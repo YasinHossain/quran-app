@@ -655,6 +655,21 @@ body::-webkit-scrollbar-thumb:hover,
   color: rgb(var(--color-accent)) !important;
 }
 
+/* Disable selection while audio is playing to avoid accidental copy/translate on word taps. */
+html[data-audio-selection-lock='true'] body {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+html[data-audio-selection-lock='true'] input,
+html[data-audio-selection-lock='true'] textarea,
+html[data-audio-selection-lock='true'] [contenteditable='true'],
+html[data-audio-selection-lock='true'] [contenteditable=''] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 .verse-audio-word {
   cursor: pointer;
   border-radius: 0.25rem;

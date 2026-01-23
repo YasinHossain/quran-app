@@ -50,3 +50,34 @@ test('settings persist after reload', async () => {
   expect(getByTestId('volume').textContent).toBe('0.5');
   expect(getByTestId('playbackRate').textContent).toBe('1.5');
 });
+
+test('toggles selection lock while player is visible and playing', () => {
+  const LockConsumer = (): React.ReactElement => {
+    const { openPlayer, setIsPlaying } = useAudio();
+    return (
+      <>
+        <button onClick={() => openPlayer()}>open</button>
+        <button onClick={() => setIsPlaying(true)}>play</button>
+        <button onClick={() => setIsPlaying(false)}>pause</button>
+      </>
+    );
+  };
+
+  const { getByText, unmount } = render(
+    <AudioProvider>
+      <LockConsumer />
+    </AudioProvider>
+  );
+
+  expect(document.documentElement.dataset['audioSelectionLock']).toBeUndefined();
+
+  fireEvent.click(getByText('open'));
+  fireEvent.click(getByText('play'));
+  expect(document.documentElement.dataset['audioSelectionLock']).toBe('true');
+
+  fireEvent.click(getByText('pause'));
+  expect(document.documentElement.dataset['audioSelectionLock']).toBeUndefined();
+
+  unmount();
+  expect(document.documentElement.dataset['audioSelectionLock']).toBeUndefined();
+});

@@ -288,8 +288,6 @@ export const VerseArabic = memo(function VerseArabic({
   const breakpoint = useBreakpoint();
   const audioCtx = useContext(AudioContext);
   const isPlayerVisible = audioCtx?.isPlayerVisible ?? false;
-  const isAudioPlaying = audioCtx?.isPlaying ?? false;
-  const disableSelectionWhileSeeking = isPlayerVisible && isAudioPlaying;
 
   // Dynamically load Arabic font when user changes their selection
   useDynamicFontLoader(settings.arabicFontFace);
@@ -676,7 +674,6 @@ export const VerseArabic = memo(function VerseArabic({
         className={cn(
           'w-full text-right leading-loose text-foreground',
           tajweed && 'tajweed-palette',
-          disableSelectionWhileSeeking && 'select-none',
           className
         )}
         style={{

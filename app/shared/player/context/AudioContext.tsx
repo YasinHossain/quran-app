@@ -89,6 +89,22 @@ function useAudioContextValue(): AudioContextType {
     }
   }, [isPlaying, activeVerse, setPlayingId]);
 
+  // Prevent accidental OS copy/translate UI when tapping word-by-word while the player is active.
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+    const shouldLock = isPlayerVisible && isPlaying;
+    if (shouldLock) {
+      root.dataset['audioSelectionLock'] = 'true';
+    } else {
+      delete root.dataset['audioSelectionLock'];
+    }
+
+    return () => {
+      delete root.dataset['audioSelectionLock'];
+    };
+  }, [isPlayerVisible, isPlaying]);
+
   // memoize the full context value including controls
   return useMemo(
     () => ({ ...core, isPlayerVisible, playbackSessionId, openPlayer, closePlayer }),
