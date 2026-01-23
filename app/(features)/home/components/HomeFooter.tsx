@@ -28,18 +28,6 @@ export const HomeFooter = memo(function HomeFooter() {
           </Link>
         </div>
 
-        {/* Attribution */}
-        <p className="text-center text-xs text-muted/70 mt-3">
-          {t('home_footer_attribution_prefix')}{' '}
-          <a
-            href="https://quran.foundation"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-accent transition-colors underline"
-          >
-            {t('home_footer_attribution_source')}
-          </a>
-        </p>
       </div>
     </footer>
   );

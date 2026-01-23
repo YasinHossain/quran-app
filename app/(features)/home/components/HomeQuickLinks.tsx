@@ -35,6 +35,8 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
   const { t } = useTranslation();
   const router = useRouter();
 
+  const maxWidth = 'clamp(18rem, 80vw, 64rem)';
+
   // Prefetch handler for intent-based prefetching
   const prefetchRoute = useCallback(
     (href: string) => {
@@ -55,9 +57,9 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
   }, [prefetchRoute]);
 
   return (
-    <div className={`w-full ${className ?? ''}`}>
-      {/* 2x2 grid on mobile, single row on md+ */}
-      <div className="grid grid-cols-2 gap-2 sm:gap-2.5 md:flex md:flex-wrap md:justify-center md:gap-3">
+    <div className={`w-full mx-auto px-2 sm:px-3 lg:px-0 ${className ?? ''}`} style={{ maxWidth }}>
+      {/* 2 columns by default, 4 columns on desktop */}
+      <div className="grid grid-cols-2 gap-2 sm:gap-2.5 lg:grid-cols-4 lg:gap-3">
         {QUICK_LINKS.map(({ href, icon: Icon, labelKey }) => (
           <Link
             key={href}
@@ -67,7 +69,7 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
             onFocus={() => prefetchRoute(href)}
             onTouchStart={() => prefetchRoute(href)}
             className="
-              flex items-center justify-center gap-2
+              w-full min-w-0 flex items-center justify-center gap-2
               min-h-[2.5rem] sm:min-h-[2.75rem] md:min-h-12
               px-4 sm:px-5 md:px-6
               py-2 sm:py-2.5 md:py-3
@@ -84,7 +86,7 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
             "
           >
             <Icon size={16} className="shrink-0 text-foreground" />
-            <span>{t(labelKey)}</span>
+            <span className="min-w-0 truncate">{t(labelKey)}</span>
           </Link>
         ))}
       </div>

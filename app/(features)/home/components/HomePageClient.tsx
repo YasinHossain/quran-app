@@ -77,10 +77,7 @@ export const HomePageClient = memo(function HomePageClient({
           )}
 
           {/* Quick Links - Navigation to bookmarks sections */}
-          <div
-            className="w-full mx-auto mt-12 md:mt-14 -mb-4 md:-mb-6"
-            style={{ maxWidth: 'clamp(16rem, 75vw, 36rem)' }}
-          >
+          <div className="w-full mx-auto mt-12 md:mt-14 -mb-4 md:-mb-6">
             <HomeQuickLinks />
           </div>
         </main>
