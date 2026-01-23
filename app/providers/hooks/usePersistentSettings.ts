@@ -12,6 +12,7 @@ import {
 } from '@/app/providers/uiLanguageContentDefaults';
 
 import type { Action } from '@/app/providers/settingsReducer';
+import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import type { Settings } from '@/types';
 
 const PERSIST_DEBOUNCE_MS = 300;
@@ -21,9 +22,15 @@ interface UsePersistentSettingsReturn {
   dispatch: Dispatch<Action>;
 }
 
-export const usePersistentSettings = (): UsePersistentSettingsReturn => {
+export const usePersistentSettings = (options?: {
+  initialUiLanguage?: UiLanguageCode;
+}): UsePersistentSettingsReturn => {
   const { i18n } = useTranslation();
-  const [settings, dispatch] = useReducer(reducer, defaultSettings);
+  const [settings, dispatch] = useReducer(reducer, defaultSettings, (defaults) => {
+    const initialLanguage =
+      options?.initialUiLanguage ?? resolveUiLanguageCode(i18n?.language ?? undefined);
+    return withUiLanguageContentDefaults(defaults, initialLanguage);
+  });
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const latestSettings = useRef(settings);
   const hasLoadedFromStorage = useRef(false);

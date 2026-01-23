@@ -16,6 +16,7 @@ import { ThemeProvider, Theme } from './ThemeContext';
 import { UIStateProvider } from './UIStateContext';
 
 import type { SWRConfiguration } from 'swr';
+import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 
 // import { ApplicationProvider } from '../../src/presentation/providers/ApplicationProvider';
 
@@ -34,9 +35,11 @@ const SWR_OPTIONS: SWRConfiguration = {
 export function ClientProviders({
   children,
   initialTheme,
+  initialUiLanguage,
 }: {
   children: React.ReactNode;
   initialTheme: Theme;
+  initialUiLanguage: UiLanguageCode;
 }): React.JSX.Element {
   const router = useRouter();
 
@@ -66,7 +69,7 @@ export function ClientProviders({
   return (
     <SWRConfig value={SWR_OPTIONS}>
       <ThemeProvider initialTheme={initialTheme}>
-        <SettingsProvider>
+        <SettingsProvider initialUiLanguage={initialUiLanguage}>
           <BookmarkProvider>
             <UIStateProvider>
               <ReaderModeProvider>

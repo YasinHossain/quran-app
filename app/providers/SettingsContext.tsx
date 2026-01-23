@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useMemo } from 'react';
 
 import { Settings } from '@/types';
+import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 
 import { usePersistentSettings } from './hooks/usePersistentSettings';
 import { ARABIC_FONTS } from './settingsStorage';
@@ -75,10 +76,14 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
  */
 export const SettingsProvider = ({
   children,
+  initialUiLanguage,
 }: {
   children: React.ReactNode;
+  initialUiLanguage?: UiLanguageCode;
 }): React.JSX.Element => {
-  const { settings, dispatch } = usePersistentSettings();
+  const { settings, dispatch } = usePersistentSettings(
+    initialUiLanguage ? { initialUiLanguage } : undefined
+  );
 
   const setters = useMemo(() => createSetters(dispatch), [dispatch]);
   const contextValue = useMemo<SettingsContextType>(

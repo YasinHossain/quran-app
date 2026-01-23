@@ -34,6 +34,8 @@ import { WebVitals } from './shared/components/WebVitals';
  */
 export const INLINE_THEME_SCRIPT = `(function(){try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){try{var m=document.cookie.match(/(?:^|; )theme=([^;]+)/);t=m?decodeURIComponent(m[1]):null}catch(e){}}if(t!=='light'&&t!=='dark'){try{var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');if(mq&&mq.matches)t='dark'}catch(e){} }var r=document.documentElement;r.classList.remove('light');r.classList.toggle('dark',t==='dark');r.setAttribute('data-theme',t==='dark'?'dark':'light');try{r.style.colorScheme=t==='dark'?'dark':'light'}catch(e){}}catch(e){}})()`;
 
+export const INLINE_UI_LANGUAGE_SCRIPT = `(function(){try{var k='ui-language';var l=null;try{l=localStorage.getItem(k)}catch(e){}if(!l){try{var re=new RegExp('(?:^|; )'+k+'=([^;]+)');var m=document.cookie.match(re);l=m?decodeURIComponent(m[1]):null}catch(e){}}if(l!=='en'&&l!=='bn')return;var r=document.documentElement;if(r&&r.lang!==l)r.lang=l;try{var c=k+'='+encodeURIComponent(l)+'; path=/; max-age=31536000; SameSite=Lax';try{if(location&&location.protocol==='https:')c+='; Secure'}catch(e){}document.cookie=c}catch(e){}}catch(e){}})()`;
+
 export const metadata = {
   title: 'Al Quran',
   description: 'Read, Study, and Learn The Holy Quran',
@@ -69,6 +71,8 @@ export default async function RootLayout({
       <head>
         {/* Must run before any paint to prevent theme flash */}
         <script dangerouslySetInnerHTML={{ __html: INLINE_THEME_SCRIPT }} />
+        {/* Must run before any paint to sync persisted UI language */}
+        <script dangerouslySetInnerHTML={{ __html: INLINE_UI_LANGUAGE_SCRIPT }} />
         <meta name="theme-color" content="#0B1220" />
         {/* Preload critical Arabic font to reduce request chain */}
         <link
@@ -91,7 +95,9 @@ export default async function RootLayout({
         <WebVitals />
         <ErrorBoundary>
           <TranslationProvider initialLanguage={uiLanguage}>
-            <ClientProviders initialTheme={theme}>{children}</ClientProviders>
+            <ClientProviders initialTheme={theme} initialUiLanguage={uiLanguage}>
+              {children}
+            </ClientProviders>
           </TranslationProvider>
         </ErrorBoundary>
       </body>

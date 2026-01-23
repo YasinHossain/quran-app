@@ -2,10 +2,9 @@ import { getRandomVerses } from '@/lib/api/verses/extras';
 
 import { HomePage } from './components/HomePage';
 
-// Static generation - pre-renders at build time for instant TTFB
-export const dynamic = 'force-static';
-// Revalidate every hour (3600 seconds) to rotate the verses
-export const revalidate = 3600;
+// This page reads user preferences (theme + UI language) from cookies in `app/layout.tsx`.
+// Marking it as static would cause the server HTML to always render with defaults (English + light),
+// resulting in a visible flash on refresh.
 
 export default async function Page(): Promise<React.JSX.Element> {
   const DEFAULT_TRANSLATION_ID = 20; // Sahih International

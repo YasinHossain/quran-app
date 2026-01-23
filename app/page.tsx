@@ -14,8 +14,9 @@ import { HeaderVisibilityProvider } from './(features)/layout/context/HeaderVisi
 import { Navigation } from './shared/IconSidebar';
 import { ModernLayout } from './shared/navigation/ModernLayout';
 
-export const dynamic = 'force-static';
-export const revalidate = 3600;
+// This page reads user preferences (theme + UI language) from cookies in `app/layout.tsx`.
+// Marking it as static would cause the server HTML to always render with defaults (English + light),
+// resulting in a visible flash on refresh.
 
 export default async function Page(): Promise<React.JSX.Element> {
   const [chapters, versesOfDay] = await Promise.all([getChaptersServer(), getVersesOfDayServer()]);
