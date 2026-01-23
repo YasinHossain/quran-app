@@ -84,7 +84,7 @@ function TabsHeader({
   onAddTafsir?: (() => void) | undefined;
 }): React.JSX.Element {
   const { t } = useTranslation();
-  const addButtonsNeeded = onAddTafsir ? MAX_TAFSIR_TABS - tabs.length : 0;
+  const showAddButton = onAddTafsir && tabs.length < MAX_TAFSIR_TABS;
 
   return (
     <div
@@ -104,29 +104,14 @@ function TabsHeader({
           {tab.name}
         </button>
       ))}
-      {Array.from({ length: addButtonsNeeded }).map((_, index) => (
+      {showAddButton && (
         <button
-          key={`add-tafsir-${index}`}
           onClick={onAddTafsir}
-          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-4 sm:py-3 sm:px-5 rounded-full text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap text-muted hover:text-foreground hover:bg-surface/30 border border-dashed border-border/50"
-          aria-label={t('add_tafsir')}
+          className="flex-1 text-center py-2.5 px-4 sm:py-3 sm:px-5 rounded-full text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap text-muted hover:text-foreground hover:bg-surface/30 border border-dashed border-border/50"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-          <span className="hidden sm:inline">{t('add_tafsir')}</span>
+          {t('add_tafsir')}
         </button>
-      ))}
+      )}
     </div>
   );
 }
