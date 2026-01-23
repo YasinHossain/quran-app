@@ -1,13 +1,11 @@
 // app/shared/Navigation.tsx - Simple unified navigation
 'use client';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { cn } from '@/lib/utils/cn';
 
 import { HomeIcon, BookmarkOutlineIcon, GridIcon } from './icons';
@@ -99,8 +97,8 @@ const MobileNavigation = memo(function MobileNavigation({
                 : item.href === '/bookmarks/last-read'
                   ? pathname.startsWith('/bookmarks')
                   : pathname.startsWith('/surah') ||
-                    pathname.startsWith('/juz') ||
-                    pathname.startsWith('/page');
+                  pathname.startsWith('/juz') ||
+                  pathname.startsWith('/page');
 
             return (
               <Link
@@ -110,14 +108,14 @@ const MobileNavigation = memo(function MobileNavigation({
                 title={item.label}
                 aria-label={item.label}
                 className={cn(
-                  'flex-1 flex flex-col items-center justify-center min-w-0 py-2 px-1 rounded-lg transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent gap-1',
+                  'flex-1 flex flex-col items-center justify-center min-w-0 py-3 px-3 rounded-lg transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent gap-1',
                   isActive ? 'text-accent' : 'text-muted'
                 )}
                 onMouseEnter={() => onPrefetch(item.href)}
                 onFocus={() => onPrefetch(item.href)}
                 onTouchStart={() => onPrefetch(item.href)}
               >
-                <div className="flex items-center justify-center h-6 w-6">
+                <div className="flex items-center justify-center h-8 w-8">
                   <item.icon className="h-5 w-5 sm:h-6 sm:w-6" />
                 </div>
                 <span className="text-[10px] sm:text-xs font-medium truncate w-full text-center leading-none">
@@ -139,98 +137,26 @@ export const Navigation = memo(function Navigation({
 }) {
   const rawPathname = usePathname();
   const pathname = pathnameOverride ?? rawPathname;
-  const searchParams = useSearchParams();
   const router = useRouter();
   const { t } = useTranslation();
   const { isHidden } = useHeaderVisibility();
-  const { lastRead } = useBookmarks();
   // Mobile nav only hides on scroll (isHidden), not when sidebar opens.
   // We handle sidebar blur via z-index (nav is z-30, sidebar overlay is z-40).
   const hideMobileNav = isHidden;
 
-  const [readerHref, setReaderHref] = useState('/surah/1');
   const [prefetchEnabled] = useState(() => {
     if (typeof document === 'undefined') return true;
     return document.documentElement.getAttribute('data-glass') !== 'off';
   });
 
-  const searchString = useMemo(() => searchParams.toString(), [searchParams]);
-  const currentHref = useMemo(
-    () => (searchString ? `${pathname}?${searchString}` : pathname),
-    [pathname, searchString]
-  );
-
-  const mostRecentSurahHref = useMemo(() => {
-    const entries = Object.entries(lastRead ?? {});
-    if (entries.length === 0) return null;
-
-    const mostRecent = entries.reduce<{
-      surahId: string;
-      updatedAt: number;
-      verseNumber: number;
-    } | null>((acc, [surahId, entry]) => {
-      if (!entry || typeof entry.updatedAt !== 'number' || typeof entry.verseNumber !== 'number') {
-        return acc;
-      }
-      if (!acc || entry.updatedAt > acc.updatedAt) {
-        return { surahId, updatedAt: entry.updatedAt, verseNumber: entry.verseNumber };
-      }
-      return acc;
-    }, null);
-
-    if (!mostRecent) return null;
-    return buildSurahRoute(mostRecent.surahId, { startVerse: mostRecent.verseNumber });
-  }, [lastRead]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const stored = window.localStorage.getItem('nav:last-reader-href');
-    if (stored) {
-      setReaderHref(stored);
-      return;
-    }
-    if (mostRecentSurahHref) {
-      setReaderHref(mostRecentSurahHref);
-    }
-  }, [mostRecentSurahHref]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const isReaderRoute =
-      pathname.startsWith('/surah') || pathname.startsWith('/juz') || pathname.startsWith('/page');
-    if (!isReaderRoute) return;
-
-    window.localStorage.setItem('nav:last-reader-href', currentHref);
-    setReaderHref(currentHref);
-  }, [currentHref, pathname]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (!pathname.startsWith('/surah/')) return;
-
-    const match = pathname.match(/^\/surah\/(\d+)/);
-    const surahId = match?.[1];
-    if (!surahId) return;
-
-    const entry = (lastRead as Record<string, { verseNumber?: number } | undefined>)[surahId];
-    const verseNumber = entry?.verseNumber;
-    if (typeof verseNumber !== 'number' || !Number.isFinite(verseNumber) || verseNumber <= 0) {
-      return;
-    }
-
-    const href = buildSurahRoute(surahId, { startVerse: verseNumber });
-    window.localStorage.setItem('nav:last-reader-href', href);
-    setReaderHref(href);
-  }, [lastRead, pathname]);
-
+  // Static route for instant prefetching - last-read position is handled by the surah page itself
   const navItems = useMemo(
     (): NavItem[] => [
       { icon: HomeIcon, label: t('home'), href: '/' },
-      { icon: GridIcon, label: t('surah_tab'), href: readerHref },
+      { icon: GridIcon, label: t('surah_tab'), href: '/surah/1' },
       { icon: BookmarkOutlineIcon, label: t('bookmarks'), href: '/bookmarks/last-read' },
     ],
-    [readerHref, t]
+    [t]
   );
 
   const linkStyles = useMemo(
