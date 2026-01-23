@@ -150,8 +150,15 @@ export const Navigation = memo(function Navigation({
 
   const [readerHref, setReaderHref] = useState('/surah/1');
   const [prefetchEnabled] = useState(() => {
-    if (typeof document === 'undefined') return true;
-    return document.documentElement.getAttribute('data-glass') !== 'off';
+    // Prefetching is a major UX win for "tab-like" navigation, but we still
+    // respect Save-Data / very slow connections when available.
+    if (typeof navigator === 'undefined') return true;
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } })
+      .connection;
+    if (connection?.saveData) return false;
+    const effectiveType = connection?.effectiveType ?? '';
+    if (effectiveType === 'slow-2g' || effectiveType === '2g') return false;
+    return true;
   });
 
   const searchString = useMemo(() => searchParams.toString(), [searchParams]);
@@ -160,14 +167,48 @@ export const Navigation = memo(function Navigation({
     [pathname, searchString]
   );
 
+  const normalizeStoredReaderHref = useCallback((href: string): string => {
+    // Migration: older builds stored `?startVerse=...` (and sometimes `nav`/`view`) in localStorage.
+    // Keeping those as query params creates a distinct RSC cache key per verse and slows "tab" switches.
+    // We now store these values in the URL fragment instead.
+    if (!href) return href;
+    if (href.includes('#')) return href;
+
+    try {
+      const url = new URL(href, typeof window !== 'undefined' ? window.location.origin : 'http://localhost');
+      if (!url.pathname.startsWith('/surah/')) return href;
+
+      const params = new URLSearchParams(url.search);
+      const startVerse = params.get('startVerse');
+      const nav = params.get('nav');
+      const view = params.get('view');
+
+      if (!startVerse && !nav && !view) return href;
+
+      const hashParams = new URLSearchParams();
+      if (startVerse) hashParams.set('startVerse', startVerse);
+      if (nav) hashParams.set('nav', nav);
+      if (view) hashParams.set('view', view);
+
+      const hash = hashParams.toString();
+      return hash ? `${url.pathname}#${hash}` : url.pathname;
+    } catch {
+      return href;
+    }
+  }, []);
+
   // Initial load from storage
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const stored = window.localStorage.getItem('nav:last-reader-href');
     if (stored) {
-      setReaderHref(stored);
+      const normalized = normalizeStoredReaderHref(stored);
+      setReaderHref(normalized);
+      if (normalized !== stored) {
+        window.localStorage.setItem('nav:last-reader-href', normalized);
+      }
     }
-  }, []);
+  }, [normalizeStoredReaderHref]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -232,10 +273,11 @@ export const Navigation = memo(function Navigation({
   const prefetch = useCallback(
     (href: string) => {
       if (!prefetchEnabled) return;
+      const normalizedHref = href.split('#')[0] ?? href;
       // Prefetch on intent for snappy "tab-like" navigation on mobile.
       // Ignore failures (e.g., during dev or if Next skips prefetch).
       try {
-        router.prefetch(href);
+        router.prefetch(normalizedHref);
       } catch {
         // no-op
       }

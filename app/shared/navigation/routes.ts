@@ -18,12 +18,21 @@ interface SurahRouteOptions {
 export const buildSurahRoute = (surahId: number | string, options?: SurahRouteOptions): string => {
   const base = `/surah/${encodeParam(surahId)}`;
   const normalizedStartVerse = normalizeStartVerse(options?.startVerse);
-  if (!normalizedStartVerse) return base;
-  const params = new URLSearchParams({ startVerse: normalizedStartVerse });
-  if (options?.forceSeq) {
+  const shouldIncludeSeq = options?.forceSeq === true;
+
+  if (!normalizedStartVerse && !shouldIncludeSeq) return base;
+
+  // Use the URL fragment for client-only navigation state (verse position, navigation nonce).
+  // This keeps the server-rendered route cache stable and avoids turning `/surah/:id` into a
+  // distinct cache key for each `startVerse`/`nav` combination.
+  const params = new URLSearchParams();
+  if (normalizedStartVerse) {
+    params.set('startVerse', normalizedStartVerse);
+  }
+  if (shouldIncludeSeq) {
     params.set('nav', String(Date.now()));
   }
-  return `${base}?${params.toString()}`;
+  return `${base}#${params.toString()}`;
 };
 
 export const buildJuzRoute = (juzId: number | string): string => `/juz/${encodeParam(juzId)}`;

@@ -11,34 +11,14 @@ export const revalidate = 3600;
 
 interface SurahPageProps {
   params: Promise<{ surahId: string }>;
-  searchParams?:
-    | Promise<{
-        startVerse?: string;
-      }>
-    | {
-        startVerse?: string;
-      };
 }
 
 /**
  * Surah page component for displaying a specific Surah.
  * Server component that handles async params and renders the SurahView.
  */
-async function SurahPage({ params, searchParams }: SurahPageProps): Promise<React.JSX.Element> {
-  const [resolvedParams, resolvedSearchParams] = await Promise.all([
-    params,
-    Promise.resolve(searchParams ?? {}),
-  ]);
-
-  const startVerseRaw = resolvedSearchParams?.startVerse;
-  const parsedStartVerse = startVerseRaw ? Number.parseInt(startVerseRaw, 10) : undefined;
-  const initialVerseNumber =
-    typeof parsedStartVerse === 'number' &&
-    Number.isFinite(parsedStartVerse) &&
-    parsedStartVerse > 0
-      ? parsedStartVerse
-      : undefined;
-
+async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element> {
+  const resolvedParams = await params;
   const surahNumber = Number.parseInt(resolvedParams.surahId, 10);
   const canFetchMetadata = Number.isFinite(surahNumber) && surahNumber > 0;
 
@@ -70,7 +50,6 @@ async function SurahPage({ params, searchParams }: SurahPageProps): Promise<Reac
   }
 
   const surahViewProps = {
-    ...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {}),
     ...(typeof totalVerses === 'number' ? { totalVerses } : {}),
     ...(initialVerses ? { initialVerses } : {}),
     initialVersesParams: {

@@ -103,7 +103,7 @@ export const Surah = ({
         const href = isTafsirPath
           ? buildTafsirRoute(chapter.id, 1)
           : isMushafMode
-            ? `${surahHref}?view=mushaf`
+            ? `${surahHref}${surahHref.includes('#') ? '&' : '#'}view=mushaf`
             : surahHref;
 
         return (

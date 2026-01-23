@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import React, { useMemo } from 'react';
 
 import { ReaderShell } from '@/app/shared/reader';
+import { useHashSearchParams } from '@/app/shared/navigation/useHashSearchParams';
 import { getVersesByChapter } from '@/lib/api';
 import { ensureLanguageCode } from '@/lib/text/languageCodes';
 
@@ -29,12 +30,15 @@ export function SurahView({
   initialVersesParams,
 }: SurahViewProps): React.JSX.Element {
   const searchParams = useSearchParams();
-  const queryStartVerseRaw = searchParams?.get('startVerse');
-  const navSeq = searchParams?.get('nav') ?? undefined;
-  const viewParam = searchParams?.get('view');
+  const hashParams = useHashSearchParams();
+
+  // Back-compat: older links may still use query params.
+  const startVerseRaw = hashParams.get('startVerse') ?? searchParams?.get('startVerse') ?? undefined;
+  const navSeq = hashParams.get('nav') ?? searchParams?.get('nav') ?? undefined;
+  const viewParam = hashParams.get('view') ?? searchParams?.get('view') ?? undefined;
 
   const resolvedInitialVerseNumber = useMemo(() => {
-    const fromQuery = queryStartVerseRaw ? Number.parseInt(queryStartVerseRaw, 10) : undefined;
+    const fromQuery = startVerseRaw ? Number.parseInt(startVerseRaw, 10) : undefined;
     if (typeof fromQuery === 'number' && Number.isFinite(fromQuery) && fromQuery > 0) {
       return fromQuery;
     }
@@ -42,7 +46,7 @@ export function SurahView({
       return initialVerseNumber > 0 ? initialVerseNumber : undefined;
     }
     return undefined;
-  }, [initialVerseNumber, queryStartVerseRaw]);
+  }, [initialVerseNumber, startVerseRaw]);
 
   const initialVerseKey =
     typeof resolvedInitialVerseNumber === 'number'
