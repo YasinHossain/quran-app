@@ -62,7 +62,6 @@ export function PanelContentBody(props: TranslationPanelContentBodyProps): React
         resourcesToRender={props.resourcesToRender}
         selectedIds={props.selectedIds}
         onToggle={props.handleSelection}
-        listHeight={props.listHeight}
       />
     </div>
   );

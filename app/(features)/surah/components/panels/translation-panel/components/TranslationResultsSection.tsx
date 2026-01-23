@@ -2,8 +2,8 @@
 
 import React from 'react';
 
+import { ResourceItem } from '@/app/shared/resource-panel';
 import { TranslationsByLanguage } from './TranslationsByLanguage';
-import { TranslationsVirtualList } from './TranslationsVirtualList';
 
 import type { TranslationResource } from '@/types';
 
@@ -13,7 +13,6 @@ interface TranslationResultsSectionProps {
   resourcesToRender: TranslationResource[];
   selectedIds: Set<number>;
   onToggle: (id: number) => void;
-  listHeight: number;
 }
 
 export function TranslationResultsSection(
@@ -21,19 +20,29 @@ export function TranslationResultsSection(
 ): React.JSX.Element {
   return (
     <div className="px-4 pb-4 pt-4">
-      {props.activeFilter === 'All' ? (
-        <TranslationsByLanguage
-          sectionsToRender={props.sectionsToRender}
-          selectedIds={props.selectedIds}
-          onToggle={props.onToggle}
-        />
+      {props.resourcesToRender.length > 0 ? (
+        props.activeFilter === 'All' ? (
+          <TranslationsByLanguage
+            sectionsToRender={props.sectionsToRender}
+            selectedIds={props.selectedIds}
+            onToggle={props.onToggle}
+          />
+        ) : (
+          <div className="space-y-2">
+            {props.resourcesToRender.map((item) => (
+              <ResourceItem
+                key={item.id}
+                item={item}
+                isSelected={props.selectedIds.has(item.id)}
+                onToggle={(id) => props.onToggle(id as number)}
+              />
+            ))}
+          </div>
+        )
       ) : (
-        <TranslationsVirtualList
-          resources={props.resourcesToRender}
-          selectedIds={props.selectedIds}
-          onToggle={props.onToggle}
-          height={props.listHeight}
-        />
+        <div className="text-center text-muted py-8">
+          No translation resources found for the selected filter.
+        </div>
       )}
     </div>
   );
