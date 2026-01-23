@@ -27,7 +27,7 @@ afterEach(() => {
 describe('NotFound page', () => {
   it('renders translated text', () => {
     render(
-      <TranslationProvider>
+      <TranslationProvider initialLanguage="en">
         <NotFound />
       </TranslationProvider>
     );

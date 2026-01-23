@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 
 import './fonts.css';
 import './globals.css';
+import { isUiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import { ClientProviders } from './providers/ClientProviders';
 import { TranslationProvider } from './providers/TranslationProvider';
 import { ErrorBoundary } from './shared/components/error-boundary';
@@ -49,6 +50,9 @@ export default async function RootLayout({
     stored && (stored.value === 'light' || stored.value === 'dark')
       ? (stored.value as 'light' | 'dark')
       : 'light';
+  const storedUiLanguage = cookieStore.get('ui-language');
+  const uiLanguage =
+    storedUiLanguage && isUiLanguageCode(storedUiLanguage.value) ? storedUiLanguage.value : 'en';
   const htmlClassNameByTheme: Record<'light' | 'dark', string | undefined> = {
     light: undefined,
     dark: 'dark',
@@ -56,13 +60,15 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="en"
+      lang={uiLanguage}
       data-theme={theme}
       data-glass="off"
       className={htmlClassNameByTheme[theme]}
       suppressHydrationWarning
     >
       <head>
+        {/* Must run before any paint to prevent theme flash */}
+        <script dangerouslySetInnerHTML={{ __html: INLINE_THEME_SCRIPT }} />
         <meta name="theme-color" content="#0B1220" />
         {/* Preload critical Arabic font to reduce request chain */}
         <link
@@ -82,11 +88,9 @@ export default async function RootLayout({
         />
       </head>
       <body className="font-sans">
-        {/* Must run before any UI renders to prevent theme flash */}
-        <script dangerouslySetInnerHTML={{ __html: INLINE_THEME_SCRIPT }} />
         <WebVitals />
         <ErrorBoundary>
-          <TranslationProvider>
+          <TranslationProvider initialLanguage={uiLanguage}>
             <ClientProviders initialTheme={theme}>{children}</ClientProviders>
           </TranslationProvider>
         </ErrorBoundary>

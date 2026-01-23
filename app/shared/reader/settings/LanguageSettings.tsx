@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { i18n } from '@/app/i18n';
 import { getUiLanguageLabel } from '@/app/shared/i18n/uiLanguages';
 import { ChevronRightIcon, GlobeIcon } from '@/app/shared/icons';
 
@@ -18,7 +17,7 @@ interface LanguageSettingsProps {
 }
 
 export const LanguageSettings = ({ idPrefix }: LanguageSettingsProps): ReactElement => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const currentLanguage = getUiLanguageLabel(i18n.language);
 

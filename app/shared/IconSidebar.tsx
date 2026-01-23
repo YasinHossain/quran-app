@@ -1,11 +1,13 @@
 // app/shared/Navigation.tsx - Simple unified navigation
 'use client';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { cn } from '@/lib/utils/cn';
 
 import { HomeIcon, BookmarkOutlineIcon, GridIcon } from './icons';
@@ -137,26 +139,88 @@ export const Navigation = memo(function Navigation({
 }) {
   const rawPathname = usePathname();
   const pathname = pathnameOverride ?? rawPathname;
+  const searchParams = useSearchParams();
   const router = useRouter();
   const { t } = useTranslation();
   const { isHidden } = useHeaderVisibility();
+  const { lastRead } = useBookmarks();
   // Mobile nav only hides on scroll (isHidden), not when sidebar opens.
   // We handle sidebar blur via z-index (nav is z-30, sidebar overlay is z-40).
   const hideMobileNav = isHidden;
 
+  const [readerHref, setReaderHref] = useState('/surah/1');
   const [prefetchEnabled] = useState(() => {
     if (typeof document === 'undefined') return true;
     return document.documentElement.getAttribute('data-glass') !== 'off';
   });
 
-  // Static route for instant prefetching - last-read position is handled by the surah page itself
+  const searchString = useMemo(() => searchParams.toString(), [searchParams]);
+  const currentHref = useMemo(
+    () => (searchString ? `${pathname}?${searchString}` : pathname),
+    [pathname, searchString]
+  );
+
+  // Initial load from storage
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const stored = window.localStorage.getItem('nav:last-reader-href');
+    if (stored) {
+      setReaderHref(stored);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // OPTIMIZATION: If we are currently ON a reader page (Surah/Juz), 
+    // we don't need to update the sidebar link constantly.
+    // The link is only useful when we navigate AWAY from the reader.
+    // This prevents re-renders while scrolling/tracking verses.
+    const isReaderRoute =
+      pathname.startsWith('/surah') || pathname.startsWith('/juz') || pathname.startsWith('/page');
+
+    if (isReaderRoute) {
+      // If we are on the reader page, we just ensure the CURRENT link matches where we are 
+      // (so if we refresh, it's correct). But we don't need to listen to every 'lastRead' update
+      // unless we actually change the URL (which handleMobileNav above or generic routing handles).
+      // We essentially "pause" updates from lastRead while reading.
+      return;
+    }
+
+    // If we are NOT on a reader page (e.g. Home, Bookmarks), we MUST listen to lastRead
+    // so the button points to the correct place.
+    const entries = Object.entries(lastRead ?? {});
+    if (entries.length === 0) return;
+
+    const mostRecent = entries.reduce<{
+      surahId: string;
+      updatedAt: number;
+      verseNumber: number;
+    } | null>((acc, [surahId, entry]) => {
+      // ... same logic as before to find most recent ...
+      if (!entry || typeof entry.updatedAt !== 'number' || typeof entry.verseNumber !== 'number') {
+        return acc;
+      }
+      if (!acc || entry.updatedAt > acc.updatedAt) {
+        return { surahId, updatedAt: entry.updatedAt, verseNumber: entry.verseNumber };
+      }
+      return acc;
+    }, null);
+
+    if (mostRecent) {
+      const href = buildSurahRoute(mostRecent.surahId, { startVerse: mostRecent.verseNumber });
+      setReaderHref(href);
+      window.localStorage.setItem('nav:last-reader-href', href);
+    }
+  }, [lastRead, pathname]); // Keep dependencies, but logic inside filters execution
+
   const navItems = useMemo(
     (): NavItem[] => [
       { icon: HomeIcon, label: t('home'), href: '/' },
-      { icon: GridIcon, label: t('surah_tab'), href: '/surah/1' },
+      { icon: GridIcon, label: t('surah_tab'), href: readerHref },
       { icon: BookmarkOutlineIcon, label: t('bookmarks'), href: '/bookmarks/last-read' },
     ],
-    [t]
+    [readerHref, t]
   );
 
   const linkStyles = useMemo(

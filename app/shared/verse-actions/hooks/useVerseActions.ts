@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { VerseActionItem } from '@/app/shared/verse-actions/types';
 
@@ -40,6 +41,7 @@ export function useVerseActions({
   onNavigateToVerse,
   onClose,
 }: UseVerseActionsParams): VerseActionItem[] {
+  const { t } = useTranslation();
   const handleAction = useCallback(
     (action: () => void) => {
       action();
@@ -67,15 +69,17 @@ export function useVerseActions({
       isPlaying,
       isLoadingAudio,
       onClick: handlePlayPause,
+      t,
     }),
-    createTafsirAction({ verseKey }),
-    ...(onNavigateToVerse ? [createGoToVerseAction({ onClick: handleGoToVerse })] : []),
+    createTafsirAction({ verseKey, t }),
+    ...(onNavigateToVerse ? [createGoToVerseAction({ onClick: handleGoToVerse, t })] : []),
     createBookmarkAction({
       isBookmarked,
       showRemove,
       onClick: handleBookmark,
+      t,
     }),
-    createAddToPlanAction({ onClick: handleAddToPlan }),
-    createShareAction({ onClick: handleShare }),
+    createAddToPlanAction({ onClick: handleAddToPlan, t }),
+    createShareAction({ onClick: handleShare, t }),
   ];
 }

@@ -32,7 +32,7 @@ const renderVerse = (options?: {
   hidePlayer?: boolean;
 }): ReturnType<typeof renderWithProvidersAsync> =>
   renderWithProvidersAsync(
-    <TranslationProvider>
+    <TranslationProvider initialLanguage="en">
       <VerseWrapper hidePlayer={options?.hidePlayer} />
     </TranslationProvider>
   );

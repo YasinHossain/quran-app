@@ -1,8 +1,8 @@
 'use client';
 
 import { Dispatch, useEffect, useReducer, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { i18n } from '@/app/i18n';
 import { reducer } from '@/app/providers/settingsReducer';
 import { defaultSettings, loadSettings, saveSettings } from '@/app/providers/settingsStorage';
 import {
@@ -22,6 +22,7 @@ interface UsePersistentSettingsReturn {
 }
 
 export const usePersistentSettings = (): UsePersistentSettingsReturn => {
+  const { i18n } = useTranslation();
   const [settings, dispatch] = useReducer(reducer, defaultSettings);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const latestSettings = useRef(settings);
@@ -37,7 +38,7 @@ export const usePersistentSettings = (): UsePersistentSettingsReturn => {
     hasLoadedFromStorage.current = true;
     dispatch({ type: 'SET_SETTINGS', value: synced });
     latestSettings.current = synced;
-  }, []);
+  }, [i18n]);
 
   useEffect(() => {
     latestSettings.current = settings;
@@ -79,7 +80,7 @@ export const usePersistentSettings = (): UsePersistentSettingsReturn => {
         saveSettings(latestSettings.current);
       }
     };
-  }, []);
+  }, [i18n]);
 
   return { settings, dispatch };
 };

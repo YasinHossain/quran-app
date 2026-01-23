@@ -29,7 +29,18 @@ jest.mock('react', () => {
   return { ...actual, use: identity };
 });
 jest.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: {
+      changeLanguage: jest.fn(),
+      language: 'en',
+      languages: ['en'],
+      on: jest.fn(),
+      off: jest.fn(),
+      exists: jest.fn(() => false),
+      t: (key: string) => key,
+    },
+  }),
 }));
 
 const mockUseSWR = useSWR as jest.Mock;

@@ -153,6 +153,10 @@ type MockUseTranslationReturn = {
     changeLanguage: jest.Mock;
     language: string;
     languages: string[];
+    on: jest.Mock;
+    off: jest.Mock;
+    exists: jest.Mock;
+    t: jest.Mock;
   };
 };
 
@@ -170,6 +174,10 @@ const defaultUseTranslationImplementation = (): MockUseTranslationReturn => ({
     changeLanguage: jest.fn(),
     language: 'en',
     languages: ['en'],
+    on: jest.fn(),
+    off: jest.fn(),
+    exists: jest.fn(() => false),
+    t: jest.fn((key: string) => key),
   },
 });
 

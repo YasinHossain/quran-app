@@ -66,7 +66,7 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
                       key={language.code}
                       type="button"
                       onClick={() => {
-                        setUiLanguage(language.code);
+                        setUiLanguage(i18n, language.code);
                         setLanguageMenuOpen(false);
                       }}
                       className="w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-interactive-hover transition-colors"

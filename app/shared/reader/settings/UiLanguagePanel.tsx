@@ -3,7 +3,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { i18n } from '@/app/i18n';
 import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
 import { UI_LANGUAGES, isUiLanguageCode, type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import { SlideOverPanel } from '@/app/shared/components/SlideOverPanel';
@@ -21,7 +20,7 @@ export function UiLanguagePanel({
   onClose,
   onCloseSidebar,
 }: UiLanguagePanelProps): React.JSX.Element {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const selectedCode: UiLanguageCode = isUiLanguageCode(i18n.language) ? i18n.language : 'en';
 
   return (
@@ -42,7 +41,7 @@ export function UiLanguagePanel({
                   item={{ id: language.code, name: language.nativeLabel, lang: language.code }}
                   isSelected={selectedCode === language.code}
                   onToggle={() => {
-                    setUiLanguage(language.code);
+                    setUiLanguage(i18n, language.code);
                     onClose();
                   }}
                 />

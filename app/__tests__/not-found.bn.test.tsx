@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 
-import { i18n } from '@/app/i18n';
 import NotFound from '@/app/not-found';
 import { TranslationProvider } from '@/app/providers/TranslationProvider';
 
@@ -14,12 +13,14 @@ jest.mock('next/link', () => {
   );
 });
 
+const BN_TRANSLATIONS = {
+  page_not_found: 'পৃষ্ঠা পাওয়া যায়নি',
+  home: 'বাড়ি',
+} as const;
+
 beforeEach(() => {
   useTranslationMock.mockImplementation(() => ({
-    t: (key: string) =>
-      (i18n.language === 'bn'
-        ? { page_not_found: 'পৃষ্ঠা পাওয়া যায় নি', home: 'বাড়ি' }
-        : { page_not_found: 'Page not found', home: 'Home' })[key] ?? key,
+    t: (key: string) => (BN_TRANSLATIONS as Record<string, string>)[key] ?? key,
   }));
 });
 
@@ -28,14 +29,14 @@ afterEach(() => {
 });
 
 describe('NotFound page in Bengali', () => {
-  it('renders Bengali text', async () => {
-    await i18n.changeLanguage('bn');
+  it('renders Bengali text', () => {
     render(
-      <TranslationProvider>
+      <TranslationProvider initialLanguage="bn">
         <NotFound />
       </TranslationProvider>
     );
-    expect(screen.getByText('পৃষ্ঠা পাওয়া যায় নি')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'বাড়ি' })).toHaveAttribute('href', '/');
+    expect(screen.getByText(BN_TRANSLATIONS.page_not_found)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: BN_TRANSLATIONS.home })).toHaveAttribute('href', '/');
   });
 });
+
