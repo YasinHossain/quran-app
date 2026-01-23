@@ -158,7 +158,7 @@ it('renders without runtime warnings', async () => {
 it('search filtering returns only matching Surahs', async () => {
   await renderHome();
   await screen.findByText('Al-Fatihah');
-  const input = screen.getByPlaceholderText('Search Surahs, Verses, or Topics...');
+  const input = screen.getByPlaceholderText('search_placeholder');
   await userEvent.type(input, 'Baqarah');
   expect(input).toHaveValue('Baqarah');
   expect(await screen.findByText('Al-Baqarah')).toBeInTheDocument();

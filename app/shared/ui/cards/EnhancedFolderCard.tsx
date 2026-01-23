@@ -75,7 +75,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
 
   return (
     <div className={cn('group relative w-full', className)} {...props}>
-      <div className="absolute right-3 top-3 z-10" onClick={(e) => e.stopPropagation()}>
+      <div className="absolute right-3 top-3 z-10" onPointerDown={(e) => e.stopPropagation()}>
         <FolderContextMenu onDelete={onDelete} onColorChange={onColorChange} />
       </div>
 

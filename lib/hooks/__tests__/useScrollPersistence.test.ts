@@ -65,9 +65,16 @@ describe('useScrollPersistence - restore and defaults', () => {
 });
 
 describe('useScrollPersistence - interactions', () => {
-  beforeEach(resetState);
+  beforeEach(() => {
+    resetState();
+    jest.useFakeTimers();
+  });
 
-  it('stores scroll on scroll event', () => {
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it('stores scroll on scroll event (debounced)', () => {
     const setSpy = jest.spyOn(Storage.prototype, 'setItem');
     const { result } = renderHook(() =>
       useScrollPersistence<Tab>({
@@ -82,6 +89,9 @@ describe('useScrollPersistence - interactions', () => {
       result.current.handleScroll({
         currentTarget: { scrollTop: 42 },
       } as React.UIEvent<HTMLDivElement>);
+    });
+    act(() => {
+      jest.advanceTimersByTime(120);
     });
     expect(setScrollTops.Surah).toHaveBeenCalledWith(42);
     expect(setSpy).toHaveBeenCalledWith('surahScrollTop', '42');

@@ -18,6 +18,7 @@ import {
 import type { PlannerGroupCardData } from './plannerGroupCard.types';
 import type { PlannerCardChapter } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
 import type { PlannerCardViewModel } from '@/app/(features)/bookmarks/planner/utils/plannerCard';
+import type { PlannerI18nContext } from '@/app/(features)/bookmarks/planner/utils/plannerI18n';
 import type { Chapter, PlannerPlan } from '@/types';
 
 export interface ProgressInput {
@@ -37,7 +38,8 @@ export interface ProgressComputationResult {
 export const computeProgressStats = (
   input: ProgressInput,
   aggregatedChapter: PlannerCardChapter | undefined,
-  chapterLookup: Map<number, Chapter>
+  chapterLookup: Map<number, Chapter>,
+  i18n?: PlannerI18nContext
 ): ProgressComputationResult => {
   const { aggregatedPlan, normalizedEstimatedDays, plans } = input;
   const progressMetrics = getProgressMetrics(aggregatedPlan);
@@ -55,6 +57,7 @@ export const computeProgressStats = (
     chapterLookup,
     pageMetrics,
     progressMetrics,
+    ...(i18n ? { i18n } : {}),
   });
   const dailyFocus = buildDailyFocus({
     aggregatedPlan,
@@ -63,6 +66,7 @@ export const computeProgressStats = (
     pageMetrics,
     plans,
     chapterLookup,
+    ...(i18n ? { i18n } : {}),
   });
 
   return {
@@ -85,6 +89,7 @@ interface DailyFocusParams {
   pageMetrics: ReturnType<typeof getPageMetrics>;
   plans: PlannerPlan[];
   chapterLookup: Map<number, Chapter>;
+  i18n?: PlannerI18nContext;
 }
 
 const buildDailyFocus = ({
@@ -94,6 +99,7 @@ const buildDailyFocus = ({
   pageMetrics,
   plans,
   chapterLookup,
+  i18n,
 }: DailyFocusParams): PlannerCardViewModel['focus'] => {
   const versesPerDay = getVersesPerDay(aggregatedPlan, normalizedEstimatedDays);
   const goalWindow = buildDailyGoalWindow({
@@ -101,6 +107,7 @@ const buildDailyFocus = ({
     versesPerDay,
     isComplete: progressMetrics.isComplete,
     pageMetrics,
+    ...(i18n ? { i18n } : {}),
   });
   const scheduleDetails = getScheduleDetails({
     plan: aggregatedPlan,
@@ -108,6 +115,7 @@ const buildDailyFocus = ({
     versesPerDay,
     isComplete: progressMetrics.isComplete,
     remainingVerses: Math.max(aggregatedPlan.targetVerses - aggregatedPlan.completedVerses, 0),
+    ...(i18n ? { i18n } : {}),
   });
 
   return {
@@ -117,15 +125,22 @@ const buildDailyFocus = ({
       plans,
       goalWindow.startVerse,
       goalWindow.endVerse,
-      chapterLookup
+      chapterLookup,
+      i18n
     ),
-    dailyHighlights: getDailyHighlights(goalWindow),
+    dailyHighlights: getDailyHighlights(goalWindow, i18n),
     remainingSummary: goalWindow.hasDailyGoal
-      ? `Remaining ${scheduleDetails.remainingDaysLabel}`
+      ? i18n
+        ? i18n.t('planner_remaining_summary', { value: scheduleDetails.remainingDaysLabel })
+        : `Remaining ${scheduleDetails.remainingDaysLabel}`
       : null,
-    endsAtSummary: goalWindow.hasDailyGoal ? `Ends at ${scheduleDetails.endsAtValue}` : null,
+    endsAtSummary: goalWindow.hasDailyGoal
+      ? i18n
+        ? i18n.t('planner_ends_at_summary', { value: scheduleDetails.endsAtValue })
+        : `Ends at ${scheduleDetails.endsAtValue}`
+      : null,
     isComplete: progressMetrics.isComplete,
-    noGoalMessage: NO_DAILY_GOAL_MESSAGE,
+    noGoalMessage: i18n ? i18n.t('planner_no_daily_goal_message') : NO_DAILY_GOAL_MESSAGE,
   };
 };
 
@@ -135,6 +150,7 @@ interface PositionInput {
   chapterLookup: Map<number, Chapter>;
   pageMetrics: ReturnType<typeof getPageMetrics>;
   progressMetrics: ReturnType<typeof getProgressMetrics>;
+  i18n?: PlannerI18nContext;
 }
 
 interface PositionContext {
@@ -149,6 +165,7 @@ const resolveProgressPosition = ({
   chapterLookup,
   pageMetrics,
   progressMetrics,
+  i18n,
 }: PositionInput): PositionContext => {
   const globalCurrentVerse = Math.max(
     1,
@@ -161,6 +178,7 @@ const resolveProgressPosition = ({
   const currentSecondaryText = buildProgressDetails({
     progress: { ...progressMetrics, currentVerse: globalCurrentVerse },
     pageMetrics,
+    ...(i18n ? { i18n } : {}),
   });
 
   const continueVerse = mappedPosition

@@ -2,6 +2,9 @@
 
 import { motion } from 'framer-motion';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { localizeDigits } from '@/lib/text/localizeNumbers';
 
 interface PlannerSelectionCardProps {
   id: string;
@@ -19,9 +22,18 @@ export function PlannerSelectionCard({
   isSelected = false,
   onSelect,
 }: PlannerSelectionCardProps): React.JSX.Element {
-  const detailParts = [verseRangeLabel];
+  const { t, i18n } = useTranslation();
+  const localizedPlanName = localizeDigits(planName, i18n.language);
+  const localizedVerseRangeLabel = localizeDigits(verseRangeLabel, i18n.language);
+
+  const detailParts = [localizedVerseRangeLabel];
   if (estimatedDays && estimatedDays > 0) {
-    detailParts.push(`${estimatedDays} day${estimatedDays === 1 ? '' : 's'}`);
+    const rounded = Math.round(estimatedDays);
+    detailParts.push(
+      rounded === 1
+        ? t('planner_one_day', { count: rounded })
+        : t('planner_n_days', { count: rounded })
+    );
   }
   const detailLine = detailParts.join(' · ');
 
@@ -49,7 +61,7 @@ export function PlannerSelectionCard({
       whileTap={{ scale: 0.98 }}
     >
       <div className="flex flex-col gap-1">
-        <span className={titleClassName}>{planName}</span>
+        <span className={titleClassName}>{localizedPlanName}</span>
         <p className={detailClassName}>{detailLine}</p>
       </div>
     </motion.button>

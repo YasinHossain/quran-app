@@ -13,7 +13,7 @@ import {
 import * as chaptersApi from '@/lib/api/chapters';
 jest.mock('@/lib/api/chapters');
 
-jest.mock('../components/BookmarksSidebar', () => ({
+jest.mock('@/app/(features)/bookmarks/components/BookmarksSidebar', () => ({
   BookmarksSidebar: ({
     onSectionChange,
     isOpen,
@@ -59,7 +59,8 @@ jest.mock('framer-motion', () => ({
 }));
 
 beforeAll(() => {
-  setMatchMedia(false);
+  // Ensure desktop sidebar renders (ThreeColumnWorkspace uses an XL breakpoint).
+  setMatchMedia(true);
 });
 
 beforeEach(() => {

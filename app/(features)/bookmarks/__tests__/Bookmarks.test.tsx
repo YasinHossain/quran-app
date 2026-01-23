@@ -90,9 +90,9 @@ describe('BookmarksSidebar', () => {
       render(<BookmarksSidebar activeSection="bookmarks" />);
     });
 
-    expect(screen.getByText('All Bookmarks')).toBeInTheDocument();
-    expect(screen.getByText('Pinned Verses')).toBeInTheDocument();
-    expect(screen.getByText('Recent')).toBeInTheDocument();
+    expect(screen.getByText('binder_tab_all')).toBeInTheDocument();
+    expect(screen.getByText('binder_tab_pinned')).toBeInTheDocument();
+    expect(screen.getByText('binder_tab_recent')).toBeInTheDocument();
   });
 
   it('should have accessible navigation items', async () => {
@@ -100,13 +100,13 @@ describe('BookmarksSidebar', () => {
       render(<BookmarksSidebar activeSection="bookmarks" />);
     });
 
-    const pinnedItem = screen.getByText('Pinned Verses').closest('div');
-    const lastReadItem = screen.getByText('Recent').closest('div');
+    const pinnedItem = screen.getByText('binder_tab_pinned').closest('div');
+    const lastReadItem = screen.getByText('binder_tab_recent').closest('div');
 
     testNavigationItemAccessibility(pinnedItem);
     testNavigationItemAccessibility(lastReadItem);
 
-    const bookmarkItem = screen.getByText('All Bookmarks');
+    const bookmarkItem = screen.getByText('binder_tab_all');
     const navBookmarkItem = bookmarkItem.closest('div');
     expect(navBookmarkItem).toBeInTheDocument();
   });

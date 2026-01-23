@@ -2,12 +2,14 @@
 
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useMemo } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
 import { SearchIcon, ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { ReaderVerseCard } from '@/app/shared/reader/VerseCard';
+import { formatNumber } from '@/lib/text/localizeNumbers';
 import { highlightMissingQueryWords } from '@/lib/utils/searchRelevance';
 import { parseVerseKey } from '@/lib/utils/verse';
 
@@ -47,56 +49,84 @@ const SearchHeader = ({
   totalResults: number;
   currentPage: number;
   totalPages: number;
-}): React.JSX.Element => (
-  <div className="mb-6 md:mb-8">
-    <div className="flex items-center gap-3 mb-2">
-      <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
-        <SearchIcon size={20} className="text-accent" />
-      </div>
-      <div>
-        <h1 className="text-xl md:text-2xl font-bold text-foreground">Search Results</h1>
-        <p className="text-sm text-muted">
-          {totalResults > 0 ? (
-            <>
-              <span className="font-medium text-accent">{totalResults}</span> results for &quot;
-              {query}&quot;
-              {totalPages > 1 && (
-                <span className="ml-2">
-                  · Page {currentPage} of {totalPages}
-                </span>
-              )}
-            </>
-          ) : (
-            <>Searching for &quot;{query}&quot;</>
-          )}
-        </p>
-      </div>
-    </div>
-  </div>
-);
+}): React.JSX.Element => {
+  const { t, i18n } = useTranslation();
 
-const EmptyState = ({ query }: { query: string }): React.JSX.Element => (
-  <div className="text-center py-16">
-    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-muted/10 flex items-center justify-center">
-      <SearchIcon size={32} className="text-muted" />
+  return (
+    <div className="mb-6 md:mb-8">
+      <div className="flex items-center gap-3 mb-2">
+        <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
+          <SearchIcon size={20} className="text-accent" />
+        </div>
+        <div>
+          <h1 className="text-xl md:text-2xl font-bold text-foreground">
+            {t('search_results_title')}
+          </h1>
+          <p className="text-sm text-muted">
+            {totalResults > 0 ? (
+              <>
+                <Trans
+                  i18nKey="search_results_summary"
+                  values={{ count: totalResults, query }}
+                  components={{
+                    count: <span className="font-medium text-accent" />,
+                  }}
+                />
+                {totalPages > 1 ? (
+                  <span className="ml-2">
+                    {t('search_results_page_of', {
+                      current: currentPage,
+                      total: totalPages,
+                      defaultValue: `· Page ${formatNumber(currentPage, i18n.language, { useGrouping: false })} of ${formatNumber(totalPages, i18n.language, { useGrouping: false })}`,
+                    })}
+                  </span>
+                ) : null}
+              </>
+            ) : (
+              t('search_searching_for_query', {
+                query,
+                defaultValue: `Searching for "${query}"`,
+              })
+            )}
+          </p>
+        </div>
+      </div>
     </div>
-    <h2 className="text-lg font-semibold text-foreground mb-2">No results found</h2>
-    <p className="text-muted text-sm max-w-md mx-auto">
-      We couldn&apos;t find any verses matching &quot;{query}&quot;. Try different keywords or check
-      your spelling.
-    </p>
-  </div>
-);
+  );
+};
 
-const ErrorState = ({ error }: { error: string }): React.JSX.Element => (
-  <div className="text-center py-16">
-    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-status-error/10 flex items-center justify-center">
-      <SearchIcon size={32} className="text-status-error" />
+const EmptyState = ({ query }: { query: string }): React.JSX.Element => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="text-center py-16">
+      <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-muted/10 flex items-center justify-center">
+        <SearchIcon size={32} className="text-muted" />
+      </div>
+      <h2 className="text-lg font-semibold text-foreground mb-2">{t('search_no_results_title')}</h2>
+      <p className="text-muted text-sm max-w-md mx-auto">
+        {t('search_no_results_description', {
+          query,
+          defaultValue: `We couldn't find any verses matching "${query}". Try different keywords or check your spelling.`,
+        })}
+      </p>
     </div>
-    <h2 className="text-lg font-semibold text-foreground mb-2">Something went wrong</h2>
-    <p className="text-status-error text-sm">{error}</p>
-  </div>
-);
+  );
+};
+
+const ErrorState = ({ error }: { error: string }): React.JSX.Element => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="text-center py-16">
+      <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-status-error/10 flex items-center justify-center">
+        <SearchIcon size={32} className="text-status-error" />
+      </div>
+      <h2 className="text-lg font-semibold text-foreground mb-2">{t('search_error_title')}</h2>
+      <p className="text-status-error text-sm">{error}</p>
+    </div>
+  );
+};
 
 const LoadingSkeletons = (): React.JSX.Element => (
   <div className="space-y-0">
@@ -125,6 +155,8 @@ const Pagination = ({
   onGoToPage: (page: number) => void;
   isLoading: boolean;
 }): React.JSX.Element => {
+  const { t, i18n } = useTranslation();
+
   // Generate page numbers to show
   const getPageNumbers = (): (number | 'ellipsis')[] => {
     const pages: (number | 'ellipsis')[] = [];
@@ -162,10 +194,10 @@ const Pagination = ({
         onClick={onPrevPage}
         disabled={!hasPrevPage || isLoading}
         className="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-interactive/60 text-foreground"
-        aria-label="Previous page"
+        aria-label={t('search_previous_page_aria')}
       >
         <ChevronLeftIcon size={16} />
-        <span className="hidden sm:inline">Previous</span>
+        <span className="hidden sm:inline">{t('previous')}</span>
       </button>
 
       {/* Page numbers */}
@@ -187,7 +219,7 @@ const Pagination = ({
                   : 'hover:bg-interactive/60 text-foreground'
               }`}
             >
-              {page}
+              {formatNumber(page, i18n.language, { useGrouping: false })}
             </button>
           )
         )}
@@ -199,9 +231,9 @@ const Pagination = ({
         onClick={onNextPage}
         disabled={!hasNextPage || isLoading}
         className="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-interactive/60 text-foreground"
-        aria-label="Next page"
+        aria-label={t('search_next_page_aria')}
       >
-        <span className="hidden sm:inline">Next</span>
+        <span className="hidden sm:inline">{t('next')}</span>
         <ChevronRightIcon size={16} />
       </button>
     </div>
@@ -220,6 +252,7 @@ interface SearchVerseItemProps {
 
 const SearchVerseItem = ({ verse, index, query }: SearchVerseItemProps): React.JSX.Element => {
   const router = useRouter();
+  const { t } = useTranslation();
   const { settings } = useSettings();
   const translationFontSize = settings.translationFontSize ?? 18;
 
@@ -296,7 +329,7 @@ const SearchVerseItem = ({ verse, index, query }: SearchVerseItemProps): React.J
         {/* Highlighted text with search term styling */}
         <div className="mt-4">
           <p className="mb-2 text-xs font-normal uppercase tracking-wider text-muted-foreground">
-            Search Match
+            {t('search_match_label')}
           </p>
           {isArabicQuery ? (
             // Arabic query: show highlighted Arabic text
@@ -343,6 +376,7 @@ export const SearchResultsContent = ({
   onPrevPage,
   onGoToPage,
 }: SearchResultsContentProps): React.JSX.Element => {
+  const { t } = useTranslation();
   // No query state
   if (!query.trim()) {
     return (
@@ -350,8 +384,10 @@ export const SearchResultsContent = ({
         <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-muted/10 flex items-center justify-center">
           <SearchIcon size={32} className="text-muted" />
         </div>
-        <h2 className="text-lg font-semibold text-foreground mb-2">Start searching</h2>
-        <p className="text-muted text-sm">Enter a search term to find verses</p>
+        <h2 className="text-lg font-semibold text-foreground mb-2">
+          {t('search_start_searching_title')}
+        </h2>
+        <p className="text-muted text-sm">{t('search_start_searching_description')}</p>
       </div>
     );
   }

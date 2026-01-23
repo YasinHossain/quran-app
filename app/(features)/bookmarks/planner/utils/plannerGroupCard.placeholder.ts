@@ -4,12 +4,14 @@ import { buildAggregatedChapter } from '@/app/(features)/bookmarks/planner/utils
 import type { PlannerGroupCardData } from './plannerGroupCard.types';
 import type { PlannerPlanGroup } from '@/app/(features)/bookmarks/planner/utils/planGrouping';
 import type { PlannerCardViewModel } from '@/app/(features)/bookmarks/planner/utils/plannerCard';
+import type { PlannerI18nContext } from '@/app/(features)/bookmarks/planner/utils/plannerI18n';
 import type { Chapter, PlannerPlan } from '@/types';
 
 const buildPlaceholderViewModel = (
   planName: string,
   planDetailsText: string | null,
-  surahLabel: string
+  surahLabel: string,
+  i18n?: PlannerI18nContext
 ): PlannerCardViewModel => ({
   planInfo: {
     displayPlanName: planName,
@@ -18,13 +20,15 @@ const buildPlaceholderViewModel = (
   },
   focus: {
     hasDailyGoal: false,
-    dayLabel: 'Getting started',
-    goalVerseLabel: 'All daily goals completed',
+    dayLabel: i18n ? i18n.t('planner_getting_started') : 'Getting started',
+    goalVerseLabel: i18n
+      ? i18n.t('planner_all_daily_goals_completed')
+      : 'All daily goals completed',
     dailyHighlights: [],
     remainingSummary: null,
     endsAtSummary: null,
     isComplete: true,
-    noGoalMessage: NO_DAILY_GOAL_MESSAGE,
+    noGoalMessage: i18n ? i18n.t('planner_no_daily_goal_message') : NO_DAILY_GOAL_MESSAGE,
   },
   stats: {
     completed: { verses: 0, pages: null, juz: null },
@@ -40,7 +44,8 @@ const buildPlaceholderViewModel = (
 
 export const buildPlaceholderCardData = (
   group: PlannerPlanGroup,
-  chapterLookup: Map<number, Chapter>
+  chapterLookup: Map<number, Chapter>,
+  i18n?: PlannerI18nContext
 ): PlannerGroupCardData => {
   const fallbackSurahId = group.surahIds[0] ?? 1;
   const placeholderPlan: PlannerPlan = {
@@ -53,9 +58,13 @@ export const buildPlaceholderCardData = (
     notes: group.planName,
     estimatedDays: 0,
   };
-  const placeholderChapter = buildAggregatedChapter(group.surahIds, chapterLookup);
-  const surahLabel = placeholderChapter?.name_simple ?? `Surah ${placeholderPlan.surahId}`;
-  const viewModel = buildPlaceholderViewModel(group.planName, null, surahLabel);
+  const placeholderChapter = buildAggregatedChapter(group.surahIds, chapterLookup, i18n);
+  const fallbackSurahLabel = placeholderChapter?.name_simple ?? `Surah ${placeholderPlan.surahId}`;
+  const surahLabel =
+    i18n && Number.isFinite(fallbackSurahId)
+      ? i18n.t(`surah_names.${fallbackSurahId}`, fallbackSurahLabel)
+      : fallbackSurahLabel;
+  const viewModel = buildPlaceholderViewModel(group.planName, null, surahLabel, i18n);
 
   return {
     key: group.key,
@@ -63,7 +72,7 @@ export const buildPlaceholderCardData = (
     plan: placeholderPlan,
     ...(placeholderChapter ? { chapter: placeholderChapter } : {}),
     viewModel,
-    progressLabel: 'No progress tracked',
+    progressLabel: i18n ? i18n.t('planner_no_progress_tracked') : 'No progress tracked',
     planIds: group.planIds,
     planName: group.planName,
   };

@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';
 
@@ -15,6 +16,7 @@ export const BookmarkModal = memo(function BookmarkModal({
   verseId,
   verseKey = '',
 }: BookmarkModalProps): React.JSX.Element {
+  const { t } = useTranslation();
   const {
     activeTab,
     setActiveTab,
@@ -29,7 +31,7 @@ export const BookmarkModal = memo(function BookmarkModal({
     <UnifiedModal
       isOpen={isOpen}
       onClose={onClose}
-      ariaLabel="Bookmark options"
+      ariaLabel={t('add_to_collections')}
       backdropClassName="touch-none"
       contentClassName="max-w-md mx-auto max-h-[80vh] overflow-hidden flex flex-col"
     >

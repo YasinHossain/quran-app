@@ -31,7 +31,7 @@ jest.mock(
 );
 
 jest.mock('@/lib/api/chapters');
-jest.mock('../components/BookmarksSidebar', () => ({
+jest.mock('@/app/(features)/bookmarks/components/BookmarksSidebar', () => ({
   BookmarksSidebar: ({
     onSectionChange,
     isOpen,
@@ -153,8 +153,8 @@ describe('Pinned Ayah Page', () => {
   it('shows empty state and handles navigation', async () => {
     renderWithProviders(<PinnedAyahPage />);
 
-    expect(await screen.findByText('Pinned Verses')).toBeInTheDocument();
-    expect(await screen.findByText('No Pinned Verses')).toBeInTheDocument();
+    expect(await screen.findByText('binder_tab_pinned')).toBeInTheDocument();
+    expect(await screen.findByText('no_pinned_verses')).toBeInTheDocument();
     const [lastReadButton] = await screen.findAllByRole('button', { name: 'Last Read' });
     fireEvent.click(lastReadButton);
     await waitFor(() => expect(push).toHaveBeenCalledWith('/bookmarks/last-read'));

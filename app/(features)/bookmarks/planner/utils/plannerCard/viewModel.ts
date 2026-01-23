@@ -12,9 +12,13 @@ import { buildStats } from '@/app/(features)/bookmarks/planner/utils/plannerCard
 
 import type { PlannerCardProps } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
 import type { PlannerCardViewModel } from '@/app/(features)/bookmarks/planner/utils/plannerCard/types';
+import type { PlannerI18nContext } from '@/app/(features)/bookmarks/planner/utils/plannerI18n';
 
-export const createPlannerCardViewModel = (params: PlannerCardProps): PlannerCardViewModel => {
-  const surahLabel = getSurahLabel(params.surahId, params.chapter);
+export const createPlannerCardViewModel = (
+  params: PlannerCardProps,
+  i18n?: PlannerI18nContext
+): PlannerCardViewModel => {
+  const surahLabel = getSurahLabel(params.surahId, params.chapter, i18n);
   const estimatedDays = getEstimatedDays(params.plan);
   const progress = getProgressMetrics(params.plan);
   const pageMetrics = getPageMetrics(params.plan, params.chapter);
@@ -25,6 +29,7 @@ export const createPlannerCardViewModel = (params: PlannerCardProps): PlannerCar
     surahId: params.surahId,
     surahLabel,
     estimatedDays,
+    ...(i18n ? { i18n } : {}),
   });
   const focus = buildDailyFocus({
     plan: params.plan,
@@ -33,6 +38,7 @@ export const createPlannerCardViewModel = (params: PlannerCardProps): PlannerCar
     estimatedDays,
     progress,
     pageMetrics,
+    ...(i18n ? { i18n } : {}),
   });
   const stats = buildStats({
     plan: params.plan,
@@ -43,6 +49,7 @@ export const createPlannerCardViewModel = (params: PlannerCardProps): PlannerCar
   const currentSecondaryText = buildProgressDetails({
     progress,
     pageMetrics,
+    ...(i18n ? { i18n } : {}),
   });
 
   return {

@@ -59,7 +59,7 @@ test('a query triggers a fetch and renders returned verses', async () => {
     );
   });
 
-  await screen.findByText('Search Match');
+  await screen.findByText('search_match_label');
   const resultText = document.querySelector('.search-result-text');
   expect(resultText).toHaveTextContent('earth verse');
 });

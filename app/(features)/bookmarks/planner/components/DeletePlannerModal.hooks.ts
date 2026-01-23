@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   buildChapterLookup,
@@ -27,8 +28,12 @@ export const useEffectivePlanIds = ({
     return match?.planIds ?? [];
   }, [chapters, groupKey, planIds, planner]);
 
-export const usePlanCountLabel = (count: number): string | null =>
-  useMemo(
-    () => (count <= 1 ? null : `This plan includes ${count} surahs. All will be removed.`),
-    [count]
+export const usePlanCountLabel = (count: number): string | null => usePlanCountLabelInner(count);
+
+const usePlanCountLabelInner = (count: number): string | null => {
+  const { t } = useTranslation();
+  return useMemo(
+    () => (count <= 1 ? null : t('planner_delete_multi_surah_warning', { count })),
+    [count, t]
   );
+};

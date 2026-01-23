@@ -79,7 +79,7 @@ describe('SettingsSidebar - Basic Interactions', () => {
     expect(fontButton).toHaveTextContent('KFGQ');
     await userEvent.click(fontButton);
 
-    const indoPakButton = screen.getByRole<HTMLButtonElement>('button', { name: 'IndoPak' });
+    const indoPakButton = await screen.findByRole<HTMLButtonElement>('button', { name: 'IndoPak' });
     await userEvent.click(indoPakButton);
     expect(screen.getByText('IndoPak Nastaleeq (Waqf Lazim)')).toBeInTheDocument();
   });

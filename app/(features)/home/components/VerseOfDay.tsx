@@ -1,8 +1,10 @@
 'use client';
 
 import { memo, useState, useEffect, useRef, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { cleanTranslationText } from '@/lib/text/cleanTranslationText';
+import { localizeDigits } from '@/lib/text/localizeNumbers';
 
 import type { Chapter, Verse } from '@/types';
 
@@ -30,6 +32,7 @@ export const VerseOfDay = memo(function VerseOfDay({
   chapters,
   className,
 }: VerseOfDayProps) {
+  const { t, i18n } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -89,9 +92,13 @@ export const VerseOfDay = memo(function VerseOfDay({
 
   // Remove unwanted marks like "Small High Rounded Zero" (0x06DF) which renders as a large circle in this font
   const cleanArabicText = verseData.text.replace(/[\u06df\u06e0]/g, '');
-  const referenceChapterName =
-    chapterNameById.get(Number(verseData.surahNum)) ?? `Surah ${verseData.surahNum}`;
-  const referenceText = `${referenceChapterName} ${verseData.surahNum}:${verseData.ayahNum}`;
+  const surahId = Number(verseData.surahNum);
+  const fallbackChapterName = chapterNameById.get(surahId) ?? `Surah ${verseData.surahNum}`;
+  const referenceChapterName = t(`surah_names.${surahId}`, fallbackChapterName);
+  const referenceText = `${referenceChapterName} ${localizeDigits(
+    `${verseData.surahNum}:${verseData.ayahNum}`,
+    i18n.language
+  )}`;
   const cleanedTranslation = verseData.translation
     ? cleanTranslationText(verseData.translation)
     : null;

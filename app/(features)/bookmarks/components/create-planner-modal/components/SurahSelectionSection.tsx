@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SurahVerseSelector } from '@/app/shared/components/SurahVerseSelector';
 
@@ -30,6 +31,7 @@ export const SurahSelectionSection = ({
   onFormDataChange,
   chapters,
 }: SurahSelectionSectionProps): React.JSX.Element => {
+  const { t } = useTranslation();
   const chapterLookup = useMemo(() => {
     return chapters.reduce<Record<number, Chapter>>((acc, chapter) => {
       acc[chapter.id] = chapter;
@@ -86,7 +88,8 @@ export const SurahSelectionSection = ({
   return (
     <div className="space-y-4">
       <RangeBoundarySection
-        label="Start"
+        surahLabel={t('start_surah')}
+        verseLabel={t('start_verse')}
         surahValue={formData.startSurah}
         verseValue={formData.startVerse}
         chapters={chapters}
@@ -95,7 +98,8 @@ export const SurahSelectionSection = ({
       />
 
       <RangeBoundarySection
-        label="End"
+        surahLabel={t('end_surah')}
+        verseLabel={t('end_verse')}
         surahValue={formData.endSurah}
         verseValue={formData.endVerse}
         chapters={chapters}
@@ -107,7 +111,8 @@ export const SurahSelectionSection = ({
 };
 
 interface RangeBoundarySectionProps {
-  label: string;
+  surahLabel: string;
+  verseLabel: string;
   surahValue: number | undefined;
   verseValue: number | undefined;
   chapters: Chapter[];
@@ -116,7 +121,8 @@ interface RangeBoundarySectionProps {
 }
 
 const RangeBoundarySection = ({
-  label,
+  surahLabel,
+  verseLabel,
   surahValue,
   verseValue,
   chapters,
@@ -131,8 +137,8 @@ const RangeBoundarySection = ({
         selectedVerse={verseValue}
         onSurahChange={onSurahChange}
         onVerseChange={onVerseChange}
-        surahLabel={`${label} Surah`}
-        verseLabel="Verse"
+        surahLabel={surahLabel}
+        verseLabel={verseLabel}
       />
     </section>
   );

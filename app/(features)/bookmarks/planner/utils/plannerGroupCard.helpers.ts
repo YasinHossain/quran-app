@@ -13,8 +13,10 @@ import {
   formatPlannerRangeDetails,
   PlannerRangePoint,
 } from '@/app/(features)/bookmarks/planner/utils/planRangeLabel';
+import { localizeDigits } from '@/lib/text/localizeNumbers';
 
 import type { PlannerCardChapter } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
+import type { PlannerI18nContext } from '@/app/(features)/bookmarks/planner/utils/plannerI18n';
 import type { Chapter, PlannerPlan } from '@/types';
 
 export { formatGoalVerseRangeLabel, mapGlobalVerseToPosition } from './plannerGroupCard.goal';
@@ -51,6 +53,7 @@ interface BadgeParams {
   plans: PlannerPlan[];
   isComplete: boolean;
   chapterLookup: Map<number, Chapter>;
+  i18n?: PlannerI18nContext;
 }
 
 const resolveChapter = (
@@ -78,13 +81,17 @@ const buildChapterPages = (
     : undefined;
 };
 
-const badgeForStatus = ({ plans, isComplete, chapterLookup }: BadgeParams): string => {
+const badgeForStatus = ({ plans, isComplete, chapterLookup, i18n }: BadgeParams): string => {
   if (isComplete) {
     const completedPlan = plans[plans.length - 1]!;
     const chapter = chapterLookup.get(completedPlan.surahId);
-    const chapterName = getChapterDisplayName(completedPlan, chapter);
+    const fallbackName = getChapterDisplayName(completedPlan, chapter);
+    const chapterName = i18n
+      ? i18n.t(`surah_names.${completedPlan.surahId}`, fallbackName)
+      : fallbackName;
     const verse = getPlanEndVerse(completedPlan);
-    return `${chapterName} ${completedPlan.surahId}:${Math.max(1, verse)}`;
+    const label = `${chapterName} ${completedPlan.surahId}:${Math.max(1, verse)}`;
+    return i18n ? localizeDigits(label, i18n.language) : label;
   }
   const recentPlan = plans.reduce(
     (latest, plan) => (plan.lastUpdated > latest.lastUpdated ? plan : latest),
@@ -97,8 +104,12 @@ const badgeForStatus = ({ plans, isComplete, chapterLookup }: BadgeParams): stri
       ? clampCompletedVerse(recentPlan)
       : clampCompletedVerse(planForLabel);
   const chapter = chapterLookup.get(planForLabel.surahId);
-  const chapterName = getChapterDisplayName(planForLabel, chapter);
-  return `${chapterName} ${planForLabel.surahId}:${verse}`;
+  const fallbackName = getChapterDisplayName(planForLabel, chapter);
+  const chapterName = i18n
+    ? i18n.t(`surah_names.${planForLabel.surahId}`, fallbackName)
+    : fallbackName;
+  const label = `${chapterName} ${planForLabel.surahId}:${verse}`;
+  return i18n ? localizeDigits(label, i18n.language) : label;
 };
 
 const clampCompletedVerse = (plan: PlannerPlan): number => {
@@ -138,11 +149,12 @@ export const buildAggregatedPlan = (
 
 export const buildAggregatedChapter = (
   surahIds: number[],
-  chapterLookup: Map<number, Chapter>
+  chapterLookup: Map<number, Chapter>,
+  i18n?: PlannerI18nContext
 ): PlannerCardChapter | undefined => {
   if (surahIds.length === 0) return undefined;
 
-  const nameLabel = buildSurahRangeNameLabel(surahIds, chapterLookup);
+  const nameLabel = buildSurahRangeNameLabel(surahIds, chapterLookup, i18n);
   const pages = buildChapterPages(surahIds, chapterLookup);
   const baseChapter: PlannerCardChapter = {
     name_simple: nameLabel,
@@ -180,7 +192,8 @@ export const formatPlanDetails = (
   group: PlannerPlanGroup,
   totalTarget: number,
   estimatedDays: number,
-  chapterLookup: Map<number, Chapter>
+  chapterLookup: Map<number, Chapter>,
+  i18n?: PlannerI18nContext
 ): string | null => {
   const rangePoints = buildRangePoints(group.plans, totalTarget, chapterLookup);
   if (!rangePoints) return null;
@@ -188,17 +201,19 @@ export const formatPlanDetails = (
   return formatPlannerRangeDetails({
     ...rangePoints,
     estimatedDays,
+    ...(i18n ? { i18n } : {}),
   });
 };
 
 export const buildProgressLabel = (
   plans: PlannerPlan[],
   isComplete: boolean,
-  chapterLookup: Map<number, Chapter>
+  chapterLookup: Map<number, Chapter>,
+  i18n?: PlannerI18nContext
 ): string => {
   if (plans.length === 0) {
-    return 'No progress tracked';
+    return i18n ? i18n.t('planner_no_progress_tracked') : 'No progress tracked';
   }
 
-  return badgeForStatus({ plans, isComplete, chapterLookup });
+  return badgeForStatus({ plans, isComplete, chapterLookup, ...(i18n ? { i18n } : {}) });
 };

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { CalendarIcon, PlusIcon } from '@/app/shared/icons';
 
@@ -9,6 +10,8 @@ interface PlannerHeaderProps {
 }
 
 export const PlannerHeader = ({ onCreatePlan }: PlannerHeaderProps): React.JSX.Element => {
+  const { t } = useTranslation();
+
   return (
     <div className="mb-2 flex flex-col gap-4">
       <div className="flex items-center justify-between gap-3">
@@ -17,18 +20,18 @@ export const PlannerHeader = ({ onCreatePlan }: PlannerHeaderProps): React.JSX.E
             <CalendarIcon size={20} className="text-on-accent" />
           </div>
           <div className="min-w-0">
-            <h1 className="text-lg font-bold text-foreground">Planner</h1>
-            <p className="text-xs text-muted">Set and track your reading goals</p>
+            <h1 className="text-lg font-bold text-foreground">{t('binder_tab_planner')}</h1>
+            <p className="text-xs text-muted">{t('planner_header_description')}</p>
           </div>
         </div>
         <button
           type="button"
-          aria-label="Create Plan"
+          aria-label={t('planner_create_plan')}
           onClick={onCreatePlan}
           className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-accent font-semibold text-on-accent shadow-sm transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation select-none"
         >
           <PlusIcon size={20} />
-          <span className="sr-only">Create Plan</span>
+          <span className="sr-only">{t('planner_create_plan')}</span>
         </button>
       </div>
     </div>

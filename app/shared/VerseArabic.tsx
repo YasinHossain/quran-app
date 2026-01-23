@@ -234,7 +234,10 @@ const WordDisplay = ({
       data-copy-text={copyText || undefined}
       data-word-translation={tooltipText || undefined}
     >
-      <span className={`inline-block ${tooltipText ? 'cursor-pointer caret-transparent' : ''}`} style={tajweedStyle}>
+      <span
+        className={`inline-block ${tooltipText ? 'cursor-pointer caret-transparent' : ''}`}
+        style={tajweedStyle}
+      >
         {useTajweed ? (
           <span>{displayText}</span>
         ) : (
@@ -336,10 +339,7 @@ export const VerseArabic = memo(function VerseArabic({
   }, [clearSelectedWordHighlight]);
 
   const showWordTooltipForElement = useCallback(
-    (
-      el: HTMLElement,
-      mode: 'hover' | 'tap'
-    ): void => {
+    (el: HTMLElement, mode: 'hover' | 'tap'): void => {
       if (isPlayerVisible) return;
       const text = el.getAttribute('data-word-translation')?.trim();
       if (!text) return;
@@ -380,7 +380,9 @@ export const VerseArabic = memo(function VerseArabic({
       if (isPlayerVisible) return;
       if (!supportsHover) return;
       const target = event.target as HTMLElement | null;
-      const wordEl = target?.closest<HTMLElement>('[data-verse-word="true"][data-word-translation]');
+      const wordEl = target?.closest<HTMLElement>(
+        '[data-verse-word="true"][data-word-translation]'
+      );
       if (!wordEl) return;
       showWordTooltipForElement(wordEl, 'hover');
     },
@@ -415,7 +417,9 @@ export const VerseArabic = memo(function VerseArabic({
     (event: React.MouseEvent<HTMLParagraphElement>): void => {
       if (isPlayerVisible) return;
       const target = event.target as HTMLElement | null;
-      const wordEl = target?.closest<HTMLElement>('[data-verse-word="true"][data-word-translation]');
+      const wordEl = target?.closest<HTMLElement>(
+        '[data-verse-word="true"][data-word-translation]'
+      );
       if (!wordEl) return;
       showWordTooltipForElement(wordEl, supportsHover ? 'hover' : 'tap');
     },
@@ -456,8 +460,7 @@ export const VerseArabic = memo(function VerseArabic({
     };
 
     window.addEventListener(WORD_TOOLTIP_OWNER_EVENT, handleOwner as EventListener);
-    return () =>
-      window.removeEventListener(WORD_TOOLTIP_OWNER_EVENT, handleOwner as EventListener);
+    return () => window.removeEventListener(WORD_TOOLTIP_OWNER_EVENT, handleOwner as EventListener);
   }, [hideWordTooltip, tooltipOwnerId]);
 
   useLayoutEffect(() => {
@@ -488,10 +491,7 @@ export const VerseArabic = memo(function VerseArabic({
             ? 'top'
             : 'bottom';
 
-    if (
-      Math.abs(clampedX - wordTooltip.x) < 1 &&
-      placement === wordTooltip.placement
-    ) {
+    if (Math.abs(clampedX - wordTooltip.x) < 1 && placement === wordTooltip.placement) {
       return;
     }
 

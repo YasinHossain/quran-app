@@ -63,7 +63,7 @@ describe('Header', () => {
         </HeaderVisibilityProvider>
       </UIStateProvider>
     );
-    expect(screen.getByPlaceholderText('Search verses, surahs...')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('search_placeholder_header')).toBeInTheDocument();
   });
 
   it('aligns content vertically centered', async () => {

@@ -3,8 +3,10 @@ import {
   convertPlanProgressToActualVerse,
   getPlanEndVerse,
 } from '@/app/(features)/bookmarks/planner/utils/planRange';
+import { localizeDigits } from '@/lib/text/localizeNumbers';
 
 import type { Chapter, PlannerPlan } from '@/types';
+import type { PlannerI18nContext } from '@/app/(features)/bookmarks/planner/utils/plannerI18n';
 
 interface VersePosition {
   plan: PlannerPlan;
@@ -18,16 +20,35 @@ const isSingleChapter = (startPosition: VersePosition, endPosition: VersePositio
 
 const buildSingleChapterLabel = (
   startPosition: VersePosition,
-  endPosition: VersePosition
+  endPosition: VersePosition,
+  i18n?: PlannerI18nContext
 ): string => {
+  const chapterName = i18n
+    ? i18n.t(`surah_names.${startPosition.surahId}`, startPosition.chapterName)
+    : startPosition.chapterName;
+
   if (startPosition.verse === endPosition.verse) {
-    return `${startPosition.chapterName} ${startPosition.surahId}:${startPosition.verse}`;
+    const label = `${chapterName} ${startPosition.surahId}:${startPosition.verse}`;
+    return i18n ? localizeDigits(label, i18n.language) : label;
   }
-  return `${startPosition.chapterName} ${startPosition.surahId}:${startPosition.verse}-${endPosition.verse}`;
+  const label = `${chapterName} ${startPosition.surahId}:${startPosition.verse}-${endPosition.verse}`;
+  return i18n ? localizeDigits(label, i18n.language) : label;
 };
 
-const buildMultiChapterLabel = (startPosition: VersePosition, endPosition: VersePosition): string =>
-  `${startPosition.chapterName} ${startPosition.surahId}:${startPosition.verse} - ${endPosition.chapterName} ${endPosition.surahId}:${endPosition.verse}`;
+const buildMultiChapterLabel = (
+  startPosition: VersePosition,
+  endPosition: VersePosition,
+  i18n?: PlannerI18nContext
+): string => {
+  const startName = i18n
+    ? i18n.t(`surah_names.${startPosition.surahId}`, startPosition.chapterName)
+    : startPosition.chapterName;
+  const endName = i18n
+    ? i18n.t(`surah_names.${endPosition.surahId}`, endPosition.chapterName)
+    : endPosition.chapterName;
+  const label = `${startName} ${startPosition.surahId}:${startPosition.verse} - ${endName} ${endPosition.surahId}:${endPosition.verse}`;
+  return i18n ? localizeDigits(label, i18n.language) : label;
+};
 
 export const mapGlobalVerseToPosition = (
   plans: PlannerPlan[],
@@ -69,17 +90,18 @@ export const formatGoalVerseRangeLabel = (
   plans: PlannerPlan[],
   goalStart: number | null,
   goalEnd: number | null,
-  chapterLookup: Map<number, Chapter>
+  chapterLookup: Map<number, Chapter>,
+  i18n?: PlannerI18nContext
 ): string => {
   const startPosition = mapGlobalVerseToPosition(plans, goalStart, chapterLookup);
   const endPosition = mapGlobalVerseToPosition(plans, goalEnd, chapterLookup);
   if (!startPosition || !endPosition) {
-    return 'All daily goals completed';
+    return i18n ? i18n.t('planner_all_daily_goals_completed') : 'All daily goals completed';
   }
 
   if (isSingleChapter(startPosition, endPosition)) {
-    return buildSingleChapterLabel(startPosition, endPosition);
+    return buildSingleChapterLabel(startPosition, endPosition, i18n);
   }
 
-  return buildMultiChapterLabel(startPosition, endPosition);
+  return buildMultiChapterLabel(startPosition, endPosition, i18n);
 };

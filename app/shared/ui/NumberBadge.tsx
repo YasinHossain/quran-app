@@ -1,4 +1,9 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
+
 import { cn } from '@/lib/utils/cn';
+import { formatNumber, localizeDigits } from '@/lib/text/localizeNumbers';
 
 interface NumberBadgeProps {
   number: string | number;
@@ -19,6 +24,12 @@ export const NumberBadge = ({
   className,
   size = 'md',
 }: NumberBadgeProps): React.JSX.Element => {
+  const { i18n } = useTranslation();
+  const displayValue =
+    typeof number === 'number'
+      ? formatNumber(number, i18n.language, { useGrouping: false })
+      : localizeDigits(String(number), i18n.language);
+
   return (
     <div
       className={cn(
@@ -30,7 +41,7 @@ export const NumberBadge = ({
         className
       )}
     >
-      {number}
+      {displayValue}
     </div>
   );
 };

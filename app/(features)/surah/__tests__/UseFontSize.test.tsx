@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 
-import useFontSize from '@/app/(features)/surah/hooks/useFontSize';
+import { useFontSize } from '@/app/(features)/surah/hooks/useFontSize';
 
 describe('useFontSize', () => {
   it('returns 0% at the minimum boundary', () => {

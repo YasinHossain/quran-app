@@ -83,9 +83,9 @@ function ChildrenSection({
   containerClassName?: string;
   contentClassName?: string;
 }): React.JSX.Element | null {
-  if (!children) return null;
-
   const { t } = useTranslation();
+
+  if (!children) return null;
   const heading = title === undefined ? t('more') : title;
 
   return (

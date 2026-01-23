@@ -34,7 +34,7 @@ describe('Player components mobile layout', () => {
         </div>
       );
     });
-    expect(screen.getByLabelText('Options')).toBeInTheDocument();
-    expect(screen.getByLabelText('Seek')).toBeInTheDocument();
+    expect(screen.getByLabelText('audio_settings')).toBeInTheDocument();
+    expect(screen.getByLabelText('seek')).toBeInTheDocument();
   });
 });

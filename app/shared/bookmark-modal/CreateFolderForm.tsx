@@ -1,6 +1,7 @@
 'use client';
 
 import { memo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { CheckIcon } from '@/app/shared/icons';
 import { UnifiedInput } from '@/app/shared/ui/inputs/UnifiedInput';
@@ -20,6 +21,7 @@ interface ActionButtonsProps {
 const ActionButtons = memo(function ActionButtons({
   newFolderName,
 }: ActionButtonsProps): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center gap-2">
       <button
@@ -32,7 +34,7 @@ const ActionButtons = memo(function ActionButtons({
             : 'text-muted cursor-not-allowed',
           touchClasses.focus
         )}
-        aria-label="Create folder"
+        aria-label={t('bookmarks_create_folder')}
       >
         <CheckIcon size={16} />
       </button>
@@ -45,6 +47,7 @@ export const CreateFolderForm = memo(function CreateFolderForm({
   onNameChange,
   onCreateFolder,
 }: CreateFolderFormProps): React.JSX.Element {
+  const { t } = useTranslation();
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
@@ -60,7 +63,7 @@ export const CreateFolderForm = memo(function CreateFolderForm({
         type="text"
         value={newFolderName}
         onChange={(e) => onNameChange(e.target.value)}
-        placeholder="Folder name"
+        placeholder={t('bookmarks_folder_name_placeholder')}
         maxLength={30}
         wrapperClassName="transition-all duration-300"
         rightSlot={<ActionButtons newFolderName={newFolderName} />}

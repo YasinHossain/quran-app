@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useEffect, type ReactElement } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { BookmarkOutlineIcon, CalendarIcon, ClockIcon, PinIcon } from '@/app/shared/icons';
 
@@ -18,10 +19,10 @@ import { BookmarkOutlineIcon, CalendarIcon, ClockIcon, PinIcon } from '@/app/sha
  */
 
 const QUICK_LINKS = [
-  { href: '/bookmarks/last-read', icon: ClockIcon, label: 'Recent' },
-  { href: '/bookmarks/folders', icon: BookmarkOutlineIcon, label: 'Bookmarks' },
-  { href: '/bookmarks/pinned', icon: PinIcon, label: 'Pinned' },
-  { href: '/bookmarks/planner', icon: CalendarIcon, label: 'Planner' },
+  { href: '/bookmarks/last-read', icon: ClockIcon, labelKey: 'home_quicklink_recent' },
+  { href: '/bookmarks/folders', icon: BookmarkOutlineIcon, labelKey: 'home_quicklink_bookmarks' },
+  { href: '/bookmarks/pinned', icon: PinIcon, labelKey: 'home_quicklink_pinned' },
+  { href: '/bookmarks/planner', icon: CalendarIcon, labelKey: 'home_quicklink_planner' },
 ] as const;
 
 interface HomeQuickLinksProps {
@@ -31,6 +32,7 @@ interface HomeQuickLinksProps {
 export const HomeQuickLinks = memo(function HomeQuickLinks({
   className,
 }: HomeQuickLinksProps): ReactElement {
+  const { t } = useTranslation();
   const router = useRouter();
 
   // Prefetch handler for intent-based prefetching
@@ -56,7 +58,7 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
     <div className={`w-full ${className ?? ''}`}>
       {/* 2x2 grid on mobile, single row on md+ */}
       <div className="grid grid-cols-2 gap-2 sm:gap-2.5 md:flex md:flex-wrap md:justify-center md:gap-3">
-        {QUICK_LINKS.map(({ href, icon: Icon, label }) => (
+        {QUICK_LINKS.map(({ href, icon: Icon, labelKey }) => (
           <Link
             key={href}
             href={href}
@@ -82,7 +84,7 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
             "
           >
             <Icon size={16} className="shrink-0 text-foreground" />
-            <span>{label}</span>
+            <span>{t(labelKey)}</span>
           </Link>
         ))}
       </div>

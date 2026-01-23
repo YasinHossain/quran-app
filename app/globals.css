@@ -509,9 +509,11 @@ input[type='range'] {
   border-radius: 5px;
   outline: none;
   touch-action: none;
-  background: linear-gradient(to right,
-      rgb(var(--color-accent)) var(--value-percent, 0%),
-      rgb(var(--color-border)) var(--value-percent, 0%));
+  background: linear-gradient(
+    to right,
+    rgb(var(--color-accent)) var(--value-percent, 0%),
+    rgb(var(--color-border)) var(--value-percent, 0%)
+  );
 }
 
 input[type='range']::-webkit-slider-thumb {
@@ -688,46 +690,6 @@ body::-webkit-scrollbar-thumb:hover,
   border-bottom: 7px solid rgb(var(--color-accent));
 }
 
-/* ===== Firefox Performance Optimizations ===== */
-/* Firefox renders backdrop-blur on CPU, causing scroll lag.
-   These rules provide solid backgrounds as fallback for Firefox. */
-@-moz-document url-prefix() {
-
-  /* Header blur fallback - use solid semi-transparent background */
-  header.backdrop-blur-lg,
-  nav.backdrop-blur-lg,
-  .backdrop-blur-lg {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    background: rgb(var(--color-surface) / 0.95) !important;
-  }
-
-  .dark header.backdrop-blur-lg,
-  .dark nav.backdrop-blur-lg,
-  .dark .backdrop-blur-lg {
-    background: rgb(var(--color-surface) / 0.92) !important;
-  }
-
-  /* Also disable saturate filter for Firefox */
-  .backdrop-saturate-150 {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-}
-
-/* Alternative approach using @supports for older Firefox versions */
-@supports (-moz-appearance: none) {
-  .backdrop-blur-lg {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: rgb(var(--color-surface) / 0.95);
-  }
-
-  .dark .backdrop-blur-lg {
-    background: rgb(var(--color-surface) / 0.92);
-  }
-}
-
 /* ===== Reduced Transparency (Performance Mode) ===== */
 /* Some mobile browsers/WebViews struggle with backdrop-filter under scroll. */
 html[data-glass='off'] header.backdrop-blur-lg,
@@ -815,7 +777,7 @@ html[data-glass='off'] .backdrop-saturate-150 {
 
 /* Animation utility classes */
 .animate-backdrop-in {
-  animation: backdrop-fade-in 0.2s ease-out forwards;
+  animation: backdrop-fade-in 0.15s ease-out forwards;
 }
 
 .animate-backdrop-out {
@@ -823,7 +785,7 @@ html[data-glass='off'] .backdrop-saturate-150 {
 }
 
 .animate-modal-in {
-  animation: modal-enter 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: modal-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-modal-out {

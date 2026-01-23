@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
@@ -42,6 +43,7 @@ const SearchMobileSidebar = ({
   isLoading,
 }: SearchMobileSidebarProps): React.JSX.Element => {
   const { isSearchSidebarOpen, setSearchSidebarOpen } = useSidebar();
+  const { t } = useTranslation();
 
   return (
     <BaseSidebar
@@ -49,7 +51,7 @@ const SearchMobileSidebar = ({
       onClose={() => setSearchSidebarOpen(false)}
       position="left"
       desktopBreakpoint="xl"
-      aria-label="Search navigation"
+      aria-label={t('search_navigation_aria')}
     >
       <SearchLeftSidebar
         query={query}

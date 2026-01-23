@@ -12,10 +12,6 @@ jest.mock('swr', () => {
   return { __esModule: true, ...actual, default: jest.fn() };
 });
 
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
-}));
-
 const mockUseSWR = useSWR as jest.Mock;
 const mockUseParams = useParams as jest.Mock;
 const mockUsePathname = usePathname as jest.Mock;
@@ -40,7 +36,8 @@ const chapters = [
 ];
 
 beforeAll(() => {
-  setMatchMedia(false);
+  // Keep the sidebar pinned open for desktop rendering.
+  setMatchMedia(true);
 });
 
 beforeEach(() => {
@@ -58,12 +55,12 @@ describe('SurahListSidebar', () => {
     expect(await screen.findByText('Al-Fatihah')).toBeInTheDocument();
 
     await userEvent.click(await screen.findByRole('button', { name: 'juz_tab' }));
-    expect(await screen.findByText('Juz 1')).toBeInTheDocument();
+    expect((await screen.findAllByText('juz_number')).length).toBeGreaterThan(0);
     expect(screen.queryByText('Al-Fatihah')).not.toBeInTheDocument();
 
     await userEvent.click(await screen.findByRole('button', { name: 'page_tab' }));
-    expect(await screen.findByText('Page 1')).toBeInTheDocument();
-    expect(screen.queryByText('Juz 1')).not.toBeInTheDocument();
+    expect((await screen.findAllByText('page_number_label')).length).toBeGreaterThan(0);
+    expect(screen.queryByText('juz_number')).not.toBeInTheDocument();
   });
 
   it('filters items when searching', async () => {

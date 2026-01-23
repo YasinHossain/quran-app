@@ -1,4 +1,7 @@
 import type { Chapter, PlannerPlan } from '@/types';
+import { localizeDigits } from '@/lib/text/localizeNumbers';
+
+import type { PlannerI18nContext } from '@/app/(features)/bookmarks/planner/utils/plannerI18n';
 
 export interface PlannerPlanGroup {
   key: string;
@@ -15,11 +18,19 @@ export const buildChapterLookup = (chapters: Chapter[]): Map<number, Chapter> =>
     return lookup;
   }, new Map<number, Chapter>());
 
-export const getChapterDisplayName = (plan: PlannerPlan, chapter: Chapter | undefined): string => {
-  if (chapter?.name_simple) return chapter.name_simple;
-  if (chapter?.translated_name?.name) return chapter.translated_name.name;
-  if (chapter?.name_arabic) return chapter.name_arabic;
-  return `Surah ${plan.surahId}`;
+export const getChapterDisplayName = (
+  plan: PlannerPlan,
+  chapter: Chapter | undefined,
+  i18n?: PlannerI18nContext
+): string => {
+  const fallback =
+    chapter?.name_simple ??
+    chapter?.translated_name?.name ??
+    chapter?.name_arabic ??
+    (i18n ? `${i18n.t('surah_tab')} ${plan.surahId}` : `Surah ${plan.surahId}`);
+
+  if (!i18n) return fallback;
+  return i18n.t(`surah_names.${plan.surahId}`, fallback);
 };
 
 // More robust suffix stripper: removes any trailing separator + chapter name
@@ -67,22 +78,48 @@ export const buildSurahRangeNumberLabel = (surahIds: number[]): string => {
   return `Surah ${firstId}-${normalizedLast}`;
 };
 
-const resolveSurahName = (chapter: Chapter | undefined, surahId: number | undefined): string => {
-  if (chapter?.name_simple) return chapter.name_simple;
-  if (typeof surahId === 'number') return `Surah ${surahId}`;
-  return '';
+export const buildSurahRangeNumberLabelI18n = (
+  surahIds: number[],
+  i18n?: PlannerI18nContext
+): string => {
+  const numberLabel = buildSurahRangeNumberLabel(surahIds);
+  if (!i18n) return numberLabel;
+
+  const prefix = i18n.t('surah_tab');
+  const label = numberLabel.replace(/^Surah\b/, prefix);
+  return localizeDigits(label, i18n.language);
+};
+
+const resolveSurahName = (
+  chapter: Chapter | undefined,
+  surahId: number | undefined,
+  i18n?: PlannerI18nContext
+): string => {
+  const fallback =
+    chapter?.name_simple ??
+    chapter?.translated_name?.name ??
+    chapter?.name_arabic ??
+    (typeof surahId === 'number'
+      ? i18n
+        ? `${i18n.t('surah_tab')} ${surahId}`
+        : `Surah ${surahId}`
+      : '');
+
+  if (!i18n || typeof surahId !== 'number') return fallback;
+  return i18n.t(`surah_names.${surahId}`, fallback);
 };
 
 export const buildSurahRangeNameLabel = (
   surahIds: number[],
-  chapterLookup: Map<number, Chapter>
+  chapterLookup: Map<number, Chapter>,
+  i18n?: PlannerI18nContext
 ): string => {
   if (surahIds.length === 0) return '';
   if (surahIds.length === 1) {
     const onlyId = surahIds[0];
     if (typeof onlyId !== 'number') return '';
     const chapter = chapterLookup.get(onlyId);
-    return resolveSurahName(chapter, onlyId);
+    return resolveSurahName(chapter, onlyId, i18n);
   }
   const firstId = surahIds[0];
   const lastId = surahIds[surahIds.length - 1];
@@ -90,22 +127,29 @@ export const buildSurahRangeNameLabel = (
   const lastChapter = typeof lastId === 'number' ? chapterLookup.get(lastId) : undefined;
   const firstName = resolveSurahName(
     firstChapter,
-    typeof firstId === 'number' ? firstId : undefined
+    typeof firstId === 'number' ? firstId : undefined,
+    i18n
   );
-  const lastName = resolveSurahName(lastChapter, typeof lastId === 'number' ? lastId : undefined);
+  const lastName = resolveSurahName(
+    lastChapter,
+    typeof lastId === 'number' ? lastId : undefined,
+    i18n
+  );
   if (firstName === lastName) return firstName;
   return `${firstName} - ${lastName}`;
 };
 
 export const buildGroupRangeLabel = (
   surahIds: number[],
-  chapterLookup: Map<number, Chapter>
+  chapterLookup: Map<number, Chapter>,
+  i18n?: PlannerI18nContext
 ): string => {
-  const nameLabel = buildSurahRangeNameLabel(surahIds, chapterLookup);
-  const numberLabel = buildSurahRangeNumberLabel(surahIds);
+  const nameLabel = buildSurahRangeNameLabel(surahIds, chapterLookup, i18n);
+  const numberLabel = buildSurahRangeNumberLabelI18n(surahIds, i18n);
   if (!nameLabel) return numberLabel;
   if (nameLabel === numberLabel) return nameLabel;
-  return `${nameLabel} (${numberLabel})`;
+  const label = `${nameLabel} (${numberLabel})`;
+  return i18n ? localizeDigits(label, i18n.language) : label;
 };
 
 type PlanBucket = { displayName: string; plans: PlannerPlan[] };

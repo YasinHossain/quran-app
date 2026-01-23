@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { TargetIcon } from '@/app/shared/icons';
 
@@ -46,22 +47,30 @@ const DailyGoalDetails = ({ focus }: DailyFocusSectionProps): React.JSX.Element 
 );
 
 export const DailyFocusSection = ({ focus }: DailyFocusSectionProps): React.JSX.Element => (
-  <div className="relative flex w-full min-w-0 flex-col gap-3">
-    <div className="rounded-lg border border-border/60 bg-background/60 px-4 py-4">
-      <div className="flex items-center justify-between text-sm font-semibold text-foreground">
-        <span className="inline-flex items-center gap-2 text-muted">
-          <TargetIcon className="h-4 w-4 shrink-0 text-accent" />
-          Today&apos;s focus
-        </span>
-        <span className="text-xs font-semibold text-muted">{focus.dayLabel}</span>
-      </div>
-      {focus.hasDailyGoal ? (
-        <DailyGoalDetails focus={focus} />
-      ) : (
-        <div className="mt-2 rounded-lg bg-surface/80 px-3 py-3 text-sm text-muted">
-          {focus.noGoalMessage}
-        </div>
-      )}
-    </div>
-  </div>
+  <DailyFocusSectionInner focus={focus} />
 );
+
+const DailyFocusSectionInner = ({ focus }: DailyFocusSectionProps): React.JSX.Element => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="relative flex w-full min-w-0 flex-col gap-3">
+      <div className="rounded-lg border border-border/60 bg-background/60 px-4 py-4">
+        <div className="flex items-center justify-between text-sm font-semibold text-foreground">
+          <span className="inline-flex items-center gap-2 text-muted">
+            <TargetIcon className="h-4 w-4 shrink-0 text-accent" />
+            {t('planner_todays_focus')}
+          </span>
+          <span className="text-xs font-semibold text-muted">{focus.dayLabel}</span>
+        </div>
+        {focus.hasDailyGoal ? (
+          <DailyGoalDetails focus={focus} />
+        ) : (
+          <div className="mt-2 rounded-lg bg-surface/80 px-3 py-3 text-sm text-muted">
+            {focus.noGoalMessage}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

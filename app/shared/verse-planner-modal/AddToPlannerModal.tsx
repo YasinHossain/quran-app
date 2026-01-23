@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   buildChapterLookup,
@@ -19,9 +20,11 @@ import { ModalFooter } from '@/app/shared/components/modal/ModalFooter';
 import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';
 import { CloseIcon } from '@/app/shared/icons';
 import { Button } from '@/app/shared/ui/Button';
+import { localizeDigits } from '@/lib/text/localizeNumbers';
 
 import { PlannerCardsSection } from './components/PlannerCardsSection';
 
+import type { TFunction } from 'i18next';
 import type { Chapter, PlannerPlan } from '@/types';
 
 export interface VerseSummaryDetails {
@@ -64,6 +67,7 @@ const useVerseHeaderLabel = (
   verseSummary: VerseSummaryDetails,
   chapterLookup: Map<number, Chapter>
 ): { title: string; subtitle: string } => {
+  const { t, i18n } = useTranslation();
   const verseSurahId = useMemo(
     () => extractSurahId(verseSummary.surahId, verseSummary.verseKey),
     [verseSummary.surahId, verseSummary.verseKey]
@@ -74,23 +78,34 @@ const useVerseHeaderLabel = (
     [chapterLookup, verseSurahId]
   );
 
-  const surahName = useMemo(() => {
+  const fallbackSurahName = useMemo(() => {
     if (verseChapter?.name_simple) return verseChapter.name_simple;
     if (verseChapter?.translated_name?.name) return verseChapter.translated_name.name;
     if (verseChapter?.name_arabic) return verseChapter.name_arabic;
-    return verseSummary.verseKey.split(':')[0] ?? 'Surah';
-  }, [verseChapter, verseSummary.verseKey]);
+    return typeof verseSurahId === 'number' ? `Surah ${verseSurahId}` : t('surah_tab');
+  }, [t, verseChapter, verseSurahId]);
+
+  const surahName = useMemo(() => {
+    if (typeof verseSurahId !== 'number') return fallbackSurahName;
+    return t(`surah_names.${verseSurahId}`, fallbackSurahName);
+  }, [fallbackSurahName, t, verseSurahId]);
+
+  const localizedVerseKey = useMemo(
+    () => localizeDigits(verseSummary.verseKey, i18n.language),
+    [verseSummary.verseKey, i18n.language]
+  );
 
   return {
-    title: 'Add to Planner',
-    subtitle: `${surahName} ${verseSummary.verseKey}`,
+    title: t('add_to_plan'),
+    subtitle: `${surahName} ${localizedVerseKey}`,
   };
 };
 
 function usePlannerCards(
   planner: Record<string, PlannerPlan>,
   chapterLookup: Map<number, Chapter>,
-  currentSurahId: number | undefined
+  currentSurahId: number | undefined,
+  i18n?: { t: TFunction; language: string }
 ): PlannerCardViewModel[] {
   return useMemo(() => {
     const groups = groupPlannerPlans(planner, chapterLookup);
@@ -103,7 +118,7 @@ function usePlannerCards(
       const card: PlannerCardViewModel = {
         id: primaryPlan?.id ?? group.planIds[0] ?? group.key,
         planName: group.planName,
-        verseRangeLabel: buildGroupRangeLabel(group.surahIds, chapterLookup),
+        verseRangeLabel: buildGroupRangeLabel(group.surahIds, chapterLookup, i18n),
         planIds: group.planIds,
         reactKey: group.key,
       };
@@ -112,7 +127,7 @@ function usePlannerCards(
       }
       return card;
     });
-  }, [planner, chapterLookup, currentSurahId]);
+  }, [planner, chapterLookup, currentSurahId, i18n]);
 }
 
 export function AddToPlannerModal({
@@ -120,6 +135,8 @@ export function AddToPlannerModal({
   onClose,
   verseSummary,
 }: AddToPlannerModalProps): React.JSX.Element | null {
+  const { t, i18n } = useTranslation();
+  const plannerI18n = useMemo(() => ({ t, language: i18n.language }), [t, i18n.language]);
   const { planner, chapters, updatePlannerProgress } = useBookmarks();
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
 
@@ -129,7 +146,7 @@ export function AddToPlannerModal({
     [verseSummary.surahId, verseSummary.verseKey]
   );
   const { title, subtitle } = useVerseHeaderLabel(verseSummary, chapterLookup);
-  const plannerCards = usePlannerCards(planner, chapterLookup, verseSurahId);
+  const plannerCards = usePlannerCards(planner, chapterLookup, verseSurahId, plannerI18n);
   const plansById = useMemo(() => {
     const map = new Map<string, PlannerPlan>();
     Object.values(planner).forEach((plan) => {
@@ -158,25 +175,26 @@ export function AddToPlannerModal({
   const helperMessage = useMemo(() => {
     if (!selectedPlan) return null;
     if (!hasValidReference) {
-      return 'Unable to determine the current verse reference for this planner.';
+      return t('add_to_plan_invalid_reference');
     }
     if (mismatchSelection) {
       const chapter = chapterLookup.get(selectedPlan.surahId);
-      const plannerName = getChapterDisplayName(selectedPlan, chapter);
-      return `This planner is for ${plannerName}. Choose a planner for this surah to continue.`;
+      const fallbackName = getChapterDisplayName(selectedPlan, chapter);
+      const plannerName = t(`surah_names.${selectedPlan.surahId}`, fallbackName);
+      return t('add_to_plan_mismatch_helper', { surah: plannerName });
     }
     if (typeof verseNumber === 'number') {
       const start = getPlanStartVerse(selectedPlan);
       const end = getPlanEndVerse(selectedPlan);
       if (verseNumber < start) {
-        return `This planner starts at verse ${start}. Progress will begin from there.`;
+        return t('add_to_plan_starts_at_helper', { verse: start });
       }
       if (verseNumber > end) {
-        return `This planner ends at verse ${end}. Progress will be capped at the end of the plan.`;
+        return t('add_to_plan_ends_at_helper', { verse: end });
       }
     }
     return null;
-  }, [selectedPlan, hasValidReference, mismatchSelection, chapterLookup, verseNumber]);
+  }, [selectedPlan, hasValidReference, mismatchSelection, chapterLookup, verseNumber, t]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -259,7 +277,7 @@ export function AddToPlannerModal({
     <UnifiedModal
       isOpen={isOpen}
       onClose={onClose}
-      ariaLabel="Add to Planner"
+      ariaLabel={t('add_to_plan')}
       contentClassName="w-full max-w-xl mx-auto max-h-[calc(100dvh-2rem)] min-h-0 overflow-hidden flex flex-col px-4 pb-4 pt-8 sm:px-6 sm:pb-6 sm:pt-8"
     >
       <header className="mb-6 shrink-0">
@@ -271,7 +289,7 @@ export function AddToPlannerModal({
           <button
             className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors text-content-secondary hover:text-content-primary shrink-0 flex items-center justify-center"
             onClick={onClose}
-            aria-label="Close planner modal"
+            aria-label={t('close')}
           >
             <CloseIcon size={18} />
           </button>
@@ -296,7 +314,7 @@ export function AddToPlannerModal({
         <ModalFooter
           right={
             <Button onClick={handleSave} disabled={!canSave} className="rounded-lg px-5">
-              Save
+              {t('save')}
             </Button>
           }
         />

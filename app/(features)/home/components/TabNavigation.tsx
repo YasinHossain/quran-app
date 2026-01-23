@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { TabButton } from './TabButton';
 
-type TabType = 'Surah' | 'Juz';
+type TabType = 'surah' | 'juz';
 
 interface TabConfig {
   id: TabType;
@@ -28,8 +28,8 @@ export const TabNavigation = memo(function TabNavigation({
   const { t } = useTranslation();
   const tabs = useMemo<TabConfig[]>(
     () => [
-      { id: 'Surah', label: t('surah_tab') },
-      { id: 'Juz', label: t('juz_tab') },
+      { id: 'surah', label: t('surah_tab') },
+      { id: 'juz', label: t('juz_tab') },
     ],
     [t]
   );

@@ -46,7 +46,7 @@ export const UnifiedModal = memo(function UnifiedModal({
   const [isExiting, setIsExiting] = useState(false);
 
   useCloseOnEscape(isOpen && closeOnEscape, onClose);
-  useBodyScrollLock(shouldRender);
+  useBodyScrollLock(isOpen);
 
   // Handle open/close state changes
   useEffect(() => {

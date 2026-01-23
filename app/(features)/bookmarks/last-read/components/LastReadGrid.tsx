@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ClockIcon } from '@/app/shared/icons';
 import { Chapter, LastReadMap } from '@/types';
@@ -46,14 +47,20 @@ export const LastReadGrid = ({
 };
 
 function LastReadEmptyState(): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <div className="text-center py-16">
       <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
         <ClockIcon size={32} className="text-muted" />
       </div>
-      <h3 className="text-lg font-semibold text-foreground mb-2">No Recent Activity</h3>
+      <h3 className="text-lg font-semibold text-foreground mb-2">
+        {t('last_read_empty_title', { defaultValue: 'No Recent Activity' })}
+      </h3>
       <p className="text-muted max-w-md mx-auto">
-        Start reading the Quran and your progress will be automatically tracked here.
+        {t('last_read_empty_description', {
+          defaultValue:
+            'Start reading the Quran and your progress will be automatically tracked here.',
+        })}
       </p>
     </div>
   );

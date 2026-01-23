@@ -31,10 +31,7 @@ export const WordLanguagePanel = ({
 
   return (
     <SlideOverPanel isOpen={isOpen} testId="word-language-panel">
-      <WordLanguagePanelBody
-        onClose={onClose}
-        {...(onCloseSidebar ? { onCloseSidebar } : {})}
-      />
+      <WordLanguagePanelBody onClose={onClose} {...(onCloseSidebar ? { onCloseSidebar } : {})} />
     </SlideOverPanel>
   );
 };

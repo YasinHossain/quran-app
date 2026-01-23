@@ -17,4 +17,3 @@ export function getUiLanguageLabel(code: string): string {
   const found = UI_LANGUAGES.find((language) => language.code === code);
   return found?.nativeLabel ?? code;
 }
-

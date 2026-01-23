@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   useEffectivePlanIds,
@@ -31,6 +32,7 @@ export function DeletePlannerModal({
   title,
   details,
 }: DeletePlannerModalProps): React.JSX.Element {
+  const { t } = useTranslation();
   const { removeFromPlanner, planner, chapters } = useBookmarks();
 
   const effectivePlanIds = useEffectivePlanIds({
@@ -53,7 +55,7 @@ export function DeletePlannerModal({
     <UnifiedModal
       isOpen={shouldRender}
       onClose={handleCancel}
-      ariaLabel="Delete planner"
+      ariaLabel={t('planner_delete_plan')}
       contentClassName="max-w-lg max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden px-3 sm:px-4 pt-4 pb-4"
     >
       <div className="max-h-full overflow-y-auto scrollbar-hide px-1 sm:px-2">
@@ -86,6 +88,7 @@ function useDeletePlannerHandlers({
   handleDelete: () => Promise<void>;
   isDeleting: boolean;
 } {
+  const { t } = useTranslation();
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -107,11 +110,11 @@ function useDeletePlannerHandlers({
       onClose();
     } catch (err) {
       logger.error('Failed to delete planner', undefined, err as Error);
-      setError('Failed to delete planner. Please try again.');
+      setError(t('planner_delete_failed'));
     } finally {
       setIsDeleting(false);
     }
-  }, [effectivePlanIds, isDeleting, onClose, removeFromPlanner]);
+  }, [effectivePlanIds, isDeleting, onClose, removeFromPlanner, t]);
 
   return {
     error,

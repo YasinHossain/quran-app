@@ -157,8 +157,13 @@ type MockUseTranslationReturn = {
 };
 
 const defaultUseTranslationImplementation = (): MockUseTranslationReturn => ({
-  t: (key: string, options?: Record<string, unknown>) => {
-    void options;
+  t: (key: string, options?: Record<string, unknown> | string) => {
+    if (typeof options === 'string') return options;
+    if (options && typeof options === 'object') {
+      const defaultValue = options['defaultValue'];
+      if (typeof defaultValue === 'string') return defaultValue;
+    }
+
     return typeof key === 'string' ? key : String(key);
   },
   i18n: {

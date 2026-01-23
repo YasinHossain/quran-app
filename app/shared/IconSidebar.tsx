@@ -80,7 +80,7 @@ const MobileNavigation = memo(function MobileNavigation({
     <nav
       className={cn(
         'xl:hidden fixed bottom-0 left-0 right-0 z-30 transition-transform duration-300 ease-in-out',
-        'backdrop-blur-lg bg-surface/8 backdrop-saturate-150',
+        'bg-background/95',
         'shadow-[0_-10px_28px_-18px_rgb(var(--color-foreground)/0.14)]',
         isHidden ? 'translate-y-full' : 'translate-y-0'
       )}

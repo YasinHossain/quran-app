@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const FOLDER_COLORS = [
   { name: 'Teal', value: 'text-accent' },
@@ -19,21 +20,26 @@ interface ColorSelectorProps {
 export const ColorSelector = ({
   selectedColor,
   setSelectedColor,
-}: ColorSelectorProps): React.JSX.Element => (
-  <div className="mb-6">
-    <div className="block text-sm font-medium text-foreground mb-3">Color</div>
-    <div className="grid grid-cols-4 gap-3">
-      {FOLDER_COLORS.map((color) => (
-        <ColorOption
-          key={color.value}
-          color={color}
-          selectedColor={selectedColor}
-          setSelectedColor={setSelectedColor}
-        />
-      ))}
+}: ColorSelectorProps): React.JSX.Element => {
+  const { t } = useTranslation();
+  return (
+    <div className="mb-6">
+      <div className="block text-sm font-medium text-foreground mb-3">
+        {t('folder_color_label')}
+      </div>
+      <div className="grid grid-cols-4 gap-3">
+        {FOLDER_COLORS.map((color) => (
+          <ColorOption
+            key={color.value}
+            color={color}
+            selectedColor={selectedColor}
+            setSelectedColor={setSelectedColor}
+          />
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 interface ColorOptionProps {
   color: { name: string; value: string };
@@ -45,19 +51,22 @@ const ColorOption = ({
   color,
   selectedColor,
   setSelectedColor,
-}: ColorOptionProps): React.JSX.Element => (
-  <button
-    type="button"
-    onClick={() => setSelectedColor(color.value)}
-    className={`flex h-12 w-full items-center justify-center rounded-lg border transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 ${
-      selectedColor === color.value
-        ? 'border-transparent ring-2 ring-accent shadow-sm'
-        : 'border-border hover:border-accent/50'
-    }`}
-    aria-label={`Select ${color.name} color`}
-    title={color.name}
-  >
-    <span className={`h-6 w-6 rounded-md bg-current ${color.value}`} aria-hidden="true" />
-    <span className="sr-only">{color.name}</span>
-  </button>
-);
+}: ColorOptionProps): React.JSX.Element => {
+  const { t } = useTranslation();
+  return (
+    <button
+      type="button"
+      onClick={() => setSelectedColor(color.value)}
+      className={`flex h-12 w-full items-center justify-center rounded-lg border transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 ${
+        selectedColor === color.value
+          ? 'border-transparent ring-2 ring-accent shadow-sm'
+          : 'border-border hover:border-accent/50'
+      }`}
+      aria-label={t('folder_color_select_aria', { color: color.name })}
+      title={color.name}
+    >
+      <span className={`h-6 w-6 rounded-md bg-current ${color.value}`} aria-hidden="true" />
+      <span className="sr-only">{color.name}</span>
+    </button>
+  );
+};

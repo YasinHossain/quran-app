@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';
@@ -28,6 +29,7 @@ export const CreatePlannerModal = ({
   isOpen,
   onClose,
 }: CreatePlannerModalProps): React.JSX.Element => {
+  const { t } = useTranslation();
   const { formData, handleFormDataChange, resetForm } = useFormState();
   const { chapters, planner, createPlannerPlan } = useBookmarks();
 
@@ -62,7 +64,7 @@ export const CreatePlannerModal = ({
     <UnifiedModal
       isOpen={isOpen}
       onClose={handleClose}
-      ariaLabel="Create planner"
+      ariaLabel={t('planner_create_plan')}
       contentClassName="max-w-lg max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden flex flex-col min-h-0"
     >
       <CreatePlannerForm
@@ -148,6 +150,7 @@ function CreatePlannerForm({
   onClose: () => void;
 }): React.JSX.Element {
   const formId = React.useId();
+  const { t } = useTranslation();
   return (
     <div className="flex min-h-0 flex-col gap-4 py-6">
       <div className="flex items-start justify-between gap-4 shrink-0 px-5 sm:px-6">
@@ -155,7 +158,7 @@ function CreatePlannerForm({
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close planner modal"
+          aria-label={t('close')}
           className="shrink-0 p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center text-muted hover:text-foreground"
         >
           <CloseIcon size={18} />

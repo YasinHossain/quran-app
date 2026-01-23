@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { CloseIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
+import { localizeDigits } from '@/lib/text/localizeNumbers';
 import { cn } from '@/lib/utils/cn';
 
 interface TabNavigationProps {
@@ -20,18 +21,23 @@ export const TabNavigation = memo(function TabNavigation({
   verseKey = '',
   onClose,
 }: TabNavigationProps): React.JSX.Element {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const tabs = [
     { id: 'pin' as const, label: t('pin_verse') },
     { id: 'bookmark' as const, label: t('add_to_folder') },
   ];
+  const localizedVerseKey = verseKey ? localizeDigits(verseKey, i18n.language) : '';
 
   return (
     <div className="px-3 py-4 relative">
       <div className="flex w-full items-start justify-center">
         <div className="space-y-1 text-center">
           <h2 className="text-xl font-semibold text-foreground">{t('add_to_collections')}</h2>
-          {verseKey && <p className="text-sm text-muted">{t('surah_verse_key', { verseKey })}</p>}
+          {localizedVerseKey && (
+            <p className="text-sm text-muted">
+              {t('surah_verse_key', { verseKey: localizedVerseKey })}
+            </p>
+          )}
         </div>
         <button
           onClick={onClose}

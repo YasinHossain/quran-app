@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
@@ -13,6 +14,7 @@ interface TafsirTabsProps {
 }
 
 export function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps): React.JSX.Element {
+  const { t } = useTranslation();
   const { settings } = useSettings();
   const { tabs, activeId, setActiveId, contents, loading } = useTafsirTabsState(
     verseKey,
@@ -40,15 +42,11 @@ export function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps): React.JSX.
   }, [loading, activeId, contents]);
 
   if (!tabs.length) {
-    return (
-      <div className="p-4 text-center text-muted">
-        No tafsir resources available. Please check your settings.
-      </div>
-    );
+    return <div className="p-4 text-center text-muted">{t('tafsir_no_resources')}</div>;
   }
 
   if (!activeId) {
-    return <div className="p-4 text-center text-muted">Loading tafsir...</div>;
+    return <div className="p-4 text-center text-muted">{t('tafsir_loading')}</div>;
   }
 
   const activeTab = tabs.find((t) => t.id === activeId);

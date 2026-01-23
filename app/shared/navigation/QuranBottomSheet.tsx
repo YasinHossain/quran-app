@@ -93,7 +93,10 @@ const Backdrop = ({
   onClose: () => void;
   isExiting: boolean;
 }): React.ReactElement => (
-  <div
+  <button
+    type="button"
+    tabIndex={-1}
+    aria-label="Close"
     className={`fixed inset-0 bg-surface-overlay/60 z-50 touch-none ${isExiting ? 'animate-backdrop-out' : 'animate-backdrop-in'}`}
     onClick={onClose}
   />

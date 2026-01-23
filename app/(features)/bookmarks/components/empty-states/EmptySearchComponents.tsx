@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 // Search icon component
 export const SearchIcon = (): React.JSX.Element => {
@@ -35,6 +36,7 @@ interface SearchContentProps {
 }
 
 export const SearchContent = ({ searchTerm }: SearchContentProps): React.JSX.Element => {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = React.useState(false);
 
   React.useEffect(() => {
@@ -48,9 +50,11 @@ export const SearchContent = ({ searchTerm }: SearchContentProps): React.JSX.Ele
       }`}
       style={{ transitionDelay: '300ms' }}
     >
-      <h3 className="mb-3 text-2xl font-bold text-foreground">No Results Found</h3>
+      <h3 className="mb-3 text-2xl font-bold text-foreground">
+        {t('bookmarks_search_empty_title')}
+      </h3>
       <div className="mb-8 space-y-2">
-        <p className="text-base text-muted">We couldn&apos;t find any folders matching</p>
+        <p className="text-base text-muted">{t('bookmarks_search_empty_description')}</p>
         <p className="inline-block rounded-xl border border-border bg-surface px-4 py-2 font-mono text-sm text-foreground">
           &quot;{searchTerm}&quot;
         </p>
@@ -65,6 +69,7 @@ interface SearchActionsProps {
 }
 
 export const SearchActions = ({ onClearSearch }: SearchActionsProps): React.JSX.Element => {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = React.useState(false);
 
   React.useEffect(() => {
@@ -82,11 +87,11 @@ export const SearchActions = ({ onClearSearch }: SearchActionsProps): React.JSX.
         onClick={onClearSearch}
         className="font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md rounded-xl bg-accent px-6 py-3 text-on-accent hover:bg-accent/90"
       >
-        Clear Search
+        {t('bookmarks_search_clear')}
       </button>
 
       <div className="text-sm text-muted">
-        <p>Try adjusting your search terms or browse all folders</p>
+        <p>{t('bookmarks_search_empty_tip')}</p>
       </div>
     </div>
   );

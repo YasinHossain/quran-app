@@ -65,18 +65,17 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
       setUiLanguage(savedLanguage);
     } else {
       const initial =
-        typeof i18n?.language === 'string' && isUiLanguageCode(i18n.language) ? i18n.language : 'en';
+        typeof i18n?.language === 'string' && isUiLanguageCode(i18n.language)
+          ? i18n.language
+          : 'en';
       setCurrentLanguage(initial);
     }
   }, [i18n]);
 
-  const handleLanguageChange = useCallback(
-    (languageCode: UiLanguageCode): void => {
-      setUiLanguage(languageCode);
-      setCurrentLanguage(languageCode);
-    },
-    []
-  );
+  const handleLanguageChange = useCallback((languageCode: UiLanguageCode): void => {
+    setUiLanguage(languageCode);
+    setCurrentLanguage(languageCode);
+  }, []);
 
   // Don't render anything during SSR to prevent hydration mismatch
   if (!isClient) {

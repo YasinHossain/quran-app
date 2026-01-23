@@ -1,5 +1,8 @@
+'use client';
+
 import { ModalActions } from '@/app/(features)/bookmarks/components/delete-folder-modal/ModalActions';
 import { CloseIcon } from '@/app/shared/icons';
+import { useTranslation } from 'react-i18next';
 
 import type { JSX } from 'react';
 
@@ -14,6 +17,7 @@ interface DeletePlannerModalBodyProps {
 }
 
 export function DeletePlannerModalHeader({ onClose }: { onClose: () => void }): JSX.Element {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-between py-2">
       <div className="flex items-center gap-3">
@@ -28,14 +32,14 @@ export function DeletePlannerModalHeader({ onClose }: { onClose: () => void }): 
           </svg>
         </div>
         <div>
-          <h2 className="text-xl font-bold text-foreground">Delete Planner</h2>
-          <p className="text-sm text-muted">This action cannot be undone</p>
+          <h2 className="text-xl font-bold text-foreground">{t('planner_delete_title')}</h2>
+          <p className="text-sm text-muted">{t('planner_delete_subtitle')}</p>
         </div>
       </div>
       <button
         onClick={onClose}
         className="shrink-0 p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center text-muted hover:text-foreground"
-        aria-label="Close"
+        aria-label={t('close')}
       >
         <CloseIcon size={18} />
       </button>
@@ -82,9 +86,10 @@ function DeletePlannerWarnings({
   countLabel: string | null;
   error: string | null;
 }): JSX.Element {
+  const { t } = useTranslation();
   return (
     <div className="space-y-4">
-      <p className="text-foreground">Are you sure you want to permanently delete this planner?</p>
+      <p className="text-foreground">{t('planner_delete_confirm')}</p>
       {countLabel ? (
         <div role="alert" className="bg-interactive border border-border rounded-lg p-4">
           <p className="text-muted text-sm">{countLabel}</p>

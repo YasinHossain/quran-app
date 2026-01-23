@@ -65,7 +65,7 @@ it('opens bookmark modal when icon clicked', async () => {
   renderCard();
   const bookmarkButton = screen.getByRole('button', { name: /bookmark/i });
   await userEvent.click(bookmarkButton);
-  expect(await screen.findByRole('dialog', { name: 'Bookmark options' })).toBeInTheDocument();
+  expect(await screen.findByRole('dialog', { name: 'add_to_collections' })).toBeInTheDocument();
 });
 
 it('strips malicious tags from content', () => {

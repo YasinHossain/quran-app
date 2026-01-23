@@ -49,13 +49,17 @@ export default async function RootLayout({
     stored && (stored.value === 'light' || stored.value === 'dark')
       ? (stored.value as 'light' | 'dark')
       : 'light';
+  const htmlClassNameByTheme: Record<'light' | 'dark', string | undefined> = {
+    light: undefined,
+    dark: 'dark',
+  };
 
   return (
     <html
       lang="en"
       data-theme={theme}
       data-glass="off"
-      className={theme === 'dark' ? 'dark' : ''}
+      className={htmlClassNameByTheme[theme]}
       suppressHydrationWarning
     >
       <head>

@@ -40,12 +40,12 @@ describe('SurahView interaction', () => {
 
     expect(mushafWrapper()).toHaveAttribute('aria-hidden', 'true');
 
-    const mushafButton = screen.getAllByRole<HTMLButtonElement>('button', { name: 'Mushaf' })[0];
+    const mushafButton = screen.getAllByRole<HTMLButtonElement>('button', { name: 'mushaf' })[0];
     fireEvent.click(mushafButton);
     expect(mushafWrapper()).toHaveAttribute('aria-hidden', 'false');
 
     const translationButton = screen.getAllByRole<HTMLButtonElement>('button', {
-      name: 'Translation',
+      name: 'translations',
     })[0];
     fireEvent.click(translationButton);
     expect(screen.getAllByLabelText('translations')[0]).toBeInTheDocument();

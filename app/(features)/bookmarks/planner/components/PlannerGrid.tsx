@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   buildPlannerGroupCardData,
@@ -78,11 +79,13 @@ const usePlannerGridGroups = (
   planner: Record<string, PlannerPlan>,
   chapters: Chapter[]
 ): { groupedCards: PlannerGroupCardData[]; hasPlans: boolean } => {
+  const { t, i18n } = useTranslation();
+  const i18nContext = React.useMemo(() => ({ t, language: i18n.language }), [t, i18n.language]);
   const chapterLookup = React.useMemo(() => buildChapterLookup(chapters), [chapters]);
   const groupedCards = React.useMemo(() => {
     const groups = groupPlannerPlans(planner, chapterLookup);
-    return groups.map((group) => buildPlannerGroupCardData(group, chapterLookup));
-  }, [planner, chapterLookup]);
+    return groups.map((group) => buildPlannerGroupCardData(group, chapterLookup, i18nContext));
+  }, [planner, chapterLookup, i18nContext]);
   return { groupedCards, hasPlans: groupedCards.length > 0 };
 };
 

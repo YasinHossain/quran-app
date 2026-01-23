@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { formatNumber } from '@/lib/text/localizeNumbers';
 
 interface CircularProgressProps {
   percentage: number;
@@ -88,19 +91,19 @@ const ProgressCircle = ({
 
 // Center text component
 const CenterText = ({
-  animatedPercentage,
+  percentageLabel,
   label,
   valueClassName,
   labelClassName,
 }: {
-  animatedPercentage: number;
+  percentageLabel: string;
   label: string;
   valueClassName?: string;
   labelClassName?: string;
 }): React.JSX.Element => (
   <div className="absolute inset-0 flex flex-col items-center justify-center">
     <div className={`font-bold text-foreground ${valueClassName ?? 'text-2xl'}`}>
-      {Math.round(animatedPercentage)}%
+      {percentageLabel}
     </div>
     <div className={`text-muted font-medium ${labelClassName ?? 'text-xs'}`}>{label}</div>
   </div>
@@ -115,8 +118,12 @@ const CircularProgress = ({
   valueClassName,
   labelClassName,
 }: CircularProgressProps): React.JSX.Element => {
+  const { i18n } = useTranslation();
   const animatedPercentage = useAnimatedPercentage(percentage);
   const { radius, circumference } = useCircleProperties(size, strokeWidth);
+  const percentageLabel = `${formatNumber(Math.round(animatedPercentage), i18n.language, {
+    useGrouping: false,
+  })}%`;
 
   const strokeDasharray = `${circumference} ${circumference}`;
   const strokeDashoffset = circumference - (animatedPercentage / 100) * circumference;
@@ -134,7 +141,7 @@ const CircularProgress = ({
         />
       </svg>
       <CenterText
-        animatedPercentage={animatedPercentage}
+        percentageLabel={percentageLabel}
         label={label}
         {...(valueClassName ? { valueClassName } : {})}
         {...(labelClassName ? { labelClassName } : {})}

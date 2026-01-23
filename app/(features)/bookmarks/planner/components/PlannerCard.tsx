@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { DailyFocusSection } from '@/app/(features)/bookmarks/planner/components/DailyFocusSection';
 import { PlannerCardHeader } from '@/app/(features)/bookmarks/planner/components/PlannerCardHeader';
@@ -23,11 +24,14 @@ export const PlannerCard = ({
   continueVerse,
   onDelete,
 }: PlannerCardProps & { onDelete?: () => void }): React.JSX.Element => {
+  const { t, i18n } = useTranslation();
+  const i18nContext = React.useMemo(() => ({ t, language: i18n.language }), [t, i18n.language]);
   const viewModel = usePlannerViewModel({
     surahId,
     plan,
     ...(chapter ? { chapter } : {}),
     ...(precomputedViewModel ? { precomputedViewModel } : {}),
+    i18nContext,
   });
   const handleNavigate = usePlannerNavigation(surahId, continueVerse);
 
@@ -75,17 +79,17 @@ const usePlannerViewModel = ({
   plan,
   chapter,
   precomputedViewModel,
-}: Pick<
-  PlannerCardProps,
-  'surahId' | 'plan' | 'chapter' | 'precomputedViewModel'
->): PlannerCardViewModel => {
+  i18nContext,
+}: Pick<PlannerCardProps, 'surahId' | 'plan' | 'chapter' | 'precomputedViewModel'> & {
+  i18nContext: { t: ReturnType<typeof useTranslation>['t']; language: string };
+}): PlannerCardViewModel => {
   return React.useMemo<PlannerCardViewModel>(() => {
     if (precomputedViewModel) {
       return precomputedViewModel;
     }
     const params: PlannerCardProps = chapter ? { surahId, plan, chapter } : { surahId, plan };
-    return createPlannerCardViewModel(params);
-  }, [chapter, plan, precomputedViewModel, surahId]);
+    return createPlannerCardViewModel(params, i18nContext);
+  }, [chapter, plan, precomputedViewModel, surahId, i18nContext]);
 };
 
 const usePlannerNavigation = (
@@ -113,11 +117,12 @@ const PlannerCardDeleteButton = ({
 }: {
   onDelete?: () => void;
 }): React.JSX.Element | null => {
+  const { t } = useTranslation();
   if (!onDelete) return null;
   return (
     <button
       type="button"
-      aria-label="Delete planner"
+      aria-label={t('planner_delete_plan')}
       className="shrink-0 p-1.5 rounded-full text-muted hover:bg-interactive-hover hover:text-error transition-colors duration-200 flex items-center justify-center focus-visible:ring-2 focus-visible:ring-accent/40 focus:outline-none"
       onClick={(event) => {
         event.stopPropagation();

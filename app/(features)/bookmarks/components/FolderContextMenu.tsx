@@ -116,13 +116,11 @@ const FolderMenuPanel = ({
       ref={menuRef}
       role="menu"
       aria-label={t('folder_options')}
+      tabIndex={-1}
       className={cn(
         'absolute right-0 top-full mt-2 min-w-[11rem] rounded-xl border border-border/40 bg-surface shadow-lg z-[200] py-2 transform-gpu',
         isExiting ? 'animate-menu-out' : 'animate-menu-in'
       )}
-      onClick={(event): void => {
-        event.stopPropagation();
-      }}
     >
       {onColorChange ? (
         <button

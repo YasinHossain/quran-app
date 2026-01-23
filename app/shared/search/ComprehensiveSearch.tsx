@@ -12,6 +12,7 @@ import {
   type KeyboardEvent,
   type ReactElement,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useDynamicFontLoader } from '@/app/hooks/useDynamicFontLoader';
 import { useSettings } from '@/app/providers/SettingsContext';
@@ -35,6 +36,7 @@ import {
   highlightMissingQueryWords,
   type ScoredVerseResult,
 } from '@/lib/utils/searchRelevance';
+import { localizeDigits } from '@/lib/text/localizeNumbers';
 
 // ============================================================================
 // Types
@@ -69,10 +71,10 @@ const QUICK_SEARCH_PAGE_SIZE = 10;
 const MIN_TEXT_QUERY_LENGTH = 3;
 
 const QUICK_LINKS = [
-  { name: 'Al-Mulk', id: 67 },
-  { name: 'Al-Kahf', id: 18 },
-  { name: 'Ya-Sin', id: 36 },
-  { name: 'Al-Ikhlas', id: 112 },
+  { id: 67, fallbackName: 'Al-Mulk' },
+  { id: 18, fallbackName: 'Al-Kahf' },
+  { id: 36, fallbackName: 'Ya-Sin' },
+  { id: 112, fallbackName: 'Al-Ikhlas' },
 ];
 
 // ============================================================================
@@ -176,6 +178,7 @@ const SearchDropdown = memo(function SearchDropdown({
   onClose,
 }: SearchDropdownProps): ReactElement {
   const { settings } = useSettings();
+  const { t, i18n } = useTranslation();
 
   // Load Arabic font dynamically when displaying search results
   useDynamicFontLoader(settings.arabicFontFace);
@@ -191,13 +194,60 @@ const SearchDropdown = memo(function SearchDropdown({
   const maxVersesToShow = QUICK_SEARCH_PAGE_SIZE;
   const visibleVerseCount = Math.min(verseResults.length, maxVersesToShow);
 
+  const resolveNavigationResultName = (result: SearchNavigationResult): string => {
+    if (result.resultType === 'surah') {
+      const surahId = Number(result.key);
+      if (Number.isFinite(surahId)) {
+        return t(`surah_names.${surahId}`, result.name);
+      }
+    }
+
+    if (result.resultType === 'juz') {
+      const juzNumber = Number(result.key);
+      if (Number.isFinite(juzNumber)) {
+        return t('juz_number', { number: juzNumber, defaultValue: result.name });
+      }
+    }
+
+    if (result.resultType === 'page') {
+      const pageNumber = Number(result.key);
+      if (Number.isFinite(pageNumber)) {
+        return t('page_number_label', { number: pageNumber, defaultValue: result.name });
+      }
+    }
+
+    if (result.resultType === 'ayah') {
+      const keyLabel = typeof result.key === 'string' ? result.key : String(result.key);
+      return localizeDigits(keyLabel, i18n.language);
+    }
+
+    return result.name;
+  };
+
+  const resolveNavigationResultTypeLabel = (
+    resultType: SearchNavigationResult['resultType']
+  ): string => {
+    switch (resultType) {
+      case 'surah':
+        return t('search_navigation_type_surah', { defaultValue: 'Surah' });
+      case 'ayah':
+        return t('search_navigation_type_ayah', { defaultValue: 'Ayah' });
+      case 'juz':
+        return t('search_navigation_type_juz', { defaultValue: 'Juz' });
+      case 'page':
+        return t('search_navigation_type_page', { defaultValue: 'Page' });
+      default:
+        return String(resultType);
+    }
+  };
+
   return (
     <div className="absolute top-full left-1/2 -translate-x-1/2 w-[calc(100vw-32px)] md:w-[44rem] mt-2 z-50 bg-surface-navigation rounded-xl shadow-2xl border border-border/30 dark:border-border/20 overflow-hidden">
       {/* Loading state */}
       {isLoading && hasQuery && (
         <div className="p-4 flex items-center justify-center gap-2 text-muted">
           <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-          <span className="text-sm">Searching...</span>
+          <span className="text-sm">{t('search_searching', { defaultValue: 'Searching...' })}</span>
         </div>
       )}
 
@@ -206,14 +256,14 @@ const SearchDropdown = memo(function SearchDropdown({
         <div className="py-2">
           <div className="px-4 py-2 flex items-center justify-between">
             <span className="text-xs font-medium text-muted uppercase tracking-wider">
-              Recent Searches
+              {t('search_recent_searches', { defaultValue: 'Recent Searches' })}
             </span>
             <button
               type="button"
               onClick={onClearRecent}
               className="text-xs text-muted hover:text-foreground transition-colors"
             >
-              Clear
+              {t('clear', { defaultValue: 'Clear' })}
             </button>
           </div>
           {recentSearches.map((search) => (
@@ -234,11 +284,15 @@ const SearchDropdown = memo(function SearchDropdown({
       {navigationResults.length > 0 && (
         <div className="py-2 border-b border-border/50">
           <div className="px-4 py-1.5">
-            <span className="text-xs font-medium text-muted uppercase tracking-wider">Go To</span>
+            <span className="text-xs font-medium text-muted uppercase tracking-wider">
+              {t('go_to', { defaultValue: 'Go To' })}
+            </span>
           </div>
           {navigationResults.map((result) => {
             const currentIndex = itemIndex++;
             const isHighlighted = currentIndex === highlightedIndex;
+            const resultName = resolveNavigationResultName(result);
+            const resultTypeLabel = resolveNavigationResultTypeLabel(result.resultType);
 
             return (
               <Link
@@ -263,8 +317,8 @@ const SearchDropdown = memo(function SearchDropdown({
                   )}
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-foreground">{result.name}</div>
-                  <div className="text-xs text-muted capitalize">{result.resultType}</div>
+                  <div className="text-sm font-medium text-foreground">{resultName}</div>
+                  <div className="text-xs text-muted capitalize">{resultTypeLabel}</div>
                 </div>
               </Link>
             );
@@ -277,15 +331,20 @@ const SearchDropdown = memo(function SearchDropdown({
         <div className="py-2 border-b border-border/50">
           <div className="px-4 py-1.5 flex items-center justify-between">
             <span className="text-xs font-medium text-muted uppercase tracking-wider">
-              Search Results
+              {t('search_results_title', { defaultValue: 'Search Results' })}
             </span>
             <div className="flex items-center gap-3">
-              <span className="text-xs text-muted">Showing {visibleVerseCount}</span>
+              <span className="text-xs text-muted">
+                {t('search_showing', {
+                  count: visibleVerseCount,
+                  defaultValue: `Showing ${visibleVerseCount}`,
+                })}
+              </span>
               <button
                 type="button"
                 onClick={onClose}
                 className="text-muted hover:text-foreground transition-colors p-1 rounded hover:bg-interactive/50"
-                aria-label="Close search preview"
+                aria-label={t('search_close_preview', { defaultValue: 'Close search preview' })}
               >
                 <svg
                   width="16"
@@ -340,7 +399,7 @@ const SearchDropdown = memo(function SearchDropdown({
                   {/* Verse key badge */}
                   <div className="flex-shrink-0 mt-0.5">
                     <span className="inline-flex items-center justify-center min-w-[3rem] px-2 py-1 rounded-md bg-accent text-white text-xs font-semibold">
-                      {verse.verseKey}
+                      {localizeDigits(verse.verseKey, i18n.language)}
                     </span>
                   </div>
                   {/* Verse content - show ONLY Arabic for Arabic queries, ONLY translation for other languages */}
@@ -395,14 +454,17 @@ const SearchDropdown = memo(function SearchDropdown({
       {hasQuery && !isLoading && !hasResults && (
         <div className="p-6 text-center">
           <div className="text-muted text-sm mb-3">
-            No results found for &quot;{searchQuery}&quot;
+            {t('search_no_results_for', {
+              query: searchQuery,
+              defaultValue: `No results found for "${searchQuery}"`,
+            })}
           </div>
           <button
             type="button"
             onClick={onSearchPage}
             className="text-sm text-accent hover:underline"
           >
-            Search all verses →
+            {t('search_all_verses', { defaultValue: 'Search all verses →' })}
           </button>
         </div>
       )}
@@ -416,7 +478,10 @@ const SearchDropdown = memo(function SearchDropdown({
             className="w-full py-2.5 px-4 text-sm font-medium text-accent hover:bg-accent/10 rounded-lg transition-colors flex items-center justify-center gap-2"
           >
             <SearchIcon size={16} />
-            View all results for &quot;{searchQuery}&quot;
+            {t('search_view_all_results_for', {
+              query: searchQuery,
+              defaultValue: `View all results for "${searchQuery}"`,
+            })}
           </button>
         </div>
       )}
@@ -430,11 +495,12 @@ const SearchDropdown = memo(function SearchDropdown({
 
 export const ComprehensiveSearch = memo(function ComprehensiveSearch({
   variant = 'home',
-  placeholder = 'Search Surahs, Verses, or Topics...',
+  placeholder,
   className = '',
   onNavigate,
   showShortcuts = false,
 }: ComprehensiveSearchProps): ReactElement {
+  const { t } = useTranslation();
   const router = useRouter();
   const { settings } = useSettings();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -669,6 +735,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
   const isHeader = variant === 'header';
   const inputVariant = isHeader ? 'header' : 'glass';
   const inputSize = isHeader ? 'sm' : 'lg';
+  const resolvedPlaceholder = placeholder ?? t('search_placeholder');
 
   return (
     <div className={`relative ${className}`} ref={containerRef}>
@@ -677,7 +744,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         onFocus={handleInputFocus}
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
         variant={inputVariant}
         size={inputSize}
         className="w-full"
@@ -700,8 +767,8 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
               setQuery(suggestionQuery);
             }}
             afterNavigate={() => setIsOpen(false)}
-            title="Go To"
-            buttonLabel="Go"
+            title={t('go_to', { defaultValue: 'Go To' })}
+            buttonLabel={t('go', { defaultValue: 'Go' })}
           />
         </div>
       )}
@@ -734,9 +801,9 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
           style={{ maxWidth: 'clamp(14rem, 65vw, 28rem)' }}
         >
           <div className="flex flex-nowrap justify-center items-center gap-1 sm:gap-1.5 md:gap-2">
-            {QUICK_LINKS.map(({ name, id }) => (
+            {QUICK_LINKS.map(({ id, fallbackName }) => (
               <Link
-                key={name}
+                key={id}
                 href={buildSurahRoute(id)}
                 prefetch={true}
                 onClick={() => {
@@ -744,7 +811,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
                 }}
                 className="flex-shrink-0 min-h-[2rem] sm:min-h-[2.25rem] md:min-h-10 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full font-medium text-[0.65rem] sm:text-xs md:text-sm transition-all duration-200 bg-surface-navigation text-foreground hover:bg-surface-navigation/90 border border-border/30 dark:border-border/20 shadow-sm hover:shadow-md active:scale-95 touch-manipulation flex items-center justify-center"
               >
-                {name}
+                {t(`surah_names.${id}`, fallbackName)}
               </Link>
             ))}
           </div>

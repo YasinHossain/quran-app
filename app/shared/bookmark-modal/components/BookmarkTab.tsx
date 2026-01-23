@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { FolderList } from '@/app/shared/bookmark-modal/FolderList';
 import { BookmarkTabProps } from '@/app/shared/bookmark-modal/types';
@@ -16,6 +17,7 @@ export const BookmarkTab = memo(function BookmarkTab({
   onToggleCreateFolder,
   onNewFolderNameChange,
 }: BookmarkTabProps): React.JSX.Element {
+  const { t } = useTranslation();
   const bookmarkTabParams = {
     verseId,
     newFolderName,
@@ -40,7 +42,7 @@ export const BookmarkTab = memo(function BookmarkTab({
           folders={folders}
           verseId={verseId}
           onFolderSelect={handleFolderSelect}
-          emptyMessage="No folders yet. Create one to get started!"
+          emptyMessage={t('bookmarks_no_folders_yet')}
         />
       </div>
     </div>

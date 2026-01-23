@@ -8,6 +8,7 @@
 
 import dynamic from 'next/dynamic';
 import React, { useState, useCallback, Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SurahTab } from './SurahTab';
 import { TabNavigation } from './TabNavigation';
@@ -41,15 +42,16 @@ export function HomeTabsClient({
   initialChapters,
   children,
 }: HomeTabsClientProps): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState<'Surah' | 'Juz'>('Surah');
+  const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState<'surah' | 'juz'>('surah');
 
   // Track if user has interacted with tabs
-  const handleTabChange = useCallback((tab: 'Surah' | 'Juz') => {
+  const handleTabChange = useCallback((tab: 'surah' | 'juz') => {
     setActiveTab(tab);
   }, []);
 
   // Determine what to render
-  const shouldShowServerGrid = activeTab === 'Surah' && !searchQuery.trim();
+  const shouldShowServerGrid = activeTab === 'surah' && !searchQuery.trim();
 
   return (
     <section
@@ -58,13 +60,13 @@ export function HomeTabsClient({
     >
       <div className="flex justify-between items-center gap-3 sm:gap-4 mb-6 sm:mb-8 content-visibility-auto animate-fade-in-up animation-delay-600">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-content-primary truncate min-w-0 flex-shrink">
-          {activeTab === 'Surah' ? 'All Surahs' : 'All Juz'}
+          {activeTab === 'surah' ? t('all_surahs') : t('all_juz')}
         </h2>
         <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
       </div>
 
       {/* Content: Show server-rendered grid or client-rendered content */}
-      {activeTab === 'Surah' ? (
+      {activeTab === 'surah' ? (
         shouldShowServerGrid && children ? (
           // Use server-rendered grid when no search/filter is active
           children

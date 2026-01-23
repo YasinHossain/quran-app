@@ -17,9 +17,7 @@ interface LanguageSettingsProps {
   idPrefix?: string;
 }
 
-export const LanguageSettings = ({
-  idPrefix,
-}: LanguageSettingsProps): ReactElement => {
+export const LanguageSettings = ({ idPrefix }: LanguageSettingsProps): ReactElement => {
   const { t } = useTranslation();
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const currentLanguage = getUiLanguageLabel(i18n.language);

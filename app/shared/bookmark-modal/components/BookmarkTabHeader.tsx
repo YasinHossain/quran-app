@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { CreateFolderForm } from '@/app/shared/bookmark-modal/CreateFolderForm';
 import { PlusIcon } from '@/app/shared/icons';
@@ -22,6 +23,8 @@ export const BookmarkTabHeader = memo(function BookmarkTabHeader({
   onToggleCreateFolder,
   onCreateFolder,
 }: BookmarkTabHeaderProps): React.JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <div className="px-3 py-4 border-b border-border">
       {isCreatingFolder ? (
@@ -42,7 +45,7 @@ export const BookmarkTabHeader = memo(function BookmarkTabHeader({
           )}
         >
           <PlusIcon size={20} />
-          <span className="font-medium">Create new folder</span>
+          <span className="font-medium">{t('bookmarks_create_folder')}</span>
         </button>
       )}
     </div>

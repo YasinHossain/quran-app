@@ -21,4 +21,3 @@ export const useAdaptiveViewportBy = (defaultPx = 1000, reducedPx = 600): number
 
   return value;
 };
-

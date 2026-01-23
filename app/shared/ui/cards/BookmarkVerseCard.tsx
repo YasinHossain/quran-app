@@ -1,6 +1,9 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
+
 import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
+import { formatNumber, localizeDigits } from '@/lib/text/localizeNumbers';
 import { cn } from '@/lib/utils/cn';
 import { parseVerseKey } from '@/lib/utils/verse';
 
@@ -22,7 +25,24 @@ export const BookmarkVerseCard = ({
   className,
   ...props
 }: BookmarkVerseCardProps): React.JSX.Element => {
+  const { t, i18n } = useTranslation();
   const { surahNumber, ayahNumber } = parseVerseKey(bookmark.verseKey);
+  const localizedAyahNumber =
+    typeof ayahNumber === 'number'
+      ? formatNumber(ayahNumber, i18n.language, { useGrouping: false })
+      : '';
+  const fallbackSurahName =
+    typeof surahNumber === 'number'
+      ? `${t('surah_tab')} ${formatNumber(surahNumber, i18n.language, { useGrouping: false })}`
+      : t('surah_tab');
+  const surahName =
+    typeof surahNumber === 'number'
+      ? t(`surah_names.${surahNumber}`, bookmark.surahName || fallbackSurahName)
+      : bookmark.surahName || fallbackSurahName;
+  const verseKeyLabel = localizeDigits(
+    bookmark.verseKey || `${surahNumber ?? ''}:${ayahNumber ?? ''}`,
+    i18n.language
+  );
 
   return (
     <BaseCard
@@ -40,20 +60,16 @@ export const BookmarkVerseCard = ({
       <div className="flex items-start space-x-2.5">
         {/* Verse indicator */}
         <div className="flex-shrink-0 w-7 h-7 rounded-md bg-accent/10 text-accent flex items-center justify-center text-xs font-semibold group-hover:bg-accent/15">
-          {ayahNumber}
+          {localizedAyahNumber}
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
           {/* Surah info */}
-          <div className="text-xs font-semibold text-foreground truncate">
-            {bookmark.surahName || `Surah ${surahNumber}`}
-          </div>
+          <div className="text-xs font-semibold text-foreground truncate">{surahName}</div>
 
           {/* Verse key */}
-          <div className="text-xs text-muted/80 leading-tight">
-            {bookmark.verseKey || `${surahNumber}:${ayahNumber}`}
-          </div>
+          <div className="text-xs text-muted/80 leading-tight">{verseKeyLabel}</div>
 
           {/* Optional verse preview - only show translation or first few words */}
           {(bookmark.translation || bookmark.verseText) && (

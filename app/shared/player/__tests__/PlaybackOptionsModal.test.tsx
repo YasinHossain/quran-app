@@ -29,7 +29,7 @@ test('coerces decimal input to integer', async () => {
     <PlaybackOptionsModal open onClose={onClose} activeTab="repeat" setActiveTab={() => {}} />
   );
 
-  const repeatEachLabel = screen.getByText('Repeat Each');
+  const repeatEachLabel = screen.getByText('repeat_each');
   const repeatEachField = repeatEachLabel.closest('div');
   const repeatEachInput = repeatEachField?.querySelector('input') as HTMLInputElement;
   expect(repeatEachInput).toHaveAttribute('type', 'number');
@@ -53,7 +53,7 @@ test('rejects decimal repeat values', async () => {
   renderWithProviders(<Wrapper />);
 
   await screen.findByDisplayValue('1.5');
-  await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+  await userEvent.click(screen.getByRole('button', { name: 'apply' }));
   expect(onClose).not.toHaveBeenCalled();
   expect(screen.getByText('Please enter whole numbers only.')).toBeInTheDocument();
 });
@@ -65,12 +65,12 @@ test('requires surah and verse when using single mode', async () => {
     <PlaybackOptionsModal open onClose={onClose} activeTab="repeat" setActiveTab={() => {}} />
   );
 
-  await userEvent.click(screen.getByRole('button', { name: /^single$/i }));
+  await userEvent.click(screen.getByRole('button', { name: 'single_verse' }));
 
-  expect(screen.getByLabelText('Surah')).toBeInTheDocument();
-  expect(screen.getByLabelText('Verse')).toBeInTheDocument();
+  expect(screen.getByLabelText('surah_tab')).toBeInTheDocument();
+  expect(screen.getByLabelText('verse')).toBeInTheDocument();
 
-  await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+  await userEvent.click(screen.getByRole('button', { name: 'apply' }));
 
   expect(onClose).not.toHaveBeenCalled();
   expect(screen.getByText('Select a surah and verse to repeat.')).toBeInTheDocument();
@@ -82,10 +82,10 @@ test('hides play count in single mode', async () => {
     <PlaybackOptionsModal open onClose={onClose} activeTab="repeat" setActiveTab={() => {}} />
   );
 
-  await userEvent.click(screen.getByRole('button', { name: /^single$/i }));
+  await userEvent.click(screen.getByRole('button', { name: 'single_verse' }));
 
-  expect(screen.queryByText('Play Count')).not.toBeInTheDocument();
-  expect(screen.getByText('Repeat Each')).toBeInTheDocument();
+  expect(screen.queryByText('play_count')).not.toBeInTheDocument();
+  expect(screen.getByText('repeat_each')).toBeInTheDocument();
 });
 
 test('surah mode uses surah selector without verse or range inputs', async () => {
@@ -94,13 +94,13 @@ test('surah mode uses surah selector without verse or range inputs', async () =>
     <PlaybackOptionsModal open onClose={onClose} activeTab="repeat" setActiveTab={() => {}} />
   );
 
-  await userEvent.click(screen.getByRole('button', { name: /^surah$/i }));
+  await userEvent.click(screen.getByRole('button', { name: 'full_surah' }));
 
-  expect(screen.getAllByText('Surah').length).toBeGreaterThan(0);
-  expect(screen.queryByText('Verse')).not.toBeInTheDocument();
-  expect(screen.queryByText('Start Surah')).not.toBeInTheDocument();
-  expect(screen.queryByText('Start Verse')).not.toBeInTheDocument();
-  expect(screen.queryByText('End Surah')).not.toBeInTheDocument();
-  expect(screen.queryByText('End Verse')).not.toBeInTheDocument();
-  expect(screen.getByText('Play Count')).toBeInTheDocument();
+  expect(screen.getAllByText('surah_tab').length).toBeGreaterThan(0);
+  expect(screen.queryByText('verse')).not.toBeInTheDocument();
+  expect(screen.queryByText('start_surah')).not.toBeInTheDocument();
+  expect(screen.queryByText('start_verse')).not.toBeInTheDocument();
+  expect(screen.queryByText('end_surah')).not.toBeInTheDocument();
+  expect(screen.queryByText('end_verse')).not.toBeInTheDocument();
+  expect(screen.getByText('play_count')).toBeInTheDocument();
 });

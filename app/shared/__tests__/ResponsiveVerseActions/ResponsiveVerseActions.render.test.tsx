@@ -23,7 +23,7 @@ const getTouchTargets = async (
 
   if (device === 'mobile') {
     const trigger = await screen.findByRole('button', {
-      name: 'Open verse actions menu',
+      name: 'open_verse_actions_menu',
     });
     await user.click(trigger);
   }
@@ -53,7 +53,7 @@ describe('[Cross-Device]', () => {
     renderOnDevice(device);
 
     if (device === 'mobile') {
-      const trigger = await screen.findByRole('button', { name: 'Open verse actions menu' });
+      const trigger = await screen.findByRole('button', { name: 'open_verse_actions_menu' });
       await user.click(trigger);
     }
 
@@ -66,7 +66,7 @@ describe('[Cross-Device]', () => {
     renderOnDevice(device);
 
     if (device === 'mobile') {
-      const trigger = await screen.findByRole('button', { name: 'Open verse actions menu' });
+      const trigger = await screen.findByRole('button', { name: 'open_verse_actions_menu' });
       await user.click(trigger);
     }
 
@@ -79,7 +79,7 @@ describe('[Cross-Device]', () => {
     renderOnDevice(device);
 
     if (device === 'mobile') {
-      const trigger = await screen.findByRole('button', { name: 'Open verse actions menu' });
+      const trigger = await screen.findByRole('button', { name: 'open_verse_actions_menu' });
       await user.click(trigger);
     }
 
@@ -142,7 +142,7 @@ describe('[Variants]', () => {
     const user = userEvent.setup();
     const { container } = renderOnDevice('mobile');
     const trigger = await screen.findByRole('button', {
-      name: 'Open verse actions menu',
+      name: 'open_verse_actions_menu',
     });
     await user.click(trigger);
     await screen.findByRole('button', { name: /play/i });

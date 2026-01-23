@@ -5,6 +5,7 @@ import { useMemo, useId, useRef, type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SurahSelect } from '@/app/shared/components/go-to/SurahSelect';
+import { formatNumber } from '@/lib/text/localizeNumbers';
 
 import type { Chapter } from '@/types';
 
@@ -48,7 +49,7 @@ export function SurahVerseSelector({
   className,
   hideVerse = false,
 }: SurahVerseSelectorProps): ReactElement {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const surahInputId = useId();
   const verseInputId = useId();
   const verseInputRef = useRef<HTMLInputElement>(null);
@@ -60,9 +61,12 @@ export function SurahVerseSelector({
     () =>
       chapters.map((chapter) => ({
         value: String(chapter.id),
-        label: `${String(chapter.id)} • ${chapter.name_simple}`,
+        label: `${formatNumber(chapter.id, i18n.language, { useGrouping: false })} • ${t(
+          `surah_names.${chapter.id}`,
+          chapter.name_simple
+        )}`,
       })),
-    [chapters]
+    [chapters, i18n.language, t]
   );
 
   // Find active chapter to get verse count
@@ -76,9 +80,9 @@ export function SurahVerseSelector({
     if (hideVerse || !activeChapter?.verses_count) return [];
     return Array.from({ length: activeChapter.verses_count }, (_, index) => ({
       value: String(index + 1),
-      label: String(index + 1),
+      label: formatNumber(index + 1, i18n.language, { useGrouping: false }),
     }));
-  }, [activeChapter, hideVerse]);
+  }, [activeChapter, hideVerse, i18n.language]);
 
   // Handlers to parse string back to number
   const handleSurahChange = (val: string) => {

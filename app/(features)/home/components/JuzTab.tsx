@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useNavigationDatasets } from '@/app/shared/navigation/hooks/useNavigationDatasets';
 import { buildJuzRoute } from '@/app/shared/navigation/routes';
@@ -9,6 +10,7 @@ import { JuzNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard'
 import { NavigationCardGrid } from './NavigationCardGrid';
 
 export const JuzTab = memo(function JuzTab(): React.JSX.Element {
+  const { t } = useTranslation();
   const { juzs } = useNavigationDatasets();
 
   return (
@@ -22,7 +24,7 @@ export const JuzTab = memo(function JuzTab(): React.JSX.Element {
           className="items-center"
           content={{
             id: juz.number,
-            title: `Juz ${juz.number}`,
+            title: t('juz_number', { number: juz.number, defaultValue: `Juz ${juz.number}` }),
             subtitle: juz.surahRange,
           }}
         />

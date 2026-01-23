@@ -123,10 +123,7 @@ export const TajweedRulesPanel = ({
 }: TajweedRulePanelProps): React.JSX.Element => {
   return (
     <SlideOverPanel isOpen={isOpen} testId="tajweed-rules-panel">
-      <TajweedRulesPanelBody
-        onClose={onClose}
-        {...(onCloseSidebar ? { onCloseSidebar } : {})}
-      />
+      <TajweedRulesPanelBody onClose={onClose} {...(onCloseSidebar ? { onCloseSidebar } : {})} />
     </SlideOverPanel>
   );
 };

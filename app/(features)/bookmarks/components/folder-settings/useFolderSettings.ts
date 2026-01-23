@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useEscapeKey } from '@/app/providers/hooks/useEscapeKey';
@@ -14,6 +15,7 @@ export const useFolderSettings = ({
   isOpen,
   mode,
 }: UseFolderSettingsParams): UseFolderSettingsResult => {
+  const { t } = useTranslation();
   const { renameFolder, createFolder } = useBookmarks();
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState(DEFAULT_COLOR);
@@ -34,9 +36,9 @@ export const useFolderSettings = ({
     selectedColor,
   });
 
-  const modalTitle = mode === 'create' ? 'Create Folder' : 'Edit Folder';
-  const submitLabel = mode === 'create' ? 'Create Folder' : 'Save Changes';
-  const submittingLabel = mode === 'create' ? 'Creating...' : 'Saving...';
+  const modalTitle = mode === 'create' ? t('bookmarks_create_folder') : t('edit_folder');
+  const submitLabel = mode === 'create' ? t('bookmarks_create_folder') : t('save_changes');
+  const submittingLabel = mode === 'create' ? t('creating') : t('saving');
 
   return {
     name,

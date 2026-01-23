@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SparklesIcon } from '@/app/shared/icons';
+import { formatNumber, localizeDigits } from '@/lib/text/localizeNumbers';
 
 import type { PlannerCardViewModel } from '@/app/(features)/bookmarks/planner/utils/plannerCard';
 
@@ -19,28 +21,37 @@ export const PlannerProgressSection = ({
   currentVerseLabel,
   onContinue,
 }: PlannerProgressSectionProps): React.JSX.Element => {
-  const verseLine =
+  const { t, i18n } = useTranslation();
+  const verseLineRaw =
     typeof currentVerseLabel === 'string' && currentVerseLabel.length > 0
       ? currentVerseLabel
       : `${surahLabel} ${surahId}:${progress.currentVerse}`;
+  const verseLine = localizeDigits(verseLineRaw, i18n.language);
+  const percentLabel = `${formatNumber(progress.percent, i18n.language, { useGrouping: false })}%`;
 
   return (
     <div className="rounded-lg border border-border/60 bg-background/60 px-4 py-4">
-      <PlannerProgressHeader percent={progress.percent} />
+      <PlannerProgressHeader label={t('planner_currently_at')} percentLabel={percentLabel} />
       <PlannerVerseDetails verseLine={verseLine} secondaryText={progress.currentSecondaryText} />
       <PlannerProgressBar percent={progress.percent} />
-      <PlannerContinueButton onContinue={onContinue} />
+      <PlannerContinueButton label={t('planner_continue_reading')} onContinue={onContinue} />
     </div>
   );
 };
 
-const PlannerProgressHeader = ({ percent }: { percent: number }): React.JSX.Element => (
+const PlannerProgressHeader = ({
+  label,
+  percentLabel,
+}: {
+  label: string;
+  percentLabel: string;
+}): React.JSX.Element => (
   <div className="flex items-center justify-between text-sm font-semibold text-foreground">
     <span className="inline-flex items-center gap-2 text-muted">
       <SparklesIcon className="h-4 w-4 shrink-0 text-accent" />
-      Currently at
+      {label}
     </span>
-    <span className="text-xs font-semibold text-muted">{percent}%</span>
+    <span className="text-xs font-semibold text-muted">{percentLabel}</span>
   </div>
 );
 
@@ -79,8 +90,10 @@ const PlannerProgressBar = ({ percent }: { percent: number }): React.JSX.Element
 );
 
 const PlannerContinueButton = ({
+  label,
   onContinue,
 }: {
+  label: string;
   onContinue: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }): React.JSX.Element => (
   <button
@@ -88,6 +101,6 @@ const PlannerContinueButton = ({
     onClick={onContinue}
     className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent shadow-sm transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
   >
-    Continue reading
+    {label}
   </button>
 );

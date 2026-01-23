@@ -29,7 +29,10 @@ export const UnifiedModalBackdrop = memo(function UnifiedModalBackdrop({
   isExiting = false,
 }: UnifiedModalBackdropProps): React.JSX.Element {
   return (
-    <div
+    <button
+      type="button"
+      tabIndex={-1}
+      aria-label="Close modal"
       className={cn(
         'fixed inset-0 bg-surface-overlay/60 touch-none',
         isExiting ? 'animate-backdrop-out' : 'animate-backdrop-in',

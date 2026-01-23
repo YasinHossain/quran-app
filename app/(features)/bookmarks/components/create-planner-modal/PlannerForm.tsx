@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { CounterInput } from '@/app/shared/ui/inputs/CounterInput';
 
@@ -35,40 +36,44 @@ export const PlannerForm = ({
   chapters,
   formId,
   showActions = true,
-}: PlannerFormProps): React.JSX.Element => (
-  <form id={formId} onSubmit={onSubmit} className="space-y-6">
-    <PlanNameInput
-      planName={formData.planName}
-      onChange={(planName) => onFormDataChange({ planName })}
-      {...(duplicatePlanName
-        ? {
-            errorMessage: `A planner named "${duplicatePlanName}" already exists. Choose a different name.`,
-          }
-        : {})}
-    />
+}: PlannerFormProps): React.JSX.Element => {
+  const { t } = useTranslation();
 
-    <SurahSelectionSection
-      formData={formData}
-      onFormDataChange={onFormDataChange}
-      chapters={chapters}
-    />
-
-    <div className="space-y-2">
-      <CounterInput
-        label="Estimated Days"
-        value={formData.estimatedDays}
-        onChange={(estimatedDays) => onFormDataChange({ estimatedDays })}
-        min={1}
-        max={365}
+  return (
+    <form id={formId} onSubmit={onSubmit} className="space-y-6">
+      <PlanNameInput
+        planName={formData.planName}
+        onChange={(planName) => onFormDataChange({ planName })}
+        {...(duplicatePlanName
+          ? {
+              errorMessage: t('planner_duplicate_name_error', { name: duplicatePlanName }),
+            }
+          : {})}
       />
-    </div>
 
-    <PlanStatistics
-      isValidRange={isValidRange}
-      totalVerses={totalVerses}
-      versesPerDay={versesPerDay}
-    />
+      <SurahSelectionSection
+        formData={formData}
+        onFormDataChange={onFormDataChange}
+        chapters={chapters}
+      />
 
-    {showActions ? <FormActions canSubmit={canSubmit} {...(formId ? { formId } : {})} /> : null}
-  </form>
-);
+      <div className="space-y-2">
+        <CounterInput
+          label={t('planner_estimated_days')}
+          value={formData.estimatedDays}
+          onChange={(estimatedDays) => onFormDataChange({ estimatedDays })}
+          min={1}
+          max={365}
+        />
+      </div>
+
+      <PlanStatistics
+        isValidRange={isValidRange}
+        totalVerses={totalVerses}
+        versesPerDay={versesPerDay}
+      />
+
+      {showActions ? <FormActions canSubmit={canSubmit} {...(formId ? { formId } : {})} /> : null}
+    </form>
+  );
+};

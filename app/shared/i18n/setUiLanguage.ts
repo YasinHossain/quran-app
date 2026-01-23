@@ -15,4 +15,3 @@ export function setUiLanguage(language: UiLanguageCode): void {
     document.documentElement.lang = language;
   }
 }
-

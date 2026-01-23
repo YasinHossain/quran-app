@@ -14,6 +14,7 @@ import type { PlannerGroupCardData } from './plannerGroupCard.types';
 import type { PlannerCardChapter } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
 import type { PlannerPlanGroup } from '@/app/(features)/bookmarks/planner/utils/planGrouping';
 import type { PlannerCardViewModel } from '@/app/(features)/bookmarks/planner/utils/plannerCard';
+import type { PlannerI18nContext } from '@/app/(features)/bookmarks/planner/utils/plannerI18n';
 import type { Chapter, PlannerPlan } from '@/types';
 
 export { buildPlaceholderCardData } from './plannerGroupCard.placeholder';
@@ -62,14 +63,16 @@ export const normalizePlannerTargets = (
 export const deriveChapterGrouping = (
   group: PlannerPlanGroup,
   normalized: NormalizedPlannerTargetsResult,
-  chapterLookup: Map<number, Chapter>
+  chapterLookup: Map<number, Chapter>,
+  i18n?: PlannerI18nContext
 ): ChapterGroupingResult => {
-  const aggregatedChapter = buildAggregatedChapter(group.surahIds, chapterLookup);
+  const aggregatedChapter = buildAggregatedChapter(group.surahIds, chapterLookup, i18n);
   const planDetailsText = formatPlanDetails(
     group,
     normalized.aggregatedPlan.targetVerses,
     normalized.normalizedEstimatedDays,
-    chapterLookup
+    chapterLookup,
+    i18n
   );
   const activeChapter = chapterLookup.get(normalized.activePlan.surahId);
   const surahLabel =
@@ -99,9 +102,10 @@ export const buildGroupCardHeader = (
 export const buildPlannerCardFromGrouping = (
   group: PlannerPlanGroup,
   normalized: NormalizedPlannerTargetsResult,
-  chapterLookup: Map<number, Chapter>
+  chapterLookup: Map<number, Chapter>,
+  i18n?: PlannerI18nContext
 ): PlannerGroupCardData => {
-  const grouping = deriveChapterGrouping(group, normalized, chapterLookup);
+  const grouping = deriveChapterGrouping(group, normalized, chapterLookup, i18n);
   const progressContext = computeProgressStats(
     {
       aggregatedPlan: normalized.aggregatedPlan,
@@ -109,7 +113,8 @@ export const buildPlannerCardFromGrouping = (
       plans: normalized.plans,
     },
     grouping.aggregatedChapter,
-    chapterLookup
+    chapterLookup,
+    i18n
   );
   const planInfo = buildGroupCardHeader(group, grouping);
 
@@ -127,7 +132,8 @@ export const buildPlannerCardFromGrouping = (
     progressLabel: buildProgressLabel(
       normalized.plans,
       progressContext.progressMetrics.isComplete,
-      chapterLookup
+      chapterLookup,
+      i18n
     ),
     planIds: group.planIds,
     planName: group.planName,

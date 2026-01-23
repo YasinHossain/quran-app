@@ -1,10 +1,11 @@
 'use client';
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { formatSurahSubtitle } from '@/app/shared/navigation/formatSurahSubtitle';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { SurahNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
+import { formatNumber } from '@/lib/text/localizeNumbers';
 
 import type { Chapter } from '@/types';
 
@@ -13,6 +14,9 @@ interface SurahCardProps {
 }
 
 export const SurahCard = memo(function SurahCard({ chapter }: SurahCardProps): React.JSX.Element {
+  const { t, i18n } = useTranslation();
+  const versesCount = formatNumber(chapter.verses_count, i18n.language, { useGrouping: false });
+
   return (
     <SurahNavigationCard
       href={buildSurahRoute(chapter.id)}
@@ -21,8 +25,8 @@ export const SurahCard = memo(function SurahCard({ chapter }: SurahCardProps): R
       className="items-center"
       content={{
         id: chapter.id,
-        title: chapter.name_simple,
-        subtitle: formatSurahSubtitle(chapter),
+        title: t(`surah_names.${chapter.id}`, chapter.name_simple),
+        subtitle: `${versesCount} ${t('verses')}`,
         arabic: chapter.name_arabic,
       }}
     />

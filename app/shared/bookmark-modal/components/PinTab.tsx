@@ -7,6 +7,7 @@ import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { PinTabProps } from '@/app/shared/bookmark-modal/types';
 import { PinIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
+import { localizeDigits } from '@/lib/text/localizeNumbers';
 import { cn } from '@/lib/utils/cn';
 
 export const PinTab = memo(function PinTab({
@@ -14,11 +15,12 @@ export const PinTab = memo(function PinTab({
   verseKey,
   onClose,
 }: PinTabProps): React.JSX.Element {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { isPinned, togglePinned } = useBookmarks();
   // Check both verseId and verseKey to find pins regardless of storage format
   const isVersePinned = isPinned(verseId) || (verseKey ? isPinned(verseKey) : false);
   const verseRef = verseKey || verseId;
+  const localizedVerseRef = localizeDigits(verseRef, i18n.language);
 
   return (
     <div className="p-6 flex flex-col items-center justify-center min-h-[200px] space-y-6">
@@ -33,8 +35,8 @@ export const PinTab = memo(function PinTab({
           </h3>
           <p className="text-sm text-muted text-center max-w-xs">
             {isVersePinned
-              ? t('pinned_verse_description', { verseRef })
-              : t('pin_this_verse_description', { verseRef })}
+              ? t('pinned_verse_description', { verseRef: localizedVerseRef })
+              : t('pin_this_verse_description', { verseRef: localizedVerseRef })}
           </p>
         </div>
       </div>
