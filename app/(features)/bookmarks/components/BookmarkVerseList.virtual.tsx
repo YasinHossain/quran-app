@@ -3,6 +3,8 @@
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
+import { useAdaptiveViewportBy } from '@/app/shared/hooks/useAdaptiveViewportBy';
+
 import type { Bookmark } from '@/types';
 
 const WORKSPACE_SCROLL_SELECTOR =
@@ -38,6 +40,7 @@ export const VirtualizedBookmarkList = ({
   // ...
   renderItem: (bm: Bookmark, index: number) => React.ReactNode;
 }): React.JSX.Element => {
+  const increaseViewportBy = useAdaptiveViewportBy();
   return (
     <div className="w-full h-full relative" ref={setRootRef}>
       <Virtuoso
@@ -48,7 +51,7 @@ export const VirtualizedBookmarkList = ({
         computeItemKey={(index, bookmark) =>
           `bookmark-${bookmark.verseId}-${bookmark.verseKey ?? index}`
         }
-        increaseViewportBy={1000}
+        increaseViewportBy={increaseViewportBy}
       />
     </div>
   );

@@ -54,6 +54,7 @@ export default async function RootLayout({
     <html
       lang="en"
       data-theme={theme}
+      data-glass="off"
       className={theme === 'dark' ? 'dark' : ''}
       suppressHydrationWarning
     >

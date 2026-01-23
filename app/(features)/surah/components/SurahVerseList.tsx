@@ -8,6 +8,7 @@ import { SurahNavigation } from '@/app/(features)/surah/components/SurahNavigati
 import { useDedupedFetchVerse } from '@/app/(features)/surah/hooks/verse-listing/useDedupedFetchVerse';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
+import { useAdaptiveViewportBy } from '@/app/shared/hooks/useAdaptiveViewportBy';
 import { LoadingStatus } from '@/app/shared/LoadingStatus';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { Spinner } from '@/app/shared/Spinner';
@@ -17,7 +18,6 @@ import { Verse as VerseComponent } from './VerseCard';
 import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVerseListing';
 import type { Verse } from '@/types';
 
-const INCREASE_VIEWPORT_BY_PX = 1000;
 const SCROLL_OFFSET_TOP_PX = 65;
 
 const parseVerseNumberFromKey = (verseKey?: string): number | null => {
@@ -170,6 +170,7 @@ function QuranComList({
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [shouldReadjustScroll, setShouldReadjustScroll] = useState(false);
   const activeVerse = verseListing.activeVerse;
+  const increaseViewportBy = useAdaptiveViewportBy();
 
   useEffect(() => {
     if (!initialVerseNumber || totalVerses <= 0) return;
@@ -228,7 +229,7 @@ function QuranComList({
       useWindowScroll
       totalCount={totalVerses}
       initialItemCount={1}
-      increaseViewportBy={INCREASE_VIEWPORT_BY_PX}
+      increaseViewportBy={increaseViewportBy}
       computeItemKey={(index) => `${verseListing.resourceId}:${index + 1}`}
       itemContent={(index) => (
         <QuranComVerseRow
@@ -257,6 +258,7 @@ function InfiniteList({
 }): React.JSX.Element {
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const activeVerse = verseListing.activeVerse;
+  const increaseViewportBy = useAdaptiveViewportBy();
 
   useEffect(() => {
     if (!initialVerseKey) return;
@@ -294,7 +296,7 @@ function InfiniteList({
         useWindowScroll
         data={verseListing.verses}
         initialItemCount={1}
-        increaseViewportBy={INCREASE_VIEWPORT_BY_PX}
+        increaseViewportBy={increaseViewportBy}
         computeItemKey={(index, verse) => `${verse.verse_key}:${verse.id}:${index}`}
         itemContent={(_index, verse) => <VerseComponent verse={verse} />}
       />

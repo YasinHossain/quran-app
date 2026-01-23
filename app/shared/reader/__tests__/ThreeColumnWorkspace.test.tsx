@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 
 import { ThreeColumnWorkspace } from '@/app/shared/reader/ThreeColumnWorkspace';
 import { WorkspaceMain } from '@/app/shared/reader/WorkspaceMain';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 
 const useHeaderVisibilityMock = jest.fn(() => ({ isHidden: false }));
 
@@ -12,6 +13,7 @@ jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
 describe('ThreeColumnWorkspace', () => {
   beforeEach(() => {
     useHeaderVisibilityMock.mockReturnValue({ isHidden: false });
+    setMatchMedia(false);
   });
 
   it('renders center content within the workspace', () => {
@@ -31,7 +33,22 @@ describe('ThreeColumnWorkspace', () => {
     );
   });
 
-  it('renders left and right slots when provided', () => {
+  it('unmounts desktop sidebars below breakpoint', () => {
+    render(
+      <ThreeColumnWorkspace
+        left={<div>Left sidebar</div>}
+        center={<WorkspaceMain>Center content</WorkspaceMain>}
+        right={<div>Right sidebar</div>}
+      />
+    );
+
+    expect(screen.queryByText('Left sidebar')).not.toBeInTheDocument();
+    expect(screen.queryByText('Right sidebar')).not.toBeInTheDocument();
+  });
+
+  it('renders left and right slots at wide breakpoints', () => {
+    setMatchMedia(true);
+
     render(
       <ThreeColumnWorkspace
         left={<div>Left sidebar</div>}
@@ -58,6 +75,7 @@ describe('ThreeColumnWorkspace', () => {
 describe('WorkspaceMain spacing defaults', () => {
   beforeEach(() => {
     useHeaderVisibilityMock.mockReturnValue({ isHidden: false });
+    setMatchMedia(false);
   });
 
   it('does not reserve sidebar space by default', () => {
@@ -80,6 +98,7 @@ describe('WorkspaceMain spacing defaults', () => {
 describe('WorkspaceMain spacing overrides', () => {
   beforeEach(() => {
     useHeaderVisibilityMock.mockReturnValue({ isHidden: false });
+    setMatchMedia(false);
   });
 
   it('reserves space when explicitly requested without sidebars', () => {
@@ -124,6 +143,7 @@ describe('WorkspaceMain spacing overrides', () => {
 describe('WorkspaceMain header awareness', () => {
   beforeEach(() => {
     useHeaderVisibilityMock.mockReturnValue({ isHidden: false });
+    setMatchMedia(false);
   });
 
   it('keeps main padding stable even when the header is hidden', () => {

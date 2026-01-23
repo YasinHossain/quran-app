@@ -24,11 +24,13 @@ const DesktopNavigation = memo(function DesktopNavigation({
   linkStyles,
   pathname,
   onPrefetch,
+  prefetchEnabled,
 }: {
   navItems: NavItem[];
   linkStyles: string;
   pathname: string;
   onPrefetch: (href: string) => void;
+  prefetchEnabled: boolean;
 }) {
   if (pathname === '/') {
     return null;
@@ -44,7 +46,7 @@ const DesktopNavigation = memo(function DesktopNavigation({
           <Link
             key={item.href}
             href={item.href}
-            prefetch
+            prefetch={prefetchEnabled}
             title={item.label}
             aria-label={item.label}
             className={linkStyles}
@@ -66,16 +68,18 @@ const MobileNavigation = memo(function MobileNavigation({
   isHidden,
   pathname,
   onPrefetch,
+  prefetchEnabled,
 }: {
   navItems: NavItem[];
   isHidden: boolean;
   pathname: string;
   onPrefetch: (href: string) => void;
+  prefetchEnabled: boolean;
 }) {
   return (
     <nav
       className={cn(
-        'xl:hidden fixed bottom-0 left-0 right-0 z-30 transition-all duration-300 ease-in-out',
+        'xl:hidden fixed bottom-0 left-0 right-0 z-30 transition-transform duration-300 ease-in-out',
         'backdrop-blur-lg bg-surface/8 backdrop-saturate-150',
         'shadow-[0_-10px_28px_-18px_rgb(var(--color-foreground)/0.14)]',
         isHidden ? 'translate-y-full' : 'translate-y-0'
@@ -102,7 +106,7 @@ const MobileNavigation = memo(function MobileNavigation({
               <Link
                 key={item.href}
                 href={item.href}
-                prefetch
+                prefetch={prefetchEnabled}
                 title={item.label}
                 aria-label={item.label}
                 className={cn(
@@ -145,6 +149,10 @@ export const Navigation = memo(function Navigation({
   const hideMobileNav = isHidden;
 
   const [readerHref, setReaderHref] = useState('/surah/1');
+  const [prefetchEnabled] = useState(() => {
+    if (typeof document === 'undefined') return true;
+    return document.documentElement.getAttribute('data-glass') !== 'off';
+  });
 
   const searchString = useMemo(() => searchParams.toString(), [searchParams]);
   const currentHref = useMemo(
@@ -233,6 +241,7 @@ export const Navigation = memo(function Navigation({
 
   const prefetch = useCallback(
     (href: string) => {
+      if (!prefetchEnabled) return;
       // Prefetch on intent for snappy "tab-like" navigation on mobile.
       // Ignore failures (e.g., during dev or if Next skips prefetch).
       try {
@@ -241,17 +250,18 @@ export const Navigation = memo(function Navigation({
         // no-op
       }
     },
-    [router]
+    [prefetchEnabled, router]
   );
 
   useEffect(() => {
+    if (!prefetchEnabled) return;
     // Warm the router cache for primary destinations so switching is near-instant.
     for (const item of navItems) {
       if (item.href !== pathname) {
         prefetch(item.href);
       }
     }
-  }, [navItems, pathname, prefetch]);
+  }, [navItems, pathname, prefetch, prefetchEnabled]);
 
   return (
     <>
@@ -260,12 +270,14 @@ export const Navigation = memo(function Navigation({
         linkStyles={`${linkStyles} text-foreground hover:text-accent`}
         pathname={pathname}
         onPrefetch={prefetch}
+        prefetchEnabled={prefetchEnabled}
       />
       <MobileNavigation
         navItems={navItems}
         isHidden={hideMobileNav}
         pathname={pathname}
         onPrefetch={prefetch}
+        prefetchEnabled={prefetchEnabled}
       />
     </>
   );

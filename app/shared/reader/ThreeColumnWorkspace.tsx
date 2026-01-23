@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
@@ -46,6 +46,41 @@ export function ThreeColumnWorkspace({
   const { isHidden } = useHeaderVisibility();
   const hasLeftSidebar = Boolean(left);
   const hasRightSidebar = Boolean(right);
+  const [isXlUp, setIsXlUp] = useState(true);
+  const [is2xlUp, setIs2xlUp] = useState(true);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+      return;
+    }
+
+    const xlQuery = window.matchMedia('(min-width: 1280px)');
+    const xxlQuery = window.matchMedia('(min-width: 1536px)');
+
+    const update = (): void => {
+      setIsXlUp(xlQuery.matches);
+      setIs2xlUp(xxlQuery.matches);
+    };
+
+    update();
+
+    if (typeof xlQuery.addEventListener === 'function') {
+      xlQuery.addEventListener('change', update);
+      xxlQuery.addEventListener('change', update);
+      return () => {
+        xlQuery.removeEventListener('change', update);
+        xxlQuery.removeEventListener('change', update);
+      };
+    }
+
+    // Safari < 14 fallback
+    xlQuery.addListener(update);
+    xxlQuery.addListener(update);
+    return () => {
+      xlQuery.removeListener(update);
+      xxlQuery.removeListener(update);
+    };
+  }, []);
 
   // Sidebar positioning: fixed with top offset based on header visibility
   const sidebarTopClass = isHidden
@@ -89,7 +124,7 @@ export function ThreeColumnWorkspace({
             )}
             data-slot="workspace-left"
           >
-            {left}
+            {isXlUp ? left : null}
           </aside>
         ) : null}
 
@@ -121,7 +156,7 @@ export function ThreeColumnWorkspace({
             )}
             data-slot="workspace-right"
           >
-            {right}
+            {is2xlUp ? right : null}
           </aside>
         ) : null}
       </div>

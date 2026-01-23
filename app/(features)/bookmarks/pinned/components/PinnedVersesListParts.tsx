@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Virtuoso } from 'react-virtuoso';
 import { useTranslation } from 'react-i18next';
+import { Virtuoso } from 'react-virtuoso';
 
 import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
+import { useAdaptiveViewportBy } from '@/app/shared/hooks/useAdaptiveViewportBy';
 import { PinIcon } from '@/app/shared/icons';
 import { LoadingStatus } from '@/app/shared/LoadingStatus';
 
@@ -33,9 +34,7 @@ export function PinnedEmptyState(): React.JSX.Element {
         <PinIcon size={32} className="text-muted" />
       </div>
       <h3 className="text-lg font-semibold text-foreground mb-2">{t('no_pinned_verses')}</h3>
-      <p className="text-muted max-w-md mx-auto">
-        {t('no_pinned_verses_description')}
-      </p>
+      <p className="text-muted max-w-md mx-auto">{t('no_pinned_verses_description')}</p>
     </div>
   );
 }
@@ -67,6 +66,7 @@ export function VirtualizedPinnedList({
   scrollElement: HTMLElement | null;
   setRootRef: (node: HTMLDivElement | null) => void;
 }): React.JSX.Element {
+  const increaseViewportBy = useAdaptiveViewportBy();
   return (
     <div className="relative w-full h-full" ref={setRootRef}>
       <Virtuoso
@@ -77,7 +77,7 @@ export function VirtualizedPinnedList({
           `pinned-${index}-${bookmark.verseId}-${bookmark.createdAt ?? index}`
         }
         itemContent={(index, bookmark) => <PinnedVerseListItem bookmark={bookmark} index={index} />}
-        increaseViewportBy={1000}
+        increaseViewportBy={increaseViewportBy}
       />
     </div>
   );
