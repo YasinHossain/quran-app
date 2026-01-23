@@ -110,7 +110,7 @@ const MobileNavigation = memo(function MobileNavigation({
                 title={item.label}
                 aria-label={item.label}
                 className={cn(
-                  'flex-1 flex flex-col items-center justify-center min-w-0 py-3 px-3 rounded-lg transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent gap-1',
+                  'flex-1 flex flex-col items-center justify-center min-w-0 py-1 px-3 rounded-lg transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent gap-1',
                   isActive ? 'text-accent' : 'text-muted'
                 )}
                 onMouseEnter={() => onPrefetch(item.href)}
