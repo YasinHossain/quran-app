@@ -3,7 +3,7 @@ import React from 'react';
 export const VerseSkeleton = ({ index }: { index: number }): React.JSX.Element => (
   <div
     aria-hidden="true"
-    className={`mb-0 pb-4 pt-4 md:mb-8 md:pb-8 md:pt-0 border-b border-border animate-pulse ${
+    className={`mb-0 pb-4 pt-4 md:pb-8 md:pt-6 border-b border-border animate-pulse ${
       index === 0 ? 'border-t md:border-t-0' : ''
     }`}
   >

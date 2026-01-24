@@ -85,9 +85,7 @@ export function ReaderResourceNavigation({
           disabled={!hasPrevious}
           data-testid={`previous-${resourceKind}-button`}
           className="group relative flex h-10 min-h-touch min-w-[130px] items-center justify-center rounded-full bg-surface px-8 text-sm font-medium text-foreground shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50"
-          aria-label={
-            prevId ? `${t('previous')} ${config.label} ${prevId}` : t('previous')
-          }
+          aria-label={prevId ? `${t('previous')} ${config.label} ${prevId}` : t('previous')}
         >
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
             <ChevronLeft />
@@ -111,4 +109,3 @@ export function ReaderResourceNavigation({
     </div>
   );
 }
-

@@ -1,12 +1,10 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getChapters } from '@/lib/api/chapters';
-
-import type { Chapter } from '@/types';
+import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 
 interface SurahNavigationProps {
   currentSurahId: number;
@@ -53,23 +51,7 @@ export function SurahNavigation({
 }: SurahNavigationProps): React.JSX.Element | null {
   const { t } = useTranslation();
   const router = useRouter();
-  const [chapters, setChapters] = useState<Chapter[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchChapters = async (): Promise<void> => {
-      try {
-        const result = await getChapters();
-        setChapters(result);
-      } catch (error) {
-        console.error('Failed to fetch chapters:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    void fetchChapters();
-  }, []);
+  const { chapters, isLoading, error } = useSurahNavigationData();
 
   const handleNavigation = useCallback(
     (surahId: number) => {
@@ -78,7 +60,7 @@ export function SurahNavigation({
     [router]
   );
 
-  if (isLoading || chapters.length === 0) {
+  if (isLoading || error || chapters.length === 0) {
     return null;
   }
 

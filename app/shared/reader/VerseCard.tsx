@@ -38,7 +38,7 @@ export interface ReaderVerseCardProps {
 
 const getVariantClasses = (variant: VerseCardVariant, isPlaying?: boolean): string => {
   const playingHighlight = isPlaying
-    ? 'bg-accent/5 rounded-lg transition-colors duration-300 md:-mt-8 md:pt-8 px-3 -mx-3'
+    ? 'bg-accent/5 rounded-lg transition-colors duration-300 px-3 -mx-3'
     : '';
 
   if (variant === 'contained') {
@@ -46,7 +46,10 @@ const getVariantClasses = (variant: VerseCardVariant, isPlaying?: boolean): stri
     return isPlaying ? `${base} ring-2 ring-accent/30` : base;
   }
 
-  const base = 'mb-0 pb-4 pt-4 md:mb-8 md:pb-8 md:pt-0 border-b border-border';
+  // NOTE (virtualization): `react-virtuoso` measures item heights via `getBoundingClientRect()`,
+  // which does NOT include margins. Avoid vertical margins/space-y between verse items (it causes
+  // the list to miscalculate total height and makes end-of-list UI overlap). Use padding instead.
+  const base = 'mb-0 pb-4 pt-4 md:pb-8 md:pt-6 border-b border-border';
   return `${base} ${playingHighlight}`.trim();
 };
 

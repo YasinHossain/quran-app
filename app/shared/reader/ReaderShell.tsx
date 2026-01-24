@@ -40,7 +40,6 @@ interface CreateSurahMainParams {
   surahId?: number | undefined;
   verseListing: VerseListingState;
   resourceKind: MushafResourceKind;
-  resourceId: string;
   emptyLabelKey?: string | undefined;
   endLabelKey?: string | undefined;
   initialVerseKey?: string | undefined;
@@ -52,7 +51,6 @@ const createSurahMain = ({
   surahId,
   verseListing,
   resourceKind,
-  resourceId,
   emptyLabelKey,
   endLabelKey,
   initialVerseKey,
@@ -66,7 +64,6 @@ const createSurahMain = ({
     surahId={surahId}
     verseListing={verseListing}
     resourceKind={resourceKind}
-    resourceId={resourceId}
     {...(emptyLabelKey ? { emptyLabelKey } : {})}
     {...(endLabelKey ? { endLabelKey } : {})}
     {...(initialVerseKey ? { initialVerseKey } : {})}
@@ -232,7 +229,6 @@ export function ReaderShell({
     surahId,
     verseListing,
     resourceKind,
-    resourceId,
     ...(typeof emptyLabelKey === 'string' ? { emptyLabelKey } : {}),
     ...(typeof endLabelKey === 'string' ? { endLabelKey } : {}),
     ...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {}),
@@ -261,9 +257,10 @@ export function ReaderShell({
     />
   );
   const mainContent = resolvedMode === 'mushaf' ? mushafMain : surahMain;
+
   const wrappedMainContent =
     resourceKind === 'surah' ? (
-      mainContent
+      <div className="w-full">{mainContent}</div>
     ) : (
       <div className="w-full space-y-8">
         <ReaderResourceHeading resourceKind={resourceKind} resourceId={resourceId} />
@@ -284,8 +281,15 @@ export function ReaderShell({
     activeReaderTab
   );
   const audioProps = mapToAudioProps(verseListing);
-  const centerContentClassName =
-    resolvedMode === 'mushaf' ? 'px-0 sm:px-0 lg:px-0' : undefined;
+  const centerContentClassName = useMemo(() => {
+    const classes: string[] = [];
+
+    if (resolvedMode === 'mushaf') {
+      classes.push('px-0 sm:px-0 lg:px-0');
+    }
+
+    return classes.length ? classes.join(' ') : undefined;
+  }, [resolvedMode]);
 
   return (
     <WorkspaceReaderLayout
