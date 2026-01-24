@@ -82,7 +82,10 @@ interface CreateGoToVerseActionParams {
   t: TFunction;
 }
 
-export function createGoToVerseAction({ onClick, t }: CreateGoToVerseActionParams): VerseActionItem {
+export function createGoToVerseAction({
+  onClick,
+  t,
+}: CreateGoToVerseActionParams): VerseActionItem {
   return {
     label: t('go_to_verse'),
     icon: createElement(GoToIcon, { size: 20 }),
@@ -108,7 +111,10 @@ interface CreateAddToPlanActionParams {
   t: TFunction;
 }
 
-export function createAddToPlanAction({ onClick, t }: CreateAddToPlanActionParams): VerseActionItem {
+export function createAddToPlanAction({
+  onClick,
+  t,
+}: CreateAddToPlanActionParams): VerseActionItem {
   return {
     label: t('add_to_plan'),
     icon: createElement(CalendarIcon, { size: 20 }),

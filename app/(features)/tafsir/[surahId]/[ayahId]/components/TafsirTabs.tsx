@@ -16,7 +16,11 @@ interface TafsirTabsProps {
 
 const MAX_TAFSIR_TABS = 3;
 
-export function TafsirTabs({ verseKey, tafsirIds, onAddTafsir }: TafsirTabsProps): React.JSX.Element {
+export function TafsirTabs({
+  verseKey,
+  tafsirIds,
+  onAddTafsir,
+}: TafsirTabsProps): React.JSX.Element {
   const { t } = useTranslation();
   const { settings } = useSettings();
   const { tabs, activeId, setActiveId, contents, loading } = useTafsirTabsState(
@@ -57,7 +61,12 @@ export function TafsirTabs({ verseKey, tafsirIds, onAddTafsir }: TafsirTabsProps
 
   return (
     <div>
-      <TabsHeader tabs={tabs} activeId={activeId} onSelect={setActiveId} onAddTafsir={onAddTafsir} />
+      <TabsHeader
+        tabs={tabs}
+        activeId={activeId}
+        onSelect={setActiveId}
+        onAddTafsir={onAddTafsir}
+      />
       {/* Wrapper div maintains stable height during loading to prevent layout shift */}
       <div style={stableHeight > 0 ? { minHeight: `${stableHeight}px` } : undefined}>
         <TafsirContent
@@ -96,10 +105,11 @@ function TabsHeader({
         <button
           key={tab.id}
           onClick={() => onSelect(tab.id)}
-          className={`flex-1 text-center py-2.5 px-4 sm:py-3 sm:px-5 rounded-full text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${activeId === tab.id
+          className={`flex-1 text-center py-2.5 px-4 sm:py-3 sm:px-5 rounded-full text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${
+            activeId === tab.id
               ? 'bg-surface shadow text-foreground'
               : 'text-muted hover:text-foreground hover:bg-surface/30'
-            }`}
+          }`}
         >
           {tab.name}
         </button>

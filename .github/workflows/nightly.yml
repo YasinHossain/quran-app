@@ -31,22 +31,12 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Start application
-        run: |
-          npm start &
-          sleep 10
-
-      - name: Wait for application to be ready
-        run: npx wait-on http://localhost:3000 --timeout 60000
-
       - name: Run Lighthouse report
-        run: |
-          npm install -g @lhci/cli@0.12.x
-          lhci autorun || true
+        run: npm run lhci
 
       - name: Upload Lighthouse report (if present)
         uses: actions/upload-artifact@v4
         with:
           name: lighthouse-report
-          path: ./**/lhr-*.json
+          path: lighthouseci/**
           retention-days: 14

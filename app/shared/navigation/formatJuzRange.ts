@@ -29,4 +29,3 @@ export const formatJuzRange = (juz: JuzSummary, t: TFunction, language: string):
 
   return `${startSurah} ${formatAyahNumber(startAyah, language)} - ${endSurah} ${formatAyahNumber(endAyah, language)}`;
 };
-

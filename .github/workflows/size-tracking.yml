@@ -39,11 +39,13 @@ jobs:
           echo "## Bundle Size Report" > size-report.md
           echo "" >> size-report.md
 
-          # Run size-limit and capture output
-          npm run size-limit > size-output.txt 2>&1 || true
+          # Run size-limit and capture output + exit code (don't hide failures).
+          set +e
+          npm run size-limit > size-output.txt 2>&1
+          SIZE_LIMIT_EXIT=$?
+          set -e
 
-          # Parse size-limit output
-          if grep -q "FAIL" size-output.txt; then
+          if [ "$SIZE_LIMIT_EXIT" -ne 0 ]; then
             echo "❌ **Bundle size check failed!**" >> size-report.md
             echo "" >> size-report.md
             echo "\`\`\`" >> size-report.md

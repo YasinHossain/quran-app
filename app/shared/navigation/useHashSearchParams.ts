@@ -11,6 +11,7 @@ const listeners = new Set<() => void>();
 let isPatched = false;
 let originalPushState: History['pushState'] | null = null;
 let originalReplaceState: History['replaceState'] | null = null;
+let broadcastScheduled = false;
 
 const broadcast = (): void => {
   for (const listener of listeners) {
@@ -18,13 +19,28 @@ const broadcast = (): void => {
   }
 };
 
+const scheduleBroadcast = (): void => {
+  if (broadcastScheduled) return;
+  broadcastScheduled = true;
+
+  const schedule =
+    typeof queueMicrotask === 'function'
+      ? queueMicrotask
+      : (cb: () => void) => Promise.resolve().then(cb);
+
+  schedule(() => {
+    broadcastScheduled = false;
+    broadcast();
+  });
+};
+
 const ensurePatched = (): void => {
   if (typeof window === 'undefined') return;
   if (isPatched) return;
   isPatched = true;
 
-  window.addEventListener('hashchange', broadcast);
-  window.addEventListener('popstate', broadcast);
+  window.addEventListener('hashchange', scheduleBroadcast);
+  window.addEventListener('popstate', scheduleBroadcast);
 
   originalPushState = window.history.pushState.bind(window.history);
   originalReplaceState = window.history.replaceState.bind(window.history);
@@ -33,12 +49,12 @@ const ensurePatched = (): void => {
   // may not trigger `hashchange`, so we also hook push/replace to notify.
   window.history.pushState = function (...args: Parameters<History['pushState']>): void {
     originalPushState?.(...args);
-    broadcast();
+    scheduleBroadcast();
   };
 
   window.history.replaceState = function (...args: Parameters<History['replaceState']>): void {
     originalReplaceState?.(...args);
-    broadcast();
+    scheduleBroadcast();
   };
 };
 
@@ -47,8 +63,8 @@ const maybeUnpatch = (): void => {
   if (!isPatched) return;
   if (listeners.size > 0) return;
 
-  window.removeEventListener('hashchange', broadcast);
-  window.removeEventListener('popstate', broadcast);
+  window.removeEventListener('hashchange', scheduleBroadcast);
+  window.removeEventListener('popstate', scheduleBroadcast);
 
   if (originalPushState) {
     window.history.pushState = originalPushState;

@@ -1,67 +1,57 @@
 {
-    "$schema": "https://unpkg.com/knip@5/schema.json",
-    "entry": [
-        "app/**/page.tsx",
-        "app/**/layout.tsx",
-        "app/**/route.ts",
-        "app/**/loading.tsx",
-        "app/**/error.tsx",
-        "app/**/not-found.tsx",
-        "app/**/template.tsx",
-        "app/**/default.tsx"
-    ],
-    "project": [
-        "app/**/*.{ts,tsx}",
-        "lib/**/*.{ts,tsx}",
-        "src/**/*.{ts,tsx}",
-        "types/**/*.ts"
-    ],
-    "ignore": [
-        "**/node_modules/**",
-        "**/.next/**",
-        "**/coverage/**",
-        "**/storybook-static/**",
-        "**/*.stories.tsx",
-        "**/*.test.ts",
-        "**/*.test.tsx",
-        "**/*.spec.ts",
-        "**/*.spec.tsx",
-        "**/tests/**",
-        "**/__tests__/**",
-        "**/test-utils/**"
-    ],
-    "ignoreDependencies": [
-        "@types/*",
-        "eslint-*",
-        "prettier",
-        "@commitlint/*",
-        "husky",
-        "lint-staged",
-        "@storybook/*",
-        "storybook",
-        "@testing-library/*",
-        "jest",
-        "jest-environment-jsdom",
-        "@playwright/test",
-        "playwright",
-        "tailwindcss",
-        "postcss",
-        "autoprefixer",
-        "sharp"
-    ],
-    "next": {
-        "entry": [
-            "next.config.ts",
-            "app/**/page.tsx",
-            "app/**/layout.tsx",
-            "app/**/route.ts"
-        ]
-    },
-    "rules": {
-        "files": "warn",
-        "exports": "warn",
-        "types": "warn",
-        "dependencies": "warn",
-        "unlisted": "off"
-    }
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "app/**/page.tsx",
+    "app/**/layout.tsx",
+    "app/**/route.ts",
+    "app/**/loading.tsx",
+    "app/**/error.tsx",
+    "app/**/not-found.tsx",
+    "app/**/template.tsx",
+    "app/**/default.tsx"
+  ],
+  "project": ["app/**/*.{ts,tsx}", "lib/**/*.{ts,tsx}", "src/**/*.{ts,tsx}", "types/**/*.ts"],
+  "ignore": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/coverage/**",
+    "**/storybook-static/**",
+    "**/*.stories.tsx",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/tests/**",
+    "**/__tests__/**",
+    "**/test-utils/**"
+  ],
+  "ignoreDependencies": [
+    "@types/*",
+    "eslint-*",
+    "prettier",
+    "@commitlint/*",
+    "husky",
+    "lint-staged",
+    "@storybook/*",
+    "storybook",
+    "@testing-library/*",
+    "jest",
+    "jest-environment-jsdom",
+    "@playwright/test",
+    "playwright",
+    "tailwindcss",
+    "postcss",
+    "autoprefixer",
+    "sharp"
+  ],
+  "next": {
+    "entry": ["next.config.ts", "app/**/page.tsx", "app/**/layout.tsx", "app/**/route.ts"]
+  },
+  "rules": {
+    "files": "warn",
+    "exports": "warn",
+    "types": "warn",
+    "dependencies": "warn",
+    "unlisted": "off"
+  }
 }

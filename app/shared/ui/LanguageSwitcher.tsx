@@ -72,10 +72,13 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
     }
   }, [i18n]);
 
-  const handleLanguageChange = useCallback((languageCode: UiLanguageCode): void => {
-    setUiLanguage(i18n, languageCode);
-    setCurrentLanguage(languageCode);
-  }, [i18n]);
+  const handleLanguageChange = useCallback(
+    (languageCode: UiLanguageCode): void => {
+      setUiLanguage(i18n, languageCode);
+      setCurrentLanguage(languageCode);
+    },
+    [i18n]
+  );
 
   // Don't render anything during SSR to prevent hydration mismatch
   if (!isClient) {

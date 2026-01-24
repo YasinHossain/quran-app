@@ -18,4 +18,3 @@ describe('buildSWRKeyFactory', () => {
     expect(implicit).toEqual(explicit);
   });
 });
-

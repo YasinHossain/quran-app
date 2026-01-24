@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
@@ -9,15 +9,15 @@ function normalizeSections(sections: string[]): string[] {
   return sections.filter((id, idx) => typeof id === 'string' && sections.indexOf(id) === idx);
 }
 
-function readInitialState(): string[] {
-  if (typeof window === 'undefined') return DEFAULT_OPEN_SECTIONS;
+function readInitialState(defaultOpenSections: string[]): string[] {
+  if (typeof window === 'undefined') return defaultOpenSections;
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) return normalizeSections(JSON.parse(saved));
   } catch (error) {
     logger.warn('Failed to parse saved sidebar sections:', undefined, error as Error);
   }
-  return normalizeSections(DEFAULT_OPEN_SECTIONS);
+  return normalizeSections(defaultOpenSections);
 }
 
 function persistState(state: string[]): void {
@@ -39,13 +39,23 @@ interface UseSettingsSectionsReturn {
   handleSectionToggle: (sectionId: string) => void;
 }
 
-export const useSettingsSections = (): UseSettingsSectionsReturn => {
-  // Initialize with defaults to avoid hydration mismatch
-  // Sync with localStorage in useEffect (may cause minor flash but strictly required for hydration)
-  const [openSections, setOpenSections] = useState<string[]>(DEFAULT_OPEN_SECTIONS);
+interface UseSettingsSectionsParams {
+  defaultOpenSections?: string[];
+}
 
-  useEffect(() => {
-    setOpenSections(readInitialState());
+export const useSettingsSections = (params: UseSettingsSectionsParams = {}): UseSettingsSectionsReturn => {
+  const defaultOpenSections = normalizeSections(params.defaultOpenSections ?? DEFAULT_OPEN_SECTIONS);
+
+  // Avoid "useLayoutEffect does nothing on the server" warnings during SSR,
+  // while still applying localStorage state before the first paint on the client.
+  const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
+  // Initialize with defaults to avoid hydration mismatch
+  // Sync with localStorage in a layout effect so the user doesn't see a close/open flash on refresh.
+  const [openSections, setOpenSections] = useState<string[]>(defaultOpenSections);
+
+  useIsomorphicLayoutEffect(() => {
+    setOpenSections(readInitialState(defaultOpenSections));
   }, []);
 
   const handleSectionToggle = useCallback(

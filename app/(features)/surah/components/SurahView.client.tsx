@@ -33,7 +33,8 @@ export function SurahView({
   const hashParams = useHashSearchParams();
 
   // Back-compat: older links may still use query params.
-  const startVerseRaw = hashParams.get('startVerse') ?? searchParams?.get('startVerse') ?? undefined;
+  const startVerseRaw =
+    hashParams.get('startVerse') ?? searchParams?.get('startVerse') ?? undefined;
   const navSeq = hashParams.get('nav') ?? searchParams?.get('nav') ?? undefined;
   const viewParam = hashParams.get('view') ?? searchParams?.get('view') ?? undefined;
 

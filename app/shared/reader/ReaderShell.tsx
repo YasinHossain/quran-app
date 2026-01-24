@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
 
 import { SurahMain } from '@/app/(features)/surah/components/surah-view/SurahMain';
 import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
@@ -163,6 +163,8 @@ export function ReaderShell({
   initialScrollNonce,
   initialMode = 'verse',
 }: ReaderShellProps): React.JSX.Element {
+  const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
   const { mode, setMode, enableReaderMode, isReaderModeAvailable } = useReaderMode();
   const { setSettingsOpen } = useUIState();
   const readerView = useReaderView({
@@ -175,16 +177,19 @@ export function ReaderShell({
     ...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {}),
   });
   const { verseListing, panels, mushafParams } = readerView;
-  const initialModeRef = useRef(initialMode);
 
-  useEffect(() => {
+  // Use a layout effect so mode changes (esp. `initialMode="mushaf"`) don't flash on refresh.
+  useIsomorphicLayoutEffect(() => {
     if (!isReaderModeAvailable) {
-      enableReaderMode(initialModeRef.current);
+      enableReaderMode(initialMode);
     } else {
       // Preserve the previously selected reader mode across surah navigations.
       enableReaderMode(mode);
     }
-  }, [enableReaderMode, isReaderModeAvailable, mode]);
+  }, [enableReaderMode, initialMode, isReaderModeAvailable, mode]);
+
+  // Avoid rendering a "verse" frame before hydration when we already know the intended initial mode.
+  const resolvedMode = isReaderModeAvailable ? mode : initialMode;
 
   const chapterId = useMemo(() => {
     if (resourceKind === 'surah') {
@@ -246,8 +251,8 @@ export function ReaderShell({
       endLabelKey={endLabelKey}
     />
   );
-  const mainContent = mode === 'mushaf' ? mushafMain : surahMain;
-  const activeReaderTab = mode === 'mushaf' ? 'reading' : 'translation';
+  const mainContent = resolvedMode === 'mushaf' ? mushafMain : surahMain;
+  const activeReaderTab = resolvedMode === 'mushaf' ? 'reading' : 'translation';
   const settingsSidebar = createSettingsSidebar(
     panels,
     handleReadingPanelOpen,
@@ -261,7 +266,8 @@ export function ReaderShell({
     activeReaderTab
   );
   const audioProps = mapToAudioProps(verseListing);
-  const centerContentClassName = mode === 'mushaf' ? 'px-0 sm:px-0 lg:px-0' : undefined;
+  const centerContentClassName =
+    resolvedMode === 'mushaf' ? 'px-0 sm:px-0 lg:px-0' : undefined;
 
   return (
     <WorkspaceReaderLayout

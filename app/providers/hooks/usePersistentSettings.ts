@@ -41,7 +41,9 @@ export const usePersistentSettings = (options?: {
     const defaultsForLanguage = withUiLanguageContentDefaults(defaultSettings, uiLanguage);
     const loaded = loadSettings(defaultsForLanguage);
     const synced =
-      loaded.contentLanguage === uiLanguage ? loaded : applyUiLanguageContentDefaults(loaded, uiLanguage);
+      loaded.contentLanguage === uiLanguage
+        ? loaded
+        : applyUiLanguageContentDefaults(loaded, uiLanguage);
     hasLoadedFromStorage.current = true;
     dispatch({ type: 'SET_SETTINGS', value: synced });
     latestSettings.current = synced;

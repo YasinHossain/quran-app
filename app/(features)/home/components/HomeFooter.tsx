@@ -27,7 +27,6 @@ export const HomeFooter = memo(function HomeFooter() {
             {t('home_footer_terms_of_use')}
           </Link>
         </div>
-
       </div>
     </footer>
   );

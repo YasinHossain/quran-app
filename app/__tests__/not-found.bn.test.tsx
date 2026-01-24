@@ -39,4 +39,3 @@ describe('NotFound page in Bengali', () => {
     expect(screen.getByRole('link', { name: BN_TRANSLATIONS.home })).toHaveAttribute('href', '/');
   });
 });
-

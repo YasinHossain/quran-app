@@ -123,10 +123,7 @@ export const SurahCalligraphyIntro = ({
         </div>
 
         <div className="order-1 sm:order-3 sm:min-w-[6rem] sm:w-auto">
-          <SurahTitleBlock
-            surahName={translatedSurahName}
-            versesLabel={translatedVersesLabel}
-          />
+          <SurahTitleBlock surahName={translatedSurahName} versesLabel={translatedVersesLabel} />
         </div>
       </div>
     </div>

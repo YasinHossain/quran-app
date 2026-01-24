@@ -99,8 +99,8 @@ const MobileNavigation = memo(function MobileNavigation({
                 : item.href === '/bookmarks/last-read'
                   ? pathname.startsWith('/bookmarks')
                   : pathname.startsWith('/surah') ||
-                  pathname.startsWith('/juz') ||
-                  pathname.startsWith('/page');
+                    pathname.startsWith('/juz') ||
+                    pathname.startsWith('/page');
 
             return (
               <Link
@@ -153,8 +153,9 @@ export const Navigation = memo(function Navigation({
     // Prefetching is a major UX win for "tab-like" navigation, but we still
     // respect Save-Data / very slow connections when available.
     if (typeof navigator === 'undefined') return true;
-    const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } })
-      .connection;
+    const connection = (
+      navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }
+    ).connection;
     if (connection?.saveData) return false;
     const effectiveType = connection?.effectiveType ?? '';
     if (effectiveType === 'slow-2g' || effectiveType === '2g') return false;
@@ -175,7 +176,10 @@ export const Navigation = memo(function Navigation({
     if (href.includes('#')) return href;
 
     try {
-      const url = new URL(href, typeof window !== 'undefined' ? window.location.origin : 'http://localhost');
+      const url = new URL(
+        href,
+        typeof window !== 'undefined' ? window.location.origin : 'http://localhost'
+      );
       if (!url.pathname.startsWith('/surah/')) return href;
 
       const params = new URLSearchParams(url.search);
@@ -213,7 +217,7 @@ export const Navigation = memo(function Navigation({
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // OPTIMIZATION: If we are currently ON a reader page (Surah/Juz), 
+    // OPTIMIZATION: If we are currently ON a reader page (Surah/Juz),
     // we don't need to update the sidebar link constantly.
     // The link is only useful when we navigate AWAY from the reader.
     // This prevents re-renders while scrolling/tracking verses.
@@ -221,7 +225,7 @@ export const Navigation = memo(function Navigation({
       pathname.startsWith('/surah') || pathname.startsWith('/juz') || pathname.startsWith('/page');
 
     if (isReaderRoute) {
-      // If we are on the reader page, we just ensure the CURRENT link matches where we are 
+      // If we are on the reader page, we just ensure the CURRENT link matches where we are
       // (so if we refresh, it's correct). But we don't need to listen to every 'lastRead' update
       // unless we actually change the URL (which handleMobileNav above or generic routing handles).
       // We essentially "pause" updates from lastRead while reading.

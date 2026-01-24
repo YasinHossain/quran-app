@@ -66,7 +66,14 @@ export function useInfiniteVerseLoader({
   const isLoading = !data && !error;
   const isReachingEnd = size >= totalPages;
 
-  useResetPrefetchedPages(prefetchedPagesRef, resourceKind, id, stableTranslationIds, wordLang, tajweed);
+  useResetPrefetchedPages(
+    prefetchedPagesRef,
+    resourceKind,
+    id,
+    stableTranslationIds,
+    wordLang,
+    tajweed
+  );
   useTargetVersePreload(targetVerseNumber, size, setSize, id);
 
   const prefetchNextPage = usePrefetchNextPage({

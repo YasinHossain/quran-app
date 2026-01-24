@@ -19,7 +19,11 @@ const formatChapterLabel = (
       : 'Surah';
 
   const numericSurahId =
-    typeof surahId === 'number' ? surahId : Number.isFinite(Number(surahId)) ? Number(surahId) : null;
+    typeof surahId === 'number'
+      ? surahId
+      : Number.isFinite(Number(surahId))
+        ? Number(surahId)
+        : null;
 
   const safeName =
     i18n && typeof numericSurahId === 'number'

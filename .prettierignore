@@ -1,2 +1,16 @@
 templates
 app/(features)/bookmarks/components/SurahSelector.tsx
+.next
+.vercel
+.swc
+.jest-cache
+coverage
+node_modules
+playwright-report
+storybook-static
+test-results
+.eslintcache
+public/sw.js
+public/workbox-*.js
+public/fallback-*.js
+tsconfig.tsbuildinfo

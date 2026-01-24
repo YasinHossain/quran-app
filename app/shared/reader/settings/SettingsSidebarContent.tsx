@@ -97,26 +97,32 @@ export function SettingsSidebarContent({
   const hookTabState = useSettingsTabState(
     onReadingPanelOpen || onTranslationTabOpen || activeReaderMode
       ? {
-          ...(onReadingPanelOpen ? { onReadingPanelOpen } : {}),
-          ...(onTranslationTabOpen ? { onTranslationTabOpen } : {}),
-          ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
-        }
+        ...(onReadingPanelOpen ? { onReadingPanelOpen } : {}),
+        ...(onTranslationTabOpen ? { onTranslationTabOpen } : {}),
+        ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
+      }
       : {}
   );
 
   const tabState = tabsEnabled
     ? hookTabState
     : {
-        activeTab: 'translation' as const,
-        handleTabChange: () => {},
-        tabOptions: [{ value: 'translation', label: t('translations') }] as Array<{
-          value: SettingsTabValue;
-          label: string;
-        }>,
-      };
+      activeTab: 'translation' as const,
+      handleTabChange: () => { },
+      tabOptions: [{ value: 'translation', label: t('translations') }] as Array<{
+        value: SettingsTabValue;
+        label: string;
+      }>,
+    };
 
   const { activeTab, handleTabChange, tabOptions } = tabState;
-  const { openSections, handleSectionToggle } = useSettingsSections();
+  const { openSections, handleSectionToggle } = useSettingsSections(
+    pageType === 'tafsir'
+      ? { defaultOpenSections: ['tafsir', 'translation', 'font'] }
+      : isMushafMode
+        ? { defaultOpenSections: ['mushaf'] }
+        : undefined
+  );
 
   const handleArabicFontPanelOpen = useCallback(() => {
     onArabicFontPanelOpenProp?.();

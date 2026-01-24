@@ -30,4 +30,3 @@ describe('resolveVerseTranslation', () => {
     expect(resolveVerseTranslation(verse, 161)).toBe('Other');
   });
 });
-

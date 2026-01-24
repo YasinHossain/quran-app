@@ -1,4 +1,8 @@
-import { UI_LANGUAGE_STORAGE_KEY, isUiLanguageCode, type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
+import {
+  UI_LANGUAGE_STORAGE_KEY,
+  isUiLanguageCode,
+  type UiLanguageCode,
+} from '@/app/shared/i18n/uiLanguages';
 import { getItem } from '@/lib/utils/safeLocalStorage';
 import type { Settings } from '@/types';
 
@@ -23,7 +27,9 @@ export const UI_LANGUAGE_CONTENT_DEFAULTS: Record<UiLanguageCode, ContentDefault
 } as const;
 
 const normalizeLanguageTag = (value: string | null | undefined): string | undefined => {
-  const trimmed = String(value ?? '').trim().toLowerCase();
+  const trimmed = String(value ?? '')
+    .trim()
+    .toLowerCase();
   if (!trimmed) return undefined;
   return trimmed.split('-')[0] ?? undefined;
 };
@@ -42,8 +48,12 @@ export const resolveUiLanguageCode = (value?: string | null | undefined): UiLang
   return 'en';
 };
 
-export const withUiLanguageContentDefaults = (defaults: Settings, uiLanguage: UiLanguageCode): Settings => {
-  const contentDefaults = UI_LANGUAGE_CONTENT_DEFAULTS[uiLanguage] ?? UI_LANGUAGE_CONTENT_DEFAULTS.en;
+export const withUiLanguageContentDefaults = (
+  defaults: Settings,
+  uiLanguage: UiLanguageCode
+): Settings => {
+  const contentDefaults =
+    UI_LANGUAGE_CONTENT_DEFAULTS[uiLanguage] ?? UI_LANGUAGE_CONTENT_DEFAULTS.en;
   const primaryTranslationId = contentDefaults.translationIds[0] ?? defaults.translationId;
 
   return {
@@ -54,8 +64,12 @@ export const withUiLanguageContentDefaults = (defaults: Settings, uiLanguage: Ui
   };
 };
 
-export const applyUiLanguageContentDefaults = (settings: Settings, uiLanguage: UiLanguageCode): Settings => {
-  const contentDefaults = UI_LANGUAGE_CONTENT_DEFAULTS[uiLanguage] ?? UI_LANGUAGE_CONTENT_DEFAULTS.en;
+export const applyUiLanguageContentDefaults = (
+  settings: Settings,
+  uiLanguage: UiLanguageCode
+): Settings => {
+  const contentDefaults =
+    UI_LANGUAGE_CONTENT_DEFAULTS[uiLanguage] ?? UI_LANGUAGE_CONTENT_DEFAULTS.en;
   const primaryTranslationId = contentDefaults.translationIds[0] ?? settings.translationId;
 
   return {

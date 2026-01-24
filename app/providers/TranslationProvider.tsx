@@ -26,20 +26,26 @@ export function TranslationProvider({
     let fromClient: string | null = null;
     try {
       fromClient = window.localStorage.getItem(UI_LANGUAGE_STORAGE_KEY);
-    } catch {}
+    } catch {
+      // Ignore storage access failures (blocked/denied in some environments).
+    }
 
     if (!fromClient) {
       try {
         const re = new RegExp(`(?:^|; )${UI_LANGUAGE_STORAGE_KEY}=([^;]+)`);
         const match = document.cookie.match(re);
         fromClient = match ? decodeURIComponent(match[1] ?? '') : null;
-      } catch {}
+      } catch {
+        // Ignore cookie parsing failures.
+      }
     }
 
     if (!fromClient) {
       try {
         fromClient = document.documentElement.lang || null;
-      } catch {}
+      } catch {
+        // Ignore DOM access failures.
+      }
     }
 
     const effective = fromClient && isUiLanguageCode(fromClient) ? fromClient : fromProp;

@@ -16,4 +16,3 @@ export function resolveVerseTranslation(
   const fallback = translations.find((t) => t.resource_id === FALLBACK_TRANSLATION_ID)?.text;
   return fallback ?? translations[0]?.text;
 }
-

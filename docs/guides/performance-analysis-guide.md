@@ -12,10 +12,15 @@ npm run analyze
 npm run preview  # First, build and start prod server
 npm run lighthouse  # Then run audit
 
+# Run Lighthouse CI budgets (multi-route, CI-friendly)
+npm run build
+npm run lhci
+
 # Type check
 npm run type-check
 
 # Check bundle sizes against limits
+npm run build
 npm run size-limit
 ```
 

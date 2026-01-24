@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 
 import { useSettingsSections } from '@/app/(features)/surah/hooks/useSettingsSections';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
@@ -29,5 +29,16 @@ describe('useSettingsSections logging', () => {
       sectionId: 'translation',
       openSections: ['translation', 'font'],
     });
+  });
+});
+
+describe('useSettingsSections defaults', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('supports overriding default open sections', () => {
+    const { result } = renderHook(() => useSettingsSections({ defaultOpenSections: ['tafsir'] }));
+    expect(result.current.openSections).toEqual(['tafsir']);
   });
 });

@@ -183,20 +183,16 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Start application
-        run: |
-          npm start &
-          sleep 10
-
-      - name: Wait for application to be ready
-        run: npx wait-on http://localhost:3000 --timeout 60000
-
       - name: Run Lighthouse CI
-        run: |
-          npm install -g @lhci/cli@0.12.x
-          lhci autorun
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+        run: npm run lhci
+
+      - name: Upload Lighthouse report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouseci
+          path: lighthouseci/**
+          retention-days: 14
 
   # Job 7: Accessibility Tests (Phase 3 Enhanced)
   test-accessibility:

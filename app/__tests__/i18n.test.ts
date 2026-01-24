@@ -13,4 +13,3 @@ describe('i18n initialization', () => {
     expect(i18n.t('page_not_found')).toBe('Page not found');
   });
 });
-
