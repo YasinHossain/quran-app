@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
 
@@ -21,6 +21,21 @@ import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVers
 import type { Verse } from '@/types';
 
 const SCROLL_OFFSET_TOP_PX = 65;
+
+// Helps prevent a "footer flash" on initial load with `useWindowScroll`, where the end-of-list
+// navigation can briefly appear in the viewport before Virtuoso has enough measurements.
+const estimateVerseCardHeight = (
+  arabicFontSize?: number,
+  translationFontSize?: number
+): number => {
+  const safeArabic = typeof arabicFontSize === 'number' ? arabicFontSize : 34;
+  const safeTranslation = typeof translationFontSize === 'number' ? translationFontSize : 18;
+
+  // Roughly calibrated for the ReaderVerseCard layout. This is only used as an initial estimate;
+  // Virtuoso refines measurements as real items render.
+  const estimate = 220 + safeArabic * 3 + safeTranslation * 2;
+  return Math.max(280, Math.min(700, Math.round(estimate)));
+};
 
 const parseVerseNumberFromKey = (verseKey?: string): number | null => {
   if (!verseKey) return null;
@@ -203,6 +218,17 @@ function QuranComList({
   const [shouldReadjustScroll, setShouldReadjustScroll] = useState(false);
   const activeVerse = verseListing.activeVerse;
   const increaseViewportBy = useAdaptiveViewportBy();
+  const defaultItemHeight = useMemo(
+    () =>
+      estimateVerseCardHeight(
+        verseListing.settings.arabicFontSize,
+        verseListing.settings.translationFontSize
+      ),
+    [verseListing.settings.arabicFontSize, verseListing.settings.translationFontSize]
+  );
+  // Render enough initial items to stabilize measurements without fetching beyond the first API page.
+  const initialItemCount = Math.min(totalVerses, Math.max(1, Math.min(6, verseListing.perPage)));
+  const hasLoadedAnyPage = Object.keys(verseListing.apiPageToVersesMap).length > 0;
 
   useEffect(() => {
     if (!initialVerseNumber || totalVerses <= 0) return;
@@ -261,8 +287,9 @@ function QuranComList({
         ref={virtuosoRef}
         useWindowScroll
         totalCount={totalVerses}
-        initialItemCount={1}
+        initialItemCount={initialItemCount}
         increaseViewportBy={increaseViewportBy}
+        defaultItemHeight={defaultItemHeight}
         computeItemKey={(index) => `${verseListing.resourceId}:${index + 1}`}
         itemContent={(index) => (
           <QuranComVerseRow
@@ -271,11 +298,13 @@ function QuranComList({
           />
         )}
       />
-      <VerseListEndSection
-        resourceKind={resourceKind}
-        resourceId={verseListing.resourceId}
-        surahId={surahId}
-      />
+      {hasLoadedAnyPage ? (
+        <VerseListEndSection
+          resourceKind={resourceKind}
+          resourceId={verseListing.resourceId}
+          surahId={surahId}
+        />
+      ) : null}
     </div>
   );
 }
