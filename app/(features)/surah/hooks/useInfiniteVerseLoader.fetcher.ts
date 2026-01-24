@@ -2,6 +2,7 @@ import { useCallback, useEffect, type MutableRefObject } from 'react';
 
 import type { LookupFn } from './useVerseListing';
 import type { Key, MutatorCallback, MutatorOptions } from 'swr';
+import type { MushafResourceKind } from './mushafReadingViewTypes';
 
 export const VERSES_PER_PAGE = 10;
 
@@ -13,24 +14,29 @@ type Mutate = <Data = unknown>(
 ) => Promise<Data | undefined>;
 
 export const buildSWRKeyFactory = (
+  resourceKind?: MushafResourceKind,
   id?: string,
   stableTranslationIds?: string,
   wordLang?: string,
   tajweed?: boolean
 ) => {
   return (index: number) =>
-    id ? ['verses', id, stableTranslationIds, wordLang, index + 1, tajweed] : null;
+    id
+      ? ['verses', resourceKind ?? 'surah', id, stableTranslationIds, wordLang, index + 1, tajweed]
+      : null;
 };
 
 export const createFetcher = (lookup: LookupFn, setError: (msg: string) => void) => {
-  return ([, pId, translationIdsStr, wl, page, tajweed]: [
+  return ([, _resourceKind, pId, translationIdsStr, wl, page, tajweed]: [
     string,
-    string,
+    string, // resourceKind
+    string, // id
     string,
     string,
     number,
     boolean | undefined,
   ]) => {
+    // Resource kind is intentionally ignored here: the lookup function determines the API endpoint.
     const translationIds = translationIdsStr.split(',').map(Number);
     return lookup({
       id: pId as string,
@@ -72,7 +78,8 @@ interface PrefetchNextPageParams {
 }
 
 interface ParsedNextKey {
-  chapterId: string;
+  resourceKind: MushafResourceKind;
+  resourceId: string;
   translationIds: number[];
   wordLang: string;
   page: number;
@@ -83,9 +90,10 @@ interface ParsedNextKey {
 const parseNextKey = (nextKey: Key): ParsedNextKey | null => {
   if (!nextKey || !Array.isArray(nextKey)) return null;
 
-  const [, chapterId, translationIdsValue, wordLang, page, tajweed] = nextKey;
+  const [, resourceKind, resourceId, translationIdsValue, wordLang, page, tajweed] = nextKey;
   if (
-    typeof chapterId !== 'string' ||
+    (resourceKind !== 'surah' && resourceKind !== 'juz' && resourceKind !== 'page') ||
+    typeof resourceId !== 'string' ||
     typeof translationIdsValue !== 'string' ||
     typeof wordLang !== 'string' ||
     typeof page !== 'number'
@@ -99,7 +107,8 @@ const parseNextKey = (nextKey: Key): ParsedNextKey | null => {
     .map((value) => Number(value));
 
   return {
-    chapterId,
+    resourceKind,
+    resourceId,
     translationIds,
     wordLang,
     page,
@@ -126,7 +135,7 @@ export const usePrefetchNextPage = ({
     const parsedKey = parseNextKey(keyFactory(nextPageIndex));
     if (!parsedKey) return;
 
-    const { chapterId, translationIds, wordLang, page, tajweed, key } = parsedKey;
+    const { resourceId, translationIds, wordLang, page, tajweed, key } = parsedKey;
 
     prefetchedPagesRef.current.add(nextPageIndex);
 
@@ -134,7 +143,7 @@ export const usePrefetchNextPage = ({
       key,
       () =>
         lookup({
-          id: chapterId,
+          id: resourceId,
           translationIds,
           page,
           perPage: VERSES_PER_PAGE,

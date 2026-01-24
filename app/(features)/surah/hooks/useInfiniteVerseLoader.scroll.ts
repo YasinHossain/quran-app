@@ -1,6 +1,7 @@
 import { useEffect, type MutableRefObject, type RefObject } from 'react';
 
 import type { SetSize } from './useInfiniteVerseLoader.fetcher';
+import type { MushafResourceKind } from './mushafReadingViewTypes';
 
 export const PREFETCH_SCROLL_THRESHOLD_PX = 800;
 
@@ -14,6 +15,7 @@ const findScrollRoot = (start: HTMLElement | null): Element | null => {
 
 export const useResetPrefetchedPages = (
   prefetchedPagesRef: MutableRefObject<Set<number>>,
+  resourceKind?: MushafResourceKind,
   id?: string,
   stableTranslationIds?: string,
   wordLang?: string,
@@ -21,7 +23,7 @@ export const useResetPrefetchedPages = (
 ): void => {
   useEffect(() => {
     prefetchedPagesRef.current.clear();
-  }, [prefetchedPagesRef, id, stableTranslationIds, wordLang, tajweed]);
+  }, [prefetchedPagesRef, resourceKind, id, stableTranslationIds, wordLang, tajweed]);
 };
 
 interface LoadMoreParams {

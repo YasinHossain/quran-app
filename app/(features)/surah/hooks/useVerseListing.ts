@@ -102,6 +102,7 @@ export function useVerseListing({
     loadMoreRef: errorState.loadMoreRef,
     error: errorState.error,
     setError: errorState.handleLoaderError,
+    ...(resourceKind ? { resourceKind } : {}),
     ...(mode === 'infinite' && typeof initialVerseNumber === 'number' && initialVerseNumber > 0
       ? { targetVerseNumber: initialVerseNumber }
       : {}),

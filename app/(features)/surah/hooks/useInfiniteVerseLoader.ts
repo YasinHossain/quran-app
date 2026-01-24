@@ -14,9 +14,11 @@ import {
 
 import type { LookupFn } from './useVerseListing';
 import type { Verse } from '@/types';
+import type { MushafResourceKind } from './mushafReadingViewTypes';
 
 interface UseInfiniteVerseLoaderParams {
   id?: string;
+  resourceKind?: MushafResourceKind;
   lookup: LookupFn;
   stableTranslationIds: string;
   wordLang: string;
@@ -36,6 +38,7 @@ interface UseInfiniteVerseLoaderReturn {
 
 export function useInfiniteVerseLoader({
   id,
+  resourceKind,
   lookup,
   stableTranslationIds,
   wordLang,
@@ -49,8 +52,8 @@ export function useInfiniteVerseLoader({
   const prefetchedPagesRef = useRef<Set<number>>(new Set());
 
   const swrKeyFactory = useMemo(
-    () => buildSWRKeyFactory(id, stableTranslationIds, wordLang, tajweed),
-    [id, stableTranslationIds, wordLang, tajweed]
+    () => buildSWRKeyFactory(resourceKind, id, stableTranslationIds, wordLang, tajweed),
+    [resourceKind, id, stableTranslationIds, wordLang, tajweed]
   );
 
   const { data, size, setSize, isValidating } = useSWRInfinite(
@@ -63,7 +66,7 @@ export function useInfiniteVerseLoader({
   const isLoading = !data && !error;
   const isReachingEnd = size >= totalPages;
 
-  useResetPrefetchedPages(prefetchedPagesRef, id, stableTranslationIds, wordLang, tajweed);
+  useResetPrefetchedPages(prefetchedPagesRef, resourceKind, id, stableTranslationIds, wordLang, tajweed);
   useTargetVersePreload(targetVerseNumber, size, setSize, id);
 
   const prefetchNextPage = usePrefetchNextPage({
