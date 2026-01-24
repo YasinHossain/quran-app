@@ -73,17 +73,14 @@ interface SurahVerseListProps {
 }
 
 function VerseListEndSection({
-  label,
   resourceKind,
   resourceId,
   surahId,
 }: {
-  label?: string | undefined;
   resourceKind?: MushafResourceKind | undefined;
   resourceId?: string | undefined;
   surahId?: number | undefined;
 }): React.JSX.Element | null {
-  const shouldShowLabel = typeof label === 'string' && label.length > 0;
   const surahNavigation =
     resourceKind === 'surah' && typeof surahId === 'number' ? (
       <SurahNavigation currentSurahId={surahId} />
@@ -93,7 +90,7 @@ function VerseListEndSection({
       <ReaderResourceNavigation resourceKind={resourceKind} resourceId={resourceId} />
     ) : null;
 
-  if (!shouldShowLabel && !surahNavigation && !resourceNavigation) {
+  if (!surahNavigation && !resourceNavigation) {
     return null;
   }
 
@@ -102,7 +99,6 @@ function VerseListEndSection({
       data-slot="reader-end-of-list"
       className="flex w-full flex-col items-center justify-center gap-6 py-10 text-center"
     >
-      {shouldShowLabel ? <p className="text-sm text-muted-foreground">{label}</p> : null}
       {surahNavigation}
       {resourceNavigation}
     </div>
@@ -149,13 +145,11 @@ export const SurahVerseList = ({
   verseListing,
   resourceKind,
   emptyLabelKey = 'no_verses_found',
-  endLabelKey,
   initialVerseKey,
 }: SurahVerseListProps): React.JSX.Element => {
   const { t } = useTranslation();
   const audio = useAudio();
   const emptyLabel = t(emptyLabelKey);
-  const endLabel = endLabelKey ? t(endLabelKey) : undefined;
   const initialVerseNumber = parseInitialVerseNumber(initialVerseKey);
 
   const hasNoContent = verseListing.verses.length === 0;
@@ -169,7 +163,6 @@ export const SurahVerseList = ({
         verseListing={verseListing}
         initialVerseNumber={initialVerseNumber}
         isAutoScrollEnabled={audio.isPlaying}
-        endLabel={endLabel}
         resourceKind={resourceKind}
         surahId={surahId}
       />
@@ -186,7 +179,6 @@ export const SurahVerseList = ({
       emptyLabel={emptyLabel}
       initialVerseKey={initialVerseKey}
       isAutoScrollEnabled={audio.isPlaying}
-      endLabel={endLabel}
       resourceKind={resourceKind}
       surahId={surahId}
     />
@@ -197,14 +189,12 @@ function QuranComList({
   verseListing,
   initialVerseNumber,
   isAutoScrollEnabled,
-  endLabel,
   resourceKind,
   surahId,
 }: {
   verseListing: UseVerseListingReturn;
   initialVerseNumber: number | null;
   isAutoScrollEnabled: boolean;
-  endLabel?: string | undefined;
   resourceKind?: MushafResourceKind | undefined;
   surahId?: number | undefined;
 }): React.JSX.Element {
@@ -282,7 +272,6 @@ function QuranComList({
         )}
       />
       <VerseListEndSection
-        label={endLabel}
         resourceKind={resourceKind}
         resourceId={verseListing.resourceId}
         surahId={surahId}
@@ -296,7 +285,6 @@ function InfiniteList({
   emptyLabel,
   initialVerseKey,
   isAutoScrollEnabled,
-  endLabel,
   resourceKind,
   surahId,
 }: {
@@ -304,7 +292,6 @@ function InfiniteList({
   emptyLabel: string;
   initialVerseKey?: string | undefined;
   isAutoScrollEnabled: boolean;
-  endLabel?: string | undefined;
   resourceKind?: MushafResourceKind | undefined;
   surahId?: number | undefined;
 }): React.JSX.Element {
@@ -361,7 +348,6 @@ function InfiniteList({
       ) : null}
       {verseListing.isReachingEnd ? (
         <VerseListEndSection
-          label={endLabel}
           resourceKind={resourceKind}
           resourceId={verseListing.resourceId}
           surahId={surahId}

@@ -18,7 +18,6 @@ export function MushafMain({
   reciterId,
   wordByWordLocale,
   translationIds,
-  endLabelKey = 'end_of_surah',
   ...rest
 }: MushafMainProps): React.JSX.Element {
   const state = useMushafMainState({
@@ -32,7 +31,6 @@ export function MushafMain({
     reciterId,
     wordByWordLocale,
     translationIds,
-    endLabelKey,
     ...rest,
   });
 
@@ -58,7 +56,6 @@ export function MushafMain({
           {...(translationIds ? { translationIds } : {})}
           settings={state.settings}
           mushafFlags={state.mushafFlags}
-          endLabel={state.endLabel}
           {...(resourceKind === 'surah' && typeof chapterId === 'number'
             ? { surahId: chapterId }
             : {})}

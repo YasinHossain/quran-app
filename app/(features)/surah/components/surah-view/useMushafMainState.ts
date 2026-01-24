@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 
@@ -9,7 +8,6 @@ type MushafMainState = {
   settings: ReaderSettings;
   mushafFlags: MushafFlags;
   shouldRenderSurahIntro: boolean;
-  endLabel: string;
 };
 
 const useMushafFlags = (mushafId?: string): MushafFlags =>
@@ -36,9 +34,7 @@ export const useMushafMainState = ({
   mushafName: _mushafName,
   mushafId,
   chapterId,
-  endLabelKey = 'end_of_surah',
 }: MushafMainProps): MushafMainState => {
-  const { t } = useTranslation();
   const { settings } = useSettings();
   const mushafFlags = useMushafFlags(mushafId);
   void _mushafName;
@@ -47,7 +43,6 @@ export const useMushafMainState = ({
     settings,
     mushafFlags,
     shouldRenderSurahIntro: typeof chapterId === 'number' && chapterId > 0,
-    endLabel: t(endLabelKey),
   };
 };
 

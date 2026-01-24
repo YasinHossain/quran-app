@@ -153,12 +153,10 @@ const resolvePageNumberForVerseKey = (
 
 const MushafEndOfList = ({
   surahId,
-  endLabel,
   resourceKind,
   resourceId,
 }: {
   surahId?: number | undefined;
-  endLabel?: string | undefined;
   resourceKind: MushafResourceKind;
   resourceId: string;
 }): React.JSX.Element => {
@@ -169,7 +167,6 @@ const MushafEndOfList = ({
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-6 py-10 text-center">
-      {endLabel ? <p className="text-sm text-muted-foreground">{endLabel}</p> : null}
       {typeof surahId === 'number' ? <SurahNavigation currentSurahId={surahId} /> : null}
       {resourceNavigation}
     </div>
@@ -266,7 +263,6 @@ type MushafPageListProps = {
   translationIds?: string | undefined;
   settings: ReaderSettings;
   mushafFlags: MushafFlags;
-  endLabel: string;
   surahId?: number | undefined;
 };
 
@@ -282,7 +278,6 @@ export const MushafPageList = ({
   settings,
   mushafFlags,
   surahId,
-  endLabel,
 }: MushafPageListProps): React.JSX.Element => {
   // Calculate height estimates based on font size
   // Font size directly affects page height - larger fonts = taller pages
@@ -433,7 +428,6 @@ export const MushafPageList = ({
                   resourceKind={resourceKind}
                   resourceId={resourceId}
                   {...(typeof surahId === 'number' ? { surahId } : {})}
-                  {...(endLabel ? { endLabel } : {})}
                 />
               </div>
             );
