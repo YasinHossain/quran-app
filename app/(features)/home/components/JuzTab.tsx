@@ -3,8 +3,8 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useNavigationDatasets } from '@/app/shared/navigation/hooks/useNavigationDatasets';
 import { formatJuzRange } from '@/app/shared/navigation/formatJuzRange';
+import { useNavigationDatasets } from '@/app/shared/navigation/hooks/useNavigationDatasets';
 import { buildJuzRoute } from '@/app/shared/navigation/routes';
 import { JuzNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
 

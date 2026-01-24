@@ -1,7 +1,7 @@
-import type { Chapter, PlannerPlan } from '@/types';
 import { localizeDigits } from '@/lib/text/localizeNumbers';
 
 import type { PlannerI18nContext } from '@/app/(features)/bookmarks/planner/utils/plannerI18n';
+import type { Chapter, PlannerPlan } from '@/types';
 
 export interface PlannerPlanGroup {
   key: string;

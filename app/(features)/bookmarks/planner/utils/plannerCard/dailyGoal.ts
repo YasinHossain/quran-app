@@ -1,6 +1,6 @@
 import { convertPlanProgressToActualVerse } from '@/app/(features)/bookmarks/planner/utils/planRange';
-import { getJuzByPage } from '@/lib/utils/surah-navigation';
 import { formatNumber, localizeDigits } from '@/lib/text/localizeNumbers';
+import { getJuzByPage } from '@/lib/utils/surah-navigation';
 
 import type { PlannerCardProps } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
 import type {

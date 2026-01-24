@@ -15,8 +15,8 @@ import { SidebarProvider } from './SidebarContext';
 import { ThemeProvider, Theme } from './ThemeContext';
 import { UIStateProvider } from './UIStateContext';
 
-import type { SWRConfiguration } from 'swr';
 import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
+import type { SWRConfiguration } from 'swr';
 
 // import { ApplicationProvider } from '../../src/presentation/providers/ApplicationProvider';
 

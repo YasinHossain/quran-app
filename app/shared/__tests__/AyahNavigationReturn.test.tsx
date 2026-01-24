@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+
 import { AyahNavigation } from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/AyahNavigation';
 
 describe('AyahNavigation return behavior', () => {

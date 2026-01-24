@@ -43,8 +43,12 @@ interface UseSettingsSectionsParams {
   defaultOpenSections?: string[];
 }
 
-export const useSettingsSections = (params: UseSettingsSectionsParams = {}): UseSettingsSectionsReturn => {
-  const defaultOpenSections = normalizeSections(params.defaultOpenSections ?? DEFAULT_OPEN_SECTIONS);
+export const useSettingsSections = (
+  params: UseSettingsSectionsParams = {}
+): UseSettingsSectionsReturn => {
+  const defaultOpenSections = normalizeSections(
+    params.defaultOpenSections ?? DEFAULT_OPEN_SECTIONS
+  );
 
   // Avoid "useLayoutEffect does nothing on the server" warnings during SSR,
   // while still applying localStorage state before the first paint on the client.

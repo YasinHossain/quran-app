@@ -6,8 +6,8 @@ import {
 
 import type { PlannerPlanGroup } from '@/app/(features)/bookmarks/planner/utils/planGrouping';
 import type { PlannerGroupCardData } from '@/app/(features)/bookmarks/planner/utils/plannerGroupCard.parts';
-import type { Chapter } from '@/types';
 import type { PlannerI18nContext } from '@/app/(features)/bookmarks/planner/utils/plannerI18n';
+import type { Chapter } from '@/types';
 
 export type { PlannerGroupCardData } from '@/app/(features)/bookmarks/planner/utils/plannerGroupCard.parts';
 

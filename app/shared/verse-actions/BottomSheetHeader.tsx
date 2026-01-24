@@ -4,8 +4,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CloseIcon } from '@/app/shared/icons';
-import { formatNumber, localizeDigits } from '@/lib/text/localizeNumbers';
 import { touchClasses } from '@/lib/responsive';
+import { formatNumber, localizeDigits } from '@/lib/text/localizeNumbers';
 import { cn } from '@/lib/utils/cn';
 import { parseVerseKey } from '@/lib/utils/verse';
 

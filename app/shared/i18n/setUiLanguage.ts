@@ -1,8 +1,8 @@
 'use client';
 
-import type { i18n as I18nInstance } from 'i18next';
-
 import { UI_LANGUAGE_STORAGE_KEY, type UiLanguageCode } from './uiLanguages';
+
+import type { i18n as I18nInstance } from 'i18next';
 
 export function setUiLanguage(i18n: I18nInstance, language: UiLanguageCode): void {
   if (typeof window !== 'undefined') {

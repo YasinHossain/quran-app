@@ -5,8 +5,8 @@ import {
 } from '@/app/(features)/bookmarks/planner/utils/planRange';
 import { localizeDigits } from '@/lib/text/localizeNumbers';
 
-import type { Chapter, PlannerPlan } from '@/types';
 import type { PlannerI18nContext } from '@/app/(features)/bookmarks/planner/utils/plannerI18n';
+import type { Chapter, PlannerPlan } from '@/types';
 
 interface VersePosition {
   plan: PlannerPlan;

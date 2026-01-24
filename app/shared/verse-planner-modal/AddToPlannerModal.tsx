@@ -24,8 +24,8 @@ import { localizeDigits } from '@/lib/text/localizeNumbers';
 
 import { PlannerCardsSection } from './components/PlannerCardsSection';
 
-import type { TFunction } from 'i18next';
 import type { Chapter, PlannerPlan } from '@/types';
+import type { TFunction } from 'i18next';
 
 export interface VerseSummaryDetails {
   verseKey: string;

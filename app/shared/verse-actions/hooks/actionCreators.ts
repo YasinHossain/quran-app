@@ -1,5 +1,4 @@
 import { ReactElement, createElement } from 'react';
-import type { TFunction } from 'i18next';
 
 import {
   PlayIcon,
@@ -12,6 +11,8 @@ import {
   GoToIcon,
 } from '@/app/shared/icons';
 import { VerseActionItem } from '@/app/shared/verse-actions/types';
+
+import type { TFunction } from 'i18next';
 
 interface CreatePlayPauseActionParams {
   isPlaying: boolean;

@@ -24,10 +24,7 @@ const SCROLL_OFFSET_TOP_PX = 65;
 
 // Helps prevent a "footer flash" on initial load with `useWindowScroll`, where the end-of-list
 // navigation can briefly appear in the viewport before Virtuoso has enough measurements.
-const estimateVerseCardHeight = (
-  arabicFontSize?: number,
-  translationFontSize?: number
-): number => {
+const estimateVerseCardHeight = (arabicFontSize?: number, translationFontSize?: number): number => {
   const safeArabic = typeof arabicFontSize === 'number' ? arabicFontSize : 34;
   const safeTranslation = typeof translationFontSize === 'number' ? translationFontSize : 18;
 
@@ -291,12 +288,7 @@ function QuranComList({
         increaseViewportBy={increaseViewportBy}
         defaultItemHeight={defaultItemHeight}
         computeItemKey={(index) => `${verseListing.resourceId}:${index + 1}`}
-        itemContent={(index) => (
-          <QuranComVerseRow
-            verseIdx={index}
-            verseListing={verseListing}
-          />
-        )}
+        itemContent={(index) => <QuranComVerseRow verseIdx={index} verseListing={verseListing} />}
       />
       {hasLoadedAnyPage ? (
         <VerseListEndSection

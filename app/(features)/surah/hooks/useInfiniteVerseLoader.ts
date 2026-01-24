@@ -12,9 +12,9 @@ import {
   useTargetVersePreload,
 } from './useInfiniteVerseLoader.helpers';
 
+import type { MushafResourceKind } from './mushafReadingViewTypes';
 import type { LookupFn } from './useVerseListing';
 import type { Verse } from '@/types';
-import type { MushafResourceKind } from './mushafReadingViewTypes';
 
 interface UseInfiniteVerseLoaderParams {
   id?: string;

@@ -3,11 +3,10 @@
 import { memo, useState, useEffect, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { resolveVerseTranslation } from '@/app/(features)/home/utils/resolveVerseTranslation';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { cleanTranslationText } from '@/lib/text/cleanTranslationText';
 import { localizeDigits } from '@/lib/text/localizeNumbers';
-
-import { resolveVerseTranslation } from '../utils/resolveVerseTranslation';
 
 import type { Chapter, Verse } from '@/types';
 

@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import './fonts.css';
 import './globals.css';
 import { isUiLanguageCode } from '@/app/shared/i18n/uiLanguages';
+
 import { ClientProviders } from './providers/ClientProviders';
 import { TranslationProvider } from './providers/TranslationProvider';
 import { ErrorBoundary } from './shared/components/error-boundary';

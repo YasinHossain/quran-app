@@ -1,8 +1,8 @@
 import { unstable_cache } from 'next/cache';
 
+import { UI_LANGUAGE_CONTENT_DEFAULTS } from '@/app/providers/uiLanguageContentDefaults';
 import { Verse } from '@/types';
 
-import { UI_LANGUAGE_CONTENT_DEFAULTS } from '@/app/providers/uiLanguageContentDefaults';
 import { getChaptersServer } from './chapters';
 
 const DEFAULT_TRANSLATION_IDS = Array.from(

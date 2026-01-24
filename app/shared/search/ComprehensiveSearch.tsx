@@ -31,12 +31,12 @@ import {
   type SearchNavigationResult,
   type SearchVerseResult,
 } from '@/lib/api/search';
+import { localizeDigits } from '@/lib/text/localizeNumbers';
 import {
   getBestMatchesForDropdown,
   highlightMissingQueryWords,
   type ScoredVerseResult,
 } from '@/lib/utils/searchRelevance';
-import { localizeDigits } from '@/lib/text/localizeNumbers';
 
 // ============================================================================
 // Types

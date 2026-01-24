@@ -64,4 +64,3 @@ export const getTafsirReturnHref = (): string | null => {
     return null;
   }
 };
-

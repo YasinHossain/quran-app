@@ -3,8 +3,8 @@
 import { useSearchParams } from 'next/navigation';
 import React, { useMemo } from 'react';
 
-import { ReaderShell } from '@/app/shared/reader';
 import { useHashSearchParams } from '@/app/shared/navigation/useHashSearchParams';
+import { ReaderShell } from '@/app/shared/reader';
 import { getVersesByChapter } from '@/lib/api';
 import { ensureLanguageCode } from '@/lib/text/languageCodes';
 

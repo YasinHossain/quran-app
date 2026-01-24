@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { ResourceItem } from '@/app/shared/resource-panel';
+
 import { TranslationsByLanguage } from './TranslationsByLanguage';
 
 import type { TranslationResource } from '@/types';

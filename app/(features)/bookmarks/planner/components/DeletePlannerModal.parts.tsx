@@ -1,8 +1,9 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
+
 import { ModalActions } from '@/app/(features)/bookmarks/components/delete-folder-modal/ModalActions';
 import { CloseIcon } from '@/app/shared/icons';
-import { useTranslation } from 'react-i18next';
 
 import type { JSX } from 'react';
 

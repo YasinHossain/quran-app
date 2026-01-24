@@ -1,6 +1,7 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { TranslationResultsSection } from '../TranslationResultsSection';
+import React from 'react';
+
+import { TranslationResultsSection } from '@/app/(features)/surah/components/panels/translation-panel/components/TranslationResultsSection';
 import { TranslationResource } from '@/types';
 
 // Mock dependencies

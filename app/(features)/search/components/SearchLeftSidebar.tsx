@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 
 import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
 import { SearchIcon, BookOpenIcon, SparklesIcon } from '@/app/shared/icons';
-import { cn } from '@/lib/utils/cn';
 import { formatNumber, localizeDigits } from '@/lib/text/localizeNumbers';
+import { cn } from '@/lib/utils/cn';
 
 import type { VerseWithHighlight } from '@/app/(features)/search/hooks/usePaginatedSearch';
 

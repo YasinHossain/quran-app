@@ -4,6 +4,7 @@ import {
   type UiLanguageCode,
 } from '@/app/shared/i18n/uiLanguages';
 import { getItem } from '@/lib/utils/safeLocalStorage';
+
 import type { Settings } from '@/types';
 
 type ContentDefaults = Pick<

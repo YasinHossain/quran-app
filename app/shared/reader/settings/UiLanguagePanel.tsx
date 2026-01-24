@@ -3,11 +3,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { SlideOverPanel } from '@/app/shared/components/SlideOverPanel';
 import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
 import { UI_LANGUAGES, isUiLanguageCode, type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
-import { SlideOverPanel } from '@/app/shared/components/SlideOverPanel';
-import { ResourceItem } from '@/app/shared/resource-panel/ResourceItem';
 import { SettingsPanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
+import { ResourceItem } from '@/app/shared/resource-panel/ResourceItem';
 
 interface UiLanguagePanelProps {
   isOpen: boolean;

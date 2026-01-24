@@ -1,8 +1,8 @@
 import { useCallback, useEffect, type MutableRefObject } from 'react';
 
+import type { MushafResourceKind } from './mushafReadingViewTypes';
 import type { LookupFn } from './useVerseListing';
 import type { Key, MutatorCallback, MutatorOptions } from 'swr';
-import type { MushafResourceKind } from './mushafReadingViewTypes';
 
 export const VERSES_PER_PAGE = 10;
 

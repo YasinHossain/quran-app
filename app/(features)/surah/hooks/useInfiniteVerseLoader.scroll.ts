@@ -1,7 +1,7 @@
 import { useEffect, type MutableRefObject, type RefObject } from 'react';
 
-import type { SetSize } from './useInfiniteVerseLoader.fetcher';
 import type { MushafResourceKind } from './mushafReadingViewTypes';
+import type { SetSize } from './useInfiniteVerseLoader.fetcher';
 
 export const PREFETCH_SCROLL_THRESHOLD_PX = 800;
 

@@ -3,10 +3,11 @@
 import React, { createContext, useContext, useMemo } from 'react';
 
 import { Settings } from '@/types';
-import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 
 import { usePersistentSettings } from './hooks/usePersistentSettings';
 import { ARABIC_FONTS } from './settingsStorage';
+
+import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 
 // Helper to create setter functions
 type SettingsSetters = Pick<

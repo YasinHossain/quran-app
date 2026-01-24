@@ -1,8 +1,7 @@
-import type { TFunction } from 'i18next';
-
 import { formatNumber } from '@/lib/text/localizeNumbers';
 
 import type { JuzSummary } from '@/app/shared/navigation/types';
+import type { TFunction } from 'i18next';
 
 const formatAyahNumber = (ayah: number, language: string): string =>
   formatNumber(ayah, language, { useGrouping: false });

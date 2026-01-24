@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSettings } from '@/app/providers/SettingsContext';
@@ -125,8 +126,6 @@ function TabsHeader({
     </div>
   );
 }
-
-import { forwardRef } from 'react';
 
 interface TafsirContentProps {
   title: string;

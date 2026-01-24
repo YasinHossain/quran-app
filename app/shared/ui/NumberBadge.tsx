@@ -2,8 +2,8 @@
 
 import { useTranslation } from 'react-i18next';
 
-import { cn } from '@/lib/utils/cn';
 import { formatNumber, localizeDigits } from '@/lib/text/localizeNumbers';
+import { cn } from '@/lib/utils/cn';
 
 interface NumberBadgeProps {
   number: string | number;

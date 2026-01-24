@@ -1,9 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { formatNumber } from '@/lib/text/localizeNumbers';
-
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { formatNumber } from '@/lib/text/localizeNumbers';
 import { cn } from '@/lib/utils/cn';
 
 type SurahIntroDetails = {

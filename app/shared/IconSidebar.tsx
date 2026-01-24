@@ -276,7 +276,7 @@ export const Navigation = memo(function Navigation({
       {
         icon: GridIcon,
         label: t('surah_tab'),
-        href: pathname.startsWith('/tafsir') ? tafsirReturnHref ?? readerHref : readerHref,
+        href: pathname.startsWith('/tafsir') ? (tafsirReturnHref ?? readerHref) : readerHref,
       },
       { icon: BookmarkOutlineIcon, label: t('bookmarks'), href: '/bookmarks/last-read' },
     ],

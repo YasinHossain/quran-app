@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatJuzRange } from '@/app/shared/navigation/formatJuzRange';
+
 import { NavigationItem } from './NavigationItem';
 
 import type { JuzSummary } from '@/app/shared/navigation/types';
