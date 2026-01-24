@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { memo } from 'react';
 
 import { VerseActionItem } from '@/app/shared/verse-actions/types';
+import { setTafsirReturnFromTafsirHref } from '@/app/shared/navigation/tafsirReturn';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
@@ -25,7 +26,12 @@ export const ActionList = memo(function ActionList({
               key={action.label}
               href={action.href}
               prefetch={true}
-              onClick={onClose}
+              onClick={() => {
+                if (action.href?.startsWith('/tafsir/')) {
+                  setTafsirReturnFromTafsirHref(action.href);
+                }
+                onClose();
+              }}
               className={cn(
                 'flex items-center gap-4 p-4 rounded-2xl transition-all duration-200',
                 'hover:bg-interactive-hover active:bg-interactive',

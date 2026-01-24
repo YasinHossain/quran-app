@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 import { usePrefetchSingleVerse } from '@/app/shared/hooks/useSingleVerse';
 import { BookReaderIcon } from '@/app/shared/icons';
+import { setTafsirReturnFromVerseKey } from '@/app/shared/navigation/tafsirReturn';
 import { touchClasses } from '@/lib/responsive';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { cn } from '@/lib/utils/cn';
@@ -20,7 +21,7 @@ export const TafsirLink = memo(function TafsirLink({
   const prefetchVerse = usePrefetchSingleVerse();
   const { settings } = useSettings();
 
-  const handlePrefetch = () => {
+  const handlePrefetch = useCallback(() => {
     // Prefetch verse data
     void prefetchVerse([verseKey]);
 
@@ -29,14 +30,21 @@ export const TafsirLink = memo(function TafsirLink({
     if (firstTafsirId) {
       void getTafsirCached(verseKey, firstTafsirId);
     }
-  };
+  }, [prefetchVerse, settings.tafsirIds, verseKey]);
+
+  const handleClick = useCallback(() => {
+    // Ensure "Back" from tafsir returns to the verse the user came from,
+    // even if they navigate between tafsir verses before returning.
+    setTafsirReturnFromVerseKey(verseKey);
+    handlePrefetch();
+  }, [handlePrefetch, verseKey]);
 
   return (
     <Link
       href={`/tafsir/${verseKey.replace(':', '/')}`}
       prefetch={true}
       onMouseEnter={handlePrefetch}
-      onClick={handlePrefetch}
+      onClick={handleClick}
       aria-label="View tafsir"
       title="Tafsir"
       className={cn(

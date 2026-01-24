@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
+import { getTafsirReturnHref } from '@/app/shared/navigation/tafsirReturn';
 import { cn } from '@/lib/utils/cn';
 
 import { HomeIcon, BookmarkOutlineIcon, GridIcon } from './icons';
@@ -149,6 +150,7 @@ export const Navigation = memo(function Navigation({
   const hideMobileNav = isHidden;
 
   const [readerHref, setReaderHref] = useState('/surah/1');
+  const [tafsirReturnHref, setTafsirReturnHref] = useState<string | null>(null);
   const [prefetchEnabled] = useState(() => {
     // Prefetching is a major UX win for "tab-like" navigation, but we still
     // respect Save-Data / very slow connections when available.
@@ -167,6 +169,15 @@ export const Navigation = memo(function Navigation({
     () => (searchString ? `${pathname}?${searchString}` : pathname),
     [pathname, searchString]
   );
+
+  useEffect(() => {
+    if (!pathname.startsWith('/tafsir')) {
+      setTafsirReturnHref(null);
+      return;
+    }
+
+    setTafsirReturnHref(getTafsirReturnHref());
+  }, [pathname]);
 
   const normalizeStoredReaderHref = useCallback((href: string): string => {
     // Migration: older builds stored `?startVerse=...` (and sometimes `nav`/`view`) in localStorage.
@@ -262,10 +273,14 @@ export const Navigation = memo(function Navigation({
   const navItems = useMemo(
     (): NavItem[] => [
       { icon: HomeIcon, label: t('home'), href: '/' },
-      { icon: GridIcon, label: t('surah_tab'), href: readerHref },
+      {
+        icon: GridIcon,
+        label: t('surah_tab'),
+        href: pathname.startsWith('/tafsir') ? tafsirReturnHref ?? readerHref : readerHref,
+      },
       { icon: BookmarkOutlineIcon, label: t('bookmarks'), href: '/bookmarks/last-read' },
     ],
-    [readerHref, t]
+    [pathname, readerHref, t, tafsirReturnHref]
   );
 
   const linkStyles = useMemo(

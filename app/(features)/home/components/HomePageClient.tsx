@@ -60,7 +60,7 @@ export const HomePageClient = memo(function HomePageClient({
           {/* Title - scales with content */}
           <div className="content-visibility-auto mb-4 md:mb-6">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-tight">
-              Al Qur&apos;an
+              Al Quran
             </h2>
           </div>
 

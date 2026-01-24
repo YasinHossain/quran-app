@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
+import { getTafsirReturnHref } from '@/app/shared/navigation/tafsirReturn';
 import { formatNumber } from '@/lib/text/localizeNumbers';
 import { Surah } from '@/types';
 
@@ -131,7 +132,8 @@ export const AyahNavigation = ({
   ayahId,
   surahId,
 }: AyahNavigationProps): JSX.Element => {
-  const backHref = buildSurahRoute(surahId, { startVerse: ayahId });
+  const backHref =
+    getTafsirReturnHref() ?? buildSurahRoute(surahId, { startVerse: ayahId, forceSeq: true });
 
   return (
     <div className="flex w-full items-center justify-between gap-1 sm:gap-3 rounded-full bg-accent text-on-accent p-2 min-w-0 overflow-hidden">
