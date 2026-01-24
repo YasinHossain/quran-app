@@ -6,6 +6,7 @@ import { useDedupedFetchMushafPage } from '@/app/(features)/surah/hooks/useDedup
 import { useMushafPagesLookup } from '@/app/(features)/surah/hooks/useMushafPagesLookup';
 import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import { LoadingStatus } from '@/app/shared/LoadingStatus';
+import { ReaderResourceNavigation } from '@/app/shared/reader/ReaderResourceNavigation';
 import { TajweedFontPalettes } from '@/app/shared/TajweedFontPalettes';
 
 import { MushafPage } from './MushafPage';
@@ -150,11 +151,30 @@ const resolvePageNumberForVerseKey = (
   return null;
 };
 
-const MushafEndOfList = ({ surahId }: { surahId?: number | undefined }): React.JSX.Element => (
-  <div className="py-10 text-center space-y-6">
-    {surahId ? <SurahNavigation currentSurahId={surahId} /> : null}
-  </div>
-);
+const MushafEndOfList = ({
+  surahId,
+  endLabel,
+  resourceKind,
+  resourceId,
+}: {
+  surahId?: number | undefined;
+  endLabel?: string | undefined;
+  resourceKind: MushafResourceKind;
+  resourceId: string;
+}): React.JSX.Element => {
+  const resourceNavigation =
+    (resourceKind === 'page' || resourceKind === 'juz') && resourceId ? (
+      <ReaderResourceNavigation resourceKind={resourceKind} resourceId={resourceId} />
+    ) : null;
+
+  return (
+    <div className="flex w-full flex-col items-center justify-center gap-6 py-10 text-center">
+      {endLabel ? <p className="text-sm text-muted-foreground">{endLabel}</p> : null}
+      {typeof surahId === 'number' ? <SurahNavigation currentSurahId={surahId} /> : null}
+      {resourceNavigation}
+    </div>
+  );
+};
 
 const MushafPageError = ({ message }: { message: string }): React.JSX.Element => (
   <div className="mx-auto w-full rounded-[32px] border border-status-error bg-status-error/10 px-6 py-10 text-center text-status-error">
@@ -262,6 +282,7 @@ export const MushafPageList = ({
   settings,
   mushafFlags,
   surahId,
+  endLabel,
 }: MushafPageListProps): React.JSX.Element => {
   // Calculate height estimates based on font size
   // Font size directly affects page height - larger fonts = taller pages
@@ -408,7 +429,12 @@ export const MushafPageList = ({
           if (index === totalPages) {
             return (
               <div className={wrapperClassName}>
-                <MushafEndOfList {...(surahId ? { surahId } : {})} />
+                <MushafEndOfList
+                  resourceKind={resourceKind}
+                  resourceId={resourceId}
+                  {...(typeof surahId === 'number' ? { surahId } : {})}
+                  {...(endLabel ? { endLabel } : {})}
+                />
               </div>
             );
           }
