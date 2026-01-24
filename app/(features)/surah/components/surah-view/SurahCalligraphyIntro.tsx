@@ -1,4 +1,7 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { formatNumber } from '@/lib/text/localizeNumbers';
 
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { cn } from '@/lib/utils/cn';
@@ -67,10 +70,10 @@ const SurahIntroBismillah = ({ showBismillah }: { showBismillah: boolean }): Rea
 
 const SurahTitleBlock = ({
   surahName,
-  versesCount,
+  versesLabel,
 }: {
   surahName: string;
-  versesCount: number;
+  versesLabel: string;
 }): React.JSX.Element => (
   <div className="flex flex-col items-center justify-center gap-1">
     <h1
@@ -81,7 +84,7 @@ const SurahTitleBlock = ({
     >
       {surahName}
     </h1>
-    <span className="text-xs text-muted-foreground/50 sm:text-sm">{versesCount} Verses</span>
+    <span className="text-xs text-muted-foreground/50 sm:text-sm">{versesLabel}</span>
   </div>
 );
 
@@ -92,9 +95,19 @@ export const SurahCalligraphyIntro = ({
   chapterId?: number | null | undefined;
   className?: string;
 }): React.JSX.Element | null => {
+  const { t, i18n } = useTranslation();
   const introDetails = useSurahIntroDetails(chapterId);
 
   if (!introDetails) return null;
+
+  const translatedSurahName = t(`surah_names.${introDetails.chapterId}`, {
+    defaultValue: introDetails.surahName,
+  });
+
+  const translatedVersesLabel = `${formatNumber(
+    introDetails.versesCount,
+    i18n.language
+  )} ${t('verses')}`;
 
   return (
     <div className={cn('mx-auto mb-4 -mt-4 w-full max-w-7xl sm:-mt-3', className)}>
@@ -111,8 +124,8 @@ export const SurahCalligraphyIntro = ({
 
         <div className="order-1 sm:order-3 sm:min-w-[6rem] sm:w-auto">
           <SurahTitleBlock
-            surahName={introDetails.surahName}
-            versesCount={introDetails.versesCount}
+            surahName={translatedSurahName}
+            versesLabel={translatedVersesLabel}
           />
         </div>
       </div>
