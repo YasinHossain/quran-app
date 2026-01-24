@@ -4,7 +4,7 @@ This directory contains helper scripts used in development.
 
 ## fetchData.ts
 
-Generates metadata for the 30 juz of the Qur'an and writes it to `data/juz.json`. Surah metadata is fetched at runtime.
+Generates metadata for the 30 juz of the Quran and writes it to `data/juz.json`. Surah metadata is fetched at runtime.
 
 Run from the project root:
 

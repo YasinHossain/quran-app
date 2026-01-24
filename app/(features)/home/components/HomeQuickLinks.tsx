@@ -13,7 +13,7 @@ import { BookmarkOutlineIcon, CalendarIcon, ClockIcon, PinIcon } from '@/app/sha
  *
  * Design:
  * - 4 pill-shaped buttons, slightly larger than Surah shortcuts
- * - Icon + text, icon color matches "Al Qur'an" title (foreground)
+ * - Icon + text, icon color matches "Al Quran" title (foreground)
  * - Desktop: single centered row
  * - Mobile: 2x2 grid or horizontal row
  */
