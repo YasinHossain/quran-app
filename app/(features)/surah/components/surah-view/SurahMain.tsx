@@ -7,11 +7,14 @@ import { SurahVerseList } from '@/app/(features)/surah/components/SurahVerseList
 import { SurahCalligraphyIntro } from './SurahCalligraphyIntro';
 import { useVerseAudioWordSync } from './useVerseAudioWordSync';
 
+import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
 import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVerseListing';
 
 interface SurahMainProps {
   surahId?: number | undefined;
   verseListing: UseVerseListingReturn;
+  resourceKind?: MushafResourceKind | undefined;
+  resourceId?: string | undefined;
   emptyLabelKey?: string;
   endLabelKey?: string;
   initialVerseKey?: string | undefined;
@@ -21,6 +24,8 @@ interface SurahMainProps {
 export function SurahMain({
   surahId,
   verseListing,
+  resourceKind,
+  resourceId,
   emptyLabelKey,
   endLabelKey,
   initialVerseKey,
@@ -36,6 +41,8 @@ export function SurahMain({
       <SurahVerseList
         surahId={surahId}
         verseListing={verseListing}
+        {...(resourceKind ? { resourceKind } : {})}
+        {...(resourceId ? { resourceId } : {})}
         {...(emptyLabelKey !== undefined ? { emptyLabelKey } : {})}
         {...(endLabelKey !== undefined ? { endLabelKey } : {})}
         {...(initialVerseKey ? { initialVerseKey } : {})}

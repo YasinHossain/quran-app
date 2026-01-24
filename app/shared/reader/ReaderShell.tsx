@@ -26,6 +26,7 @@ const MushafMain = dynamic(
 );
 
 import { ReaderAudioProps, WorkspaceReaderLayout } from './ReaderLayouts';
+import { ReaderResourceHeading } from './ReaderResourceHeading';
 import { useReaderView } from './useReaderView';
 
 import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
@@ -38,6 +39,8 @@ type ReaderPanelsState = ReaderViewState['panels'];
 interface CreateSurahMainParams {
   surahId?: number | undefined;
   verseListing: VerseListingState;
+  resourceKind: MushafResourceKind;
+  resourceId: string;
   emptyLabelKey?: string | undefined;
   endLabelKey?: string | undefined;
   initialVerseKey?: string | undefined;
@@ -48,6 +51,8 @@ interface CreateSurahMainParams {
 const createSurahMain = ({
   surahId,
   verseListing,
+  resourceKind,
+  resourceId,
   emptyLabelKey,
   endLabelKey,
   initialVerseKey,
@@ -60,6 +65,8 @@ const createSurahMain = ({
     key={`${initialVerseKey ?? 'no-initial-verse'}:${initialScrollNonce ?? '0'}`}
     surahId={surahId}
     verseListing={verseListing}
+    resourceKind={resourceKind}
+    resourceId={resourceId}
     {...(emptyLabelKey ? { emptyLabelKey } : {})}
     {...(endLabelKey ? { endLabelKey } : {})}
     {...(initialVerseKey ? { initialVerseKey } : {})}
@@ -224,6 +231,8 @@ export function ReaderShell({
   const surahMain = createSurahMain({
     surahId,
     verseListing,
+    resourceKind,
+    resourceId,
     ...(typeof emptyLabelKey === 'string' ? { emptyLabelKey } : {}),
     ...(typeof endLabelKey === 'string' ? { endLabelKey } : {}),
     ...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {}),
@@ -252,6 +261,15 @@ export function ReaderShell({
     />
   );
   const mainContent = resolvedMode === 'mushaf' ? mushafMain : surahMain;
+  const wrappedMainContent =
+    resourceKind === 'surah' ? (
+      mainContent
+    ) : (
+      <div className="w-full space-y-8">
+        <ReaderResourceHeading resourceKind={resourceKind} resourceId={resourceId} />
+        {mainContent}
+      </div>
+    );
   const activeReaderTab = resolvedMode === 'mushaf' ? 'reading' : 'translation';
   const settingsSidebar = createSettingsSidebar(
     panels,
@@ -271,7 +289,7 @@ export function ReaderShell({
 
   return (
     <WorkspaceReaderLayout
-      main={mainContent}
+      main={wrappedMainContent}
       desktopLeft={<SurahWorkspaceNavigation />}
       desktopRight={workspaceSettingsSidebar}
       mobileLeft={<SurahListSidebar />}

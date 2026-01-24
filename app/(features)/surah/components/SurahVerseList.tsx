@@ -7,6 +7,7 @@ import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
 import { SurahNavigation } from '@/app/(features)/surah/components/SurahNavigation';
 import { useDedupedFetchVerse } from '@/app/(features)/surah/hooks/verse-listing/useDedupedFetchVerse';
 import { useSettings } from '@/app/providers/SettingsContext';
+import { ReaderResourceNavigation } from '@/app/shared/reader/ReaderResourceNavigation';
 import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
 import { useAdaptiveViewportBy } from '@/app/shared/hooks/useAdaptiveViewportBy';
 import { LoadingStatus } from '@/app/shared/LoadingStatus';
@@ -16,6 +17,7 @@ import { Spinner } from '@/app/shared/Spinner';
 import { Verse as VerseComponent } from './VerseCard';
 
 import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVerseListing';
+import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
 import type { Verse } from '@/types';
 
 const SCROLL_OFFSET_TOP_PX = 65;
@@ -64,6 +66,8 @@ const ensureVerseAtTop = (
 interface SurahVerseListProps {
   surahId?: number | undefined;
   verseListing: UseVerseListingReturn;
+  resourceKind?: MushafResourceKind | undefined;
+  resourceId?: string | undefined;
   emptyLabelKey?: string;
   endLabelKey?: string;
   initialVerseKey?: string | undefined;
@@ -74,11 +78,13 @@ function QuranComVerseRow({
   verseListing,
   isLastVerse,
   surahId,
+  resourceKind,
 }: {
   verseIdx: number;
   verseListing: UseVerseListingReturn;
   isLastVerse?: boolean;
   surahId?: number | undefined;
+  resourceKind: MushafResourceKind;
 }): React.JSX.Element {
   const { settings } = useSettings();
   const tajweed = settings.tajweed ?? false;
@@ -104,7 +110,7 @@ function QuranComVerseRow({
   return (
     <>
       <VerseComponent verse={verse} />
-      {isLastVerse && surahId ? (
+      {isLastVerse && resourceKind === 'surah' && surahId ? (
         <div className="mt-2 text-center pb-10">
           <SurahNavigation currentSurahId={surahId} className="!py-6" />
         </div>
@@ -116,6 +122,8 @@ function QuranComVerseRow({
 export const SurahVerseList = ({
   surahId,
   verseListing,
+  resourceKind = 'surah',
+  resourceId,
   emptyLabelKey = 'no_verses_found',
   initialVerseKey,
 }: SurahVerseListProps): React.JSX.Element => {
@@ -123,6 +131,7 @@ export const SurahVerseList = ({
   const audio = useAudio();
   const emptyLabel = t(emptyLabelKey);
   const initialVerseNumber = parseInitialVerseNumber(initialVerseKey);
+  const resolvedResourceId = resourceId ?? verseListing.resourceId;
 
   const hasNoContent = verseListing.verses.length === 0;
   const isQuranComMode =
@@ -134,6 +143,7 @@ export const SurahVerseList = ({
       <QuranComList
         verseListing={verseListing}
         surahId={surahId}
+        resourceKind={resourceKind}
         initialVerseNumber={initialVerseNumber}
         isAutoScrollEnabled={audio.isPlaying}
       />
@@ -149,6 +159,8 @@ export const SurahVerseList = ({
       verseListing={verseListing}
       surahId={surahId}
       emptyLabel={emptyLabel}
+      resourceKind={resourceKind}
+      resourceId={resolvedResourceId}
       initialVerseKey={initialVerseKey}
       isAutoScrollEnabled={audio.isPlaying}
     />
@@ -158,11 +170,13 @@ export const SurahVerseList = ({
 function QuranComList({
   verseListing,
   surahId,
+  resourceKind,
   initialVerseNumber,
   isAutoScrollEnabled,
 }: {
   verseListing: UseVerseListingReturn;
   surahId?: number | undefined;
+  resourceKind: MushafResourceKind;
   initialVerseNumber: number | null;
   isAutoScrollEnabled: boolean;
 }): React.JSX.Element {
@@ -237,6 +251,7 @@ function QuranComList({
           verseListing={verseListing}
           isLastVerse={index === totalVerses - 1}
           surahId={surahId}
+          resourceKind={resourceKind}
         />
       )}
     />
@@ -247,12 +262,16 @@ function InfiniteList({
   verseListing,
   surahId,
   emptyLabel,
+  resourceKind,
+  resourceId,
   initialVerseKey,
   isAutoScrollEnabled,
 }: {
   verseListing: UseVerseListingReturn;
   surahId?: number | undefined;
   emptyLabel: string;
+  resourceKind: MushafResourceKind;
+  resourceId?: string | undefined;
   initialVerseKey?: string | undefined;
   isAutoScrollEnabled: boolean;
 }): React.JSX.Element {
@@ -306,6 +325,8 @@ function InfiniteList({
         isReachingEnd={verseListing.isReachingEnd}
         hasVerses={verseListing.verses.length > 0}
         surahId={surahId}
+        resourceKind={resourceKind}
+        resourceId={resourceId}
       />
     </div>
   );
@@ -317,6 +338,8 @@ interface LoadMoreFooterProps {
   isReachingEnd: boolean;
   hasVerses: boolean;
   surahId?: number | undefined;
+  resourceKind: MushafResourceKind;
+  resourceId?: string | undefined;
 }
 
 function LoadMoreFooter({
@@ -325,6 +348,8 @@ function LoadMoreFooter({
   isReachingEnd,
   hasVerses,
   surahId,
+  resourceKind,
+  resourceId,
 }: LoadMoreFooterProps): React.JSX.Element | null {
   if (!hasVerses) return null;
 
@@ -334,8 +359,17 @@ function LoadMoreFooter({
         {isValidating && <Spinner className="inline h-5 w-5 text-accent" />}
       </div>
       {isReachingEnd ? (
-        <div className="py-10 text-center space-y-6">
-          {surahId ? <SurahNavigation currentSurahId={surahId} /> : null}
+        <div className="pb-10 pt-14 text-center">
+          {resourceKind === 'surah' && surahId ? (
+            <SurahNavigation currentSurahId={surahId} className="!py-6" />
+          ) : null}
+          {resourceKind !== 'surah' && resourceId ? (
+            <ReaderResourceNavigation
+              resourceKind={resourceKind}
+              resourceId={resourceId}
+              className="!py-6"
+            />
+          ) : null}
         </div>
       ) : null}
     </>
