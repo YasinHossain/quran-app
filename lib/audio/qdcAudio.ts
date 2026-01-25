@@ -82,10 +82,14 @@ export function normalizeQdcAudioFile(apiFile: QdcAudioFileApi): QdcAudioFile {
   };
 }
 
-export async function getQdcAudioReciters(): Promise<QdcAudioReciterApi[]> {
+export async function getQdcAudioReciters(locale?: string): Promise<QdcAudioReciterApi[]> {
+  const params: Record<string, string> = {};
+  if (locale) {
+    params['language'] = locale;
+  }
   const json = await apiFetch<QdcAudioRecitersResponse>(
     'audio/reciters',
-    {},
+    params,
     'Failed to fetch QDC audio reciters'
   );
   return Array.isArray(json.reciters) ? json.reciters : [];

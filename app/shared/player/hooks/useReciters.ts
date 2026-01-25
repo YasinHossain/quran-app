@@ -41,7 +41,10 @@ interface UseRecitersReturn {
 
 export function useReciters(): UseRecitersReturn {
   const { t, i18n } = useTranslation();
-  const { data, error, isLoading } = useSWR(QDC_RECITERS_KEY, getQdcAudioReciters);
+  const { data, error, isLoading } = useSWR(
+    [QDC_RECITERS_KEY, i18n.language],
+    ([_, lang]) => getQdcAudioReciters(lang?.split('-')[0])
+  );
 
   const reciters = useMemo(() => {
     const mapped = (data ?? []).map((reciter) =>

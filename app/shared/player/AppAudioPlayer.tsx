@@ -59,6 +59,7 @@ const createTrack = (
   startMs: number,
   endMs: number,
   surahLabel: string,
+  locale: string,
   segments?: Array<[number, number, number]>
 ): Track => {
   const durationMs = Math.max(0, endMs - startMs);
@@ -69,9 +70,10 @@ const createTrack = (
     start: Math.max(0, (fromMs - startMs) / 1000),
     end: Math.max(0, (toMs - startMs) / 1000),
   }));
+
   return {
     id: verse.id.toString(),
-    title: `${surahLabel} ${verse.verse_key}`,
+    title: `${surahLabel} ${formatVerseKey(verse.verse_key, locale)}`,
     artist: reciter.name,
     durationSec: durationMs / 1000,
     src: audioUrl,
@@ -81,6 +83,17 @@ const createTrack = (
   };
 };
 
+function formatVerseKey(key: string, locale: string): string {
+  try {
+    const [surah, ayah] = key.split(':');
+    if (!surah || !ayah) return key;
+    const fmt = new Intl.NumberFormat(locale);
+    return `${fmt.format(Number(surah))}:${fmt.format(Number(ayah))}`;
+  } catch {
+    return key;
+  }
+}
+
 export const AppAudioPlayer = ({
   activeVerse,
   reciter,
@@ -88,7 +101,7 @@ export const AppAudioPlayer = ({
   onNext,
   onPrev,
 }: AppAudioPlayerProps): React.JSX.Element | null => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { isHidden } = useHeaderVisibility();
   const surahLabel = t('surah_tab');
 
@@ -111,9 +124,10 @@ export const AppAudioPlayer = ({
       timing.timestampFrom,
       timing.timestampTo,
       surahLabel,
+      i18n.language,
       timing.segments
     );
-  }, [activeVerse, audioFile, reciter, surahLabel]);
+  }, [activeVerse, audioFile, reciter, surahLabel, i18n.language]);
 
   const handleNext = useMemo(() => (): boolean => Boolean(onNext?.()), [onNext]);
   const handlePrev = useMemo(() => (): boolean => Boolean(onPrev?.()), [onPrev]);
@@ -121,9 +135,8 @@ export const AppAudioPlayer = ({
   // Early return AFTER all hooks have been called
   if (!activeVerse || !isVisible) return null;
 
-  const containerClass = `fixed left-0 right-0 p-4 bg-background/0 z-audio-player transition-all duration-300 ease-in-out ${
-    isHidden ? 'bottom-0 pb-safe' : 'bottom-0 pb-safe lg:pb-4'
-  } lg:left-1/2 lg:-translate-x-1/2 lg:right-auto lg:w-[min(90vw,60rem)]`;
+  const containerClass = `fixed left-0 right-0 p-4 bg-background/0 z-audio-player transition-all duration-300 ease-in-out ${isHidden ? 'bottom-0 pb-safe' : 'bottom-0 pb-safe lg:pb-4'
+    } lg:left-1/2 lg:-translate-x-1/2 lg:right-auto lg:w-[min(90vw,60rem)]`;
 
   const containerStyle = {
     bottom: isHidden ? 'env(safe-area-inset-bottom)' : 'calc(5rem + env(safe-area-inset-bottom))',
