@@ -126,7 +126,7 @@
   .dark {
     --color-background: 15 23 42;
     --color-surface: 30 41 59;
-    --color-foreground: 241 245 249;
+    --color-foreground: 231 229 228;
     --color-muted: 148 163 184;
     --color-accent: 20 184 166;
     --color-accent-hover: 13 148 136;
@@ -137,7 +137,7 @@
     --color-on-accent: 255 255 255;
 
     /* Content semantic colors - Dark Mode */
-    --color-content-primary: 241 245 249;
+    --color-content-primary: 231 229 228;
     /* slate-100 equivalent */
     --color-content-secondary: 148 163 184;
     /* slate-400 equivalent */
@@ -509,11 +509,9 @@ input[type='range'] {
   border-radius: 5px;
   outline: none;
   touch-action: none;
-  background: linear-gradient(
-    to right,
-    rgb(var(--color-accent)) var(--value-percent, 0%),
-    rgb(var(--color-border)) var(--value-percent, 0%)
-  );
+  background: linear-gradient(to right,
+      rgb(var(--color-accent)) var(--value-percent, 0%),
+      rgb(var(--color-border)) var(--value-percent, 0%));
 }
 
 input[type='range']::-webkit-slider-thumb {

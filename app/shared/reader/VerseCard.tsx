@@ -146,7 +146,7 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
                       )}
                       <p
                         className={cn(
-                          'text-left leading-relaxed text-slate-900 dark:text-slate-50',
+                          'text-left leading-relaxed text-slate-900 dark:text-stone-200',
                           isEnglish ? 'font-[family-name:var(--font-crimson-text)]' : ''
                         )}
                         lang={lang}
