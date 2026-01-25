@@ -38,6 +38,7 @@ export const VerseOfDay = memo(function VerseOfDay({
   const { settings } = useSettings();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const hasVerses = verses && verses.length > 0;
@@ -51,26 +52,55 @@ export const VerseOfDay = memo(function VerseOfDay({
     return map;
   }, [chapters]);
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setPrefersReducedMotion(mediaQuery.matches);
+    update();
+
+    mediaQuery.addEventListener('change', update);
+    return () => mediaQuery.removeEventListener('change', update);
+  }, []);
+
   // Rotate verse every 15 seconds
   useEffect(() => {
-    if (!hasVerses || versesLength <= 1) return;
+    if (!hasVerses || versesLength <= 1 || prefersReducedMotion) return;
 
-    timerRef.current = setInterval(() => {
-      setIsTransitioning(true);
-
-      // After fade-out, change verse
-      setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % versesLength);
-        setIsTransitioning(false);
-      }, 300);
-    }, 15000);
-
-    return () => {
+    const stop = () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
+        timerRef.current = null;
       }
     };
-  }, [hasVerses, versesLength]);
+
+    const start = () => {
+      stop();
+      timerRef.current = setInterval(() => {
+        setIsTransitioning(true);
+
+        // After fade-out, change verse
+        setTimeout(() => {
+          setCurrentIndex((prev) => (prev + 1) % versesLength);
+          setIsTransitioning(false);
+        }, 300);
+      }, 15000);
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        start();
+      } else {
+        stop();
+      }
+    };
+
+    onVisibilityChange();
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      stop();
+    };
+  }, [hasVerses, prefersReducedMotion, versesLength]);
 
   // Memoize current verse data
   const verseData = useMemo(() => {
@@ -106,13 +136,15 @@ export const VerseOfDay = memo(function VerseOfDay({
     ? cleanTranslationText(verseData.translation)
     : null;
 
+  const contentClassName = prefersReducedMotion
+    ? 'space-y-4'
+    : `transition-opacity duration-300 ease-in-out space-y-4 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`;
+
   return (
     <div
       className={`w-full p-4 md:p-6 lg:p-8 rounded-2xl shadow-lg bg-surface-navigation border border-border/30 dark:border-border/20 min-h-[180px] ${className || ''}`}
     >
-      <div
-        className={`transition-opacity duration-300 ease-in-out space-y-4 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
-      >
+      <div className={contentClassName}>
         {/* Arabic text - uses preloaded UthmanicHafs font */}
         <h3
           className="text-2xl md:text-3xl lg:text-4xl leading-relaxed text-right text-content-accent"

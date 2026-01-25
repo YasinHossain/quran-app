@@ -3,6 +3,8 @@ import { unstable_cache } from 'next/cache';
 import { UI_LANGUAGE_CONTENT_DEFAULTS } from '@/app/providers/uiLanguageContentDefaults';
 import { Verse } from '@/types';
 
+import type { Chapter } from '@/types';
+
 import { getChaptersServer } from './chapters';
 
 const DEFAULT_TRANSLATION_IDS = Array.from(
@@ -29,9 +31,7 @@ interface VerseByKeyResponse {
   };
 }
 
-async function fetchRandomVerse(seed: number): Promise<Verse> {
-  const chapters = await getChaptersServer();
-
+async function fetchRandomVerse(seed: number, chapters: ReadonlyArray<Chapter>): Promise<Verse> {
   // Simple seeded random for reproducible results
   let s = seed;
   const rng = () => {
@@ -82,6 +82,8 @@ async function fetchRandomVerse(seed: number): Promise<Verse> {
 }
 
 async function fetchRandomVerses(): Promise<Verse[]> {
+  const chapters = await getChaptersServer();
+
   // Use hour-based seed for consistent verses per hour
   const now = new Date();
   const baseSeed =
@@ -92,7 +94,7 @@ async function fetchRandomVerses(): Promise<Verse[]> {
 
   // Fetch verses in parallel with different seeds
   const versePromises = Array.from({ length: VERSE_COUNT }, (_, i) =>
-    fetchRandomVerse(baseSeed + i)
+    fetchRandomVerse(baseSeed + i, chapters)
   );
 
   try {
