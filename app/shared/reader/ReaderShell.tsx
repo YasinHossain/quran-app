@@ -37,6 +37,7 @@ type VerseListingState = ReaderViewState['verseListing'];
 type ReaderPanelsState = ReaderViewState['panels'];
 
 interface CreateSurahMainParams {
+  resourceId: string;
   surahId?: number | undefined;
   verseListing: VerseListingState;
   resourceKind: MushafResourceKind;
@@ -48,6 +49,7 @@ interface CreateSurahMainParams {
 }
 
 const createSurahMain = ({
+  resourceId,
   surahId,
   verseListing,
   resourceKind,
@@ -60,7 +62,7 @@ const createSurahMain = ({
   <SurahMain
     // Force remount not only when the target verse changes, but also when a new navigation
     // intent is fired for the same verse (via nav sequence query param)
-    key={`${initialVerseKey ?? 'no-initial-verse'}:${initialScrollNonce ?? '0'}`}
+    key={`${resourceKind}:${resourceId}:${initialVerseKey ?? 'no-initial-verse'}:${initialScrollNonce ?? '0'}`}
     surahId={surahId}
     verseListing={verseListing}
     resourceKind={resourceKind}
@@ -226,6 +228,7 @@ export function ReaderShell({
   }, [resourceKind, resourceId, verseListing.verses, initialVerses]);
 
   const surahMain = createSurahMain({
+    resourceId,
     surahId,
     verseListing,
     resourceKind,

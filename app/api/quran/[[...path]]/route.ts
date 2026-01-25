@@ -14,6 +14,8 @@ const DEFAULT_TTL_MS = (() => {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 60_000;
 })();
 
+const DEFAULT_TTL_SECONDS = Math.max(1, Math.floor(DEFAULT_TTL_MS / 1000));
+
 const MAX_CACHE_ENTRIES = (() => {
   const rawMax = process.env['QURAN_PROXY_CACHE_SIZE'];
   const parsed = rawMax ? Number.parseInt(rawMax, 10) : Number.NaN;
@@ -91,6 +93,47 @@ function getWordLanguageParam(params: URLSearchParams): string {
   ).toLowerCase();
 }
 
+function normaliseCsvParam(value: string): string {
+  if (!value) return '';
+  return value
+    .split(',')
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .sort((a, b) => {
+      const aNum = Number.parseInt(a, 10);
+      const bNum = Number.parseInt(b, 10);
+      if (Number.isNaN(aNum) || Number.isNaN(bNum)) return a.localeCompare(b);
+      return aNum - bNum;
+    })
+    .join(',');
+}
+
+function canonicaliseSearchParams(params: URLSearchParams): string {
+  const entries = Array.from(params.entries()).map(([key, value]) => {
+    if (key === 'translations' || key === 'translation_ids' || key === 'translationId') {
+      return [key, normaliseCsvParam(value)] as const;
+    }
+
+    if (key === 'word_translation_language' || key === 'language' || key === 'wordLang') {
+      return [key, value.trim().toLowerCase()] as const;
+    }
+
+    return [key, value] as const;
+  });
+
+  entries.sort(([aKey, aVal], [bKey, bVal]) => {
+    if (aKey !== bKey) return aKey.localeCompare(bKey);
+    return aVal.localeCompare(bVal);
+  });
+
+  const canonical = new URLSearchParams();
+  for (const [key, value] of entries) {
+    canonical.append(key, value);
+  }
+
+  return canonical.toString();
+}
+
 function serialiseAdditionalParams(params: URLSearchParams): string {
   return Array.from(params.entries())
     .filter(
@@ -131,7 +174,7 @@ function createResponse(
   headers.set('X-Quran-Proxy-Cache', cacheStatus);
   headers.set(
     'Cache-Control',
-    headers.get('Cache-Control') ?? 'public, max-age=60, stale-while-revalidate=60'
+    headers.get('Cache-Control') ?? 'public, max-age=60, s-maxage=60, stale-while-revalidate=60'
   );
   return new NextResponse(body, {
     ...init,
@@ -147,6 +190,10 @@ export async function GET(
   const downstreamPathSegments = context.params.path ?? [];
   const upstreamPath = downstreamPathSegments.join('/');
   const upstreamUrl = getUpstreamUrl(upstreamPath, nextUrl.search);
+
+  const canonicalSearch = canonicaliseSearchParams(upstreamUrl.searchParams);
+  upstreamUrl.search = canonicalSearch ? `?${canonicalSearch}` : '';
+
   const cacheKey = buildCacheKey(upstreamUrl.pathname, upstreamUrl.searchParams);
   const ifNoneMatch = request.headers.get('if-none-match');
   const now = Date.now();
@@ -172,7 +219,7 @@ export async function GET(
       headers: {
         Accept: 'application/json',
       },
-      cache: 'no-store',
+      next: { revalidate: DEFAULT_TTL_SECONDS },
     });
 
     const bodyText = await upstreamResponse.text();
@@ -183,9 +230,7 @@ export async function GET(
       'Content-Type':
         upstreamResponse.headers.get('content-type') ?? 'application/json; charset=utf-8',
       ETag: etag,
-      'Cache-Control': `public, max-age=${Math.floor(DEFAULT_TTL_MS / 1000)}, stale-while-revalidate=${Math.floor(
-        DEFAULT_TTL_MS / 1000
-      )}`,
+      'Cache-Control': `public, max-age=${DEFAULT_TTL_SECONDS}, s-maxage=${DEFAULT_TTL_SECONDS}, stale-while-revalidate=${DEFAULT_TTL_SECONDS}`,
     };
 
     if (ifNoneMatch && ifNoneMatch === etag) {
