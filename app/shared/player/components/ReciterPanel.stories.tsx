@@ -12,7 +12,7 @@ export const meta: Meta<typeof ReciterPanel> = {
 type Story = StoryObj<typeof ReciterPanel>;
 
 function ReciterPanelStory(): React.JSX.Element {
-  const [reciter, setReciter] = useState(7); // Default to Mishari Rashid al-Afasy
+  const [reciter, setReciter] = useState(173); // Default to Mishari Rashid al-Afasy
   return (
     <div className="p-4 bg-surface">
       <ReciterPanel localReciter={reciter} setLocalReciter={setReciter} />

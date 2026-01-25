@@ -11,7 +11,7 @@ const QDC_RECITERS_KEY = 'qdc-audio-reciters';
 
 // Default reciter to use while loading or if API fails
 export const DEFAULT_RECITER: Reciter = {
-  id: 7,
+  id: 173,
   name: 'Mishari Rashid al-`Afasy',
   locale: 'Murattal',
 };

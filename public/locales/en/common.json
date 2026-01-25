@@ -310,7 +310,8 @@
   "audio_error_hint_try_again": "Try again in a moment.",
   "unknown_reciter": "Unknown reciter",
   "reciter_names": {
-    "7": "Mishari Rashid al-`Afasy"
+    "7": "Mishari Rashid al-`Afasy",
+    "173": "Mishari Rashid al-`Afasy"
   },
   "surah_names": {
     "1": "Al-Fatihah",
