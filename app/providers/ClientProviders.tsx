@@ -3,7 +3,6 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import { SWRConfig } from 'swr';
 
-import { WebVitals } from '@/app/shared/components/WebVitals';
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 import { ErrorHandler } from '@/src/infrastructure/errors';
 
@@ -76,7 +75,6 @@ export function ClientProviders({
                 <SidebarProvider>
                   <NavigationProvider>
                     <AudioProvider>
-                      <WebVitals reportTarget="console" />
                       {children}
                     </AudioProvider>
                   </NavigationProvider>

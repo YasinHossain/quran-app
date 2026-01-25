@@ -1,13 +1,6 @@
 // app/layout.tsx
-import { cookies } from 'next/headers';
-
 import './fonts.css';
 import './globals.css';
-import { isUiLanguageCode } from '@/app/shared/i18n/uiLanguages';
-
-import { ClientProviders } from './providers/ClientProviders';
-import { TranslationProvider } from './providers/TranslationProvider';
-import { ErrorBoundary } from './shared/components/error-boundary';
 import { WebVitals } from './shared/components/WebVitals';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
@@ -37,38 +30,34 @@ import { Analytics } from '@vercel/analytics/react';
  */
 export const INLINE_THEME_SCRIPT = `(function(){try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){try{var m=document.cookie.match(/(?:^|; )theme=([^;]+)/);t=m?decodeURIComponent(m[1]):null}catch(e){}}if(t!=='light'&&t!=='dark'){try{var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');if(mq&&mq.matches)t='dark'}catch(e){} }var r=document.documentElement;r.classList.remove('light');r.classList.toggle('dark',t==='dark');r.setAttribute('data-theme',t==='dark'?'dark':'light');try{r.style.colorScheme=t==='dark'?'dark':'light'}catch(e){}}catch(e){}})()`;
 
-export const INLINE_UI_LANGUAGE_SCRIPT = `(function(){try{var k='ui-language';var l=null;try{l=localStorage.getItem(k)}catch(e){}if(!l){try{var re=new RegExp('(?:^|; )'+k+'=([^;]+)');var m=document.cookie.match(re);l=m?decodeURIComponent(m[1]):null}catch(e){}}if(l!=='en'&&l!=='bn')return;var r=document.documentElement;if(r&&r.lang!==l)r.lang=l;try{var c=k+'='+encodeURIComponent(l)+'; path=/; max-age=31536000; SameSite=Lax';try{if(location&&location.protocol==='https:')c+='; Secure'}catch(e){}document.cookie=c}catch(e){}}catch(e){}})()`;
+/**
+ * Inline UI language sync (pre-paint).
+ *
+ * Priority order:
+ * 1) URL prefix (/en or /bn) when present (prevents language flashes on hard reload)
+ * 2) localStorage value
+ * 3) cookie value
+ *
+ * This keeps SSR static/cached while still aligning client language before paint.
+ */
+export const INLINE_UI_LANGUAGE_SCRIPT = `(function(){try{var k='ui-language';var l=null;try{var p=location&&location.pathname?location.pathname:'';if(p.indexOf('/bn')===0)l='bn';else if(p.indexOf('/en')===0)l='en'}catch(e){}if(!l){try{l=localStorage.getItem(k)}catch(e){}}if(!l){try{var re=new RegExp('(?:^|; )'+k+'=([^;]+)');var m=document.cookie.match(re);l=m?decodeURIComponent(m[1]):null}catch(e){}}if(l!=='en'&&l!=='bn')return;var r=document.documentElement;if(r&&r.lang!==l)r.lang=l;try{var c=k+'='+encodeURIComponent(l)+'; path=/; max-age=31536000; SameSite=Lax';try{if(location&&location.protocol==='https:')c+='; Secure'}catch(e){}document.cookie=c}catch(e){}try{localStorage.setItem(k,l)}catch(e){}}catch(e){}})()`;
 
 export const metadata = {
   title: 'Al Quran',
   description: 'Read, Study, and Learn The Holy Quran',
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
-}): Promise<React.JSX.Element> {
-  const cookieStore = await cookies();
-  const stored = cookieStore.get('theme');
-  const theme =
-    stored && (stored.value === 'light' || stored.value === 'dark')
-      ? (stored.value as 'light' | 'dark')
-      : 'light';
-  const storedUiLanguage = cookieStore.get('ui-language');
-  const uiLanguage =
-    storedUiLanguage && isUiLanguageCode(storedUiLanguage.value) ? storedUiLanguage.value : 'en';
-  const htmlClassNameByTheme: Record<'light' | 'dark', string | undefined> = {
-    light: undefined,
-    dark: 'dark',
-  };
+}): React.JSX.Element {
 
   return (
     <html
-      lang={uiLanguage}
-      data-theme={theme}
+      lang="en"
+      data-theme="light"
       data-glass="off"
-      className={htmlClassNameByTheme[theme]}
       suppressHydrationWarning
     >
       <head>
@@ -98,13 +87,7 @@ export default async function RootLayout({
         <WebVitals />
         <SpeedInsights />
         <Analytics />
-        <ErrorBoundary>
-          <TranslationProvider initialLanguage={uiLanguage}>
-            <ClientProviders initialTheme={theme} initialUiLanguage={uiLanguage}>
-              {children}
-            </ClientProviders>
-          </TranslationProvider>
-        </ErrorBoundary>
+        {children}
       </body>
     </html>
   );

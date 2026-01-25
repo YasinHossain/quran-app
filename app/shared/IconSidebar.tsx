@@ -19,6 +19,24 @@ interface NavItem {
   href: string;
 }
 
+const LOCALE_PREFIX_RE = /^\/(en|bn)(?=\/|$)/;
+
+const getLocaleFromPathname = (pathname: string): 'en' | 'bn' => {
+  const match = pathname.match(LOCALE_PREFIX_RE);
+  return match?.[1] === 'bn' ? 'bn' : 'en';
+};
+
+const stripLocalePrefix = (pathname: string): string => {
+  const stripped = pathname.replace(LOCALE_PREFIX_RE, '');
+  return stripped === '' ? '/' : stripped;
+};
+
+const withLocalePrefix = (href: string, locale: 'en' | 'bn'): string => {
+  if (!href.startsWith('/')) return href;
+  if (LOCALE_PREFIX_RE.test(href)) return href;
+  return href === '/' ? `/${locale}` : `/${locale}${href}`;
+};
+
 // Desktop navigation component
 const DesktopNavigation = memo(function DesktopNavigation({
   navItems,
@@ -94,10 +112,11 @@ const MobileNavigation = memo(function MobileNavigation({
       <div className="px-2 sm:px-4 py-2 pb-safe">
         <div className="flex items-center w-full">
           {navItems.map((item) => {
+            const baseItemHref = stripLocalePrefix(item.href);
             const isActive =
-              item.href === '/'
+              baseItemHref === '/'
                 ? pathname === '/'
-                : item.href === '/bookmarks/last-read'
+                : baseItemHref === '/bookmarks/last-read'
                   ? pathname.startsWith('/bookmarks')
                   : pathname.startsWith('/surah') ||
                     pathname.startsWith('/juz') ||
@@ -140,6 +159,8 @@ export const Navigation = memo(function Navigation({
 }) {
   const rawPathname = usePathname();
   const pathname = pathnameOverride ?? rawPathname;
+  const locale = useMemo(() => getLocaleFromPathname(pathname), [pathname]);
+  const basePathname = useMemo(() => stripLocalePrefix(pathname), [pathname]);
   const searchParams = useSearchParams();
   const router = useRouter();
   const { t } = useTranslation();
@@ -171,13 +192,13 @@ export const Navigation = memo(function Navigation({
   );
 
   useEffect(() => {
-    if (!pathname.startsWith('/tafsir')) {
+    if (!basePathname.startsWith('/tafsir')) {
       setTafsirReturnHref(null);
       return;
     }
 
     setTafsirReturnHref(getTafsirReturnHref());
-  }, [pathname]);
+  }, [basePathname]);
 
   const normalizeStoredReaderHref = useCallback((href: string): string => {
     // Migration: older builds stored `?startVerse=...` (and sometimes `nav`/`view`) in localStorage.
@@ -191,7 +212,8 @@ export const Navigation = memo(function Navigation({
         href,
         typeof window !== 'undefined' ? window.location.origin : 'http://localhost'
       );
-      if (!url.pathname.startsWith('/surah/')) return href;
+      const basePath = stripLocalePrefix(url.pathname);
+      if (!basePath.startsWith('/surah/')) return href;
 
       const params = new URLSearchParams(url.search);
       const startVerse = params.get('startVerse');
@@ -206,7 +228,7 @@ export const Navigation = memo(function Navigation({
       if (view) hashParams.set('view', view);
 
       const hash = hashParams.toString();
-      return hash ? `${url.pathname}#${hash}` : url.pathname;
+      return hash ? `${basePath}#${hash}` : basePath;
     } catch {
       return href;
     }
@@ -233,7 +255,9 @@ export const Navigation = memo(function Navigation({
     // The link is only useful when we navigate AWAY from the reader.
     // This prevents re-renders while scrolling/tracking verses.
     const isReaderRoute =
-      pathname.startsWith('/surah') || pathname.startsWith('/juz') || pathname.startsWith('/page');
+      basePathname.startsWith('/surah') ||
+      basePathname.startsWith('/juz') ||
+      basePathname.startsWith('/page');
 
     if (isReaderRoute) {
       // If we are on the reader page, we just ensure the CURRENT link matches where we are
@@ -264,23 +288,33 @@ export const Navigation = memo(function Navigation({
     }, null);
 
     if (mostRecent) {
-      const href = buildSurahRoute(mostRecent.surahId, { startVerse: mostRecent.verseNumber });
+      const href = buildSurahRoute(mostRecent.surahId, {
+        startVerse: mostRecent.verseNumber,
+        locale,
+      });
       setReaderHref(href);
       window.localStorage.setItem('nav:last-reader-href', href);
     }
-  }, [lastRead, pathname]); // Keep dependencies, but logic inside filters execution
+  }, [lastRead, basePathname, locale]); // Keep dependencies, but logic inside filters execution
 
   const navItems = useMemo(
     (): NavItem[] => [
-      { icon: HomeIcon, label: t('home'), href: '/' },
+      { icon: HomeIcon, label: t('home'), href: `/${locale}` },
       {
         icon: GridIcon,
         label: t('surah_tab'),
-        href: pathname.startsWith('/tafsir') ? (tafsirReturnHref ?? readerHref) : readerHref,
+        href: withLocalePrefix(
+          basePathname.startsWith('/tafsir') ? (tafsirReturnHref ?? readerHref) : readerHref,
+          locale
+        ),
       },
-      { icon: BookmarkOutlineIcon, label: t('bookmarks'), href: '/bookmarks/last-read' },
+      {
+        icon: BookmarkOutlineIcon,
+        label: t('bookmarks'),
+        href: withLocalePrefix('/bookmarks/last-read', locale),
+      },
     ],
-    [pathname, readerHref, t, tafsirReturnHref]
+    [basePathname, locale, readerHref, t, tafsirReturnHref]
   );
 
   const linkStyles = useMemo(
@@ -319,14 +353,14 @@ export const Navigation = memo(function Navigation({
       <DesktopNavigation
         navItems={navItems}
         linkStyles={`${linkStyles} text-foreground hover:text-accent`}
-        pathname={pathname}
+        pathname={basePathname}
         onPrefetch={prefetch}
         prefetchEnabled={prefetchEnabled}
       />
       <MobileNavigation
         navItems={navItems}
         isHidden={hideMobileNav}
-        pathname={pathname}
+        pathname={basePathname}
         onPrefetch={prefetch}
         prefetchEnabled={prefetchEnabled}
       />

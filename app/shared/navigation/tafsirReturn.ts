@@ -35,7 +35,7 @@ export const setTafsirReturnFromVerseKey = (verseKey: string): void => {
 export const setTafsirReturnFromTafsirHref = (href: string): void => {
   if (typeof window === 'undefined') return;
 
-  const match = String(href).match(/^\/tafsir\/([^/]+)\/([^/?#]+)/);
+  const match = String(href).match(/^\/(?:(?:en|bn)\/)?tafsir\/([^/]+)\/([^/?#]+)/);
   const surahId = match?.[1];
   const ayahId = match?.[2];
   if (!surahId || !ayahId) return;

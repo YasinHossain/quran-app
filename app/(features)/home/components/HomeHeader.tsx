@@ -1,10 +1,11 @@
 'use client';
 import * as Popover from '@radix-ui/react-popover';
+import { usePathname, useRouter } from 'next/navigation';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useTheme } from '@/app/providers/ThemeContext';
-import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
+import { localizePathname, setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
 import {
   getUiLanguageLabel,
   isUiLanguageCode,
@@ -23,6 +24,8 @@ interface HomeHeaderProps {
  */
 export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProps) {
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
+  const pathname = usePathname();
   const { t, i18n } = useTranslation();
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
   const selectedCode: UiLanguageCode = isUiLanguageCode(i18n.language) ? i18n.language : 'en';
@@ -67,6 +70,7 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
                       type="button"
                       onClick={() => {
                         setUiLanguage(i18n, language.code);
+                        router.replace(localizePathname(pathname, language.code));
                         setLanguageMenuOpen(false);
                       }}
                       className="w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-interactive-hover transition-colors"

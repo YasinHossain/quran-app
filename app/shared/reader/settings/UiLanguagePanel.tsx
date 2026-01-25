@@ -1,10 +1,11 @@
 'use client';
 
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SlideOverPanel } from '@/app/shared/components/SlideOverPanel';
-import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
+import { localizePathname, setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
 import { UI_LANGUAGES, isUiLanguageCode, type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import { SettingsPanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
 import { ResourceItem } from '@/app/shared/resource-panel/ResourceItem';
@@ -20,6 +21,8 @@ export function UiLanguagePanel({
   onClose,
   onCloseSidebar,
 }: UiLanguagePanelProps): React.JSX.Element {
+  const router = useRouter();
+  const pathname = usePathname();
   const { t, i18n } = useTranslation();
   const selectedCode: UiLanguageCode = isUiLanguageCode(i18n.language) ? i18n.language : 'en';
 
@@ -42,6 +45,7 @@ export function UiLanguagePanel({
                   isSelected={selectedCode === language.code}
                   onToggle={() => {
                     setUiLanguage(i18n, language.code);
+                    router.replace(localizePathname(pathname, language.code));
                     onClose();
                   }}
                 />

@@ -1,5 +1,37 @@
 const encodeParam = (value: number | string): string => encodeURIComponent(String(value));
 
+const LOCALE_PREFIX_RE = /^\/(en|bn)(?=\/|$)/;
+
+const resolveLocalePrefix = (explicit?: string | null): string => {
+  const normalized = String(explicit ?? '')
+    .trim()
+    .toLowerCase();
+
+  if (normalized === 'en' || normalized === 'bn') {
+    return `/${normalized}`;
+  }
+
+  if (typeof window === 'undefined') {
+    return '';
+  }
+
+  try {
+    const fromPath = window.location.pathname.match(LOCALE_PREFIX_RE)?.[1];
+    if (fromPath === 'en' || fromPath === 'bn') return `/${fromPath}`;
+  } catch {
+    // ignore
+  }
+
+  try {
+    const fromDoc = document.documentElement.lang.trim().toLowerCase();
+    if (fromDoc === 'en' || fromDoc === 'bn') return `/${fromDoc}`;
+  } catch {
+    // ignore
+  }
+
+  return '';
+};
+
 const normalizeStartVerse = (startVerse?: number | string | null): string | null => {
   if (startVerse === undefined || startVerse === null) return null;
   const numeric =
@@ -13,10 +45,12 @@ const normalizeStartVerse = (startVerse?: number | string | null): string | null
 interface SurahRouteOptions {
   startVerse?: number | string | null;
   forceSeq?: boolean;
+  locale?: string | null;
 }
 
 export const buildSurahRoute = (surahId: number | string, options?: SurahRouteOptions): string => {
-  const base = `/surah/${encodeParam(surahId)}`;
+  const localePrefix = resolveLocalePrefix(options?.locale);
+  const base = `${localePrefix}/surah/${encodeParam(surahId)}`;
   const normalizedStartVerse = normalizeStartVerse(options?.startVerse);
   const shouldIncludeSeq = options?.forceSeq === true;
 
@@ -35,12 +69,17 @@ export const buildSurahRoute = (surahId: number | string, options?: SurahRouteOp
   return `${base}#${params.toString()}`;
 };
 
-export const buildJuzRoute = (juzId: number | string): string => `/juz/${encodeParam(juzId)}`;
+export const buildJuzRoute = (juzId: number | string, locale?: string | null): string =>
+  `${resolveLocalePrefix(locale)}/juz/${encodeParam(juzId)}`;
 
-export const buildPageRoute = (pageNumber: number | string): string =>
-  `/page/${encodeParam(pageNumber)}`;
+export const buildPageRoute = (pageNumber: number | string, locale?: string | null): string =>
+  `${resolveLocalePrefix(locale)}/page/${encodeParam(pageNumber)}`;
 
-export const buildTafsirRoute = (surahId: number | string, verseId: number | string): string =>
-  `/tafsir/${encodeParam(surahId)}/${encodeParam(verseId)}`;
+export const buildTafsirRoute = (
+  surahId: number | string,
+  verseId: number | string,
+  locale?: string | null
+): string => `${resolveLocalePrefix(locale)}/tafsir/${encodeParam(surahId)}/${encodeParam(verseId)}`;
 
-export const buildSearchRoute = (query: string): string => `/search?query=${encodeParam(query)}`;
+export const buildSearchRoute = (query: string, locale?: string | null): string =>
+  `${resolveLocalePrefix(locale)}/search?query=${encodeParam(query)}`;

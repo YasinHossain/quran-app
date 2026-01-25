@@ -7,10 +7,24 @@ import { memo, type ReactElement, useCallback } from 'react';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { BarsIcon } from '@/app/shared/icons';
 
+const LOCALE_PREFIX_RE = /^\/(en|bn)(?=\/|$)/;
+
+const getLocaleFromPathname = (pathname: string | null): 'en' | 'bn' => {
+  const match = (pathname ?? '').match(LOCALE_PREFIX_RE);
+  return match?.[1] === 'bn' ? 'bn' : 'en';
+};
+
+const stripLocalePrefix = (pathname: string | null): string => {
+  const stripped = (pathname ?? '').replace(LOCALE_PREFIX_RE, '');
+  return stripped === '' ? '/' : stripped;
+};
+
 export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
   const { setSurahListOpen, setBookmarkSidebarOpen, setSearchSidebarOpen } = useSidebar();
 
   const pathname = usePathname();
+  const locale = getLocaleFromPathname(pathname);
+  const basePathname = stripLocalePrefix(pathname);
 
   const isNavPath = (path?: string | null): boolean =>
     Boolean(
@@ -25,21 +39,22 @@ export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
   const isSearchPath = (path?: string | null): boolean =>
     Boolean(path && path.startsWith('/search'));
 
-  const shouldShowMenu = isNavPath(pathname) || isBookmarkPath(pathname) || isSearchPath(pathname);
+  const shouldShowMenu =
+    isNavPath(basePathname) || isBookmarkPath(basePathname) || isSearchPath(basePathname);
 
   const handleMobileNavClick = useCallback((): void => {
-    if (isBookmarkPath(pathname)) {
+    if (isBookmarkPath(basePathname)) {
       setBookmarkSidebarOpen(true);
       return;
     }
-    if (isSearchPath(pathname)) {
+    if (isSearchPath(basePathname)) {
       setSearchSidebarOpen(true);
       return;
     }
-    if (isNavPath(pathname)) {
+    if (isNavPath(basePathname)) {
       setSurahListOpen(true);
     }
-  }, [pathname, setBookmarkSidebarOpen, setSearchSidebarOpen, setSurahListOpen]);
+  }, [basePathname, setBookmarkSidebarOpen, setSearchSidebarOpen, setSurahListOpen]);
 
   return (
     <div className="flex items-center justify-start w-auto sm:w-1/3 gap-1">
@@ -56,7 +71,7 @@ export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
 
       {/* PC: Brand Link (Hidden on mobile) */}
       <Link
-        href="/"
+        href={`/${locale}`}
         className="hidden xl:flex items-center space-x-2 hover:opacity-80 transition-opacity ml-2"
       >
         {/* Logo Removed on PC as per request, implicitly */}

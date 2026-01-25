@@ -10,7 +10,7 @@ import { Navigation } from '@/app/shared/IconSidebar';
 import { ModernLayout } from '@/app/shared/navigation/ModernLayout';
 // Surah list sidebar is now provided by reader/bookmark layouts themselves
 
-import type { ReactElement, ReactNode } from 'react';
+import { Suspense, type ReactElement, type ReactNode } from 'react';
 
 function LayoutContent({ children }: { children: ReactNode }): ReactElement {
   const { isHidden } = useHeaderVisibility();
@@ -23,7 +23,9 @@ function LayoutContent({ children }: { children: ReactNode }): ReactElement {
       <Header />
 
       {/* Simple unified navigation: desktop left sidebar, mobile bottom */}
-      <Navigation />
+      <Suspense fallback={null}>
+        <Navigation />
+      </Suspense>
 
       {/* Sidebars are managed per-feature (ReaderShell/BookmarksLayout) */}
 

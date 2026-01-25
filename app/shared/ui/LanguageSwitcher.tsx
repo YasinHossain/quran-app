@@ -1,9 +1,10 @@
 'use client';
 
+import { usePathname, useRouter } from 'next/navigation';
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
+import { localizePathname, setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
 import {
   UI_LANGUAGES,
   UI_LANGUAGE_STORAGE_KEY,
@@ -52,6 +53,8 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
   variant = 'tabs',
   className,
 }: LanguageSwitcherProps): React.JSX.Element {
+  const router = useRouter();
+  const pathname = usePathname();
   const { i18n } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState<UiLanguageCode>('en');
   const [isClient, setIsClient] = useState(false);
@@ -63,6 +66,10 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
     if (savedLanguage && UI_LANGUAGES.some((lang) => lang.code === savedLanguage)) {
       setCurrentLanguage(savedLanguage);
       setUiLanguage(i18n, savedLanguage);
+      const nextPath = localizePathname(pathname, savedLanguage);
+      if (nextPath !== pathname) {
+        router.replace(nextPath);
+      }
     } else {
       const initial =
         typeof i18n?.language === 'string' && isUiLanguageCode(i18n.language)
@@ -70,14 +77,15 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
           : 'en';
       setCurrentLanguage(initial);
     }
-  }, [i18n]);
+  }, [i18n, pathname, router]);
 
   const handleLanguageChange = useCallback(
     (languageCode: UiLanguageCode): void => {
       setUiLanguage(i18n, languageCode);
+      router.replace(localizePathname(pathname, languageCode));
       setCurrentLanguage(languageCode);
     },
-    [i18n]
+    [i18n, pathname, router]
   );
 
   // Don't render anything during SSR to prevent hydration mismatch

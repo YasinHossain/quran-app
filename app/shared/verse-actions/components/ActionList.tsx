@@ -13,6 +13,13 @@ interface ActionListProps {
   onClose: () => void;
 }
 
+const LOCALE_PREFIX_RE = /^\/(en|bn)(?=\/|$)/;
+
+const stripLocalePrefix = (href: string): string => {
+  const stripped = href.replace(LOCALE_PREFIX_RE, '');
+  return stripped === '' ? '/' : stripped;
+};
+
 export const ActionList = memo(function ActionList({
   actions,
   onClose,
@@ -27,7 +34,7 @@ export const ActionList = memo(function ActionList({
               href={action.href}
               prefetch={true}
               onClick={() => {
-                if (action.href?.startsWith('/tafsir/')) {
+                if (action.href && stripLocalePrefix(action.href).startsWith('/tafsir/')) {
                   setTafsirReturnFromTafsirHref(action.href);
                 }
                 onClose();
