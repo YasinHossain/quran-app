@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -53,17 +52,16 @@ export function PlannerSelectionCard({
     : 'text-sm leading-snug text-muted/80';
 
   return (
-    <motion.button
+    <button
       type="button"
       onClick={onSelect}
       className={composedClassName}
       aria-pressed={isSelected}
-      whileTap={{ scale: 0.98 }}
     >
       <div className="flex flex-col gap-1">
         <span className={titleClassName}>{localizedPlanName}</span>
         <p className={detailClassName}>{detailLine}</p>
       </div>
-    </motion.button>
+    </button>
   );
 }

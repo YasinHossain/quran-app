@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 import { buildAccessibilityProps, buildLinkBehaviorProps, isLinkProps } from './renderers.shared';
@@ -15,41 +14,9 @@ type FramerRenderProps = BaseCardCommonProps & {
   animationConfig: AnimationConfig;
 };
 
-type FramerAnimation = NonNullable<AnimationConfig['framer']>;
-
 type UnknownProps = Record<string, unknown>;
-type UnknownComponent = React.ComponentType<UnknownProps>;
 
-interface MotionFactory {
-  (component: UnknownComponent): UnknownComponent;
-  create?: (component: UnknownComponent) => UnknownComponent;
-  div?: UnknownComponent;
-}
-
-const motionFactory = motion as unknown as MotionFactory | undefined;
-
-const ensureMotionComponent = (Component: UnknownComponent): UnknownComponent => {
-  if (motionFactory && typeof (motionFactory as { create?: unknown }).create === 'function') {
-    return (motionFactory as { create: (component: UnknownComponent) => UnknownComponent }).create(
-      Component
-    );
-  }
-
-  if (typeof motionFactory === 'function') {
-    return motionFactory(Component);
-  }
-
-  return Component;
-};
-
-const fallbackMotionDiv: UnknownComponent = (props) => (
-  <div {...(props as React.HTMLAttributes<HTMLDivElement>)} />
-);
-
-const MotionLink: UnknownComponent = ensureMotionComponent(Link as unknown as UnknownComponent);
-const MotionDiv: UnknownComponent = motionFactory?.div ?? ensureMotionComponent(fallbackMotionDiv);
-
-const renderMotionLink = (props: LinkCommonProps, framer: FramerAnimation): React.JSX.Element => {
+const renderLink = (props: LinkCommonProps): React.JSX.Element => {
   const a11yProps = buildAccessibilityProps(props);
   const behaviorProps = buildLinkBehaviorProps(props);
 
@@ -60,19 +27,16 @@ const renderMotionLink = (props: LinkCommonProps, framer: FramerAnimation): Reac
     ...a11yProps,
     ...behaviorProps,
     ...props.elementProps,
-    initial: framer.initial,
-    animate: framer.animate,
-    transition: framer.transition,
   };
 
   if (props.onClick) linkProps['onClick'] = props.onClick;
-  if (framer.exit) linkProps['exit'] = framer.exit;
-  if (framer.hover) linkProps['whileHover'] = framer.hover;
 
-  return <MotionLink {...linkProps}>{props.children}</MotionLink>;
+  return (
+    <Link {...(linkProps as unknown as React.ComponentProps<typeof Link>)}>{props.children}</Link>
+  );
 };
 
-const renderMotionDiv = (props: DivCommonProps, framer: FramerAnimation): React.JSX.Element => {
+const renderDiv = (props: DivCommonProps): React.JSX.Element => {
   const a11yProps = buildAccessibilityProps(props);
 
   const divProps: UnknownProps = {
@@ -80,24 +44,21 @@ const renderMotionDiv = (props: DivCommonProps, framer: FramerAnimation): React.
     'data-active': props.dataActive ? 'true' : undefined,
     ...a11yProps,
     ...props.elementProps,
-    initial: framer.initial,
-    animate: framer.animate,
-    transition: framer.transition,
   };
 
   if (props.onClick) divProps['onClick'] = props.onClick;
-  if (framer.exit) divProps['exit'] = framer.exit;
-  if (framer.hover) divProps['whileHover'] = framer.hover;
 
-  return <MotionDiv {...divProps}>{props.children}</MotionDiv>;
+  return <div {...(divProps as React.HTMLAttributes<HTMLDivElement>)}>{props.children}</div>;
 };
 
 const renderFramerMotion = ({
   animationConfig,
   ...props
 }: FramerRenderProps): React.JSX.Element => {
-  const framer = animationConfig.framer!;
-  return isLinkProps(props) ? renderMotionLink(props, framer) : renderMotionDiv(props, framer);
+  // Framer Motion is intentionally disabled in this project.
+  // We keep the renderer so existing config paths continue to work, but we ignore animationConfig.
+  void animationConfig;
+  return isLinkProps(props) ? renderLink(props) : renderDiv(props);
 };
 
 export { renderFramerMotion };

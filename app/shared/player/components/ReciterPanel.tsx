@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -32,7 +31,7 @@ export const ReciterPanel = memo(function ReciterPanel({
           {reciters.map((r) => {
             const isSelected = localReciter === r.id;
             return (
-              <motion.button
+              <button
                 key={r.id}
                 onClick={() => setLocalReciter(r.id)}
                 className={cn(
@@ -43,7 +42,6 @@ export const ReciterPanel = memo(function ReciterPanel({
                   touchClasses.target,
                   touchClasses.focus
                 )}
-                whileTap={{ scale: 0.98 }}
               >
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-medium truncate text-foreground">{r.name}</div>
@@ -60,7 +58,7 @@ export const ReciterPanel = memo(function ReciterPanel({
                     }`}
                   />
                 </div>
-              </motion.button>
+              </button>
             );
           })}
         </div>
