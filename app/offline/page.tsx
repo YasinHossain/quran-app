@@ -37,10 +37,16 @@ export default function OfflinePage(): React.JSX.Element {
           <OfflineIllustration />
           <header className="mb-8">
             <h1 className="mb-4 text-3xl font-bold text-foreground">You&apos;re Offline</h1>
-            <p className="text-muted leading-relaxed">
+            <p className="mb-6 text-muted leading-relaxed">
               It looks like you&apos;ve lost your internet connection. Please check your connection
               and try again.
             </p>
+            <div className="rounded-xl bg-accent/5 p-4 text-sm text-foreground/90 ring-1 ring-inset ring-accent/10">
+              <p>
+                We will be releasing Android and iOS apps soon which will support full offline
+                features, Insha Allah.
+              </p>
+            </div>
           </header>
           <OfflineActions />
           <p className="mt-8 text-sm text-content-muted">

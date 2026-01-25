@@ -15,7 +15,17 @@ export const HomeFooter = memo(function HomeFooter() {
     <footer className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 pb-20 md:pb-4">
       <div className="border-t border-border pt-3">
         {/* Beta Notice */}
-        <p className="text-center text-sm text-muted mb-3">{t('home_footer_beta_notice')}</p>
+        <p className="text-center text-sm text-muted mb-3">
+          {t('home_footer_beta_notice')}{' '}
+          <a
+            href="https://github.com/YasinHossain/quran-app/issues/new"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-accent underline decoration-dotted underline-offset-4 transition-colors"
+          >
+            {t('home_footer_feedback_call_to_action')}
+          </a>
+        </p>
 
         {/* Legal Links */}
         <div className="flex justify-center items-center gap-4 text-sm text-muted">
