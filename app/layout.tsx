@@ -9,6 +9,8 @@ import { ClientProviders } from './providers/ClientProviders';
 import { TranslationProvider } from './providers/TranslationProvider';
 import { ErrorBoundary } from './shared/components/error-boundary';
 import { WebVitals } from './shared/components/WebVitals';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/react';
 
 /**
  * FONT LOADING STRATEGY (Performance Optimized):
@@ -94,6 +96,8 @@ export default async function RootLayout({
       </head>
       <body className="font-sans">
         <WebVitals />
+        <SpeedInsights />
+        <Analytics />
         <ErrorBoundary>
           <TranslationProvider initialLanguage={uiLanguage}>
             <ClientProviders initialTheme={theme} initialUiLanguage={uiLanguage}>
