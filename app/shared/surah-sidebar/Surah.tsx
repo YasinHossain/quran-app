@@ -44,7 +44,7 @@ const SurahItem = memo(function SurahItem({
     <li style={{ contain: 'layout style' }}>
       <SurahNavigationCard
         href={href}
-        scroll={false}
+        scroll={!isActive}
         prefetch={true}
         data-active={isActive}
         isActive={isActive}

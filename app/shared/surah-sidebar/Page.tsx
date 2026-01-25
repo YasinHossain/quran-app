@@ -42,7 +42,7 @@ const PageItem = memo(function PageItem({
     <li style={{ contain: 'layout style' }}>
       <PageNavigationCard
         href={href}
-        scroll={false}
+        scroll={!isActive}
         prefetch={true}
         data-active={isActive}
         isActive={isActive}
