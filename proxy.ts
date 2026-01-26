@@ -55,6 +55,9 @@ export function proxy(request: NextRequest): NextResponse {
     const strippedPath = `/${segments.slice(2).join('/')}`.replace(/\/$/, '') || '/';
     const url = request.nextUrl.clone();
     url.pathname = strippedPath === '' ? '/' : strippedPath;
+    // Important: make the rewrite destination unique per locale so Next's
+    // client/router caches don't accidentally reuse RSC payloads across locales.
+    url.searchParams.set('__uiLanguage', maybeLocale);
 
     // Canonicalize English: `/en/...` -> `/<...>` (no locale prefix for default locale).
     if (maybeLocale === 'en') {
