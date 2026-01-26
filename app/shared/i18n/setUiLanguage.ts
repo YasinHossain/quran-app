@@ -38,7 +38,7 @@ export function setUiLanguage(
   if (options?.changeI18n === false) return;
   if (i18n.language === language) return;
 
-  void ensureUiResourcesLoaded(i18n, language).finally(() => {
-    i18n.changeLanguage(language).catch(() => {});
-  });
+  void ensureUiResourcesLoaded(i18n, language)
+    .then(() => i18n.changeLanguage(language))
+    .catch(() => {});
 }

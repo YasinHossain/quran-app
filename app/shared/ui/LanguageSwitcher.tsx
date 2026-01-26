@@ -76,7 +76,7 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
       const query = searchParams.toString();
       const hash = typeof window !== 'undefined' ? window.location.hash : '';
       const nextPath = setLocaleInPathname(pathname, languageCode);
-      setUiLanguage(i18n, languageCode, { changeI18n: nextPath === pathname });
+      setUiLanguage(i18n, languageCode);
       setCurrentLanguage(languageCode);
       router.push(`${nextPath}${query ? `?${query}` : ''}${hash}`);
     },

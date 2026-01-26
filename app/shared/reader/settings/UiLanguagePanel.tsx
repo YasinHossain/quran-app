@@ -49,7 +49,7 @@ export function UiLanguagePanel({
                     const query = searchParams.toString();
                     const hash = typeof window !== 'undefined' ? window.location.hash : '';
                     const nextPath = setLocaleInPathname(pathname, language.code);
-                    setUiLanguage(i18n, language.code, { changeI18n: nextPath === pathname });
+                    setUiLanguage(i18n, language.code);
                     router.push(`${nextPath}${query ? `?${query}` : ''}${hash}`);
                     onClose();
                   }}
