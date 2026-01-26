@@ -9,7 +9,11 @@ import { ensureUiResourcesLoaded } from './uiResourcesClient';
 
 import type { i18n as I18nInstance } from 'i18next';
 
-export function setUiLanguage(i18n: I18nInstance, language: UiLanguageCode): void {
+export function setUiLanguage(
+  i18n: I18nInstance,
+  language: UiLanguageCode,
+  options?: { changeI18n?: boolean }
+): void {
   if (typeof window !== 'undefined') {
     try {
       window.localStorage.setItem(UI_LANGUAGE_STORAGE_KEY, language);
@@ -31,6 +35,7 @@ export function setUiLanguage(i18n: I18nInstance, language: UiLanguageCode): voi
     }
   }
 
+  if (options?.changeI18n === false) return;
   if (i18n.language === language) return;
 
   void ensureUiResourcesLoaded(i18n, language).finally(() => {

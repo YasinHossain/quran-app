@@ -71,10 +71,10 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
                       key={language.code}
                       type="button"
                       onClick={() => {
-                        setUiLanguage(i18n, language.code);
                         const query = searchParams.toString();
                         const hash = typeof window !== 'undefined' ? window.location.hash : '';
                         const nextPath = setLocaleInPathname(pathname, language.code);
+                        setUiLanguage(i18n, language.code, { changeI18n: nextPath === pathname });
                         router.push(`${nextPath}${query ? `?${query}` : ''}${hash}`);
                         setLanguageMenuOpen(false);
                       }}

@@ -276,16 +276,19 @@
     margin-bottom: 0;
   }
 
-  [lang='ar'] {
+  html[lang='ar'],
+  html[lang='ar'] body {
     font-family: Inter, 'Noto Sans Arabic', 'Noto Naskh Arabic', serif;
   }
 
-  [lang='bn'] {
-    font-family: Inter, 'Noto Sans Bengali', sans-serif !important;
+  html[lang='bn'],
+  html[lang='bn'] body {
+    font-family: Inter, 'Noto Sans Bengali', sans-serif;
   }
 
-  [lang='ur'] {
-    font-family: Inter, 'IndoPak', 'Lateef', 'Noto Naskh Arabic', serif !important;
+  html[lang='ur'],
+  html[lang='ur'] body {
+    font-family: Inter, 'Noto Nastaliq Urdu', 'IndoPak', 'Lateef', 'Noto Naskh Arabic', serif;
   }
 }
 

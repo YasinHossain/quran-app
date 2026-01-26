@@ -73,12 +73,11 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
 
   const handleLanguageChange = useCallback(
     (languageCode: UiLanguageCode): void => {
-      setUiLanguage(i18n, languageCode);
-      setCurrentLanguage(languageCode);
-
       const query = searchParams.toString();
       const hash = typeof window !== 'undefined' ? window.location.hash : '';
       const nextPath = setLocaleInPathname(pathname, languageCode);
+      setUiLanguage(i18n, languageCode, { changeI18n: nextPath === pathname });
+      setCurrentLanguage(languageCode);
       router.push(`${nextPath}${query ? `?${query}` : ''}${hash}`);
     },
     [i18n, pathname, router, searchParams]

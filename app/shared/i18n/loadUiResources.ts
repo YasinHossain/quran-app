@@ -1,41 +1,42 @@
 import 'server-only';
 
-import { readFile } from 'node:fs/promises';
-import path from 'node:path';
-
 import type { Resource } from 'i18next';
 
 import { isUiLanguageCode, type UiLanguageCode } from './uiLanguages';
 
 type UiNamespace = 'translation' | 'player';
 
-const LOCALES_DIR = path.join(process.cwd(), 'public', 'locales');
+type UiJson = Record<string, unknown>;
+type UiResourceLanguage = Record<UiNamespace, UiJson>;
 
-const readJson = async <T>(filePath: string): Promise<T | null> => {
-  try {
-    const raw = await readFile(filePath, 'utf8');
-    return JSON.parse(raw) as T;
-  } catch {
-    return null;
-  }
+type UiImporters = Record<UiLanguageCode, { common: () => Promise<UiJson>; player: () => Promise<UiJson> }>;
+
+const IMPORTERS: UiImporters = {
+  en: {
+    common: async () => (await import('@/public/locales/en/common.json')).default as UiJson,
+    player: async () => (await import('@/public/locales/en/player.json')).default as UiJson,
+  },
+  bn: {
+    common: async () => (await import('@/public/locales/bn/common.json')).default as UiJson,
+    player: async () => (await import('@/public/locales/bn/player.json')).default as UiJson,
+  },
+  ar: {
+    common: async () => (await import('@/public/locales/ar/common.json')).default as UiJson,
+    player: async () => (await import('@/public/locales/ar/player.json')).default as UiJson,
+  },
+  ur: {
+    common: async () => (await import('@/public/locales/ur/common.json')).default as UiJson,
+    player: async () => (await import('@/public/locales/ur/player.json')).default as UiJson,
+  },
+  hi: {
+    common: async () => (await import('@/public/locales/hi/common.json')).default as UiJson,
+    player: async () => (await import('@/public/locales/hi/player.json')).default as UiJson,
+  },
 };
-
-const loadNamespace = async (
-  language: UiLanguageCode,
-  filename: string
-): Promise<Record<string, string>> => {
-  const filePath = path.join(LOCALES_DIR, language, filename);
-  const parsed = await readJson<Record<string, string>>(filePath);
-  return parsed ?? {};
-};
-
-type UiResourceLanguage = Record<UiNamespace, Record<string, string>>;
 
 const loadLanguageResources = async (language: UiLanguageCode): Promise<UiResourceLanguage> => {
-  const [translation, player] = await Promise.all([
-    loadNamespace(language, 'common.json'),
-    loadNamespace(language, 'player.json'),
-  ]);
+  const importer = IMPORTERS[language];
+  const [translation, player] = await Promise.all([importer.common(), importer.player()]);
 
   return { translation, player };
 };

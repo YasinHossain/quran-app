@@ -46,10 +46,10 @@ export function UiLanguagePanel({
                   item={{ id: language.code, name: language.nativeLabel, lang: language.code }}
                   isSelected={selectedCode === language.code}
                   onToggle={() => {
-                    setUiLanguage(i18n, language.code);
                     const query = searchParams.toString();
                     const hash = typeof window !== 'undefined' ? window.location.hash : '';
                     const nextPath = setLocaleInPathname(pathname, language.code);
+                    setUiLanguage(i18n, language.code, { changeI18n: nextPath === pathname });
                     router.push(`${nextPath}${query ? `?${query}` : ''}${hash}`);
                     onClose();
                   }}
