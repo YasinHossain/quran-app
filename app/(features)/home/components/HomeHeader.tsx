@@ -5,7 +5,7 @@ import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useTheme } from '@/app/providers/ThemeContext';
-import { setLocaleInPathname } from '@/app/shared/i18n/localeRouting';
+import { setLocaleInPathnameForSwitch } from '@/app/shared/i18n/localeRouting';
 import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
 import {
   getUiLanguageLabel,
@@ -73,7 +73,7 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
                       onClick={() => {
                         const query = searchParams.toString();
                         const hash = typeof window !== 'undefined' ? window.location.hash : '';
-                        const nextPath = setLocaleInPathname(pathname, language.code);
+                        const nextPath = setLocaleInPathnameForSwitch(pathname, language.code);
                         setUiLanguage(i18n, language.code);
                         router.push(`${nextPath}${query ? `?${query}` : ''}${hash}`);
                         setLanguageMenuOpen(false);
