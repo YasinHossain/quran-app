@@ -2,14 +2,11 @@
 
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
-import {
-  UI_LANGUAGES,
-  UI_LANGUAGE_STORAGE_KEY,
-  isUiLanguageCode,
-  type UiLanguageCode,
-} from '@/app/shared/i18n/uiLanguages';
+import { UI_LANGUAGES, isUiLanguageCode, type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
+import { getLocaleFromPathname, setLocaleInPathname } from '@/app/shared/i18n/localeRouting';
 import { cn } from '@/lib/utils/cn';
 
 interface LanguageButtonProps {
@@ -53,31 +50,38 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
   className,
 }: LanguageSwitcherProps): React.JSX.Element {
   const { i18n } = useTranslation();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [currentLanguage, setCurrentLanguage] = useState<UiLanguageCode>('en');
   const [isClient, setIsClient] = useState(false);
 
   // Initialize language from localStorage on mount
   useEffect(() => {
     setIsClient(true);
-    const savedLanguage = localStorage.getItem(UI_LANGUAGE_STORAGE_KEY) as UiLanguageCode | null;
-    if (savedLanguage && UI_LANGUAGES.some((lang) => lang.code === savedLanguage)) {
-      setCurrentLanguage(savedLanguage);
-      setUiLanguage(i18n, savedLanguage);
-    } else {
-      const initial =
-        typeof i18n?.language === 'string' && isUiLanguageCode(i18n.language)
-          ? i18n.language
-          : 'en';
-      setCurrentLanguage(initial);
+
+    const fromPath = getLocaleFromPathname(pathname);
+    if (fromPath) {
+      setCurrentLanguage(fromPath);
+      return;
     }
-  }, [i18n]);
+
+    const initial =
+      typeof i18n?.language === 'string' && isUiLanguageCode(i18n.language) ? i18n.language : 'en';
+    setCurrentLanguage(initial);
+  }, [i18n, pathname]);
 
   const handleLanguageChange = useCallback(
     (languageCode: UiLanguageCode): void => {
       setUiLanguage(i18n, languageCode);
       setCurrentLanguage(languageCode);
+
+      const query = searchParams.toString();
+      const hash = typeof window !== 'undefined' ? window.location.hash : '';
+      const nextPath = setLocaleInPathname(pathname, languageCode);
+      router.push(`${nextPath}${query ? `?${query}` : ''}${hash}`);
     },
-    [i18n]
+    [i18n, pathname, router, searchParams]
   );
 
   // Don't render anything during SSR to prevent hydration mismatch

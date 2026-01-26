@@ -277,18 +277,15 @@
   }
 
   [lang='ar'] {
-    font-family: var(--font-noto-sans-arabic);
+    font-family: Inter, 'Noto Sans Arabic', 'Noto Naskh Arabic', serif;
   }
 
   [lang='bn'] {
-    font-family: var(--font-noto-sans-bengali), 'Noto Sans Bengali', sans-serif !important;
+    font-family: Inter, 'Noto Sans Bengali', sans-serif !important;
   }
 
   [lang='ur'] {
-    font-family: var(--font-nastaliq), 'Noto Nastaliq Urdu', serif !important;
-    line-height: 2 !important;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    font-family: Inter, 'IndoPak', 'Lateef', 'Noto Naskh Arabic', serif !important;
   }
 }
 
@@ -509,9 +506,11 @@ input[type='range'] {
   border-radius: 5px;
   outline: none;
   touch-action: none;
-  background: linear-gradient(to right,
-      rgb(var(--color-accent)) var(--value-percent, 0%),
-      rgb(var(--color-border)) var(--value-percent, 0%));
+  background: linear-gradient(
+    to right,
+    rgb(var(--color-accent)) var(--value-percent, 0%),
+    rgb(var(--color-border)) var(--value-percent, 0%)
+  );
 }
 
 input[type='range']::-webkit-slider-thumb {

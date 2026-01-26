@@ -2,8 +2,11 @@
 import React from 'react';
 import { I18nextProvider } from 'react-i18next';
 
-import { createI18n, resolveInitialUiLanguage } from '@/app/i18n';
-import { isUiLanguageCode, UI_LANGUAGE_STORAGE_KEY } from '@/app/shared/i18n/uiLanguages';
+import { createI18nWithResources, resolveInitialUiLanguage } from '@/app/i18n';
+import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
+import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
+
+import type { Resource } from 'i18next';
 
 /**
  * Wraps the `I18nextProvider` to supply translation services via `react-i18next`.
@@ -12,44 +15,22 @@ import { isUiLanguageCode, UI_LANGUAGE_STORAGE_KEY } from '@/app/shared/i18n/uiL
 export function TranslationProvider({
   children,
   initialLanguage,
+  resources,
 }: {
   children: React.ReactNode;
   initialLanguage: string;
+  resources?: Resource;
 }): React.JSX.Element {
   const i18n = React.useMemo(() => {
     const fromProp = resolveInitialUiLanguage(initialLanguage);
+    return createI18nWithResources(fromProp, resources ?? {});
+  }, [initialLanguage, resources]);
 
-    if (typeof window === 'undefined') {
-      return createI18n(fromProp);
-    }
+  React.useEffect(() => {
+    const language = resolveInitialUiLanguage(initialLanguage) as UiLanguageCode;
 
-    let fromClient: string | null = null;
-    try {
-      fromClient = window.localStorage.getItem(UI_LANGUAGE_STORAGE_KEY);
-    } catch {
-      // Ignore storage access failures (blocked/denied in some environments).
-    }
-
-    if (!fromClient) {
-      try {
-        const re = new RegExp(`(?:^|; )${UI_LANGUAGE_STORAGE_KEY}=([^;]+)`);
-        const match = document.cookie.match(re);
-        fromClient = match ? decodeURIComponent(match[1] ?? '') : null;
-      } catch {
-        // Ignore cookie parsing failures.
-      }
-    }
-
-    if (!fromClient) {
-      try {
-        fromClient = document.documentElement.lang || null;
-      } catch {
-        // Ignore DOM access failures.
-      }
-    }
-
-    const effective = fromClient && isUiLanguageCode(fromClient) ? fromClient : fromProp;
-    return createI18n(effective);
-  }, [initialLanguage]);
+    // Keep document + cookies synchronized for middleware redirects and a11y.
+    setUiLanguage(i18n, language);
+  }, [i18n, initialLanguage]);
   return <I18nextProvider i18n={i18n}>{children}</I18nextProvider>;
 }
