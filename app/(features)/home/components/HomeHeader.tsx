@@ -5,7 +5,7 @@ import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useTheme } from '@/app/providers/ThemeContext';
-import { setLocaleInPathnameForSwitch } from '@/app/shared/i18n/localeRouting';
+import { setLocaleInPathname } from '@/app/shared/i18n/localeRouting';
 import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
 import {
   getUiLanguageLabel,
@@ -71,11 +71,12 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
                       key={language.code}
                       type="button"
                       onClick={() => {
+                        if (selectedCode === language.code) return;
                         const query = searchParams.toString();
                         const hash = typeof window !== 'undefined' ? window.location.hash : '';
-                        const nextPath = setLocaleInPathnameForSwitch(pathname, language.code);
+                        const nextPath = setLocaleInPathname(pathname, language.code);
                         setUiLanguage(i18n, language.code);
-                        router.push(`${nextPath}${query ? `?${query}` : ''}${hash}`);
+                        router.replace(`${nextPath}${query ? `?${query}` : ''}${hash}`);
                         setLanguageMenuOpen(false);
                       }}
                       className="w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-interactive-hover transition-colors"

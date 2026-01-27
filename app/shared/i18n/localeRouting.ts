@@ -30,13 +30,11 @@ export const setLocaleInPathname = (pathname: string, locale: UiLanguageCode): s
   return withoutLocale === '/' ? `/${locale}` : `/${locale}${withoutLocale}`;
 };
 
-// For imperative language switching, route via `/en/...` so the server can persist the
-// selection and then canonicalize back to non-prefixed English routes.
 export const setLocaleInPathnameForSwitch = (pathname: string, locale: UiLanguageCode): string => {
-  const cleanPath = String(pathname || '/').startsWith('/') ? String(pathname || '/') : `/${pathname}`;
-  const withoutLocale = stripLocaleFromPathname(cleanPath);
-  if (locale === 'en') return withoutLocale === '/' ? '/en' : `/en${withoutLocale}`;
-  return withoutLocale === '/' ? `/${locale}` : `/${locale}${withoutLocale}`;
+  // Keep switching behavior canonical: English has no prefix, non-English has a prefix.
+  // The client sets the locale cookie before navigation so the server can render correctly
+  // without an extra `/en` redirect hop.
+  return setLocaleInPathname(pathname, locale);
 };
 
 export const localizeHref = (href: string, locale: UiLanguageCode): string => {

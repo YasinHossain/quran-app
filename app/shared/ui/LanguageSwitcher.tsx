@@ -6,10 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
 import { UI_LANGUAGES, isUiLanguageCode, type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
-import {
-  getLocaleFromPathname,
-  setLocaleInPathnameForSwitch,
-} from '@/app/shared/i18n/localeRouting';
+import { getLocaleFromPathname, setLocaleInPathname } from '@/app/shared/i18n/localeRouting';
 import { cn } from '@/lib/utils/cn';
 
 interface LanguageButtonProps {
@@ -76,14 +73,15 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
 
   const handleLanguageChange = useCallback(
     (languageCode: UiLanguageCode): void => {
+      if (languageCode === currentLanguage) return;
       const query = searchParams.toString();
       const hash = typeof window !== 'undefined' ? window.location.hash : '';
-      const nextPath = setLocaleInPathnameForSwitch(pathname, languageCode);
+      const nextPath = setLocaleInPathname(pathname, languageCode);
       setUiLanguage(i18n, languageCode);
       setCurrentLanguage(languageCode);
-      router.push(`${nextPath}${query ? `?${query}` : ''}${hash}`);
+      router.replace(`${nextPath}${query ? `?${query}` : ''}${hash}`);
     },
-    [i18n, pathname, router, searchParams]
+    [currentLanguage, i18n, pathname, router, searchParams]
   );
 
   // Don't render anything during SSR to prevent hydration mismatch

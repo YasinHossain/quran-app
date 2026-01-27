@@ -7,7 +7,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { SlideOverPanel } from '@/app/shared/components/SlideOverPanel';
 import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
 import { UI_LANGUAGES, isUiLanguageCode, type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
-import { setLocaleInPathnameForSwitch } from '@/app/shared/i18n/localeRouting';
+import { setLocaleInPathname } from '@/app/shared/i18n/localeRouting';
 import { SettingsPanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
 import { ResourceItem } from '@/app/shared/resource-panel/ResourceItem';
 
@@ -46,11 +46,12 @@ export function UiLanguagePanel({
                   item={{ id: language.code, name: language.nativeLabel, lang: language.code }}
                   isSelected={selectedCode === language.code}
                   onToggle={() => {
+                    if (selectedCode === language.code) return;
                     const query = searchParams.toString();
                     const hash = typeof window !== 'undefined' ? window.location.hash : '';
-                    const nextPath = setLocaleInPathnameForSwitch(pathname, language.code);
+                    const nextPath = setLocaleInPathname(pathname, language.code);
                     setUiLanguage(i18n, language.code);
-                    router.push(`${nextPath}${query ? `?${query}` : ''}${hash}`);
+                    router.replace(`${nextPath}${query ? `?${query}` : ''}${hash}`);
                     onClose();
                   }}
                 />

@@ -13,7 +13,28 @@ import { server } from '@tests/setup/msw/server';
 
 import type { RouterMock } from '@/types/testing';
 
-const unhandledRejections: unknown[] = [];
+type TestProcessState = {
+  unhandledRejections: unknown[];
+  unhandledRejectionListenerInstalled: boolean;
+};
+
+const getTestProcessState = (): TestProcessState => {
+  const key = '__QURAN_APP_TEST_PROCESS_STATE__';
+  const processWithState = process as typeof process & { [key]?: TestProcessState };
+
+  const existing = processWithState[key];
+  if (existing) return existing;
+
+  const created: TestProcessState = {
+    unhandledRejections: [],
+    unhandledRejectionListenerInstalled: false,
+  };
+  processWithState[key] = created;
+  return created;
+};
+
+const testProcessState = getTestProcessState();
+const unhandledRejections = testProcessState.unhandledRejections;
 
 const isErrorLike = (value: unknown): value is { name?: unknown; message?: unknown } =>
   typeof value === 'object' && value !== null;
@@ -33,7 +54,11 @@ const describeFetchTarget = (input: Parameters<typeof fetch>[0]): string => {
 };
 
 const originalFetch = globalThis.fetch;
-if (typeof originalFetch === 'function') {
+const FETCH_WRAPPED = Symbol.for('quran-app/tests/fetch-wrapped');
+if (
+  typeof originalFetch === 'function' &&
+  !((originalFetch as unknown as Record<symbol, unknown>)[FETCH_WRAPPED] === true)
+) {
   globalThis.fetch = ((...args: Parameters<typeof originalFetch>) => {
     const target = describeFetchTarget(args[0]);
     return originalFetch(...args).catch((error) => {
@@ -44,15 +69,21 @@ if (typeof originalFetch === 'function') {
       throw error;
     });
   }) as typeof originalFetch;
+
+  (globalThis.fetch as unknown as Record<symbol, unknown>)[FETCH_WRAPPED] = true;
 }
 
-process.on('unhandledRejection', (reason) => {
-  const label = getErrorLabel(reason);
-  if (label?.startsWith('InvalidStateError')) {
-    console.error(`[tests] unhandledRejection: ${label}`);
-  }
-  unhandledRejections.push(reason);
-});
+if (!testProcessState.unhandledRejectionListenerInstalled) {
+  process.on('unhandledRejection', (reason) => {
+    const label = getErrorLabel(reason);
+    if (label?.startsWith('InvalidStateError')) {
+      console.error(`[tests] unhandledRejection: ${label}`);
+    }
+    unhandledRejections.push(reason);
+  });
+
+  testProcessState.unhandledRejectionListenerInstalled = true;
+}
 
 const routerPushMock = jest.fn();
 const routerReplaceMock = jest.fn();
