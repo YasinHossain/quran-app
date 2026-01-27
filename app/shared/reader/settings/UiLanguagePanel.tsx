@@ -7,7 +7,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { SlideOverPanel } from '@/app/shared/components/SlideOverPanel';
 import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
 import { UI_LANGUAGES, isUiLanguageCode, type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
-import { setLocaleInPathname } from '@/app/shared/i18n/localeRouting';
+import { ensureUiResourcesLoaded } from '@/app/shared/i18n/uiResourcesClient';
+import { setLocaleInPathnameForSwitch } from '@/app/shared/i18n/localeRouting';
 import { SettingsPanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
 import { ResourceItem } from '@/app/shared/resource-panel/ResourceItem';
 
@@ -27,6 +28,13 @@ export function UiLanguagePanel({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const selectedCode: UiLanguageCode = isUiLanguageCode(i18n.language) ? i18n.language : 'en';
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+    UI_LANGUAGES.forEach((language) => {
+      void ensureUiResourcesLoaded(i18n, language.code).catch(() => {});
+    });
+  }, [i18n, isOpen]);
 
   return (
     <SlideOverPanel isOpen={isOpen} testId="ui-language-panel">
@@ -49,7 +57,7 @@ export function UiLanguagePanel({
                     if (selectedCode === language.code) return;
                     const query = searchParams.toString();
                     const hash = typeof window !== 'undefined' ? window.location.hash : '';
-                    const nextPath = setLocaleInPathname(pathname, language.code);
+                    const nextPath = setLocaleInPathnameForSwitch(pathname, language.code);
                     setUiLanguage(i18n, language.code);
                     router.replace(`${nextPath}${query ? `?${query}` : ''}${hash}`);
                     onClose();

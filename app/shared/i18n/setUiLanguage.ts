@@ -24,8 +24,6 @@ export function setUiLanguage(
 
   if (typeof document !== 'undefined') {
     try {
-      document.documentElement.lang = language;
-      document.documentElement.dir = getUiLanguageDirection(language);
       const secure = typeof window !== 'undefined' && window.location?.protocol === 'https:';
       document.cookie = `${UI_LANGUAGE_STORAGE_KEY}=${encodeURIComponent(language)}; path=/; max-age=31536000; SameSite=Lax${
         secure ? '; Secure' : ''
@@ -35,10 +33,42 @@ export function setUiLanguage(
     }
   }
 
-  if (options?.changeI18n === false) return;
-  if (i18n.language === language) return;
+  if (options?.changeI18n === false) {
+    if (typeof document !== 'undefined') {
+      try {
+        document.documentElement.lang = language;
+        document.documentElement.dir = getUiLanguageDirection(language);
+      } catch {
+        // Ignore DOM access failures.
+      }
+    }
+    return;
+  }
+  if (i18n.language === language) {
+    if (typeof document !== 'undefined') {
+      try {
+        document.documentElement.lang = language;
+        document.documentElement.dir = getUiLanguageDirection(language);
+      } catch {
+        // Ignore DOM access failures.
+      }
+    }
+    return;
+  }
 
   void ensureUiResourcesLoaded(i18n, language)
-    .then(() => i18n.changeLanguage(language))
+    .then(() => {
+      // Avoid visible "dir/layout switches before text" on first load by only applying
+      // document direction once translations are available.
+      if (typeof document !== 'undefined') {
+        try {
+          document.documentElement.lang = language;
+          document.documentElement.dir = getUiLanguageDirection(language);
+        } catch {
+          // Ignore DOM access failures.
+        }
+      }
+      return i18n.changeLanguage(language);
+    })
     .catch(() => {});
 }

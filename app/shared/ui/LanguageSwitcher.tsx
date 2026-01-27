@@ -6,19 +6,22 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
 import { UI_LANGUAGES, isUiLanguageCode, type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
-import { getLocaleFromPathname, setLocaleInPathname } from '@/app/shared/i18n/localeRouting';
+import { ensureUiResourcesLoaded } from '@/app/shared/i18n/uiResourcesClient';
+import { getLocaleFromPathname, setLocaleInPathnameForSwitch } from '@/app/shared/i18n/localeRouting';
 import { cn } from '@/lib/utils/cn';
 
 interface LanguageButtonProps {
   language: (typeof UI_LANGUAGES)[number];
   currentLanguage: UiLanguageCode;
   onClick: () => void;
+  onPrefetch?: () => void;
 }
 
 const LanguageButton = memo(function LanguageButton({
   language,
   currentLanguage,
   onClick,
+  onPrefetch,
 }: LanguageButtonProps): React.JSX.Element {
   const isActive = currentLanguage === language.code;
   const buttonClass = isActive
@@ -28,6 +31,8 @@ const LanguageButton = memo(function LanguageButton({
   return (
     <button
       onClick={onClick}
+      onMouseEnter={onPrefetch}
+      onFocus={onPrefetch}
       className={cn(
         'min-h-touch min-w-touch flex items-center justify-center px-3 py-2 rounded-full text-sm font-semibold transition-colors touch-manipulation',
         buttonClass
@@ -71,12 +76,19 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
     setCurrentLanguage(initial);
   }, [i18n, pathname]);
 
+  const prefetchUiLanguage = useCallback(
+    (languageCode: UiLanguageCode): void => {
+      void ensureUiResourcesLoaded(i18n, languageCode).catch(() => {});
+    },
+    [i18n]
+  );
+
   const handleLanguageChange = useCallback(
     (languageCode: UiLanguageCode): void => {
       if (languageCode === currentLanguage) return;
       const query = searchParams.toString();
       const hash = typeof window !== 'undefined' ? window.location.hash : '';
-      const nextPath = setLocaleInPathname(pathname, languageCode);
+      const nextPath = setLocaleInPathnameForSwitch(pathname, languageCode);
       setUiLanguage(i18n, languageCode);
       setCurrentLanguage(languageCode);
       router.replace(`${nextPath}${query ? `?${query}` : ''}${hash}`);
@@ -112,6 +124,7 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
             language={language}
             currentLanguage={currentLanguage}
             onClick={() => handleLanguageChange(language.code)}
+            onPrefetch={() => prefetchUiLanguage(language.code)}
           />
         ))}
       </div>
