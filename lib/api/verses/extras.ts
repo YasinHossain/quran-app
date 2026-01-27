@@ -20,18 +20,6 @@ interface SearchApiResult {
   translations?: Verse['translations'];
 }
 
-function normalizeTranslationIdsParam(
-  translationIds: number | number[] | null | undefined
-): string | undefined {
-  const ids = Array.isArray(translationIds)
-    ? translationIds
-    : typeof translationIds === 'number'
-      ? [translationIds]
-      : [];
-  const filtered = ids.filter((id) => Number.isFinite(id));
-  return filtered.length ? filtered.join(',') : undefined;
-}
-
 export async function searchVerses(query: string): Promise<Verse[]> {
   const data = await apiFetch<{ search?: { results: SearchApiResult[] } }>(
     'search',
@@ -128,11 +116,13 @@ export async function getRandomVerses(
 
 export async function getVerseById(
   verseId: string | number,
-  translationIds: number | number[] | null | undefined,
+  translationIds: number | number[],
   wordLang: LanguageCode = 'en',
   tajweed = false
 ): Promise<Verse> {
-  const translationsParam = normalizeTranslationIdsParam(translationIds);
+  const translationsParam = Array.isArray(translationIds)
+    ? translationIds.join(',')
+    : translationIds.toString();
 
   // Include code_v2 and page_number when tajweed is enabled for V4 font rendering
   const wordFields = tajweed ? 'text_uthmani,code_v2,page_number' : 'text_uthmani';
@@ -140,13 +130,12 @@ export async function getVerseById(
   const data = await apiFetch<{ verse: ApiVerse }>(
     `verses/${verseId}`,
     {
+      translations: translationsParam,
       fields: 'text_uthmani,audio',
       words: 'true',
       word_translation_language: wordLang,
       word_fields: wordFields,
-      ...(translationsParam
-        ? { translations: translationsParam, translation_fields: 'resource_name' }
-        : {}),
+      translation_fields: 'resource_name',
     },
     'Failed to fetch verse'
   );
@@ -158,11 +147,13 @@ export async function getVerseById(
  */
 export async function getVerseByKey(
   verseKey: string,
-  translationIds: number | number[] | null | undefined,
+  translationIds: number | number[],
   wordLang: LanguageCode = 'en',
   tajweed = false
 ): Promise<Verse> {
-  const translationsParam = normalizeTranslationIdsParam(translationIds);
+  const translationsParam = Array.isArray(translationIds)
+    ? translationIds.join(',')
+    : translationIds.toString();
 
   // Include code_v2 and page_number when tajweed is enabled for V4 font rendering
   const wordFields = tajweed ? 'text_uthmani,code_v2,page_number' : 'text_uthmani';
@@ -170,40 +161,14 @@ export async function getVerseByKey(
   const data = await apiFetch<{ verse: ApiVerse }>(
     `verses/by_key/${encodeURIComponent(verseKey)}`,
     {
+      translations: translationsParam,
       fields: 'text_uthmani,audio',
       words: 'true',
       word_translation_language: wordLang,
       word_fields: wordFields,
-      ...(translationsParam
-        ? { translations: translationsParam, translation_fields: 'resource_name' }
-        : {}),
+      translation_fields: 'resource_name',
     },
     'Failed to fetch verse by key'
   );
   return normalizeVerse(data.verse, wordLang);
-}
-
-/**
- * Fetch the translation text for a verse key without fetching words/audio.
- * Intended for lightweight UI use-cases (e.g. Verse of the Day).
- */
-export async function getVerseTranslationByKey(
-  verseKey: string,
-  translationId: number
-): Promise<string | undefined> {
-  if (!verseKey.trim()) return undefined;
-  if (!Number.isFinite(translationId)) return undefined;
-
-  const data = await apiFetch<{
-    verse: { translations?: Array<{ resource_id: number; text: string }> };
-  }>(
-    `verses/by_key/${encodeURIComponent(verseKey)}`,
-    {
-      translations: String(translationId),
-      fields: 'text_uthmani',
-    },
-    'Failed to fetch verse translation'
-  );
-
-  return data.verse.translations?.find((t) => t.resource_id === translationId)?.text;
 }

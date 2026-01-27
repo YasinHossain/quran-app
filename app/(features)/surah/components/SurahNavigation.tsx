@@ -1,10 +1,9 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 
 interface SurahNavigationProps {
@@ -52,15 +51,13 @@ export function SurahNavigation({
 }: SurahNavigationProps): React.JSX.Element | null {
   const { t } = useTranslation();
   const router = useRouter();
-  const pathname = usePathname();
   const { chapters, isLoading, error } = useSurahNavigationData();
 
   const handleNavigation = useCallback(
     (surahId: number) => {
-      const locale = getLocaleFromPathname(pathname) ?? 'en';
-      router.push(localizeHref(`/surah/${surahId}`, locale));
+      router.push(`/surah/${surahId}`);
     },
-    [pathname, router]
+    [router]
   );
 
   if (isLoading || error || chapters.length === 0) {

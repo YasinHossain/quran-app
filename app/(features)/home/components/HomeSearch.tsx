@@ -1,11 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { memo, type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { ComprehensiveSearch } from '@/app/shared/search';
 
@@ -32,8 +30,6 @@ const SHORTCUT_SURAHS = [
  */
 export const HomeSearch = memo(function HomeSearch({ className }: HomeSearchProps): ReactElement {
   const { t } = useTranslation();
-  const pathname = usePathname();
-  const locale = getLocaleFromPathname(pathname) ?? 'en';
 
   return (
     <div className={`w-full space-y-4 md:space-y-5 ${className ?? ''}`}>
@@ -48,7 +44,7 @@ export const HomeSearch = memo(function HomeSearch({ className }: HomeSearchProp
           {SHORTCUT_SURAHS.map(({ id, fallbackName }) => (
             <Link
               key={id}
-              href={localizeHref(buildSurahRoute(id), locale)}
+              href={buildSurahRoute(id)}
               className="flex-shrink-0 min-h-[2rem] sm:min-h-[2.25rem] md:min-h-10 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full font-medium text-[0.65rem] sm:text-xs md:text-sm transition-all duration-200 bg-surface-navigation text-foreground hover:bg-surface-navigation/90 border border-border/30 dark:border-border/20 shadow-sm hover:shadow-md active:scale-95 touch-manipulation flex items-center justify-center"
             >
               {t(`surah_names.${id}`, fallbackName)}

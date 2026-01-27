@@ -80,22 +80,17 @@ export function useVerseListing({
       ? 'quran-com'
       : 'infinite';
 
-  const initialStableTranslationIds = useMemo(
-    () =>
-      (initialVersesParams?.translationIds ?? [])
-        .filter((value) => Number.isFinite(value))
-        .sort((a, b) => a - b)
-        .join(','),
-    [initialVersesParams?.translationIds]
-  );
-
   const canUseInitialVerses =
     mode === 'quran-com' &&
     Boolean(initialVerses?.length) &&
     Boolean(initialVersesParams) &&
     !tajweed &&
     initialVersesParams?.wordLang === wordLang &&
-    (stableTranslationIds === '' || stableTranslationIds === initialStableTranslationIds);
+    stableTranslationIds ===
+      (initialVersesParams?.translationIds ?? [])
+        .filter((value) => Number.isFinite(value))
+        .sort((a, b) => a - b)
+        .join(',');
 
   const effectiveInitialVerses =
     mode === 'quran-com' ? (canUseInitialVerses ? initialVerses : undefined) : initialVerses;

@@ -2,13 +2,7 @@
 
 import Link from 'next/link';
 import { memo } from 'react';
-import { usePathname } from 'next/navigation';
 
-import {
-  getLocaleFromPathname,
-  localizeHref,
-  stripLocaleFromPathname,
-} from '@/app/shared/i18n/localeRouting';
 import { setTafsirReturnFromTafsirHref } from '@/app/shared/navigation/tafsirReturn';
 import { VerseActionItem } from '@/app/shared/verse-actions/types';
 import { touchClasses } from '@/lib/responsive';
@@ -23,9 +17,6 @@ export const ActionList = memo(function ActionList({
   actions,
   onClose,
 }: ActionListProps): React.JSX.Element {
-  const rawPathname = usePathname();
-  const locale = getLocaleFromPathname(rawPathname) ?? 'en';
-
   return (
     <div className="flex-1 overflow-y-auto px-4 pt-4 pb-2">
       <div className="space-y-2">
@@ -33,11 +24,11 @@ export const ActionList = memo(function ActionList({
           action.href ? (
             <Link
               key={action.label}
-              href={localizeHref(action.href!, locale)}
+              href={action.href}
               prefetch={true}
               onClick={() => {
-                if (stripLocaleFromPathname(action.href!).startsWith('/tafsir/')) {
-                  setTafsirReturnFromTafsirHref(localizeHref(action.href!, locale));
+                if (action.href?.startsWith('/tafsir/')) {
+                  setTafsirReturnFromTafsirHref(action.href);
                 }
                 onClose();
               }}
