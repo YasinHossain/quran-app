@@ -40,7 +40,14 @@ const resolveTranslationIdsParam = (
   primaryId: number | undefined,
   ids?: number[]
 ): string | undefined => {
-  const source = ids?.length ? ids : typeof primaryId === 'number' ? [primaryId] : [];
+  if (Array.isArray(ids)) {
+    // An explicit empty array means "no translations selected".
+    if (ids.length === 0) return undefined;
+    const filtered = ids.filter((id) => typeof id === 'number' && Number.isFinite(id));
+    return filtered.length ? filtered.join(',') : undefined;
+  }
+
+  const source = typeof primaryId === 'number' ? [primaryId] : [];
   const filtered = source.filter((id) => typeof id === 'number' && Number.isFinite(id));
   return filtered.length ? filtered.join(',') : undefined;
 };

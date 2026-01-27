@@ -164,7 +164,7 @@ function ReadingSettingsContent({
       <SelectionBox
         {...(idPrefix ? { id: `${idPrefix}-translations` } : {})}
         label={t('translations')}
-        value={selectedTranslationName || 'No translation selected'}
+        value={selectedTranslationName || t('no_translation_selected')}
         onClick={onTranslationPanelOpen}
       />
 

@@ -13,7 +13,7 @@ export interface PaginatedVerses {
 export interface FetchVersesOptions {
   type: 'by_chapter' | 'by_juz' | 'by_page';
   id: string | number;
-  translationIds: number | number[];
+  translationIds?: number | number[];
   page?: number;
   perPage?: number;
   wordLang?: LanguageCode;
@@ -38,8 +38,13 @@ export async function fetchVerses({
   wordLang = 'en',
   tajweed = false,
 }: FetchVersesOptions): Promise<PaginatedVerses> {
-  const translationIdsArray = Array.isArray(translationIds) ? translationIds : [translationIds];
-  const translationParam = translationIdsArray.join(',');
+  const translationIdsArray = Array.isArray(translationIds)
+    ? translationIds
+    : typeof translationIds === 'number'
+      ? [translationIds]
+      : [];
+  const filteredTranslationIds = translationIdsArray.filter((id) => Number.isFinite(id));
+  const translationParam = filteredTranslationIds.length ? filteredTranslationIds.join(',') : null;
 
   // Include code_v2 and page_number when tajweed is enabled for V4 font rendering
   const wordFields = tajweed
@@ -57,9 +62,10 @@ export async function fetchVerses({
       words: 'true',
       word_translation_language: wordLang,
       word_fields: wordFields,
-      translations: translationParam,
       fields: 'text_uthmani,text_indopak,audio',
-      translation_fields: 'resource_name',
+      ...(translationParam
+        ? { translations: translationParam, translation_fields: 'resource_name' }
+        : {}),
       per_page: perPage.toString(),
       page: page.toString(),
     },

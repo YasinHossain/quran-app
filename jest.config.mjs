@@ -17,8 +17,15 @@ const customJestConfig = {
   testEnvironmentOptions: {
     url: 'http://localhost',
   },
-  // Prefer Linux tmp for stability on WSL-mounted workspaces (avoid ENOENT during cache reads).
-  cacheDirectory: '/tmp/jest-cache',
+  // Keep Jest cache inside the repo for cross-platform stability.
+  cacheDirectory: '<rootDir>/.jest-cache',
+
+  // Defaults tuned for developer machines; override locally if needed:
+  // - `JEST_MAX_WORKERS=75%`
+  // - `JEST_WORKER_IDLE_MEMORY_LIMIT=4GB`
+  maxWorkers: process.env.JEST_MAX_WORKERS ?? (process.env.CI ? '50%' : '50%'),
+  workerIdleMemoryLimit:
+    process.env.JEST_WORKER_IDLE_MEMORY_LIMIT ?? (process.env.CI ? '1GB' : '2GB'),
   // Shared test utilities and polyfills
   setupFilesAfterEnv: ['<rootDir>/tests/setup/setupTests.ts'],
   resolver: '<rootDir>/tests/setup/jest-resolver.cjs',
