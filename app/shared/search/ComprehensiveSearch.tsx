@@ -300,7 +300,7 @@ const SearchDropdown = memo(function SearchDropdown({
             return (
               <Link
                 key={`${result.resultType}-${result.key}`}
-                href={getNavResultHref(result, searchQuery)}
+                href={localizeHref(getNavResultHref(result, searchQuery), locale)}
                 prefetch={true}
                 onClick={onLinkClick}
                 className={`w-full px-4 py-3 text-left transition-colors flex items-center gap-3 ${
