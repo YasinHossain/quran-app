@@ -5,33 +5,10 @@ import { useTranslation } from 'react-i18next';
 
 import { resolveVerseTranslation } from '@/app/(features)/home/utils/resolveVerseTranslation';
 import { useSettings } from '@/app/providers/SettingsContext';
-import { getVerseTranslationByKey } from '@/lib/api/verses/extras';
 import { cleanTranslationText } from '@/lib/text/cleanTranslationText';
 import { localizeDigits } from '@/lib/text/localizeNumbers';
 
 import type { Chapter, Verse } from '@/types';
-
-const VOTD_TRANSLATION_CACHE = new Map<string, string>();
-
-const createTranslationCacheKey = (verseKey: string, translationId: number): string =>
-  `${verseKey}:${translationId}`;
-
-const scheduleIdleWork = (work: () => void): (() => void) => {
-  const win = window as unknown as {
-    requestIdleCallback?: (cb: () => void, options?: { timeout: number }) => number;
-    cancelIdleCallback?: (id: number) => void;
-  };
-
-  if (typeof win.requestIdleCallback === 'function') {
-    const handle = win.requestIdleCallback(work, { timeout: 1200 });
-    return () => {
-      win.cancelIdleCallback?.(handle);
-    };
-  }
-
-  const timer = window.setTimeout(work, 0);
-  return () => window.clearTimeout(timer);
-};
 
 // Renamed from VerseOfDaySimple
 interface VerseOfDayProps {
@@ -62,19 +39,10 @@ export const VerseOfDay = memo(function VerseOfDay({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const [translationOverrides, setTranslationOverrides] = useState<Record<string, string>>({});
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const hasVerses = verses && verses.length > 0;
   const versesLength = verses?.length ?? 0;
-
-  const isTranslationDisabled = Boolean(
-    settings.translationIds && settings.translationIds.length === 0
-  );
-  const activeTranslationId = useMemo(() => {
-    if (isTranslationDisabled) return null;
-    return settings.translationIds?.[0] ?? settings.translationId ?? null;
-  }, [isTranslationDisabled, settings.translationIds, settings.translationId]);
 
   const chapterNameById = useMemo(() => {
     const map = new Map<number, string>();
@@ -92,65 +60,6 @@ export const VerseOfDay = memo(function VerseOfDay({
     mediaQuery.addEventListener('change', update);
     return () => mediaQuery.removeEventListener('change', update);
   }, []);
-
-  useEffect(() => {
-    if (!hasVerses) return;
-    if (isTranslationDisabled) {
-      setTranslationOverrides({});
-      return;
-    }
-    if (typeof activeTranslationId !== 'number' || !Number.isFinite(activeTranslationId)) {
-      setTranslationOverrides({});
-      return;
-    }
-
-    // Clear any overrides from a previous translation selection immediately to avoid stale display.
-    setTranslationOverrides({});
-
-    let cancelled = false;
-
-    const cancelIdle = scheduleIdleWork(() => {
-      void (async () => {
-        const next: Record<string, string> = {};
-
-        await Promise.all(
-          verses.map(async (verse) => {
-            const verseKey = verse.verse_key;
-            if (!verseKey) return;
-
-            if (verse.translations?.some((t) => t.resource_id === activeTranslationId)) {
-              return;
-            }
-
-            const cacheKey = createTranslationCacheKey(verseKey, activeTranslationId);
-            const cached = VOTD_TRANSLATION_CACHE.get(cacheKey);
-            if (cached) {
-              next[verseKey] = cached;
-              return;
-            }
-
-            try {
-              const text = await getVerseTranslationByKey(verseKey, activeTranslationId);
-              if (!text) return;
-
-              VOTD_TRANSLATION_CACHE.set(cacheKey, text);
-              next[verseKey] = text;
-            } catch {
-              // Silent failure: fall back to whatever is already present in the initial payload.
-            }
-          })
-        );
-
-        if (cancelled) return;
-        setTranslationOverrides(next);
-      })();
-    });
-
-    return () => {
-      cancelled = true;
-      cancelIdle();
-    };
-  }, [activeTranslationId, hasVerses, isTranslationDisabled, verses]);
 
   // Rotate verse every 15 seconds
   useEffect(() => {
@@ -200,25 +109,14 @@ export const VerseOfDay = memo(function VerseOfDay({
     if (!verse) return null;
 
     const [surahNum, ayahNum] = verse.verse_key.split(':');
-    const translation =
-      isTranslationDisabled || typeof activeTranslationId !== 'number'
-        ? undefined
-        : (translationOverrides[verse.verse_key] ??
-          resolveVerseTranslation(verse, activeTranslationId));
+    const translation = resolveVerseTranslation(verse, settings.translationId);
     return {
       text: verse.text_uthmani,
       translation,
       surahNum,
       ayahNum,
     };
-  }, [
-    activeTranslationId,
-    currentIndex,
-    hasVerses,
-    isTranslationDisabled,
-    translationOverrides,
-    verses,
-  ]);
+  }, [hasVerses, verses, currentIndex, settings.translationId]);
 
   // Don't render if no verses available
   if (!verseData) {

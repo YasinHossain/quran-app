@@ -1,11 +1,10 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { parseVerseKey } from '@/lib/utils/verse';
 
@@ -33,7 +32,6 @@ export function useBookmarkVerseActions(
   };
 } {
   const router = useRouter();
-  const pathname = usePathname();
   const { removeBookmark, findBookmark } = useBookmarks();
   const card = useVerseCard(verse);
 
@@ -45,16 +43,11 @@ export function useBookmarkVerseActions(
   const handleNavigateToVerse = React.useCallback(() => {
     const { surahNumber, ayahNumber } = parseVerseKey(bookmark.verseKey ?? verse.verse_key);
     if (surahNumber && ayahNumber) {
-      const locale = getLocaleFromPathname(pathname) ?? 'en';
-      router.push(
-        localizeHref(
-          buildSurahRoute(surahNumber, { startVerse: ayahNumber, forceSeq: true }),
-          locale
-        ),
-        { scroll: false }
-      );
+      router.push(buildSurahRoute(surahNumber, { startVerse: ayahNumber, forceSeq: true }), {
+        scroll: false,
+      });
     }
-  }, [bookmark.verseKey, pathname, router, verse.verse_key]);
+  }, [bookmark.verseKey, router, verse.verse_key]);
 
   return {
     verseRef: card.verseRef,

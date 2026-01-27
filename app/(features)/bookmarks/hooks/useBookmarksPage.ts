@@ -1,8 +1,7 @@
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState, useMemo } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
@@ -49,13 +48,11 @@ export const useBookmarksPage = (): UseBookmarksPageReturn => {
   const { folders } = useBookmarks();
   const [sortBy] = useState<SortKey>('recent');
   const router = useRouter();
-  const pathname = usePathname();
 
   const sortedFolders = useMemo(() => sortFolders(folders, sortBy), [folders, sortBy]);
 
   const handleSectionChange = (section: SectionId): void => {
-    const locale = getLocaleFromPathname(pathname) ?? 'en';
-    router.push(localizeHref(sectionToPath(section), locale));
+    router.push(sectionToPath(section));
   };
 
   return { folders, sortedFolders, handleSectionChange };

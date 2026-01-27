@@ -7,16 +7,8 @@ import type { Chapter } from '@/types';
 
 import { getChaptersServer } from './chapters';
 
-type ContentDefaults = NonNullable<
-  (typeof UI_LANGUAGE_CONTENT_DEFAULTS)[keyof typeof UI_LANGUAGE_CONTENT_DEFAULTS]
->;
-
 const DEFAULT_TRANSLATION_IDS = Array.from(
-  new Set(
-    (Object.values(UI_LANGUAGE_CONTENT_DEFAULTS).filter(Boolean) as ContentDefaults[]).flatMap(
-      (defaults) => defaults.translationIds
-    )
-  )
+  new Set(Object.values(UI_LANGUAGE_CONTENT_DEFAULTS).flatMap((d) => d.translationIds))
 ).sort((a, b) => a - b);
 
 const DEFAULT_TRANSLATIONS_PARAM = DEFAULT_TRANSLATION_IDS.join(',');

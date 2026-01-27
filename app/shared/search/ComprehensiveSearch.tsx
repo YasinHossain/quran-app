@@ -25,7 +25,6 @@ import {
   buildPageRoute,
   buildSearchRoute,
 } from '@/app/shared/navigation/routes';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import {
   quickSearch,
   analyzeQuery,
@@ -180,8 +179,6 @@ const SearchDropdown = memo(function SearchDropdown({
 }: SearchDropdownProps): ReactElement {
   const { settings } = useSettings();
   const { t, i18n } = useTranslation();
-  const rawPathname = usePathname();
-  const locale = useMemo(() => getLocaleFromPathname(rawPathname) ?? 'en', [rawPathname]);
 
   // Load Arabic font dynamically when displaying search results
   useDynamicFontLoader(settings.arabicFontFace);
@@ -391,10 +388,7 @@ const SearchDropdown = memo(function SearchDropdown({
             return (
               <Link
                 key={verse.verseKey}
-                href={localizeHref(
-                  buildSurahRoute(verse.surahNumber, { startVerse: verse.verseNumber }),
-                  locale
-                )}
+                href={buildSurahRoute(verse.surahNumber, { startVerse: verse.verseNumber })}
                 prefetch={true}
                 onClick={onLinkClick}
                 className={`w-full block px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${
@@ -556,7 +550,6 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
 
   // Close dropdown when route changes
   const pathname = usePathname();
-  const locale = useMemo(() => getLocaleFromPathname(pathname) ?? 'en', [pathname]);
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
@@ -633,48 +626,46 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
 
       switch (result.resultType) {
         case 'surah':
-          router.push(localizeHref(buildSurahRoute(Number(result.key)), locale));
+          router.push(buildSurahRoute(Number(result.key)));
           break;
         case 'ayah': {
           const [surah, ayahNum] = String(result.key).split(':').map(Number);
-          router.push(localizeHref(buildSurahRoute(surah!, { startVerse: ayahNum ?? 1 }), locale));
+          router.push(buildSurahRoute(surah!, { startVerse: ayahNum ?? 1 }));
           break;
         }
         case 'juz':
-          router.push(localizeHref(buildJuzRoute(Number(result.key)), locale));
+          router.push(buildJuzRoute(Number(result.key)));
           break;
         case 'page':
-          router.push(localizeHref(buildPageRoute(Number(result.key)), locale));
+          router.push(buildPageRoute(Number(result.key)));
           break;
         default:
-          router.push(localizeHref(buildSearchRoute(query), locale));
+          router.push(buildSearchRoute(query));
       }
 
       onNavigate?.();
     },
-    [locale, query, router, onNavigate]
+    [query, router, onNavigate]
   );
 
   const navigateToVerse = useCallback(
     (verse: SearchVerseResult): void => {
       saveRecentSearch(query);
       setIsOpen(false);
-      router.push(
-        localizeHref(buildSurahRoute(verse.surahNumber, { startVerse: verse.verseNumber }), locale)
-      );
+      router.push(buildSurahRoute(verse.surahNumber, { startVerse: verse.verseNumber }));
       onNavigate?.();
     },
-    [locale, query, router, onNavigate]
+    [query, router, onNavigate]
   );
 
   const navigateToSearchPage = useCallback((): void => {
     if (query.trim()) {
       saveRecentSearch(query);
       setIsOpen(false);
-      router.push(localizeHref(buildSearchRoute(query), locale));
+      router.push(buildSearchRoute(query));
       onNavigate?.();
     }
-  }, [locale, query, router, onNavigate]);
+  }, [query, router, onNavigate]);
 
   const handleRecentSelect = useCallback((recentQuery: string): void => {
     setQuery(recentQuery);
@@ -768,7 +759,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
                 typeof verse === 'number'
                   ? buildSurahRoute(surahId, { startVerse: verse })
                   : buildSurahRoute(surahId);
-              router.push(localizeHref(href, locale));
+              router.push(href);
               setIsOpen(false);
               onNavigate?.();
             }}
@@ -813,7 +804,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
             {QUICK_LINKS.map(({ id, fallbackName }) => (
               <Link
                 key={id}
-                href={localizeHref(buildSurahRoute(id), locale)}
+                href={buildSurahRoute(id)}
                 prefetch={true}
                 onClick={() => {
                   onNavigate?.();

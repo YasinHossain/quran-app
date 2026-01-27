@@ -1,8 +1,7 @@
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useModal } from '@/app/shared/hooks/useModal';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Chapter } from '@/types';
@@ -16,20 +15,18 @@ interface UsePlannerPageResult {
 
 export const usePlannerPage = (): UsePlannerPageResult => {
   const router = useRouter();
-  const pathname = usePathname();
   const { planner, chapters } = useBookmarks();
   const modal = useModal();
 
   const handleSectionChange = (section: SectionId): void => {
-    const locale = getLocaleFromPathname(pathname) ?? 'en';
     if (section === 'bookmarks') {
-      router.push(localizeHref('/bookmarks/folders', locale));
+      router.push('/bookmarks/folders');
     } else if (section === 'pinned') {
-      router.push(localizeHref('/bookmarks/pinned', locale));
+      router.push('/bookmarks/pinned');
     } else if (section === 'last-read') {
-      router.push(localizeHref('/bookmarks/last-read', locale));
+      router.push('/bookmarks/last-read');
     } else {
-      router.push(localizeHref('/bookmarks/planner', locale));
+      router.push('/bookmarks/planner');
     }
   };
 

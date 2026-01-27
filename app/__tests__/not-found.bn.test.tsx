@@ -13,8 +13,6 @@ jest.mock('next/link', () => {
   );
 });
 
-jest.mock('next/navigation', () => ({ usePathname: () => '/bn/missing' }));
-
 const BN_TRANSLATIONS = {
   page_not_found: 'পৃষ্ঠা পাওয়া যায়নি',
   home: 'বাড়ি',
@@ -38,6 +36,6 @@ describe('NotFound page in Bengali', () => {
       </TranslationProvider>
     );
     expect(screen.getByText(BN_TRANSLATIONS.page_not_found)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: BN_TRANSLATIONS.home })).toHaveAttribute('href', '/bn');
+    expect(screen.getByRole('link', { name: BN_TRANSLATIONS.home })).toHaveAttribute('href', '/');
   });
 });
