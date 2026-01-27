@@ -18,12 +18,16 @@ export const useTranslationOptions = (): UseTranslationOptionsReturn => {
   const { data } = useSWR('translations', getTranslations);
   const translationOptions: TranslationResource[] = useMemo(() => data || [], [data]);
 
-  const selectedTranslationName = useMemo(
-    () =>
+  const selectedTranslationName = useMemo(() => {
+    if (settings.translationIds?.length === 0) {
+      return t('no_translation_selected');
+    }
+
+    return (
       translationOptions.find((o) => o.id === settings.translationId)?.name ||
-      t('select_translation'),
-    [translationOptions, settings.translationId, t]
-  );
+      t('select_translation')
+    );
+  }, [settings.translationIds, settings.translationId, translationOptions, t]);
 
   return { translationOptions, selectedTranslationName };
 };

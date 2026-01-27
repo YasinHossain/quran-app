@@ -27,6 +27,25 @@ export const UI_LANGUAGE_CONTENT_DEFAULTS: Partial<Record<UiLanguageCode, Conten
     wordLang: 'bn',
     wordTranslationId: 161, // Bengali entry from QDC resources list
   },
+  hi: {
+    translationIds: [122], // Maulana Azizul Haque al-Umari
+    tafsirIds: [169], // QDC does not provide a Hindi tafsir resource; fall back to English.
+    wordLang: 'hi',
+    wordTranslationId: 122, // Hindi entry from QDC resources list
+  },
+  ur: {
+    translationIds: [54], // Maulana Muhammad Junagarhi
+    tafsirIds: [160], // Tafsir Ibn Kathir (Urdu)
+    wordLang: 'ur',
+    wordTranslationId: 54, // Urdu entry from QDC resources list
+  },
+  ar: {
+    translationIds: [], // No translation by default for Arabic UI
+    tafsirIds: [14], // Tafsir Ibn Kathir (Arabic)
+    // Word-by-word is not required for Arabic UI; keep English hover defaults.
+    wordLang: 'en',
+    wordTranslationId: 85,
+  },
 } as const;
 
 export const getUiLanguageContentDefaults = (uiLanguage: UiLanguageCode): ContentDefaults =>

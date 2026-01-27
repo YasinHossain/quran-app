@@ -35,6 +35,7 @@
   "reading_setting": "إعدادات القراءة",
   "translations": "الترجمات",
   "select_translation": "اختر ترجمة",
+  "no_translation_selected": "لا توجد ترجمة",
   "font_setting": "إعدادات الخط",
   "arabic_font_size": "حجم خط العربية",
   "translation_font_size": "حجم خط الترجمة",

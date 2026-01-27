@@ -43,10 +43,14 @@ function fetchSingleVerse(
 }
 
 function resolveTranslationIds(translationIds: number[], fallbackTranslationId: number): number[] {
-  const validIds = translationIds.filter((id) => Number.isFinite(id));
-  if (validIds.length > 0) {
-    return validIds;
+  // An explicit empty array means "no translations selected".
+  if (Array.isArray(translationIds) && translationIds.length === 0) {
+    return [];
   }
+
+  const validIds = translationIds.filter((id) => Number.isFinite(id));
+  if (validIds.length > 0) return validIds;
+
   return [Number.isFinite(fallbackTranslationId) ? fallbackTranslationId : FALLBACK_TRANSLATION_ID];
 }
 
