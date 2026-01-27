@@ -179,7 +179,7 @@ beforeEach(() => {
 });
 
 type MockUseTranslationReturn = {
-  t: (key: string, options?: Record<string, unknown>) => string;
+  t: (key: string, options?: Record<string, unknown> | string) => string;
   i18n: {
     changeLanguage: jest.Mock;
     language: string;
@@ -191,25 +191,31 @@ type MockUseTranslationReturn = {
   };
 };
 
-const defaultUseTranslationImplementation = (): MockUseTranslationReturn => ({
-  t: (key: string, options?: Record<string, unknown> | string) => {
-    if (typeof options === 'string') return options;
-    if (options && typeof options === 'object') {
-      const defaultValue = options['defaultValue'];
-      if (typeof defaultValue === 'string') return defaultValue;
-    }
+const defaultT = (key: string, options?: Record<string, unknown> | string) => {
+  if (typeof options === 'string') return options;
+  if (options && typeof options === 'object') {
+    const defaultValue = options['defaultValue'];
+    if (typeof defaultValue === 'string') return defaultValue;
+  }
 
-    return typeof key === 'string' ? key : String(key);
-  },
-  i18n: {
-    changeLanguage: jest.fn(),
-    language: 'en',
-    languages: ['en'],
-    on: jest.fn(),
-    off: jest.fn(),
-    exists: jest.fn(() => false),
-    t: jest.fn((key: string) => key),
-  },
+  return typeof key === 'string' ? key : String(key);
+};
+
+// Keep a stable i18n reference across renders to avoid infinite effect loops in
+// providers that depend on `i18n` identity (e.g. `[i18n]` dependencies).
+const stableMockI18n: MockUseTranslationReturn['i18n'] = {
+  changeLanguage: jest.fn(),
+  language: 'en',
+  languages: ['en'],
+  on: jest.fn(),
+  off: jest.fn(),
+  exists: jest.fn(() => false),
+  t: jest.fn((key: string) => key),
+};
+
+const defaultUseTranslationImplementation = (): MockUseTranslationReturn => ({
+  t: defaultT,
+  i18n: stableMockI18n,
 });
 
 const mockUseTranslation = jest.fn(defaultUseTranslationImplementation);
