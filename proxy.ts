@@ -7,6 +7,31 @@ const PUBLIC_FILE = /\.[^/]+$/;
 const stripRegion = (languageTag: string): string =>
   String(languageTag).trim().toLowerCase().split(/[-_]/)[0] ?? '';
 
+const isDocumentNavigation = (request: NextRequest): boolean => {
+  const dest = request.headers.get('sec-fetch-dest');
+  const mode = request.headers.get('sec-fetch-mode');
+  if (dest === 'document' || mode === 'navigate') return true;
+
+  const accept = request.headers.get('accept') ?? '';
+  return accept.includes('text/html');
+};
+
+const setUiLanguageCookie = (
+  request: NextRequest,
+  response: NextResponse,
+  uiLanguage: string
+): void => {
+  // Only persist locale on real document navigations (not RSC/prefetch fetches).
+  // Otherwise, background prefetches can race and overwrite the user's selection.
+  if (!isDocumentNavigation(request)) return;
+
+  response.cookies.set(UI_LANGUAGE_STORAGE_KEY, uiLanguage, {
+    path: '/',
+    maxAge: 60 * 60 * 24 * 365,
+    sameSite: 'lax',
+  });
+};
+
 const getPreferredLocale = (request: NextRequest): string => {
   const fromCookie = request.cookies.get(UI_LANGUAGE_STORAGE_KEY)?.value;
   if (fromCookie && isUiLanguageCode(fromCookie)) {
@@ -59,11 +84,7 @@ export function proxy(request: NextRequest): NextResponse {
     // Canonicalize English: `/en/...` -> `/<...>` (no locale prefix for default locale).
     if (maybeLocale === 'en') {
       const response = NextResponse.redirect(url);
-      response.cookies.set(UI_LANGUAGE_STORAGE_KEY, maybeLocale, {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 365,
-        sameSite: 'lax',
-      });
+      setUiLanguageCookie(request, response, maybeLocale);
       return response;
     }
 
@@ -75,11 +96,7 @@ export function proxy(request: NextRequest): NextResponse {
     requestHeaders.set('x-ui-language', maybeLocale);
 
     const response = NextResponse.rewrite(url, { request: { headers: requestHeaders } });
-    response.cookies.set(UI_LANGUAGE_STORAGE_KEY, maybeLocale, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365,
-      sameSite: 'lax',
-    });
+    setUiLanguageCookie(request, response, maybeLocale);
     return response;
   }
 
@@ -90,11 +107,7 @@ export function proxy(request: NextRequest): NextResponse {
     requestHeaders.set('x-ui-language', locale);
 
     const response = NextResponse.next({ request: { headers: requestHeaders } });
-    response.cookies.set(UI_LANGUAGE_STORAGE_KEY, locale, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365,
-      sameSite: 'lax',
-    });
+    setUiLanguageCookie(request, response, locale);
     return response;
   }
 
@@ -102,11 +115,7 @@ export function proxy(request: NextRequest): NextResponse {
   url.pathname = pathname === '/' ? `/${locale}` : `/${locale}${pathname}`;
 
   const response = NextResponse.redirect(url);
-  response.cookies.set(UI_LANGUAGE_STORAGE_KEY, locale, {
-    path: '/',
-    maxAge: 60 * 60 * 24 * 365,
-    sameSite: 'lax',
-  });
+  setUiLanguageCookie(request, response, locale);
   return response;
 }
 
