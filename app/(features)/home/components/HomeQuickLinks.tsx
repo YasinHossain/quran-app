@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { memo, useCallback, useMemo, type ReactElement } from 'react';
+import { memo, useMemo, type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { BookmarkOutlineIcon, CalendarIcon, ClockIcon, PinIcon } from '@/app/shared/icons';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+import { useIntentPrefetch } from '@/app/shared/navigation/hooks/useIntentPrefetch';
 
 /**
  * Quick shortcut links to bookmark sections.
@@ -37,24 +38,13 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
   const pathname = usePathname();
   const locale = getLocaleFromPathname(pathname) ?? 'en';
   const router = useRouter();
+  const intentPrefetch = useIntentPrefetch((href) => router.prefetch(href));
 
   const maxWidth = 'clamp(18rem, 80vw, 64rem)';
 
   const links = useMemo(
     () => QUICK_LINKS.map((link) => ({ ...link, href: localizeHref(link.href, locale) })),
     [locale]
-  );
-
-  // Prefetch handler for intent-based prefetching
-  const prefetchRoute = useCallback(
-    (href: string) => {
-      try {
-        router.prefetch(href);
-      } catch {
-        // Ignore prefetch errors
-      }
-    },
-    [router]
   );
 
   return (
@@ -65,10 +55,13 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
           <Link
             key={href}
             href={href}
-            prefetch
-            onMouseEnter={() => prefetchRoute(href)}
-            onFocus={() => prefetchRoute(href)}
-            onTouchStart={() => prefetchRoute(href)}
+            prefetch={false}
+            onMouseEnter={() => intentPrefetch.onMouseEnter(href)}
+            onFocus={() => intentPrefetch.onFocus(href)}
+            onTouchStart={(event) => intentPrefetch.onTouchStart(event, href)}
+            onTouchMove={intentPrefetch.onTouchMove}
+            onTouchEnd={intentPrefetch.onTouchEnd}
+            onTouchCancel={intentPrefetch.onTouchCancel}
             className="
               w-full min-w-0 flex items-center justify-center gap-2
               min-h-[2.5rem] sm:min-h-[2.75rem] md:min-h-12

@@ -63,6 +63,7 @@ export const VerseOfDay = memo(function VerseOfDay({
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [translationOverrides, setTranslationOverrides] = useState<Record<string, string>>({});
+  const [isLoadingTranslations, setIsLoadingTranslations] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const hasVerses = verses && verses.length > 0;
@@ -97,10 +98,12 @@ export const VerseOfDay = memo(function VerseOfDay({
     if (!hasVerses) return;
     if (isTranslationDisabled) {
       setTranslationOverrides({});
+      setIsLoadingTranslations(false);
       return;
     }
     if (typeof activeTranslationId !== 'number' || !Number.isFinite(activeTranslationId)) {
       setTranslationOverrides({});
+      setIsLoadingTranslations(false);
       return;
     }
 
@@ -108,6 +111,14 @@ export const VerseOfDay = memo(function VerseOfDay({
     setTranslationOverrides({});
 
     let cancelled = false;
+
+    const needsFetch = verses.some((verse) => {
+      const verseKey = verse.verse_key;
+      if (!verseKey) return false;
+      return !verse.translations?.some((t) => t.resource_id === activeTranslationId);
+    });
+
+    setIsLoadingTranslations(needsFetch);
 
     const cancelIdle = scheduleIdleWork(() => {
       void (async () => {
@@ -143,12 +154,14 @@ export const VerseOfDay = memo(function VerseOfDay({
 
         if (cancelled) return;
         setTranslationOverrides(next);
+        setIsLoadingTranslations(false);
       })();
     });
 
     return () => {
       cancelled = true;
       cancelIdle();
+      setIsLoadingTranslations(false);
     };
   }, [activeTranslationId, hasVerses, isTranslationDisabled, verses]);
 
@@ -238,6 +251,12 @@ export const VerseOfDay = memo(function VerseOfDay({
     ? cleanTranslationText(verseData.translation)
     : null;
 
+  const showTranslationSkeleton =
+    !isTranslationDisabled &&
+    typeof activeTranslationId === 'number' &&
+    isLoadingTranslations &&
+    !cleanedTranslation;
+
   const contentClassName = prefersReducedMotion
     ? 'space-y-4'
     : `transition-opacity duration-300 ease-in-out space-y-4 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`;
@@ -261,6 +280,13 @@ export const VerseOfDay = memo(function VerseOfDay({
           <p className="text-left text-sm md:text-base text-content-secondary">
             &quot;{cleanedTranslation}&quot; - [{referenceText}]
           </p>
+        )}
+
+        {showTranslationSkeleton && (
+          <div className="space-y-2" aria-hidden="true">
+            <div className="h-4 w-11/12 rounded bg-interactive animate-pulse" />
+            <div className="h-4 w-9/12 rounded bg-interactive animate-pulse" />
+          </div>
         )}
       </div>
     </div>
