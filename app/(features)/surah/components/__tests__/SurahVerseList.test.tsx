@@ -8,21 +8,6 @@ import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders
 import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVerseListing';
 import type { Verse } from '@/types';
 
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-    i18n: {
-      changeLanguage: jest.fn(),
-      language: 'en',
-      languages: ['en'],
-      on: jest.fn(),
-      off: jest.fn(),
-      exists: jest.fn(() => false),
-      t: (key: string) => key,
-    },
-  }),
-}));
-
 describe('SurahVerseList', () => {
   const createVerseListing = (
     overrides: Partial<UseVerseListingReturn> = {}

@@ -2,10 +2,6 @@ import { act, renderHook } from '@testing-library/react';
 
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(() => ({ push: jest.fn() })),
-}));
-
 describe('useNavigationTargets', () => {
   it('returns href builders that match route helpers', () => {
     const { result } = renderHook(() => useNavigationTargets());
@@ -15,10 +11,6 @@ describe('useNavigationTargets', () => {
   });
 
   it('pushes routes via router when actions are invoked', () => {
-    const push = jest.fn();
-    const mockedRouter = require('next/navigation').useRouter as jest.Mock;
-    mockedRouter.mockReturnValue({ push });
-
     const { result } = renderHook(() => useNavigationTargets());
 
     act(() => {
@@ -27,6 +19,7 @@ describe('useNavigationTargets', () => {
       result.current.goToPage(3);
     });
 
+    const push = globalThis.__NEXT_ROUTER_MOCK__?.push as unknown as jest.Mock;
     expect(push).toHaveBeenNthCalledWith(1, '/surah/1');
     expect(push).toHaveBeenNthCalledWith(2, '/juz/2');
     expect(push).toHaveBeenNthCalledWith(3, '/page/3');
