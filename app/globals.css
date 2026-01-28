@@ -239,6 +239,25 @@
     display: inline-flex;
   }
 
+  /* Toggle switch thumb positioning (LTR/RTL aware) */
+  .toggle-switch {
+    --toggle-offset-on: 1.5rem;
+    --toggle-offset-off: 0.25rem;
+  }
+
+  [dir='rtl'] .toggle-switch {
+    --toggle-offset-on: -1.5rem;
+    --toggle-offset-off: -0.25rem;
+  }
+
+  .toggle-switch-thumb {
+    transform: translateX(var(--toggle-offset-off));
+  }
+
+  .toggle-switch[aria-pressed='true'] .toggle-switch-thumb {
+    transform: translateX(var(--toggle-offset-on));
+  }
+
   /* Focus visible improvements for better keyboard navigation */
   *:focus-visible {
     outline: none !important;
@@ -500,21 +519,29 @@
   }
 }
 
-/* ===== Custom Range Slider Styles ===== */
-input[type='range'] {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
+  /* ===== Custom Range Slider Styles ===== */
+  input[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
   height: 6px;
   border-radius: 5px;
   outline: none;
   touch-action: none;
-  background: linear-gradient(
-    to right,
-    rgb(var(--color-accent)) var(--value-percent, 0%),
-    rgb(var(--color-border)) var(--value-percent, 0%)
-  );
-}
+    background: linear-gradient(
+      to right,
+      rgb(var(--color-accent)) var(--value-percent, 0%),
+      rgb(var(--color-border)) var(--value-percent, 0%)
+    );
+  }
+
+  [dir='rtl'] input[type='range'] {
+    background: linear-gradient(
+      to left,
+      rgb(var(--color-accent)) var(--value-percent, 0%),
+      rgb(var(--color-border)) var(--value-percent, 0%)
+    );
+  }
 
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;

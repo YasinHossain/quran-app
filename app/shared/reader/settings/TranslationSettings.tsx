@@ -100,7 +100,7 @@ function ToggleRow({
       <span className="text-sm text-foreground">{label}</span>
       <button
         onClick={onToggle}
-        className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-300 outline-none ring-0 focus:ring-0 focus:ring-offset-0 focus:outline-none ${
+        className={`toggle-switch relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-300 outline-none ring-0 focus:ring-0 focus:ring-offset-0 focus:outline-none ${
           active
             ? 'bg-accent shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
             : 'bg-interactive shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
@@ -108,9 +108,7 @@ function ToggleRow({
         aria-pressed={active}
       >
         <span
-          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-[0_2px_4px_rgba(0,0,0,0.2)] ring-0 transition-transform duration-300 ${
-            active ? 'translate-x-6' : 'translate-x-1'
-          }`}
+          className="toggle-switch-thumb inline-block h-5 w-5 rounded-full bg-white shadow-[0_2px_4px_rgba(0,0,0,0.2)] ring-0 transition-transform duration-300"
         />
       </button>
     </div>
