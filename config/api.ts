@@ -1,5 +1,3 @@
-import { z } from 'zod';
-
 import { getEnvVar, parseNumberEnv } from './utils';
 
 /**
@@ -7,14 +5,12 @@ import { getEnvVar, parseNumberEnv } from './utils';
  *
  * Centralises settings for external service communication.
  */
-export const apiSchema = z.object({
-  quranBaseUrl: z.string().url(),
-  timeout: z.number().positive().default(30000),
-  retryAttempts: z.number().int().min(0).max(10).default(3),
-  retryDelay: z.number().positive().default(1000),
-});
-
-export type ApiConfig = z.infer<typeof apiSchema>;
+export interface ApiConfig {
+  quranBaseUrl: string;
+  timeout: number;
+  retryAttempts: number;
+  retryDelay: number;
+}
 
 export const apiConfig: ApiConfig = {
   quranBaseUrl: getEnvVar('NEXT_PUBLIC_API_URL', 'https://api.quran.com/api/v4')!,

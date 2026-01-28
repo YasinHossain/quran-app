@@ -2,7 +2,6 @@ export * from './Bookmark';
 export * from './Surah';
 export * from './Surah.types';
 export * from './Surah.utils';
-export * from './Tafsir';
 export * from './Verse';
 export * from './surahHelpers';
 export * from './verseUtils';

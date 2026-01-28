@@ -70,6 +70,7 @@ claude_desktop_config.json
 codex-artifacts/
 .dev.log
 .dev.pid
+.tmp/
 
 # generated reports
 lighthouse-report.json
@@ -77,6 +78,7 @@ design-system.json
 .lighthouseci/
 lighthouseci/
 lighthouse-build/
+.lighthouse-report*.json
 
 # temporary scripts
 analyze-chars.js

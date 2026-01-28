@@ -13,9 +13,6 @@ import { SITE_DESCRIPTION, SITE_NAME, absoluteUrl } from '@/lib/seo/site';
 
 import { HomePageClient } from './(features)/home/components/HomePageClient';
 import { SurahGridServer } from './(features)/home/components/SurahGridServer';
-import { HeaderVisibilityProvider } from './(features)/layout/context/HeaderVisibilityContext';
-import { Navigation } from './shared/IconSidebar';
-import { ModernLayout } from './shared/navigation/ModernLayout';
 
 // This page reads user preferences (theme + UI language) from cookies in `app/layout.tsx`.
 // Marking it as static would cause the server HTML to always render with defaults (English + light),
@@ -40,14 +37,8 @@ export default async function Page(): Promise<React.JSX.Element> {
   const [chapters, versesOfDay] = await Promise.all([getChaptersServer(), getVersesOfDayServer()]);
 
   return (
-    <HeaderVisibilityProvider>
-      <ModernLayout>
-        {/* Mobile bottom navigation is OK on home; desktop rail stays hidden. */}
-        <Navigation pathnameOverride="/" />
-        <HomePageClient initialChapters={chapters} initialVerses={versesOfDay}>
-          <SurahGridServer chapters={chapters} />
-        </HomePageClient>
-      </ModernLayout>
-    </HeaderVisibilityProvider>
+    <HomePageClient initialChapters={chapters} initialVerses={versesOfDay}>
+      <SurahGridServer chapters={chapters} />
+    </HomePageClient>
   );
 }

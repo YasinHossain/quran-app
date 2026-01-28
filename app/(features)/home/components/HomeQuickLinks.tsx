@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { memo, useCallback, useEffect, useMemo, type ReactElement } from 'react';
+import { memo, useCallback, useMemo, type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { BookmarkOutlineIcon, CalendarIcon, ClockIcon, PinIcon } from '@/app/shared/icons';
@@ -57,13 +57,6 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
     [router]
   );
 
-  // Warm cache on mount - prefetch all quick links immediately
-  useEffect(() => {
-    for (const link of links) {
-      prefetchRoute(link.href);
-    }
-  }, [links, prefetchRoute]);
-
   return (
     <div className={`w-full mx-auto px-2 sm:px-3 lg:px-0 ${className ?? ''}`} style={{ maxWidth }}>
       {/* 2 columns by default, 4 columns on desktop */}
@@ -72,7 +65,7 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
           <Link
             key={href}
             href={href}
-            prefetch={true}
+            prefetch={false}
             onMouseEnter={() => prefetchRoute(href)}
             onFocus={() => prefetchRoute(href)}
             onTouchStart={() => prefetchRoute(href)}

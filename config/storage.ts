@@ -1,5 +1,3 @@
-import { z } from 'zod';
-
 import { parseBooleanEnv, parseNumberEnv } from './utils';
 
 /**
@@ -7,18 +5,26 @@ import { parseBooleanEnv, parseNumberEnv } from './utils';
  *
  * Governs access to browser storage mechanisms and quotas.
  */
-export const storageSchema = z.object({
-  enableIndexedDB: z.boolean().default(true),
-  enableLocalStorage: z.boolean().default(true),
-  storageQuota: z.number().positive().default(100),
-  autoCleanupDays: z.number().int().min(1).default(30),
-});
+export interface StorageConfig {
+  enableIndexedDB: boolean;
+  enableLocalStorage: boolean;
+  storageQuota: number;
+  autoCleanupDays: number;
+}
 
-export type StorageConfig = z.infer<typeof storageSchema>;
+const resolvePositiveNumber = (value: number | undefined, fallback: number): number => {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) return fallback;
+  return value;
+};
+
+const resolveIntAtLeast = (value: number | undefined, fallback: number, min: number): number => {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return fallback;
+  return Math.max(min, Math.trunc(value));
+};
 
 export const storageConfig: StorageConfig = {
   enableIndexedDB: parseBooleanEnv('STORAGE_ENABLE_INDEXEDDB', true),
   enableLocalStorage: parseBooleanEnv('STORAGE_ENABLE_LOCALSTORAGE', true),
-  storageQuota: parseNumberEnv('STORAGE_QUOTA_MB', 100)!,
-  autoCleanupDays: parseNumberEnv('STORAGE_AUTO_CLEANUP_DAYS', 30)!,
+  storageQuota: resolvePositiveNumber(parseNumberEnv('STORAGE_QUOTA_MB', 100), 100),
+  autoCleanupDays: resolveIntAtLeast(parseNumberEnv('STORAGE_AUTO_CLEANUP_DAYS', 30), 30, 1),
 };

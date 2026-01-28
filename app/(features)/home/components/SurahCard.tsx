@@ -1,7 +1,7 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import { memo } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
@@ -18,14 +18,27 @@ interface SurahCardProps {
 export const SurahCard = memo(function SurahCard({ chapter }: SurahCardProps): React.JSX.Element {
   const { t, i18n } = useTranslation();
   const pathname = usePathname();
+  const router = useRouter();
   const locale = getLocaleFromPathname(pathname) ?? 'en';
+  const href = localizeHref(buildSurahRoute(chapter.id), locale);
   const versesCount = formatNumber(chapter.verses_count, i18n.language, { useGrouping: false });
+
+  const prefetchRoute = useCallback(() => {
+    try {
+      void router.prefetch(href);
+    } catch {
+      // Ignore prefetch errors
+    }
+  }, [href, router]);
 
   return (
     <SurahNavigationCard
-      href={localizeHref(buildSurahRoute(chapter.id), locale)}
+      href={href}
       scroll
-      prefetch={true}
+      prefetch={false}
+      onMouseEnter={prefetchRoute}
+      onFocus={prefetchRoute}
+      onTouchStart={prefetchRoute}
       className="items-center"
       content={{
         id: chapter.id,

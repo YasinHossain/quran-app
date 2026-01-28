@@ -2,39 +2,35 @@
  * Application Configuration
  *
  * Centralised entry point that composes individual configuration segments and
- * validates them using Zod schemas.
+ * exposes them as a typed object.
  */
-import { z } from 'zod';
+import { apiConfig, type ApiConfig } from './api';
+import { appConfig, type AppConfig } from './app';
+import { audioConfig, type AudioConfig } from './audio';
+import { cacheConfig, type CacheConfig } from './cache';
+import { featuresConfig, type FeaturesConfig } from './features';
+import { loggingConfig, type LoggingConfig } from './logging';
+import { monitoringConfig, type MonitoringConfig } from './monitoring';
+import { searchConfig, type SearchConfig } from './search';
+import { securityConfig, type SecurityConfig } from './security';
+import { storageConfig, type StorageConfig } from './storage';
+import { uiConfig, type UiConfig } from './ui';
 
-import { apiConfig, apiSchema } from './api';
-import { appConfig, appSchema } from './app';
-import { audioConfig, audioSchema } from './audio';
-import { cacheConfig, cacheSchema } from './cache';
-import { featuresConfig, featuresSchema } from './features';
-import { loggingConfig, loggingSchema } from './logging';
-import { monitoringConfig, monitoringSchema } from './monitoring';
-import { searchConfig, searchSchema } from './search';
-import { securityConfig, securitySchema } from './security';
-import { storageConfig, storageSchema } from './storage';
-import { uiConfig, uiSchema } from './ui';
+export interface Config {
+  app: AppConfig;
+  api: ApiConfig;
+  features: FeaturesConfig;
+  cache: CacheConfig;
+  storage: StorageConfig;
+  audio: AudioConfig;
+  ui: UiConfig;
+  search: SearchConfig;
+  security: SecurityConfig;
+  monitoring: MonitoringConfig;
+  logging: LoggingConfig;
+}
 
-const configSchema = z.object({
-  app: appSchema,
-  api: apiSchema,
-  features: featuresSchema,
-  cache: cacheSchema,
-  storage: storageSchema,
-  audio: audioSchema,
-  ui: uiSchema,
-  search: searchSchema,
-  security: securitySchema,
-  monitoring: monitoringSchema,
-  logging: loggingSchema,
-});
-
-export type Config = z.infer<typeof configSchema>;
-
-const rawConfig = {
+const rawConfig: Config = {
   app: appConfig,
   api: apiConfig,
   features: featuresConfig,
@@ -49,26 +45,13 @@ const rawConfig = {
 };
 
 /**
- * Validated and typed configuration.
+ * Typed application configuration.
  *
- * Throws an error if configuration validation fails.
+ * Each configuration segment is responsible for normalising and defaulting its
+ * values. Additional runtime warnings and assertions can be performed by
+ * calling {@link validateConfig}.
  */
-export const config: Config = ((): Config => {
-  try {
-    return configSchema.parse(rawConfig);
-  } catch (error) {
-    let message = '❌ Configuration validation failed';
-
-    if (error instanceof z.ZodError) {
-      const details = error.issues
-        .map((issue: z.ZodIssue) => `  - ${issue.path.join('.')}: ${issue.message}`)
-        .join('\n');
-      message += `\n${details}`;
-    }
-
-    throw new Error(message);
-  }
-})();
+export const config: Config = rawConfig;
 
 /** Environment helpers */
 export const isDevelopment = config.app.environment === 'development';

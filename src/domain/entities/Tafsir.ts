@@ -1,15 +1,28 @@
-import { z } from 'zod';
+export interface TafsirData {
+  id: number;
+  name: string;
+  lang: string;
+  authorName?: string | undefined;
+  slug?: string | undefined;
+}
 
-// Validation schema for Tafsir
-export const TafsirSchema = z.object({
-  id: z.number().positive(),
-  name: z.string().min(1),
-  lang: z.string().min(1),
-  authorName: z.string().optional(),
-  slug: z.string().optional(),
-});
-
-export type TafsirData = z.infer<typeof TafsirSchema>;
+function validateTafsirData(data: TafsirData): void {
+  if (!Number.isFinite(data.id) || data.id <= 0) {
+    throw new Error('Invalid Tafsir data: id must be a positive number');
+  }
+  if (typeof data.name !== 'string' || !data.name.trim()) {
+    throw new Error('Invalid Tafsir data: name must be a non-empty string');
+  }
+  if (typeof data.lang !== 'string' || !data.lang.trim()) {
+    throw new Error('Invalid Tafsir data: lang must be a non-empty string');
+  }
+  if (data.authorName !== undefined && typeof data.authorName !== 'string') {
+    throw new Error('Invalid Tafsir data: authorName must be a string when provided');
+  }
+  if (data.slug !== undefined && typeof data.slug !== 'string') {
+    throw new Error('Invalid Tafsir data: slug must be a string when provided');
+  }
+}
 
 /**
  * Tafsir Domain Entity
@@ -19,8 +32,10 @@ export type TafsirData = z.infer<typeof TafsirSchema>;
  */
 export class Tafsir {
   constructor(private readonly data: TafsirData) {
-    // Validate data on construction
-    TafsirSchema.parse(data);
+    // Validate shape on construction (dev-only to keep production bundles lean)
+    if (process.env.NODE_ENV !== 'production') {
+      validateTafsirData(data);
+    }
   }
 
   // Getters for accessing data

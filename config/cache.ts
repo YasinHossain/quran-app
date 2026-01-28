@@ -1,5 +1,3 @@
-import { z } from 'zod';
-
 import { getEnvVar, parseBooleanEnv, parseNumberEnv } from './utils';
 
 /**
@@ -7,20 +5,23 @@ import { getEnvVar, parseBooleanEnv, parseNumberEnv } from './utils';
  *
  * Determines caching behaviour for client-side data.
  */
-export const cacheSchema = z.object({
-  ttl: z.number().positive().default(300000),
-  maxSize: z.number().positive().default(50),
-  enableMemoryCache: z.boolean().default(true),
-  enableIndexedDBCache: z.boolean().default(true),
-  cachePrefix: z.string().default('quran-app-cache'),
-});
+export interface CacheConfig {
+  ttl: number;
+  maxSize: number;
+  enableMemoryCache: boolean;
+  enableIndexedDBCache: boolean;
+  cachePrefix: string;
+}
 
-export type CacheConfig = z.infer<typeof cacheSchema>;
+const resolvePositiveNumber = (value: number | undefined, fallback: number): number => {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) return fallback;
+  return value;
+};
 
 export const cacheConfig: CacheConfig = {
-  ttl: parseNumberEnv('CACHE_TTL', 300000)!,
-  maxSize: parseNumberEnv('CACHE_MAX_SIZE', 50)!,
+  ttl: resolvePositiveNumber(parseNumberEnv('CACHE_TTL', 300000), 300000),
+  maxSize: resolvePositiveNumber(parseNumberEnv('CACHE_MAX_SIZE', 50), 50),
   enableMemoryCache: parseBooleanEnv('CACHE_ENABLE_MEMORY', true),
   enableIndexedDBCache: parseBooleanEnv('CACHE_ENABLE_INDEXEDDB', true),
-  cachePrefix: getEnvVar('CACHE_PREFIX', 'quran-app-cache')!,
+  cachePrefix: getEnvVar('CACHE_PREFIX', 'quran-app-cache') ?? 'quran-app-cache',
 };
