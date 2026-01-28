@@ -8,9 +8,30 @@ import { normalizeVerse, ApiVerse } from './normalize';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 
 let surahList: Surah[] | null = null;
+let surahListPromise: Promise<Surah[]> | null = null;
 
 export function clearSurahListCache(): void {
   surahList = null;
+  surahListPromise = null;
+}
+
+async function getSurahListCached(): Promise<Surah[]> {
+  if (surahList) return surahList;
+
+  if (!surahListPromise) {
+    surahListPromise = getSurahList()
+      .then((surahs) => {
+        surahList = surahs;
+        surahListPromise = null;
+        return surahs;
+      })
+      .catch((error) => {
+        surahListPromise = null;
+        throw error;
+      });
+  }
+
+  return surahListPromise;
 }
 
 interface SearchApiResult {
@@ -45,7 +66,7 @@ export async function getRandomVerse(
   rng: () => number = Math.random
 ): Promise<Verse> {
   try {
-    const surahs = surahList ?? (surahList = await getSurahList());
+    const surahs = await getSurahListCached();
     if (!surahs.length) {
       throw new Error('No surahs available');
     }

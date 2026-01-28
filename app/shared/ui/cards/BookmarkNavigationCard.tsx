@@ -1,7 +1,9 @@
 'use client';
 
-import React, { memo, useCallback, startTransition } from 'react';
+import { usePathname } from 'next/navigation';
+import React, { memo, useCallback, useMemo, startTransition } from 'react';
 
+import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { colors } from '@/app/shared/design-system/card-tokens';
 import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
 import { cn } from '@/lib/utils/cn';
@@ -95,6 +97,9 @@ export const BookmarkNavigationCard = memo(function BookmarkNavigationCard({
 }: BookmarkNavigationCardProps): React.JSX.Element {
   const { id, icon, label, description } = content;
   const activeState = Boolean(isActive);
+  const rawPathname = usePathname();
+  const locale = getLocaleFromPathname(rawPathname) ?? 'en';
+  const href = useMemo(() => localizeHref(getSectionHref(id), locale), [id, locale]);
   const handleClick = useNavigationClick(
     id,
     onSectionChange,
@@ -106,7 +111,7 @@ export const BookmarkNavigationCard = memo(function BookmarkNavigationCard({
       variant="navigation"
       animation="navigation"
       isActive={activeState}
-      href={getSectionHref(id)}
+      href={href}
       scroll={false}
       prefetch={true}
       className={cn('items-center', className as string)}

@@ -8,6 +8,10 @@ import type { Verse } from '@/types';
 // Translation changes are handled client-side by SWR
 export const revalidate = 3600;
 
+export async function generateStaticParams(): Promise<Array<{ surahId: string }>> {
+  return [{ surahId: '1' }, { surahId: '2' }];
+}
+
 interface SurahPageProps {
   params: Promise<{ surahId: string }>;
 }
