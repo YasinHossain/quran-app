@@ -65,7 +65,7 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
           <Link
             key={href}
             href={href}
-            prefetch={false}
+            prefetch
             onMouseEnter={() => prefetchRoute(href)}
             onFocus={() => prefetchRoute(href)}
             onTouchStart={() => prefetchRoute(href)}

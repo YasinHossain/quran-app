@@ -35,7 +35,7 @@ export const SurahCard = memo(function SurahCard({ chapter }: SurahCardProps): R
     <SurahNavigationCard
       href={href}
       scroll
-      prefetch={false}
+      prefetch
       onMouseEnter={prefetchRoute}
       onFocus={prefetchRoute}
       onTouchStart={prefetchRoute}
