@@ -30,6 +30,15 @@ export const setLocaleInPathname = (pathname: string, locale: UiLanguageCode): s
   return withoutLocale === '/' ? `/${locale}` : `/${locale}${withoutLocale}`;
 };
 
+/**
+ * Locale routing contract (kept as JSON so it’s easy to grep/copy during refactors):
+ * {
+ *   "defaultLocale": "en",
+ *   "urlPrefix": { "en": "(none)", "other": "/{locale}" },
+ *   "englishSwitchFlow": "/en/* -> server redirects to /* (canonical)",
+ *   "persistence": ["cookie:ui-language", "localStorage:ui-language"]
+ * }
+ */
 export const setLocaleInPathnameForSwitch = (pathname: string, locale: UiLanguageCode): string => {
   const cleanPath = String(pathname || '/').startsWith('/') ? String(pathname || '/') : `/${pathname}`;
   const withoutLocale = stripLocaleFromPathname(cleanPath);
