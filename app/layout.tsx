@@ -1,10 +1,12 @@
 // app/layout.tsx
 import { cookies, headers } from 'next/headers';
+import type { Metadata } from 'next';
 
 import './fonts.css';
 import './globals.css';
 import { getUiLanguageDirection, isUiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import { loadUiResources } from '@/app/shared/i18n/loadUiResources';
+import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, absoluteUrl, getSiteUrl } from '@/lib/seo/site';
 
 import { ClientProviders } from './providers/ClientProviders';
 import { TranslationProvider } from './providers/TranslationProvider';
@@ -41,9 +43,49 @@ export const INLINE_THEME_SCRIPT = `(function(){try{var t=null;try{t=localStorag
 export const INLINE_UI_LANGUAGE_SCRIPT = `(function(){try{var k='ui-language';var s=['en','bn','ar','ur','hi'];var l=null;try{var p=location&&location.pathname?location.pathname.split('/')[1]:null;if(p&&s.indexOf(p)>-1)l=p}catch(e){}if(!l){try{l=localStorage.getItem(k)}catch(e){}}if(!l){try{var re=new RegExp('(?:^|; )'+k+'=([^;]+)');var m=document.cookie.match(re);l=m?decodeURIComponent(m[1]):null}catch(e){}}if(!l||s.indexOf(l)===-1)return;var r=document.documentElement;if(r){if(r.lang!==l)r.lang=l;try{r.dir=(l==='ar'||l==='ur')?'rtl':'ltr'}catch(e){}}try{var c=k+'='+encodeURIComponent(l)+'; path=/; max-age=31536000; SameSite=Lax';try{if(location&&location.protocol==='https:')c+='; Secure'}catch(e){}document.cookie=c}catch(e){}}catch(e){}})()`;
 
 export const metadata = {
-  title: 'Al Quran',
-  description: 'Read, Study, and Learn The Holy Quran',
-};
+  metadataBase: new URL(getSiteUrl()),
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  applicationName: SITE_NAME,
+  description: SITE_DESCRIPTION,
+  keywords: [...SITE_KEYWORDS],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: 'education',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} – Quran app`,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: ['/twitter-image'],
+  },
+} satisfies Metadata;
 
 export default async function RootLayout({
   children,
@@ -68,6 +110,38 @@ export default async function RootLayout({
     dark: 'dark',
   };
 
+  const siteUrl = getSiteUrl();
+  const jsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: siteUrl,
+      logo: absoluteUrl('/icons/icon-512x512.png'),
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: SITE_NAME,
+      url: siteUrl,
+      description: SITE_DESCRIPTION,
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: `${siteUrl}/search?query={search_term_string}`,
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: SITE_NAME,
+      url: siteUrl,
+      applicationCategory: 'EducationApplication',
+      operatingSystem: 'Web',
+      description: SITE_DESCRIPTION,
+    },
+  ];
+
   return (
     <html
       lang={uiLanguage}
@@ -82,6 +156,10 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: INLINE_THEME_SCRIPT }} />
         {/* Must run before any paint to sync persisted UI language */}
         <script dangerouslySetInnerHTML={{ __html: INLINE_UI_LANGUAGE_SCRIPT }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <meta name="theme-color" content="#0B1220" />
         {/* Preload critical Arabic font to reduce request chain */}
         <link

@@ -1,15 +1,16 @@
 import type { MetadataRoute } from 'next';
 
+import { SITE_DESCRIPTION, SITE_NAME } from '@/lib/seo/site';
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Al Quran',
-    short_name: 'Al Quran',
-    description:
-      'Read, Study, and Learn The Holy Quran - Your complete Quran companion with translations, tafsir, audio recitations, and more.',
+    name: SITE_NAME,
+    short_name: SITE_NAME,
+    description: SITE_DESCRIPTION,
     start_url: '/',
     display: 'standalone',
     background_color: '#0a0a0a',
-    theme_color: '#10b981',
+    theme_color: '#0B1220',
     orientation: 'portrait-primary',
     scope: '/',
     lang: 'en',
