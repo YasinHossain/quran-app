@@ -39,7 +39,11 @@ interface VerseByKeyResponse {
   };
 }
 
-async function fetchRandomVerse(seed: number, chapters: ReadonlyArray<Chapter>): Promise<Verse> {
+async function fetchRandomVerse(
+  seed: number,
+  chapters: ReadonlyArray<Chapter>,
+  translationsParam?: string
+): Promise<Verse> {
   // Simple seeded random for reproducible results
   let s = seed;
   const rng = () => {
@@ -56,7 +60,14 @@ async function fetchRandomVerse(seed: number, chapters: ReadonlyArray<Chapter>):
   const randomAyah = Math.floor(rng() * randomChapter.verses_count) + 1;
   const verseKey = `${randomChapter.id}:${randomAyah}`;
 
-  const verseUrl = `https://api.quran.com/api/v4/verses/by_key/${encodeURIComponent(verseKey)}?translations=${DEFAULT_TRANSLATIONS_PARAM}&fields=text_uthmani&translation_fields=resource_name`;
+  const verseUrl = new URL(
+    `https://api.quran.com/api/v4/verses/by_key/${encodeURIComponent(verseKey)}`
+  );
+  verseUrl.searchParams.set('fields', 'text_uthmani');
+  if (translationsParam) {
+    verseUrl.searchParams.set('translations', translationsParam);
+    verseUrl.searchParams.set('translation_fields', 'resource_name');
+  }
 
   const response = await fetch(verseUrl, {
     headers: { Accept: 'application/json' },
@@ -89,7 +100,7 @@ async function fetchRandomVerse(seed: number, chapters: ReadonlyArray<Chapter>):
   return verse;
 }
 
-async function fetchRandomVerses(): Promise<Verse[]> {
+async function fetchRandomVerses(translationsParam: string, count: number): Promise<Verse[]> {
   const chapters = await getChaptersServer();
 
   // Use hour-based seed for consistent verses per hour
@@ -101,14 +112,16 @@ async function fetchRandomVerses(): Promise<Verse[]> {
     now.getHours();
 
   // Fetch verses in parallel with different seeds
-  const versePromises = Array.from({ length: VERSE_COUNT }, (_, i) =>
-    fetchRandomVerse(baseSeed + i, chapters)
+  const versePromises = Array.from({ length: count }, (_, i) =>
+    fetchRandomVerse(baseSeed + i, chapters, translationsParam || undefined)
   );
 
   try {
     const verses = await Promise.all(versePromises);
-    // Validate that at least one verse has a translation
-    const hasTranslations = verses.some((v) => v.translations && v.translations.length > 0);
+    // Validate that at least one verse has a translation when translations were requested.
+    const hasTranslations = translationsParam
+      ? verses.some((v) => v.translations && v.translations.length > 0)
+      : true;
 
     if (!hasTranslations) {
       console.warn('API returned verses without translations, using fallback');
@@ -128,7 +141,21 @@ async function fetchRandomVerses(): Promise<Verse[]> {
  * Get multiple random verses for the Verse of the Day rotation (server-side).
  * Cached for 1 hour to rotate verses periodically.
  */
-export const getVersesOfDayServer = unstable_cache(fetchRandomVerses, ['verses-of-day-server-v3'], {
-  revalidate: 3600, // Cache for 1 hour
-  tags: ['verses-of-day'],
-});
+export const getVersesOfDayServer = unstable_cache(
+  () => fetchRandomVerses(DEFAULT_TRANSLATIONS_PARAM, VERSE_COUNT),
+  ['verses-of-day-server-v4'],
+  {
+    revalidate: 3600, // Cache for 1 hour
+    tags: ['verses-of-day'],
+  }
+);
+
+export const getVersesOfDayServerForTranslations = unstable_cache(
+  (translationsParam: string, count: number) =>
+    fetchRandomVerses(translationsParam, Math.min(Math.max(count, 1), 10)),
+  ['verses-of-day-server-by-translations-v1'],
+  {
+    revalidate: 3600, // Cache for 1 hour
+    tags: ['verses-of-day'],
+  }
+);

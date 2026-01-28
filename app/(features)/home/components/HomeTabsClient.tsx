@@ -7,8 +7,11 @@
  */
 
 import dynamic from 'next/dynamic';
-import React, { useState, useCallback, Suspense } from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useCallback, useRef, useState, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { useIdleViewportPrefetch } from '@/app/shared/navigation/hooks/useIdleViewportPrefetch';
 
 import { SurahTab } from './SurahTab';
 import { TabNavigation } from './TabNavigation';
@@ -37,13 +40,17 @@ function JuzTabSkeleton(): React.JSX.Element {
   );
 }
 
+const SURAH_HREF_MATCH = /\/surah\/\d+/;
+
 export function HomeTabsClient({
   searchQuery = '',
   initialChapters,
   children,
 }: HomeTabsClientProps): React.JSX.Element {
   const { t } = useTranslation();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'surah' | 'juz'>('surah');
+  const surahContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Track if user has interacted with tabs
   const handleTabChange = useCallback((tab: 'surah' | 'juz') => {
@@ -52,6 +59,17 @@ export function HomeTabsClient({
 
   // Determine what to render
   const shouldShowServerGrid = activeTab === 'surah' && !searchQuery.trim();
+
+  const prefetch = useCallback((href: string) => router.prefetch(href), [router]);
+
+  useIdleViewportPrefetch({
+    enabled: activeTab === 'surah',
+    containerRef: surahContainerRef,
+    prefetch,
+    hrefMatch: SURAH_HREF_MATCH,
+    delayMs: 2500,
+    limit: 8,
+  });
 
   return (
     <section
@@ -67,13 +85,15 @@ export function HomeTabsClient({
 
       {/* Content: Show server-rendered grid or client-rendered content */}
       {activeTab === 'surah' ? (
-        shouldShowServerGrid && children ? (
-          // Use server-rendered grid when no search/filter is active
-          children
-        ) : (
-          // Use client-rendered grid with filtering
-          <SurahTab searchQuery={searchQuery} initialChapters={initialChapters} />
-        )
+        <div ref={surahContainerRef}>
+          {shouldShowServerGrid && children ? (
+            // Use server-rendered grid when no search/filter is active
+            children
+          ) : (
+            // Use client-rendered grid with filtering
+            <SurahTab searchQuery={searchQuery} initialChapters={initialChapters} />
+          )}
+        </div>
       ) : (
         <Suspense fallback={<JuzTabSkeleton />}>
           <JuzTab />

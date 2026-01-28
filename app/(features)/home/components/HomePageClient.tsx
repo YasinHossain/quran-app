@@ -13,16 +13,14 @@ import { HomePageBackground } from './HomePageBackground';
 import { HomeQuickLinks } from './HomeQuickLinks';
 import { HomeSearch } from './HomeSearch';
 import { HomeTabsClient } from './HomeTabsClient';
-import { VerseOfDay } from './VerseOfDay';
+import { VerseOfDayClient } from './VerseOfDayClient';
 
-import type { Chapter, Verse } from '@/types';
+import type { Chapter } from '@/types';
 
 interface HomePageClientProps {
   className?: string;
   /** Pre-fetched chapters from server */
   initialChapters: ReadonlyArray<Chapter>;
-  /** Pre-fetched verses of the day from server (up to 5) */
-  initialVerses?: Verse[] | undefined;
   /** Server-rendered Surah grid (children) */
   children?: React.ReactNode;
 }
@@ -44,7 +42,6 @@ interface HomePageClientProps {
 export const HomePageClient = memo(function HomePageClient({
   className,
   initialChapters,
-  initialVerses,
   children,
 }: HomePageClientProps) {
   return (
@@ -72,12 +69,10 @@ export const HomePageClient = memo(function HomePageClient({
             <HomeSearch />
           </div>
 
-          {/* Verse of the Day - Simple, performant version */}
-          {initialVerses && initialVerses.length > 0 && (
-            <div className="w-full mx-auto" style={{ maxWidth: 'clamp(18rem, 80vw, 64rem)' }}>
-              <VerseOfDay verses={initialVerses} chapters={initialChapters} />
-            </div>
-          )}
+          {/* Verse of the Day - Loaded after initial paint (skeleton first) */}
+          <div className="w-full mx-auto" style={{ maxWidth: 'clamp(18rem, 80vw, 64rem)' }}>
+            <VerseOfDayClient chapters={initialChapters} />
+          </div>
 
           {/* Quick Links - Navigation to bookmarks sections */}
           <div className="w-full mx-auto mt-12 md:mt-14 -mb-4 md:-mb-6">

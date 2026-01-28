@@ -8,7 +8,7 @@
 
 import type { Metadata } from 'next';
 
-import { getChaptersServer, getVersesOfDayServer } from '@/lib/api/server';
+import { getChaptersServer } from '@/lib/api/server';
 import { SITE_DESCRIPTION, SITE_NAME, absoluteUrl } from '@/lib/seo/site';
 
 import { HomePageClient } from './(features)/home/components/HomePageClient';
@@ -34,10 +34,10 @@ export const metadata: Metadata = {
 };
 
 export default async function Page(): Promise<React.JSX.Element> {
-  const [chapters, versesOfDay] = await Promise.all([getChaptersServer(), getVersesOfDayServer()]);
+  const chapters = await getChaptersServer();
 
   return (
-    <HomePageClient initialChapters={chapters} initialVerses={versesOfDay}>
+    <HomePageClient initialChapters={chapters}>
       <SurahGridServer chapters={chapters} />
     </HomePageClient>
   );

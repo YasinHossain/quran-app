@@ -3,13 +3,9 @@ import { getChapters } from '@/lib/api/chapters';
 import { HomePageClient } from './HomePageClient';
 import { SurahGridServer } from './SurahGridServer';
 
-import type { Chapter, Verse } from '@/types';
+import type { Chapter } from '@/types';
 
-interface HomePageProps {
-  initialVerses?: Verse[] | undefined;
-}
-
-export async function HomePage({ initialVerses }: HomePageProps) {
+export async function HomePage(): Promise<React.JSX.Element> {
   let chapters: Chapter[] = [];
   try {
     chapters = await getChapters();
@@ -18,7 +14,7 @@ export async function HomePage({ initialVerses }: HomePageProps) {
   }
 
   return (
-    <HomePageClient initialChapters={chapters} initialVerses={initialVerses}>
+    <HomePageClient initialChapters={chapters}>
       <SurahGridServer chapters={chapters} />
     </HomePageClient>
   );
