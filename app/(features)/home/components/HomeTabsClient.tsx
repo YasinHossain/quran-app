@@ -67,7 +67,7 @@ export function HomeTabsClient({
     containerRef: surahContainerRef,
     prefetch,
     hrefMatch: SURAH_HREF_MATCH,
-    delayMs: 2500,
+    delayMs: 0,
     limit: 8,
   });
 

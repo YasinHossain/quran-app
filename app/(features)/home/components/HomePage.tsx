@@ -1,20 +1,13 @@
-import { getChapters } from '@/lib/api/chapters';
+import { getChaptersServer, getVersesOfDayServer } from '@/lib/api/server';
 
 import { HomePageClient } from './HomePageClient';
 import { SurahGridServer } from './SurahGridServer';
 
-import type { Chapter } from '@/types';
-
 export async function HomePage(): Promise<React.JSX.Element> {
-  let chapters: Chapter[] = [];
-  try {
-    chapters = await getChapters();
-  } catch (e) {
-    console.error('Failed to fetch chapters', e);
-  }
+  const [chapters, versesOfDay] = await Promise.all([getChaptersServer(), getVersesOfDayServer()]);
 
   return (
-    <HomePageClient initialChapters={chapters}>
+    <HomePageClient initialChapters={chapters} initialVerses={versesOfDay}>
       <SurahGridServer chapters={chapters} />
     </HomePageClient>
   );

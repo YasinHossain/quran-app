@@ -130,9 +130,19 @@ const initialChapters: Chapter[] = [
   },
 ];
 
+const initialVerses: Verse[] = [
+  {
+    id: 1,
+    verse_key: '1:1',
+    text_uthmani: 'بِسْمِ اللّهِ',
+    words: [],
+    translations: [{ resource_id: 20, text: 'In the name of Allah' }],
+  },
+];
+
 const renderHome = (): Promise<RenderResult> =>
   renderWithProvidersAsync(
-    <HomePageClient initialChapters={initialChapters}>
+    <HomePageClient initialChapters={initialChapters} initialVerses={initialVerses}>
       <SurahGridServer chapters={initialChapters} />
     </HomePageClient>
   );

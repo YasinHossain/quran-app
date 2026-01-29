@@ -13,14 +13,16 @@ import { HomePageBackground } from './HomePageBackground';
 import { HomeQuickLinks } from './HomeQuickLinks';
 import { HomeSearch } from './HomeSearch';
 import { HomeTabsClient } from './HomeTabsClient';
-import { VerseOfDayClient } from './VerseOfDayClient';
+import { VerseOfDay } from './VerseOfDay';
 
-import type { Chapter } from '@/types';
+import type { Chapter, Verse } from '@/types';
 
 interface HomePageClientProps {
   className?: string;
   /** Pre-fetched chapters from server */
   initialChapters: ReadonlyArray<Chapter>;
+  /** Pre-fetched verses of the day from server */
+  initialVerses: ReadonlyArray<Verse>;
   /** Server-rendered Surah grid (children) */
   children?: React.ReactNode;
 }
@@ -42,6 +44,7 @@ interface HomePageClientProps {
 export const HomePageClient = memo(function HomePageClient({
   className,
   initialChapters,
+  initialVerses,
   children,
 }: HomePageClientProps) {
   return (
@@ -69,9 +72,9 @@ export const HomePageClient = memo(function HomePageClient({
             <HomeSearch />
           </div>
 
-          {/* Verse of the Day - Loaded after initial paint (skeleton first) */}
+          {/* Verse of the Day - Server-rendered for fast LCP */}
           <div className="w-full mx-auto" style={{ maxWidth: 'clamp(18rem, 80vw, 64rem)' }}>
-            <VerseOfDayClient chapters={initialChapters} />
+            <VerseOfDay verses={initialVerses} chapters={initialChapters} />
           </div>
 
           {/* Quick Links - Navigation to bookmarks sections */}
