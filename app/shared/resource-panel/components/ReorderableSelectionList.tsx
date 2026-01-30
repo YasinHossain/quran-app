@@ -91,22 +91,20 @@ export const ReorderableSelectionList = memo(function ReorderableSelectionList(
 
   const move = useCallback(
     (id: number, direction: -1 | 1) => {
-      setLocalOrder((prev) => {
-        const currentIndex = prev.indexOf(id);
-        if (currentIndex === -1) return prev;
-        const nextIndex = currentIndex + direction;
-        if (nextIndex < 0 || nextIndex >= prev.length) return prev;
+      const currentIndex = localOrder.indexOf(id);
+      if (currentIndex === -1) return;
+      const nextIndex = currentIndex + direction;
+      if (nextIndex < 0 || nextIndex >= localOrder.length) return;
 
-        const next = [...prev];
-        const temp = next[currentIndex];
-        next[currentIndex] = next[nextIndex]!;
-        next[nextIndex] = temp!;
+      const next = [...localOrder];
+      const temp = next[currentIndex];
+      next[currentIndex] = next[nextIndex]!;
+      next[nextIndex] = temp!;
 
-        props.onReorder?.(next);
-        return next;
-      });
+      setLocalOrder(next);
+      props.onReorder?.(next);
     },
-    [props.onReorder]
+    [localOrder, props.onReorder]
   );
 
   const selectionCount = localOrder.length;
