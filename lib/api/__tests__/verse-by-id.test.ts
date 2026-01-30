@@ -36,10 +36,16 @@ describe('getVerseById', () => {
     }) as jest.Mock;
 
     const result = await getVerseById(1, [20, 22], 'en');
-    expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL}/verses/1?translations=20,22&fields=text_uthmani,audio&words=true&word_translation_language=en&word_fields=text_uthmani&translation_fields=resource_name`,
-      expect.objectContaining({ headers: { Accept: 'application/json' } })
-    );
+    const [fetchUrl, fetchInit] = (global.fetch as jest.Mock).mock.calls[0] as [string, unknown];
+    const parsed = new URL(fetchUrl);
+    expect(parsed.href.startsWith(`${API_BASE_URL}/verses/1?`)).toBe(true);
+    expect(parsed.searchParams.get('translations')).toBe('20,22');
+    expect(parsed.searchParams.get('fields')).toBe('text_uthmani,audio');
+    expect(parsed.searchParams.get('words')).toBe('true');
+    expect(parsed.searchParams.get('word_translation_language')).toBe('en');
+    expect(parsed.searchParams.get('word_fields')).toBe('text_uthmani');
+    expect(parsed.searchParams.get('translation_fields')).toBe('resource_name');
+    expect(fetchInit).toEqual(expect.objectContaining({ headers: { Accept: 'application/json' } }));
     expect(result).toEqual(expected);
   });
 

@@ -59,9 +59,12 @@ export const HomePageClient = memo(function HomePageClient({
         <main className="flex-grow flex flex-col items-center justify-center text-center space-y-6 pt-6 pb-6 md:pt-12 md:pb-10 md:space-y-8">
           {/* Title - scales with content */}
           <div className="content-visibility-auto mb-4 md:mb-6">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-tight">
-              Al Quran
-            </h2>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-tight">
+              AppQuran
+            </h1>
+            <p className="mt-3 text-base md:text-lg text-content-muted max-w-2xl mx-auto">
+              Read, listen, and study the Holy Quran with translations, tafsir, and audio recitations.
+            </p>
           </div>
 
           {/* Search bar - Third widest */}

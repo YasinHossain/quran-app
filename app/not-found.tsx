@@ -1,18 +1,20 @@
-'use client';
-import Link from 'next/link';
-import { useTranslation } from 'react-i18next';
+import type { Metadata } from 'next';
+
+import { SITE_NAME } from '@/lib/seo/site';
+
+import { NotFoundClient } from './NotFoundClient';
+
+export const metadata: Metadata = {
+  title: {
+    absolute: `Page not found – ${SITE_NAME}`,
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default function NotFound(): React.JSX.Element {
-  const { t } = useTranslation();
-  return (
-    <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background text-foreground p-6">
-      <h1 className="text-2xl font-semibold mb-4">{t('page_not_found')}</h1>
-      <Link
-        href="/"
-        className="text-accent hover:text-accent-hover focus:text-accent-hover hover:underline"
-      >
-        {t('home')}
-      </Link>
-    </div>
-  );
+  return <NotFoundClient />;
 }
+
