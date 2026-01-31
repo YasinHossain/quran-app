@@ -1,74 +1,21 @@
 'use client';
 
-import {
-  getUiLanguageDirection,
-  UI_LANGUAGE_STORAGE_KEY,
-  type UiLanguageCode,
-} from './uiLanguages';
-import { ensureUiResourcesLoaded } from './uiResourcesClient';
+import { UI_LANGUAGE_STORAGE_KEY, type UiLanguageCode } from './uiLanguages';
 
 import type { i18n as I18nInstance } from 'i18next';
 
-export function setUiLanguage(
-  i18n: I18nInstance,
-  language: UiLanguageCode,
-  options?: { changeI18n?: boolean }
-): void {
+export function setUiLanguage(i18n: I18nInstance, language: UiLanguageCode): void {
   if (typeof window !== 'undefined') {
-    try {
-      window.localStorage.setItem(UI_LANGUAGE_STORAGE_KEY, language);
-    } catch {
-      // Ignore storage access failures (blocked/denied in some environments).
-    }
+    window.localStorage.setItem(UI_LANGUAGE_STORAGE_KEY, language);
   }
 
   if (typeof document !== 'undefined') {
-    try {
-      const secure = typeof window !== 'undefined' && window.location?.protocol === 'https:';
-      document.cookie = `${UI_LANGUAGE_STORAGE_KEY}=${encodeURIComponent(language)}; path=/; max-age=31536000; SameSite=Lax${
-        secure ? '; Secure' : ''
-      }`;
-    } catch {
-      // Ignore cookie/DOM access failures.
-    }
+    document.documentElement.lang = language;
+    const secure = typeof window !== 'undefined' && window.location?.protocol === 'https:';
+    document.cookie = `${UI_LANGUAGE_STORAGE_KEY}=${encodeURIComponent(language)}; path=/; max-age=31536000; SameSite=Lax${
+      secure ? '; Secure' : ''
+    }`;
   }
 
-  if (options?.changeI18n === false) {
-    if (typeof document !== 'undefined') {
-      try {
-        document.documentElement.lang = language;
-        document.documentElement.dir = getUiLanguageDirection(language);
-      } catch {
-        // Ignore DOM access failures.
-      }
-    }
-    return;
-  }
-  if (i18n.language === language) {
-    if (typeof document !== 'undefined') {
-      try {
-        document.documentElement.lang = language;
-        document.documentElement.dir = getUiLanguageDirection(language);
-      } catch {
-        // Ignore DOM access failures.
-      }
-    }
-    return;
-  }
-
-  void ensureUiResourcesLoaded(i18n, language)
-    .then(() => {
-      // Avoid visible "dir/layout switches before text" on first load by only applying
-      // document direction once translations are available.
-      if (typeof document !== 'undefined') {
-        try {
-          document.documentElement.lang = language;
-          document.documentElement.dir = getUiLanguageDirection(language);
-        } catch {
-          // Ignore DOM access failures.
-        }
-      }
-      return i18n.changeLanguage(language);
-    })
-    .catch(() => {});
+  i18n.changeLanguage(language).catch(() => {});
 }

@@ -1,18 +1,12 @@
 // app/shared/Navigation.tsx - Simple unified navigation
 'use client';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import {
-  getLocaleFromPathname,
-  localizeHref,
-  stripLocaleFromPathname,
-} from '@/app/shared/i18n/localeRouting';
-import { isUiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { getTafsirReturnHref } from '@/app/shared/navigation/tafsirReturn';
 import { cn } from '@/lib/utils/cn';
@@ -100,11 +94,10 @@ const MobileNavigation = memo(function MobileNavigation({
       <div className="px-2 sm:px-4 py-2 pb-safe">
         <div className="flex items-center w-full">
           {navItems.map((item) => {
-            const itemHref = stripLocaleFromPathname(item.href);
             const isActive =
-              itemHref === '/'
+              item.href === '/'
                 ? pathname === '/'
-                : itemHref === '/bookmarks/last-read'
+                : item.href === '/bookmarks/last-read'
                   ? pathname.startsWith('/bookmarks')
                   : pathname.startsWith('/surah') ||
                     pathname.startsWith('/juz') ||
@@ -146,12 +139,10 @@ export const Navigation = memo(function Navigation({
   pathnameOverride?: string;
 }) {
   const rawPathname = usePathname();
-  const localeFromPath = getLocaleFromPathname(rawPathname);
-  const { i18n, t } = useTranslation();
-  const locale = localeFromPath ?? (isUiLanguageCode(i18n.language) ? i18n.language : 'en');
   const pathname = pathnameOverride ?? rawPathname;
-  const routePathname = stripLocaleFromPathname(pathname);
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const { t } = useTranslation();
   const { isHidden } = useHeaderVisibility();
   const { lastRead } = useBookmarks();
   // Mobile nav only hides on scroll (isHidden), not when sidebar opens.
@@ -173,14 +164,20 @@ export const Navigation = memo(function Navigation({
     return true;
   });
 
+  const searchString = useMemo(() => searchParams.toString(), [searchParams]);
+  const currentHref = useMemo(
+    () => (searchString ? `${pathname}?${searchString}` : pathname),
+    [pathname, searchString]
+  );
+
   useEffect(() => {
-    if (!routePathname.startsWith('/tafsir')) {
+    if (!pathname.startsWith('/tafsir')) {
       setTafsirReturnHref(null);
       return;
     }
 
     setTafsirReturnHref(getTafsirReturnHref());
-  }, [routePathname]);
+  }, [pathname]);
 
   const normalizeStoredReaderHref = useCallback((href: string): string => {
     // Migration: older builds stored `?startVerse=...` (and sometimes `nav`/`view`) in localStorage.
@@ -194,7 +191,7 @@ export const Navigation = memo(function Navigation({
         href,
         typeof window !== 'undefined' ? window.location.origin : 'http://localhost'
       );
-      if (!stripLocaleFromPathname(url.pathname).startsWith('/surah/')) return href;
+      if (!url.pathname.startsWith('/surah/')) return href;
 
       const params = new URLSearchParams(url.search);
       const startVerse = params.get('startVerse');
@@ -236,9 +233,7 @@ export const Navigation = memo(function Navigation({
     // The link is only useful when we navigate AWAY from the reader.
     // This prevents re-renders while scrolling/tracking verses.
     const isReaderRoute =
-      routePathname.startsWith('/surah') ||
-      routePathname.startsWith('/juz') ||
-      routePathname.startsWith('/page');
+      pathname.startsWith('/surah') || pathname.startsWith('/juz') || pathname.startsWith('/page');
 
     if (isReaderRoute) {
       // If we are on the reader page, we just ensure the CURRENT link matches where we are
@@ -273,24 +268,19 @@ export const Navigation = memo(function Navigation({
       setReaderHref(href);
       window.localStorage.setItem('nav:last-reader-href', href);
     }
-  }, [lastRead, routePathname]); // Keep dependencies, but logic inside filters execution
+  }, [lastRead, pathname]); // Keep dependencies, but logic inside filters execution
 
-  const navItemsBase = useMemo(
+  const navItems = useMemo(
     (): NavItem[] => [
       { icon: HomeIcon, label: t('home'), href: '/' },
       {
         icon: GridIcon,
         label: t('surah_tab'),
-        href: routePathname.startsWith('/tafsir') ? (tafsirReturnHref ?? readerHref) : readerHref,
+        href: pathname.startsWith('/tafsir') ? (tafsirReturnHref ?? readerHref) : readerHref,
       },
       { icon: BookmarkOutlineIcon, label: t('bookmarks'), href: '/bookmarks/last-read' },
     ],
-    [readerHref, routePathname, t, tafsirReturnHref]
-  );
-
-  const navItems = useMemo(
-    () => navItemsBase.map((item) => ({ ...item, href: localizeHref(item.href, locale) })),
-    [locale, navItemsBase]
+    [pathname, readerHref, t, tafsirReturnHref]
   );
 
   const linkStyles = useMemo(
@@ -318,25 +308,25 @@ export const Navigation = memo(function Navigation({
     if (!prefetchEnabled) return;
     // Warm the router cache for primary destinations so switching is near-instant.
     for (const item of navItems) {
-      if (stripLocaleFromPathname(item.href) !== routePathname) {
+      if (item.href !== pathname) {
         prefetch(item.href);
       }
     }
-  }, [navItems, prefetch, prefetchEnabled, routePathname]);
+  }, [navItems, pathname, prefetch, prefetchEnabled]);
 
   return (
     <>
       <DesktopNavigation
         navItems={navItems}
         linkStyles={`${linkStyles} text-foreground hover:text-accent`}
-        pathname={routePathname}
+        pathname={pathname}
         onPrefetch={prefetch}
         prefetchEnabled={prefetchEnabled}
       />
       <MobileNavigation
         navItems={navItems}
         isHidden={hideMobileNav}
-        pathname={routePathname}
+        pathname={pathname}
         onPrefetch={prefetch}
         prefetchEnabled={prefetchEnabled}
       />

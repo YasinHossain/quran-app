@@ -37,11 +37,7 @@ export const createFetcher = (lookup: LookupFn, setError: (msg: string) => void)
     boolean | undefined,
   ]) => {
     // Resource kind is intentionally ignored here: the lookup function determines the API endpoint.
-    const translationIds = translationIdsStr
-      .split(',')
-      .filter((value) => value.length > 0)
-      .map((value) => Number(value))
-      .filter((value) => Number.isFinite(value) && value > 0);
+    const translationIds = translationIdsStr.split(',').map(Number);
     return lookup({
       id: pId as string,
       translationIds,
@@ -108,8 +104,7 @@ const parseNextKey = (nextKey: Key): ParsedNextKey | null => {
   const translationIds = translationIdsValue
     .split(',')
     .filter((value) => value.length > 0)
-    .map((value) => Number(value))
-    .filter((value) => Number.isFinite(value) && value > 0);
+    .map((value) => Number(value));
 
   return {
     resourceKind,

@@ -3,8 +3,10 @@ import { initReactI18next } from 'react-i18next';
 
 import { isUiLanguageCode, type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import { formatNumber } from '@/lib/text/localizeNumbers';
-
-import type { Resource } from 'i18next';
+import commonBn from '@/public/locales/bn/common.json';
+import playerBn from '@/public/locales/bn/player.json';
+import commonEn from '@/public/locales/en/common.json';
+import playerEn from '@/public/locales/en/player.json';
 
 export function resolveInitialUiLanguage(value: string | undefined | null): UiLanguageCode {
   return value && isUiLanguageCode(value) ? value : 'en';
@@ -20,13 +22,6 @@ const reactI18nextPlugin =
   } as const);
 
 export function createI18n(initialLanguage: string): I18nInstance {
-  return createI18nWithResources(initialLanguage);
-}
-
-export function createI18nWithResources(
-  initialLanguage: string,
-  resources: Resource = {}
-): I18nInstance {
   const instance = i18next.createInstance();
   const lng = resolveInitialUiLanguage(initialLanguage);
 
@@ -34,7 +29,10 @@ export function createI18nWithResources(
   // synchronously during the render pass (prevents "default language" flashes).
   instance.use(reactI18nextPlugin).init({
     initImmediate: false,
-    resources,
+    resources: {
+      en: { translation: commonEn, player: playerEn },
+      bn: { translation: commonBn, player: playerBn },
+    },
     ns: ['translation', 'player'],
     defaultNS: 'translation',
     lng,

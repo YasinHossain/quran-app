@@ -1,10 +1,8 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { formatJuzRange } from '@/app/shared/navigation/formatJuzRange';
 import { useNavigationDatasets } from '@/app/shared/navigation/hooks/useNavigationDatasets';
 import { buildJuzRoute } from '@/app/shared/navigation/routes';
@@ -14,8 +12,6 @@ import { NavigationCardGrid } from './NavigationCardGrid';
 
 export const JuzTab = memo(function JuzTab(): React.JSX.Element {
   const { t, i18n } = useTranslation();
-  const pathname = usePathname();
-  const locale = getLocaleFromPathname(pathname) ?? 'en';
   const language = i18n?.language ?? 'en';
   const { juzs } = useNavigationDatasets();
 
@@ -24,7 +20,7 @@ export const JuzTab = memo(function JuzTab(): React.JSX.Element {
       {juzs.map((juz) => (
         <JuzNavigationCard
           key={juz.number}
-          href={localizeHref(buildJuzRoute(juz.number), locale)}
+          href={buildJuzRoute(juz.number)}
           scroll
           prefetch={true}
           className="items-center"

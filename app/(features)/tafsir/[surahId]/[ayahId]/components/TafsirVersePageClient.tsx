@@ -1,23 +1,22 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useMemo } from 'react';
 
 import { SettingsSidebar } from '@/app/(features)/surah/components';
 import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
 import { useTafsirVerseData } from '@/app/(features)/tafsir/hooks/useTafsirVerseData';
 import { useUIState } from '@/app/providers/UIStateContext';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
 import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
 import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 
+import type { Surah, TafsirResource, Verse } from '@/types';
+
 import { AyahNavigation } from './AyahNavigation';
 import { TafsirAudioPlayer } from './TafsirAudioPlayer';
 import { TafsirViewer } from './TafsirViewer';
-
-import type { Surah, TafsirResource, Verse } from '@/types';
 
 const TRANSLATION_PANEL_ID = 'tafsir:translation-panel';
 const TAFSIR_PANEL_ID = 'tafsir:tafsir-panel';
@@ -165,15 +164,13 @@ function TafsirContent({
   onAddTafsir: () => void;
 }): React.JSX.Element {
   const router = useRouter();
-  const pathname = usePathname();
   const touchStart = React.useRef<{ x: number; y: number } | null>(null);
 
   const navigateTo = React.useCallback(
     (target: { surahId: string; ayahId: number }) => {
-      const locale = getLocaleFromPathname(pathname) ?? 'en';
-      router.push(localizeHref(`/tafsir/${target.surahId}/${target.ayahId}`, locale));
+      router.push(`/tafsir/${target.surahId}/${target.ayahId}`);
     },
-    [pathname, router]
+    [router]
   );
 
   const onTouchStart = (e: React.TouchEvent) => {

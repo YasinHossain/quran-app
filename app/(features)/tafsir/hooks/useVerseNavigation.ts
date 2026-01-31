@@ -1,8 +1,7 @@
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
 
 import { useSidebar } from '@/app/providers/SidebarContext';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 
 import type { Surah } from '@/types';
@@ -16,7 +15,6 @@ interface UseVerseNavigationReturn {
 
 export const useVerseNavigation = (surahId: string, ayahId: string): UseVerseNavigationReturn => {
   const router = useRouter();
-  const pathname = usePathname();
   const { setSurahListOpen } = useSidebar();
   const { surahs: surahList } = useSurahNavigationData();
 
@@ -42,10 +40,9 @@ export const useVerseNavigation = (surahId: string, ayahId: string): UseVerseNav
     (target: { surahId: string; ayahId: number } | null) => {
       if (!target) return;
       setSurahListOpen(false);
-      const locale = getLocaleFromPathname(pathname) ?? 'en';
-      router.push(localizeHref(`/tafsir/${target.surahId}/${target.ayahId}`, locale));
+      router.push(`/tafsir/${target.surahId}/${target.ayahId}`);
     },
-    [pathname, router, setSurahListOpen]
+    [router, setSurahListOpen]
   );
 
   const currentSurah = useMemo(

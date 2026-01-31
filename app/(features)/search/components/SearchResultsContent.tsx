@@ -1,12 +1,11 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { SearchIcon, ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { ReaderVerseCard } from '@/app/shared/reader/VerseCard';
@@ -253,7 +252,6 @@ interface SearchVerseItemProps {
 
 const SearchVerseItem = ({ verse, index, query }: SearchVerseItemProps): React.JSX.Element => {
   const router = useRouter();
-  const pathname = usePathname();
   const { t } = useTranslation();
   const { settings } = useSettings();
   const translationFontSize = settings.translationFontSize ?? 18;
@@ -291,16 +289,11 @@ const SearchVerseItem = ({ verse, index, query }: SearchVerseItemProps): React.J
   const handleNavigateToVerse = useCallback(() => {
     const { surahNumber, ayahNumber } = parseVerseKey(verse.verse_key);
     if (surahNumber && ayahNumber) {
-      const locale = getLocaleFromPathname(pathname) ?? 'en';
-      router.push(
-        localizeHref(
-          buildSurahRoute(surahNumber, { startVerse: ayahNumber, forceSeq: true }),
-          locale
-        ),
-        { scroll: false }
-      );
+      router.push(buildSurahRoute(surahNumber, { startVerse: ayahNumber, forceSeq: true }), {
+        scroll: false,
+      });
     }
-  }, [pathname, router, verse.verse_key]);
+  }, [router, verse.verse_key]);
 
   // Create actions object for the verse card
   const actions = {
@@ -312,13 +305,9 @@ const SearchVerseItem = ({ verse, index, query }: SearchVerseItemProps): React.J
     onPlayPause: () => {}, // Noop - audio not supported in search results
     onNavigateToVerse: handleNavigateToVerse,
     navigateHref: (() => {
-      const locale = getLocaleFromPathname(pathname) ?? 'en';
       const { surahNumber, ayahNumber } = parseVerseKey(verse.verse_key);
       if (surahNumber && ayahNumber) {
-        return localizeHref(
-          buildSurahRoute(surahNumber, { startVerse: ayahNumber, forceSeq: true }),
-          locale
-        );
+        return buildSurahRoute(surahNumber, { startVerse: ayahNumber, forceSeq: true });
       }
       return undefined;
     })(),

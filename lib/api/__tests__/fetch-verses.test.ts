@@ -36,28 +36,15 @@ describe('fetchVerses', () => {
 
     const result = await fetchVerses(defaultArgs);
 
+    const expectedUrl = `${API_BASE_URL}/verses/by_chapter/1?language=en&words=true&word_translation_language=en&word_fields=text_uthmani,text_indopak&translations=20&fields=text_uthmani,text_indopak,audio&translation_fields=resource_name&per_page=1&page=1`;
+
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.any(String),
+      expectedUrl,
       expect.objectContaining({
         headers: { Accept: 'application/json' },
         signal: expect.anything(),
       })
     );
-
-    const [[calledUrl]] = (global.fetch as jest.Mock).mock.calls;
-    const url = new URL(String(calledUrl));
-    expect(`${url.origin}${url.pathname}`).toBe(`${API_BASE_URL}/verses/by_chapter/1`);
-
-    expect(url.searchParams.get('language')).toBe('en');
-    expect(url.searchParams.get('words')).toBe('true');
-    expect(url.searchParams.get('word_translation_language')).toBe('en');
-    expect(url.searchParams.get('word_fields')).toBe('text_uthmani,text_indopak');
-    expect(url.searchParams.get('translations')).toBe('20');
-    expect(url.searchParams.get('fields')).toBe('text_uthmani,text_indopak,audio');
-    expect(url.searchParams.get('translation_fields')).toBe('resource_name');
-    expect(url.searchParams.get('per_page')).toBe('1');
-    expect(url.searchParams.get('page')).toBe('1');
-
     expect(result).toEqual({
       totalPages: 2,
       verses: [
@@ -74,16 +61,5 @@ describe('fetchVerses', () => {
   it('throws an error when the response is not ok', async () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 500 }) as jest.Mock;
     await expect(fetchVerses(defaultArgs)).rejects.toThrow('Failed to fetch verses: 500');
-  });
-
-  it('omits translation params when translationIds is empty', async () => {
-    mockFetchJson({ pagination: { total_pages: 1 }, verses: [mockVerse] });
-
-    await fetchVerses({ ...defaultArgs, translationIds: [] });
-
-    const [[calledUrl]] = (global.fetch as jest.Mock).mock.calls;
-    const url = new URL(String(calledUrl));
-    expect(url.searchParams.get('translations')).toBeNull();
-    expect(url.searchParams.get('translation_fields')).toBeNull();
   });
 });

@@ -74,9 +74,6 @@ codex-artifacts/
 # generated reports
 lighthouse-report.json
 design-system.json
-.lighthouseci/
-lighthouseci/
-lighthouse-build/
 
 # temporary scripts
 analyze-chars.js

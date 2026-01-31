@@ -1,11 +1,9 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
-import { type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 
 // Custom hooks for cleaner component logic
 const useKeyboardShortcuts = (
@@ -76,17 +74,15 @@ export const NavigationProvider = ({
   children: React.ReactNode;
 }): React.JSX.Element => {
   const router = useRouter();
-  const pathname = usePathname();
   const [isQuranBottomSheetOpen, setQuranBottomSheetOpen] = useState(false);
 
   // Navigation helpers
   const navigateToSurah = useCallback(
     (surahId: number) => {
-      const locale = (getLocaleFromPathname(pathname) ?? 'en') as UiLanguageCode;
-      router.push(localizeHref(buildSurahRoute(surahId), locale));
+      router.push(buildSurahRoute(surahId));
       setQuranBottomSheetOpen(false);
     },
-    [pathname, router]
+    [router]
   );
 
   const showQuranSelector = useCallback(() => {

@@ -1,13 +1,12 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
 import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { ReaderVerseCard } from '@/app/shared/reader';
 import { parseVerseKey } from '@/lib/utils/verse';
@@ -77,7 +76,6 @@ function usePinnedVerseActions(
   };
 } {
   const router = useRouter();
-  const pathname = usePathname();
   const { togglePinned, isPinned } = useBookmarks();
   const verseCard = useVerseCard(verse);
   const { verseRef, isPlaying, isLoadingAudio, isVerseBookmarked, handlePlayPause } = verseCard;
@@ -87,17 +85,10 @@ function usePinnedVerseActions(
     if (!verseKey) return;
     const { surahNumber, ayahNumber } = parseVerseKey(verseKey);
     if (!surahNumber || !ayahNumber) return;
-    const locale = getLocaleFromPathname(pathname) ?? 'en';
-    router.push(
-      localizeHref(
-        buildSurahRoute(surahNumber, { startVerse: ayahNumber, forceSeq: true }),
-        locale
-      ),
-      {
-        scroll: false,
-      }
-    );
-  }, [bookmark.verseKey, pathname, router, verse.verse_key]);
+    router.push(buildSurahRoute(surahNumber, { startVerse: ayahNumber, forceSeq: true }), {
+      scroll: false,
+    });
+  }, [bookmark.verseKey, router, verse.verse_key]);
 
   const handleTogglePinned = React.useCallback(() => {
     togglePinned(bookmark.verseId, { verseKey: bookmark.verseKey ?? verse.verse_key });
