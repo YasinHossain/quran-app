@@ -1,0 +1,11 @@
+{
+  "skip_back": "10 सेकंड पीछे जाएँ",
+  "skip_forward": "10 सेकंड आगे जाएँ",
+  "pause_audio": "ऑडियो रोकें",
+  "play_audio": "ऑडियो चलाएँ",
+  "toggle_repeat": "दोहराव टॉगल करें",
+  "toggle_mute": "म्यूट टॉगल करें",
+  "audio_settings": "ऑडियो सेटिंग्स",
+  "microphone": "माइक्रोफोन",
+  "could_not_play_audio": "ऑडियो नहीं चल सका।"
+}

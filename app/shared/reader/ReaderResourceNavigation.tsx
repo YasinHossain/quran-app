@@ -1,8 +1,10 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 
 import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
 
@@ -54,6 +56,7 @@ export function ReaderResourceNavigation({
 }: ReaderResourceNavigationProps): React.JSX.Element | null {
   const { t } = useTranslation();
   const router = useRouter();
+  const pathname = usePathname();
 
   const current = toDisplayNumber(resourceId);
   const config = useMemo(() => {
@@ -65,9 +68,10 @@ export function ReaderResourceNavigation({
 
   const handleNavigation = useCallback(
     (nextId: number) => {
-      router.push(`${config.prefix}/${nextId}`);
+      const locale = getLocaleFromPathname(pathname) ?? 'en';
+      router.push(localizeHref(`${config.prefix}/${nextId}`, locale));
     },
-    [config.prefix, router]
+    [config.prefix, pathname, router]
   );
 
   if (!current) return null;

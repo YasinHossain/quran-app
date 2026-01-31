@@ -1,6 +1,7 @@
 'use client';
 
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
+import { stripLocaleFromPathname } from '@/app/shared/i18n/localeRouting';
 
 const STORAGE_KEY = 'quranAppTafsirReturn_v1';
 
@@ -35,7 +36,9 @@ export const setTafsirReturnFromVerseKey = (verseKey: string): void => {
 export const setTafsirReturnFromTafsirHref = (href: string): void => {
   if (typeof window === 'undefined') return;
 
-  const match = String(href).match(/^\/tafsir\/([^/]+)\/([^/?#]+)/);
+  const rawPath = String(href).split('?')[0]?.split('#')[0] ?? String(href);
+  const pathname = stripLocaleFromPathname(rawPath);
+  const match = pathname.match(/^\/tafsir\/([^/]+)\/([^/?#]+)/);
   const surahId = match?.[1];
   const ayahId = match?.[2];
   if (!surahId || !ayahId) return;

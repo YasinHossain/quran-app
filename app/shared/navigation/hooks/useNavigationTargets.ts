@@ -1,8 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
 
+import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { buildJuzRoute, buildPageRoute, buildSurahRoute } from '@/app/shared/navigation/routes';
 
 interface NavigationTargets {
@@ -16,26 +17,28 @@ interface NavigationTargets {
 
 export function useNavigationTargets(): NavigationTargets {
   const router = useRouter();
+  const pathname = usePathname();
+  const locale = useMemo(() => getLocaleFromPathname(pathname) ?? 'en', [pathname]);
 
   const goToSurah = useCallback(
     (surahId: number | string) => {
-      router.push(buildSurahRoute(surahId));
+      router.push(localizeHref(buildSurahRoute(surahId), locale));
     },
-    [router]
+    [locale, router]
   );
 
   const goToJuz = useCallback(
     (juzId: number | string) => {
-      router.push(buildJuzRoute(juzId));
+      router.push(localizeHref(buildJuzRoute(juzId), locale));
     },
-    [router]
+    [locale, router]
   );
 
   const goToPage = useCallback(
     (page: number | string) => {
-      router.push(buildPageRoute(page));
+      router.push(localizeHref(buildPageRoute(page), locale));
     },
-    [router]
+    [locale, router]
   );
 
   return useMemo(
@@ -43,10 +46,10 @@ export function useNavigationTargets(): NavigationTargets {
       goToSurah,
       goToJuz,
       goToPage,
-      getSurahHref: buildSurahRoute,
-      getJuzHref: buildJuzRoute,
-      getPageHref: buildPageRoute,
+      getSurahHref: (surahId) => localizeHref(buildSurahRoute(surahId), locale),
+      getJuzHref: (juzId) => localizeHref(buildJuzRoute(juzId), locale),
+      getPageHref: (page) => localizeHref(buildPageRoute(page), locale),
     }),
-    [goToSurah, goToJuz, goToPage]
+    [goToSurah, goToJuz, goToPage, locale]
   );
 }

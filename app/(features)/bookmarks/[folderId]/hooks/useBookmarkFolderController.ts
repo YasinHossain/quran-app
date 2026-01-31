@@ -1,12 +1,14 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { useSidebar } from '@/app/providers/SidebarContext';
+import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import { useBookmarkFolderData, useBookmarkFolderPanels } from './index';
 
+import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
 export type BookmarkFolderControllerReturn = {
@@ -27,30 +29,31 @@ export type BookmarkFolderControllerReturn = {
 // Helper function to create navigation handler
 function useNavigationHandler(
   router: ReturnType<typeof useRouter>,
-  setBookmarkSidebarOpen: (open: boolean) => void
+  setBookmarkSidebarOpen: (open: boolean) => void,
+  locale: UiLanguageCode
 ): {
   handleNavigateToBookmarks: () => void;
   handleSectionChange: (section: SectionId) => void;
 } {
   const handleNavigateToBookmarks = (): void => {
     setBookmarkSidebarOpen(false);
-    router.push('/bookmarks/folders');
+    router.push(localizeHref('/bookmarks/folders', locale));
   };
 
   const handleSectionChange = (section: SectionId): void => {
     setBookmarkSidebarOpen(false);
     switch (section) {
       case 'pinned':
-        router.push('/bookmarks/pinned');
+        router.push(localizeHref('/bookmarks/pinned', locale));
         break;
       case 'last-read':
-        router.push('/bookmarks/last-read');
+        router.push(localizeHref('/bookmarks/last-read', locale));
         break;
       case 'planner':
-        router.push('/bookmarks/planner');
+        router.push(localizeHref('/bookmarks/planner', locale));
         break;
       default:
-        router.push('/bookmarks');
+        router.push(localizeHref('/bookmarks', locale));
         break;
     }
   };
@@ -61,6 +64,8 @@ function useNavigationHandler(
 export function useBookmarkFolderController(folderId: string): BookmarkFolderControllerReturn {
   logger.debug('BookmarkFolderClient rendering', { folderId });
   const router = useRouter();
+  const pathname = usePathname();
+  const locale = (getLocaleFromPathname(pathname) ?? 'en') as UiLanguageCode;
   const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
 
   const { folder, bookmarks } = useBookmarkFolderData({ folderId });
@@ -75,7 +80,8 @@ export function useBookmarkFolderController(folderId: string): BookmarkFolderCon
 
   const { handleNavigateToBookmarks, handleSectionChange } = useNavigationHandler(
     router,
-    setBookmarkSidebarOpen
+    setBookmarkSidebarOpen,
+    locale
   );
 
   return {

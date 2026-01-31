@@ -5,12 +5,19 @@ import { usePathname } from 'next/navigation';
 import { memo, type ReactElement, useCallback } from 'react';
 
 import { useSidebar } from '@/app/providers/SidebarContext';
+import {
+  getLocaleFromPathname,
+  localizeHref,
+  stripLocaleFromPathname,
+} from '@/app/shared/i18n/localeRouting';
 import { BarsIcon } from '@/app/shared/icons';
 
 export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
   const { setSurahListOpen, setBookmarkSidebarOpen, setSearchSidebarOpen } = useSidebar();
 
-  const pathname = usePathname();
+  const rawPathname = usePathname();
+  const locale = getLocaleFromPathname(rawPathname) ?? 'en';
+  const pathname = stripLocaleFromPathname(rawPathname);
 
   const isNavPath = (path?: string | null): boolean =>
     Boolean(
@@ -56,7 +63,7 @@ export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
 
       {/* PC: Brand Link (Hidden on mobile) */}
       <Link
-        href="/"
+        href={localizeHref('/', locale)}
         className="hidden xl:flex items-center space-x-2 hover:opacity-80 transition-opacity ml-2"
       >
         {/* Logo Removed on PC as per request, implicitly */}
