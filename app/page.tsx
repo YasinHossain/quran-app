@@ -12,7 +12,7 @@ import { getChaptersServer, getVersesOfDayServer } from '@/lib/api/server';
 import { SITE_DESCRIPTION, SITE_NAME, absoluteUrl } from '@/lib/seo/site';
 
 import { HomePageClient } from './(features)/home/components/HomePageClient';
-import { SurahGridServer } from './(features)/home/components/SurahGridServer';
+import { SurahGridStaticServer } from './(features)/home/components/SurahGridStaticServer';
 import { HeaderVisibilityProvider } from './(features)/layout/context/HeaderVisibilityContext';
 import { Navigation } from './shared/IconSidebar';
 import { ModernLayout } from './shared/navigation/ModernLayout';
@@ -45,7 +45,7 @@ export default async function Page(): Promise<React.JSX.Element> {
         {/* Mobile bottom navigation is OK on home; desktop rail stays hidden. */}
         <Navigation pathnameOverride="/" />
         <HomePageClient initialChapters={chapters} initialVerses={versesOfDay}>
-          <SurahGridServer chapters={chapters} />
+          <SurahGridStaticServer chapters={chapters} />
         </HomePageClient>
       </ModernLayout>
     </HeaderVisibilityProvider>
