@@ -48,7 +48,8 @@ export function proxy(request: NextRequest): NextResponse {
   }
 
   const segments = pathname.split('/');
-  const maybeLocale = segments[1];
+  const rawLocale = segments[1];
+  const maybeLocale = rawLocale ? rawLocale.toLowerCase() : '';
 
   // Locale prefix present -> rewrite to existing (non-prefixed) routes.
   if (maybeLocale && isUiLanguageCode(maybeLocale)) {
