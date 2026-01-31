@@ -1,14 +1,9 @@
 'use client';
 
-import React, { memo, useCallback, useMemo } from 'react';
+import { Reorder, useDragControls, motion, PanInfo } from 'framer-motion';
+import React, { memo } from 'react';
 
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  CloseIcon,
-  GripVerticalIcon,
-  ResetIcon,
-} from '@/app/shared/icons';
+import { CloseIcon, GripVerticalIcon, ResetIcon } from '@/app/shared/icons';
 
 type BasicResource = {
   id: number;
@@ -79,35 +74,15 @@ export const ReorderableSelectionList = memo(function ReorderableSelectionList(
     setLocalOrder(props.orderedSelection);
   }, [props.orderedSelection]);
 
-  const resourceById = useMemo(() => {
-    const map = new Map<number, BasicResource>();
-    for (const resource of props.resources) {
-      map.set(resource.id, resource);
+  const handleReorder = (newOrder: number[]) => {
+    setLocalOrder(newOrder);
+  };
+
+  const handleDragEnd = () => {
+    if (props.onReorder) {
+      props.onReorder(localOrder);
     }
-    return map;
-  }, [props.resources]);
-
-  const canReorder = typeof props.onReorder === 'function' && localOrder.length > 1;
-
-  const move = useCallback(
-    (id: number, direction: -1 | 1) => {
-      setLocalOrder((prev) => {
-        const currentIndex = prev.indexOf(id);
-        if (currentIndex === -1) return prev;
-        const nextIndex = currentIndex + direction;
-        if (nextIndex < 0 || nextIndex >= prev.length) return prev;
-
-        const next = [...prev];
-        const temp = next[currentIndex];
-        next[currentIndex] = next[nextIndex]!;
-        next[nextIndex] = temp!;
-
-        props.onReorder?.(next);
-        return next;
-      });
-    },
-    [props.onReorder]
-  );
+  };
 
   const selectionCount = localOrder.length;
 
@@ -137,9 +112,14 @@ export const ReorderableSelectionList = memo(function ReorderableSelectionList(
         {selectionCount === 0 ? (
           <p className={styles.emptyTextClassName}>{props.emptyText}</p>
         ) : (
-          <div className="space-y-2">
+          <Reorder.Group
+            axis="y"
+            values={localOrder}
+            onReorder={handleReorder}
+            className="space-y-2"
+          >
             {localOrder.map((id) => {
-              const item = resourceById.get(id);
+              const item = props.resources.find((resource) => resource.id === id);
               if (!item) return null;
 
               return (
@@ -148,18 +128,14 @@ export const ReorderableSelectionList = memo(function ReorderableSelectionList(
                   item={item}
                   styles={styles}
                   onRemove={props.onRemove}
-                  canReorder={canReorder}
-                  onMoveUp={() => move(id, -1)}
-                  onMoveDown={() => move(id, 1)}
-                  isFirst={localOrder[0] === id}
-                  isLast={localOrder[localOrder.length - 1] === id}
+                  onDragEnd={handleDragEnd}
                   {...(props.removeAriaLabel !== undefined
                     ? { removeAriaLabel: props.removeAriaLabel }
                     : {})}
                 />
               );
             })}
-          </div>
+          </Reorder.Group>
         )}
       </div>
     </div>
@@ -170,66 +146,58 @@ function SelectionListItem({
   item,
   styles,
   onRemove,
-  canReorder,
-  onMoveUp,
-  onMoveDown,
-  isFirst,
-  isLast,
+  onDragEnd,
   removeAriaLabel,
 }: {
   item: BasicResource;
   styles: VariantStyles;
   onRemove: (id: number) => void;
-  canReorder: boolean;
-  onMoveUp: () => void;
-  onMoveDown: () => void;
-  isFirst: boolean;
-  isLast: boolean;
+  onDragEnd: () => void;
   removeAriaLabel?: string;
 }): React.JSX.Element {
-  return (
-    <div className={styles.itemRowClassName}>
-      <div className="flex items-center min-w-0">
-        <div className="p-1 mr-2 text-muted">
-          <GripVerticalIcon className={styles.gripIconClassName} />
-        </div>
-        <span className="font-medium text-sm truncate text-foreground select-none">
-          {item.name}
-        </span>
-      </div>
+  const controls = useDragControls();
 
-      <div className="flex items-center gap-1 flex-shrink-0">
-        {canReorder && (
-          <div className="flex flex-col">
-            <button
-              type="button"
-              onClick={onMoveUp}
-              disabled={isFirst}
-              className="rounded-md p-1 text-muted hover:text-foreground hover:bg-interactive-hover disabled:opacity-40 disabled:hover:bg-transparent"
-              aria-label="Move up"
-            >
-              <ChevronUpIcon size={16} />
-            </button>
-            <button
-              type="button"
-              onClick={onMoveDown}
-              disabled={isLast}
-              className="rounded-md p-1 text-muted hover:text-foreground hover:bg-interactive-hover disabled:opacity-40 disabled:hover:bg-transparent"
-              aria-label="Move down"
-            >
-              <ChevronDownIcon size={16} />
-            </button>
+  return (
+    <Reorder.Item
+      value={item.id}
+      dragListener={false}
+      dragControls={controls}
+      className="relative"
+      onDragEnd={onDragEnd}
+    >
+      <motion.div
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.5}
+        onDragEnd={(_, info: PanInfo) => {
+          if (Math.abs(info.offset.x) > 100) {
+            onRemove(item.id);
+          }
+        }}
+        className={styles.itemRowClassName}
+        style={{ touchAction: 'pan-y' }}
+      >
+        <div className="flex items-center min-w-0">
+          <div
+            onPointerDown={(e) => controls.start(e)}
+            className="cursor-grab active:cursor-grabbing touch-none p-1 mr-2 text-muted hover:text-foreground"
+          >
+            <GripVerticalIcon className={styles.gripIconClassName} />
           </div>
-        )}
+          <span className="font-medium text-sm truncate text-foreground select-none">
+            {item.name}
+          </span>
+        </div>
+
         <button
-          type="button"
           onClick={() => onRemove(item.id)}
           className={styles.removeButtonClassName}
           {...(removeAriaLabel ? { 'aria-label': removeAriaLabel } : {})}
+          onPointerDown={(e) => e.stopPropagation()}
         >
           <CloseIcon size={styles.removeIconSize} strokeWidth={2.5} />
         </button>
-      </div>
-    </div>
+      </motion.div>
+    </Reorder.Item>
   );
 }

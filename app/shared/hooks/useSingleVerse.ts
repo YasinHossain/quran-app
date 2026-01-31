@@ -13,7 +13,6 @@ import type { Verse } from '@/types';
 export interface UseSingleVerseOptions {
   idOrKey: string;
   suspense?: boolean;
-  initialVerse?: Verse | undefined;
 }
 
 export interface UseSingleVerseReturn {
@@ -106,7 +105,6 @@ export function usePrefetchSingleVerse(): (
 export function useSingleVerse({
   idOrKey,
   suspense = false,
-  initialVerse,
 }: UseSingleVerseOptions): UseSingleVerseReturn {
   const { settings } = useSettings();
 
@@ -135,7 +133,6 @@ export function useSingleVerse({
 
   const { data, error, isLoading, mutate } = useSWR<Verse>(swrKey, fetchVerse, {
     suspense,
-    ...(initialVerse ? { fallbackData: initialVerse } : {}),
   });
 
   const normalizedError = error

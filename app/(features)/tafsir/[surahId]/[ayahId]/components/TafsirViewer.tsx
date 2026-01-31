@@ -1,7 +1,6 @@
 'use client';
 import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
 import { useSettings } from '@/app/providers/SettingsContext';
-import { useTranslation } from 'react-i18next';
 import { Verse as VerseType, TafsirResource } from '@/types';
 
 import { TafsirTabs } from './TafsirTabs';
@@ -19,14 +18,15 @@ export const TafsirViewer = ({
   tafsirHtml,
   onAddTafsir,
 }: TafsirViewerProps): React.JSX.Element | null => {
-  const { t } = useTranslation();
   const { settings } = useSettings();
 
   if (!verse) return null;
 
-  const tafsirIds = settings.tafsirIds ?? [];
-  const hasSelectedTafsir = tafsirIds.length >= 1;
-  const showTabs = tafsirIds.length > 1;
+  // Show TafsirTabs when we have tafsirs AND (we have multiple OR onAddTafsir is provided)
+  const showTabs =
+    settings.tafsirIds &&
+    settings.tafsirIds.length >= 1 &&
+    (settings.tafsirIds.length > 1 || onAddTafsir);
 
   return (
     <div className="space-y-4 w-full">
@@ -35,27 +35,16 @@ export const TafsirViewer = ({
       {showTabs ? (
         <TafsirTabs
           verseKey={verse.verse_key}
-          tafsirIds={tafsirIds}
+          tafsirIds={settings.tafsirIds}
           onAddTafsir={onAddTafsir}
         />
-      ) : hasSelectedTafsir ? (
+      ) : settings.tafsirIds && settings.tafsirIds.length === 1 ? (
         <div key={verse.verse_key} className="p-3 sm:p-4">
-          <div className="flex flex-col items-center gap-3 mb-4">
-            {tafsirResource && (
-              <h2 className="text-center text-lg sm:text-xl font-bold text-foreground">
-                {tafsirResource.name}
-              </h2>
-            )}
-            {onAddTafsir && (
-              <button
-                type="button"
-                onClick={onAddTafsir}
-                className="rounded-lg border border-border bg-surface px-3 py-2 text-sm font-semibold text-foreground hover:bg-interactive-hover transition-colors"
-              >
-                {t('add_tafsir')}
-              </button>
-            )}
-          </div>
+          {tafsirResource && (
+            <h2 className="mb-4 text-center text-lg sm:text-xl font-bold text-foreground">
+              {tafsirResource.name}
+            </h2>
+          )}
           <div
             className="prose max-w-none tafsir-content break-words"
             style={{ fontSize: `${settings.tafsirFontSize || 18}px` }}

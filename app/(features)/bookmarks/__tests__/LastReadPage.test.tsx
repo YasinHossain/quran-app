@@ -34,6 +34,30 @@ jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
   useHeaderVisibility: () => ({ isHidden: false }),
 }));
 
+jest.mock('framer-motion', () => ({
+  motion: {
+    div: (args: any) => {
+      const { children, ...props } = args;
+      delete (props as any).whileHover;
+      delete (props as any).whileTap;
+      return React.createElement('div', props, children);
+    },
+    aside: (args: any) => {
+      const { children, ...props } = args;
+      delete (props as any).whileHover;
+      delete (props as any).whileTap;
+      return React.createElement('aside', props, children);
+    },
+    button: (args: any) => {
+      const { children, ...props } = args;
+      delete (props as any).whileHover;
+      delete (props as any).whileTap;
+      return React.createElement('button', props, children);
+    },
+  },
+  AnimatePresence: ({ children }: any) => <>{children}</>,
+}));
+
 beforeAll(() => {
   // Ensure desktop sidebar renders (ThreeColumnWorkspace uses an XL breakpoint).
   setMatchMedia(true);

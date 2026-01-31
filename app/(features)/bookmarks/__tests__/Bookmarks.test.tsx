@@ -5,6 +5,14 @@ import { BookmarksHeader } from '@/app/(features)/bookmarks/components/Bookmarks
 import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 
+// Mock framer-motion to avoid animation issues in tests
+jest.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: any) => React.createElement('div', props, children),
+  },
+  AnimatePresence: ({ children }: any) => <>{children}</>,
+}));
+
 // Mock the BookmarkContext
 jest.mock('@/app/providers/BookmarkContext', () => ({
   useBookmarks: () => ({

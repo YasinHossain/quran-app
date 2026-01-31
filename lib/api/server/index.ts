@@ -5,4 +5,3 @@
 
 export { getChaptersServer, getChapterServer } from './chapters';
 export { getVersesOfDayServer } from './verses';
-export { getTafsirVersePageDataServer } from './tafsir';
