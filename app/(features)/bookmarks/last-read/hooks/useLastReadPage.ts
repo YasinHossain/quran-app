@@ -1,7 +1,8 @@
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Chapter, LastReadMap } from '@/types';
@@ -15,6 +16,7 @@ export interface UseLastReadPageReturn {
 
 export const useLastReadPage = (): UseLastReadPageReturn => {
   const router = useRouter();
+  const pathname = usePathname();
   const { lastRead, chapters, removeLastRead } = useBookmarks();
 
   useEffect(() => {
@@ -25,14 +27,15 @@ export const useLastReadPage = (): UseLastReadPageReturn => {
   }, []);
 
   const handleSectionChange = (section: SectionId): void => {
+    const locale = getLocaleFromPathname(pathname) ?? 'en';
     if (section === 'bookmarks') {
-      router.push('/bookmarks/folders');
+      router.push(localizeHref('/bookmarks/folders', locale));
     } else if (section === 'pinned') {
-      router.push('/bookmarks/pinned');
+      router.push(localizeHref('/bookmarks/pinned', locale));
     } else if (section === 'planner') {
-      router.push('/bookmarks/planner');
+      router.push(localizeHref('/bookmarks/planner', locale));
     } else {
-      router.push('/bookmarks/last-read');
+      router.push(localizeHref('/bookmarks/last-read', locale));
     }
   };
 
