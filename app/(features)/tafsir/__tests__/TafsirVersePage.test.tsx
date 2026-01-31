@@ -1,43 +1,105 @@
-import { render, screen } from '@testing-library/react';
+import useSWR from 'swr';
 
-import { AyahNavigation } from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/AyahNavigation';
+import TafsirVersePage from '@/app/(features)/tafsir/[surahId]/[ayahId]/page';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
+import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
+import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { Verse } from '@/types';
 
-import type { Surah } from '@/types';
+jest.mock('@/app/shared/hooks/useSingleVerse', () => ({
+  useSingleVerse: jest.fn(),
+  usePrefetchSingleVerse: () => jest.fn(),
+}));
+jest.mock('@/app/(features)/tafsir/hooks/useVerseNavigation', () => ({
+  useVerseNavigation: () => ({
+    prev: { surahId: '1', ayahId: 7 },
+    next: { surahId: '1', ayahId: 2 },
+    currentSurah: { number: 1, verses: 7 },
+  }),
+}));
+jest.mock('swr', () => {
+  const actual = jest.requireActual('swr');
+  return { __esModule: true, ...actual, default: jest.fn() };
+});
+jest.mock('@/lib/tafsir/tafsirCache');
+jest.mock('react', () => {
+  const actual = jest.requireActual('react');
+  const identity = <T,>(x: T): T => x;
+  return { ...actual, use: identity };
+});
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: {
+      changeLanguage: jest.fn(),
+      language: 'en',
+      languages: ['en'],
+      on: jest.fn(),
+      off: jest.fn(),
+      exists: jest.fn(() => false),
+      t: (key: string) => key,
+    },
+  }),
+}));
 
-const currentSurah: Surah = {
-  number: 1,
-  name: 'Al-Fatiha',
-  arabicName: 'الفاتحة',
-  verses: 7,
-  meaning: 'The Opening',
+const mockUseSWR = useSWR as jest.Mock;
+const mockGetTafsirCached = getTafsirCached as jest.Mock;
+const mockUseSingleVerse = jest.requireMock('@/app/shared/hooks/useSingleVerse')
+  .useSingleVerse as jest.Mock;
+
+beforeAll(() => {
+  setMatchMedia(false);
+  jest.spyOn(logger, 'error').mockImplementation(() => {});
+});
+
+const verse: Verse = {
+  id: 1,
+  verse_key: '1:1',
+  text_uthmani: 'verse text',
+  words: [],
+  translations: [{ resource_id: 20, text: 'translation' }],
 };
 
-test('next link points to next verse', () => {
-  render(
-    <AyahNavigation
-      prev={{ surahId: '1', ayahId: 7 }}
-      next={{ surahId: '1', ayahId: 2 }}
-      currentSurah={currentSurah}
-      surahId="1"
-      ayahId="1"
+const resources = [
+  { id: 1, name: 'Tafsir One', lang: 'english' },
+  { id: 2, name: 'Tafsir Two', lang: 'english' },
+];
+
+beforeEach(() => {
+  localStorage.setItem(
+    'quranAppSettings',
+    JSON.stringify({ tafsirIds: [1, 2], translationId: 20 })
+  );
+  mockGetTafsirCached.mockImplementation((key: string, id: number) =>
+    Promise.resolve(`Text ${id}`)
+  );
+  mockUseSWR.mockImplementation((key: string | readonly unknown[]) => {
+    if (key === 'tafsirs') return { data: resources };
+    if (Array.isArray(key) && key[0] === 'tafsir') return { data: `Rendered ${key[2]}` };
+    return { data: undefined };
+  });
+  mockUseSingleVerse.mockReturnValue({ verse, isLoading: false, error: null, mutate: jest.fn() });
+});
+
+const renderPage = (surahId = '1', ayahId = '1'): void => {
+  renderWithProviders(
+    <TafsirVersePage
+      params={{ surahId, ayahId } as unknown as Promise<{ surahId: string; ayahId: string }>}
     />
   );
+};
 
+test('next link points to next verse', async () => {
+  renderPage('1', '1');
+  await waitFor(() => expect(screen.getByLabelText('Next')).toBeInTheDocument());
   const nextLink = screen.getByLabelText('Next');
   expect(nextLink).toHaveAttribute('href', '/tafsir/1/2');
 });
 
-test('previous link points to previous verse', () => {
-  render(
-    <AyahNavigation
-      prev={{ surahId: '1', ayahId: 7 }}
-      next={{ surahId: '1', ayahId: 2 }}
-      currentSurah={currentSurah}
-      surahId="2"
-      ayahId="1"
-    />
-  );
-
+test('previous link points to previous verse', async () => {
+  renderPage('2', '1');
+  await waitFor(() => expect(screen.getByLabelText('Previous')).toBeInTheDocument());
   const prevLink = screen.getByLabelText('Previous');
   expect(prevLink).toHaveAttribute('href', '/tafsir/1/7');
 });

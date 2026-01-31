@@ -4,7 +4,6 @@ import {
   HeaderVisibilityProvider,
   useHeaderVisibility,
 } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-import { FeatureProviders } from '@/app/providers/FeatureProviders';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { Header } from '@/app/shared/Header';
 import { Navigation } from '@/app/shared/IconSidebar';
@@ -38,10 +37,8 @@ function LayoutContent({ children }: { children: ReactNode }): ReactElement {
 
 export default function FeaturesLayout({ children }: { children: ReactNode }): ReactElement {
   return (
-    <FeatureProviders>
-      <HeaderVisibilityProvider>
-        <LayoutContent>{children}</LayoutContent>
-      </HeaderVisibilityProvider>
-    </FeatureProviders>
+    <HeaderVisibilityProvider>
+      <LayoutContent>{children}</LayoutContent>
+    </HeaderVisibilityProvider>
   );
 }

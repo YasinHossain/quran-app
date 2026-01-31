@@ -75,7 +75,7 @@ describe('useSingleVerse', () => {
     expect(result.current.error).toBeNull();
   });
 
-  it('fetches by verse key with no translations when translationIds is empty', async () => {
+  it('fetches by verse key and falls back to translationId when array empty', async () => {
     useSettings.mockReturnValue({
       settings: {
         translationIds: [],
@@ -92,7 +92,7 @@ describe('useSingleVerse', () => {
 
     await waitFor(() => expect(result.current.verse).toEqual(verse));
 
-    expect(getVerseByKey).toHaveBeenCalledWith('2:255', [], 'bn', false);
+    expect(getVerseByKey).toHaveBeenCalledWith('2:255', [30], 'bn', false);
     expect(getVerseById).not.toHaveBeenCalled();
   });
 

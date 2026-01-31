@@ -84,25 +84,6 @@ jest.mock('next/navigation', () => ({
   useParams: useParamsMock,
 }));
 
-// Next.js server-only request helpers (used by server components/pages).
-// In unit tests we don't have a request scope, so provide lightweight mocks.
-jest.mock('next/headers', () => ({
-  headers: async () => new Headers(),
-  cookies: async () => ({
-    get: () => undefined,
-    getAll: () => [],
-    has: () => false,
-    set: () => {},
-    delete: () => {},
-  }),
-}));
-
-// Optional Vercel runtime components (not needed for unit tests).
-jest.mock('@vercel/speed-insights/next', () => ({ SpeedInsights: () => null }), {
-  virtual: true,
-});
-jest.mock('@vercel/analytics/react', () => ({ Analytics: () => null }), { virtual: true });
-
 declare global {
   interface HTMLMediaElement {
     simulateEvent(eventType: string): void;

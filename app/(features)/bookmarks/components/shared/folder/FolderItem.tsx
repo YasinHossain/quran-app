@@ -1,10 +1,8 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import React from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { BaseCard } from '@/app/shared/ui/BaseCard';
 import { Bookmark, Folder } from '@/types';
 
@@ -48,8 +46,6 @@ export const FolderItem = ({
   folderBookmarks,
   onToggle,
 }: FolderItemProps): React.JSX.Element => {
-  const rawPathname = usePathname();
-  const locale = getLocaleFromPathname(rawPathname) ?? 'en';
   const { removeBookmark } = useBookmarks();
   const handleRemoveBookmark = React.useCallback(
     (bookmark: Bookmark): void => {
@@ -60,7 +56,7 @@ export const FolderItem = ({
   const shouldShowExpanded = isExpanded && isCurrentFolder;
 
   // Build href for Link-based navigation with prefetching
-  const folderHref = localizeHref(`/bookmarks/${folderItem.id}`, locale);
+  const folderHref = `/bookmarks/${folderItem.id}`;
 
   return (
     <BaseCard

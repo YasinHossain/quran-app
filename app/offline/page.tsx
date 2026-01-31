@@ -1,19 +1,10 @@
 import { Metadata } from 'next';
 
-import { absoluteUrl } from '@/lib/seo/site';
-
 import { OfflineActions } from './OfflineActions';
 
 export const metadata: Metadata = {
   title: 'Offline - Quran App',
   description: 'You are currently offline. Please check your internet connection.',
-  alternates: {
-    canonical: absoluteUrl('/offline'),
-  },
-  robots: {
-    index: false,
-    follow: true,
-  },
 };
 
 function OfflineIllustration(): React.JSX.Element {

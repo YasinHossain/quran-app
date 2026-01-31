@@ -12,8 +12,7 @@ module.exports = {
   ci: {
     collect: {
       startServerCommand: 'cross-env NEXT_DISABLE_PWA=true npm start -- -p 3000',
-      // Next.js output varies across versions (e.g. "Ready in ..." vs "started server ...").
-      startServerReadyPattern: 'Ready in|started server',
+      startServerReadyPattern: 'started server',
       startServerReadyTimeout: 120000,
       url: [
         'http://localhost:3000/',
@@ -34,9 +33,9 @@ module.exports = {
     assert: {
       assertions: {
         'categories:performance': ['error', { minScore: 0.85 }],
-        'largest-contentful-paint': ['error', { maxNumericValue: 5000 }],
-        'cumulative-layout-shift': ['error', { maxNumericValue: 0.15 }],
-        'total-blocking-time': ['error', { maxNumericValue: 800 }],
+        'audits:largest-contentful-paint': ['error', { maxNumericValue: 5000 }],
+        'audits:cumulative-layout-shift': ['error', { maxNumericValue: 0.15 }],
+        'audits:total-blocking-time': ['error', { maxNumericValue: 800 }],
       },
     },
     upload: {

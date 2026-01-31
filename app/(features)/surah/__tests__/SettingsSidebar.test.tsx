@@ -9,6 +9,21 @@ import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: {
+      changeLanguage: jest.fn(),
+      language: 'en',
+      languages: ['en'],
+      on: jest.fn(),
+      off: jest.fn(),
+      exists: jest.fn(() => false),
+      t: (key: string) => key,
+    },
+  }),
+}));
+
 const Wrapper = ({ children }: { children: React.ReactNode }): React.ReactElement => (
   <HeaderVisibilityProvider>{children}</HeaderVisibilityProvider>
 );

@@ -1,9 +1,6 @@
 import { SurahView } from '@/app/(features)/surah/components';
 import { getSurahInitialDataServer } from '@/lib/api/server';
-import { getChapterServer } from '@/lib/api/server';
-import { SITE_NAME, absoluteUrl } from '@/lib/seo/site';
 import { ensureLanguageCode } from '@/lib/text/languageCodes';
-import type { Metadata } from 'next';
 
 import type { Verse } from '@/types';
 
@@ -11,43 +8,8 @@ import type { Verse } from '@/types';
 // Translation changes are handled client-side by SWR
 export const revalidate = 3600;
 
-export async function generateStaticParams(): Promise<Array<{ surahId: string }>> {
-  return [{ surahId: '1' }, { surahId: '2' }];
-}
-
 interface SurahPageProps {
   params: Promise<{ surahId: string }>;
-}
-
-export async function generateMetadata({ params }: SurahPageProps): Promise<Metadata> {
-  const resolvedParams = await params;
-  const rawId = resolvedParams.surahId;
-  const surahId = Number.parseInt(String(rawId), 10);
-  const canonicalPath = Number.isFinite(surahId) ? `/surah/${surahId}` : `/surah/${encodeURIComponent(rawId)}`;
-
-  const chapter = Number.isFinite(surahId) ? await getChapterServer(surahId) : undefined;
-  const chapterName = chapter?.name_simple || `Surah ${rawId}`;
-  const title = chapter ? `Surah ${chapterName} (${surahId})` : chapterName;
-  const description = chapter
-    ? `Read Surah ${chapterName} (Chapter ${surahId}) from the Holy Quran with translations, tafsir, and audio recitation on ${SITE_NAME}.`
-    : `Read ${chapterName} from the Holy Quran with translations, tafsir, and audio recitation on ${SITE_NAME}.`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical: absoluteUrl(canonicalPath),
-    },
-    openGraph: {
-      title: `${title} | ${SITE_NAME}`,
-      description,
-      url: absoluteUrl(canonicalPath),
-    },
-    twitter: {
-      title: `${title} | ${SITE_NAME}`,
-      description,
-    },
-  };
 }
 
 /**

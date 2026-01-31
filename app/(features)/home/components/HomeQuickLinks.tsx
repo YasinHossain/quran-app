@@ -1,12 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { memo, useCallback, useEffect, useMemo, type ReactElement } from 'react';
+import { useRouter } from 'next/navigation';
+import { memo, useCallback, useEffect, type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { BookmarkOutlineIcon, CalendarIcon, ClockIcon, PinIcon } from '@/app/shared/icons';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 
 /**
  * Quick shortcut links to bookmark sections.
@@ -34,16 +33,9 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
   className,
 }: HomeQuickLinksProps): ReactElement {
   const { t } = useTranslation();
-  const pathname = usePathname();
-  const locale = getLocaleFromPathname(pathname) ?? 'en';
   const router = useRouter();
 
   const maxWidth = 'clamp(18rem, 80vw, 64rem)';
-
-  const links = useMemo(
-    () => QUICK_LINKS.map((link) => ({ ...link, href: localizeHref(link.href, locale) })),
-    [locale]
-  );
 
   // Prefetch handler for intent-based prefetching
   const prefetchRoute = useCallback(
@@ -59,16 +51,16 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
 
   // Warm cache on mount - prefetch all quick links immediately
   useEffect(() => {
-    for (const link of links) {
+    for (const link of QUICK_LINKS) {
       prefetchRoute(link.href);
     }
-  }, [links, prefetchRoute]);
+  }, [prefetchRoute]);
 
   return (
     <div className={`w-full mx-auto px-2 sm:px-3 lg:px-0 ${className ?? ''}`} style={{ maxWidth }}>
       {/* 2 columns by default, 4 columns on desktop */}
       <div className="grid grid-cols-2 gap-2 sm:gap-2.5 lg:grid-cols-4 lg:gap-3">
-        {links.map(({ href, icon: Icon, labelKey }) => (
+        {QUICK_LINKS.map(({ href, icon: Icon, labelKey }) => (
           <Link
             key={href}
             href={href}

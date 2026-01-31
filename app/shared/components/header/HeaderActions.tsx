@@ -4,13 +4,11 @@ import { usePathname } from 'next/navigation';
 import { memo, type ReactElement, useCallback } from 'react';
 
 import { useUIState } from '@/app/providers/UIStateContext';
-import { stripLocaleFromPathname } from '@/app/shared/i18n/localeRouting';
 import { SettingsIcon } from '@/app/shared/icons';
 
 export const HeaderActions = memo(function HeaderActions(): ReactElement {
   const { setSettingsOpen } = useUIState();
-  const rawPathname = usePathname();
-  const pathname = stripLocaleFromPathname(rawPathname);
+  const pathname = usePathname();
 
   // These pages have NO settings sidebar at all (not even on desktop 2xl),
   // so we should hide the gear icon completely and show a placeholder for centering

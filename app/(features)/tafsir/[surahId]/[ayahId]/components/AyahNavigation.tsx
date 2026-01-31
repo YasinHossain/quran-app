@@ -1,11 +1,8 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
 import { ArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
-import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { getTafsirReturnHref } from '@/app/shared/navigation/tafsirReturn';
 import { formatNumber } from '@/lib/text/localizeNumbers';
@@ -36,10 +33,9 @@ interface NavLinkProps {
   label: string;
   target: NavTarget | null;
   side: 'left' | 'right';
-  locale: UiLanguageCode;
 }
 
-const NavLink = ({ label, target, side, locale }: NavLinkProps): JSX.Element => {
+const NavLink = ({ label, target, side }: NavLinkProps): JSX.Element => {
   const baseClasses =
     'flex items-center px-1 py-2 sm:px-4 rounded-full bg-accent text-on-accent font-bold';
   const iconWrapperClasses =
@@ -58,12 +54,7 @@ const NavLink = ({ label, target, side, locale }: NavLinkProps): JSX.Element => 
   }
 
   return (
-    <Link
-      href={localizeHref(buildTafsirUrl(target), locale)}
-      prefetch={true}
-      aria-label={label}
-      className={baseClasses}
-    >
+    <Link href={buildTafsirUrl(target)} prefetch={true} aria-label={label} className={baseClasses}>
       <div className={iconWrapperClasses}>
         {side === 'left' ? <ChevronLeft /> : <ChevronRight />}
       </div>
@@ -73,12 +64,11 @@ const NavLink = ({ label, target, side, locale }: NavLinkProps): JSX.Element => 
 
 interface BackLinkProps {
   href: string;
-  locale: UiLanguageCode;
 }
 
-const BackLink = ({ href, locale }: BackLinkProps): JSX.Element => (
+const BackLink = ({ href }: BackLinkProps): JSX.Element => (
   <Link
-    href={localizeHref(href, locale)}
+    href={href}
     prefetch={true}
     aria-label="Back"
     className="flex items-center px-1 sm:px-3 py-2 rounded-full bg-accent text-on-accent"
@@ -142,18 +132,16 @@ export const AyahNavigation = ({
   ayahId,
   surahId,
 }: AyahNavigationProps): JSX.Element => {
-  const rawPathname = usePathname();
-  const locale = getLocaleFromPathname(rawPathname) ?? 'en';
   const backHref =
     getTafsirReturnHref() ?? buildSurahRoute(surahId, { startVerse: ayahId, forceSeq: true });
 
   return (
     <div className="flex w-full items-center justify-between gap-1 sm:gap-3 rounded-full bg-accent text-on-accent p-2 min-w-0 overflow-hidden">
-      <BackLink href={backHref} locale={locale} />
+      <BackLink href={backHref} />
       <Title currentSurah={currentSurah} surahId={surahId} ayahId={ayahId} />
       <div className="flex items-center gap-1 sm:gap-3">
-        <NavLink label="Previous" target={prev} side="left" locale={locale} />
-        <NavLink label="Next" target={next} side="right" locale={locale} />
+        <NavLink label="Previous" target={prev} side="left" />
+        <NavLink label="Next" target={next} side="right" />
       </div>
     </div>
   );

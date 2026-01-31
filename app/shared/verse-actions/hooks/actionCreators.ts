@@ -71,7 +71,7 @@ interface CreateTafsirActionParams {
 
 export function createTafsirAction({ verseKey, t }: CreateTafsirActionParams): VerseActionItem {
   return {
-    label: t('view_tafsir', { defaultValue: 'View tafsir' }),
+    label: t('view_tafsir'),
     icon: createElement(BookReaderIcon, { size: 20 }),
     onClick: () => {},
     href: `/tafsir/${verseKey.replace(':', '/')}`,

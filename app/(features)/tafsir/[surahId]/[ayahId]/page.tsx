@@ -1,47 +1,10 @@
-import type { Metadata } from 'next';
-
 import { getTafsirVersePageDataServer } from '@/lib/api/server';
-import { getChapterServer } from '@/lib/api/server';
-import { SITE_NAME, absoluteUrl } from '@/lib/seo/site';
 import { ensureLanguageCode } from '@/lib/text/languageCodes';
 
 import TafsirVersePageClient from './components/TafsirVersePageClient';
 
 interface TafsirVersePageProps {
   params: Promise<{ surahId: string; ayahId: string }>;
-}
-
-export async function generateMetadata({ params }: TafsirVersePageProps): Promise<Metadata> {
-  const { surahId: rawSurahId, ayahId: rawAyahId } = await params;
-  const surahId = Number.parseInt(String(rawSurahId), 10);
-  const ayahId = Number.parseInt(String(rawAyahId), 10);
-
-  const canonicalPath = `/tafsir/${encodeURIComponent(rawSurahId)}/${encodeURIComponent(rawAyahId)}`;
-  const verseKey =
-    Number.isFinite(surahId) && Number.isFinite(ayahId) ? `${surahId}:${ayahId}` : `${rawSurahId}:${rawAyahId}`;
-
-  const chapter = Number.isFinite(surahId) ? await getChapterServer(surahId) : undefined;
-  const chapterName = chapter?.name_simple || `Surah ${rawSurahId}`;
-
-  const title = `Tafsir of ${chapterName} ${verseKey}`;
-  const description = `Read tafsir for ${chapterName} ${verseKey} on ${SITE_NAME}.`;
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical: absoluteUrl(canonicalPath),
-    },
-    openGraph: {
-      title: `${title} | ${SITE_NAME}`,
-      description,
-      url: absoluteUrl(canonicalPath),
-    },
-    twitter: {
-      title: `${title} | ${SITE_NAME}`,
-      description,
-    },
-  };
 }
 
 export default async function TafsirVersePage({

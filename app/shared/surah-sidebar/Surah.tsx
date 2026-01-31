@@ -1,10 +1,8 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import React, { memo, useCallback, startTransition } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { buildTafsirRoute } from '@/app/shared/navigation/routes';
 import { SurahNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
@@ -73,8 +71,6 @@ export const Surah = ({
   isMushafMode,
   onClose,
 }: Props): React.JSX.Element => {
-  const rawPathname = usePathname();
-  const locale = getLocaleFromPathname(rawPathname) ?? 'en';
   const { getSurahHref } = useNavigationTargets();
 
   // Create a stable callback factory for navigation handlers
@@ -105,7 +101,7 @@ export const Surah = ({
         const isActive = chapter.id === selectedSurahId;
         const surahHref = getSurahHref(chapter.id);
         const href = isTafsirPath
-          ? localizeHref(buildTafsirRoute(chapter.id, 1), locale)
+          ? buildTafsirRoute(chapter.id, 1)
           : isMushafMode
             ? `${surahHref}${surahHref.includes('#') ? '&' : '#'}view=mushaf`
             : surahHref;
