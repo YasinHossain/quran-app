@@ -1,5 +1,6 @@
 import { SurahView } from '@/app/(features)/surah/components';
-import { getSurahInitialDataServer } from '@/lib/api/server';
+import { getVersesByChapter } from '@/lib/api';
+import { getChapter } from '@/lib/api/chapters';
 import { ensureLanguageCode } from '@/lib/text/languageCodes';
 
 import type { Verse } from '@/types';
@@ -18,25 +19,35 @@ interface SurahPageProps {
  */
 async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element> {
   const resolvedParams = await params;
+  const surahNumber = Number.parseInt(resolvedParams.surahId, 10);
+  const canFetchMetadata = Number.isFinite(surahNumber) && surahNumber > 0;
 
   const DEFAULT_INITIAL_TRANSLATION_IDS = [20];
   const DEFAULT_INITIAL_WORD_LANG = 'en';
-  const INITIAL_VERSES_PER_PAGE = 20;
 
   let totalVerses: number | undefined;
   let initialVerses: Verse[] | undefined;
 
   const language = ensureLanguageCode(DEFAULT_INITIAL_WORD_LANG);
 
-  const initialData = await getSurahInitialDataServer({
-    surahId: resolvedParams.surahId,
-    translationIds: DEFAULT_INITIAL_TRANSLATION_IDS,
-    wordLang: language,
-    perPage: INITIAL_VERSES_PER_PAGE,
-  });
+  const [chapterResult, versesResult] = await Promise.allSettled([
+    canFetchMetadata ? getChapter(surahNumber, language) : Promise.resolve(null),
+    getVersesByChapter({
+      id: resolvedParams.surahId,
+      translationIds: DEFAULT_INITIAL_TRANSLATION_IDS,
+      page: 1,
+      perPage: 20,
+      wordLang: language,
+    }),
+  ]);
 
-  totalVerses = initialData.totalVerses;
-  initialVerses = initialData.initialVerses;
+  if (chapterResult.status === 'fulfilled' && chapterResult.value) {
+    totalVerses = chapterResult.value.verses_count;
+  }
+
+  if (versesResult.status === 'fulfilled') {
+    initialVerses = versesResult.value.verses;
+  }
 
   const surahViewProps = {
     ...(typeof totalVerses === 'number' ? { totalVerses } : {}),
