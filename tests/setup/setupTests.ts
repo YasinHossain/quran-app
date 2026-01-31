@@ -13,7 +13,28 @@ import { server } from '@tests/setup/msw/server';
 
 import type { RouterMock } from '@/types/testing';
 
-const unhandledRejections: unknown[] = [];
+type TestProcessState = {
+  unhandledRejections: unknown[];
+  unhandledRejectionListenerInstalled: boolean;
+};
+
+const getTestProcessState = (): TestProcessState => {
+  const key = '__QURAN_APP_TEST_PROCESS_STATE__';
+  const processWithState = process as typeof process & { [key]?: TestProcessState };
+
+  const existing = processWithState[key];
+  if (existing) return existing;
+
+  const created: TestProcessState = {
+    unhandledRejections: [],
+    unhandledRejectionListenerInstalled: false,
+  };
+  processWithState[key] = created;
+  return created;
+};
+
+const testProcessState = getTestProcessState();
+const unhandledRejections = testProcessState.unhandledRejections;
 
 const isErrorLike = (value: unknown): value is { name?: unknown; message?: unknown } =>
   typeof value === 'object' && value !== null;
@@ -33,7 +54,11 @@ const describeFetchTarget = (input: Parameters<typeof fetch>[0]): string => {
 };
 
 const originalFetch = globalThis.fetch;
-if (typeof originalFetch === 'function') {
+const FETCH_WRAPPED = Symbol.for('quran-app/tests/fetch-wrapped');
+if (
+  typeof originalFetch === 'function' &&
+  !((originalFetch as unknown as Record<symbol, unknown>)[FETCH_WRAPPED] === true)
+) {
   globalThis.fetch = ((...args: Parameters<typeof originalFetch>) => {
     const target = describeFetchTarget(args[0]);
     return originalFetch(...args).catch((error) => {
@@ -44,15 +69,21 @@ if (typeof originalFetch === 'function') {
       throw error;
     });
   }) as typeof originalFetch;
+
+  (globalThis.fetch as unknown as Record<symbol, unknown>)[FETCH_WRAPPED] = true;
 }
 
-process.on('unhandledRejection', (reason) => {
-  const label = getErrorLabel(reason);
-  if (label?.startsWith('InvalidStateError')) {
-    console.error(`[tests] unhandledRejection: ${label}`);
-  }
-  unhandledRejections.push(reason);
-});
+if (!testProcessState.unhandledRejectionListenerInstalled) {
+  process.on('unhandledRejection', (reason) => {
+    const label = getErrorLabel(reason);
+    if (label?.startsWith('InvalidStateError')) {
+      console.error(`[tests] unhandledRejection: ${label}`);
+    }
+    unhandledRejections.push(reason);
+  });
+
+  testProcessState.unhandledRejectionListenerInstalled = true;
+}
 
 const routerPushMock = jest.fn();
 const routerReplaceMock = jest.fn();
@@ -83,6 +114,25 @@ jest.mock('next/navigation', () => ({
   useSearchParams: useSearchParamsMock,
   useParams: useParamsMock,
 }));
+
+// Next.js server-only request helpers (used by server components/pages).
+// In unit tests we don't have a request scope, so provide lightweight mocks.
+jest.mock('next/headers', () => ({
+  headers: async () => new Headers(),
+  cookies: async () => ({
+    get: () => undefined,
+    getAll: () => [],
+    has: () => false,
+    set: () => {},
+    delete: () => {},
+  }),
+}));
+
+// Optional Vercel runtime components (not needed for unit tests).
+jest.mock('@vercel/speed-insights/next', () => ({ SpeedInsights: () => null }), {
+  virtual: true,
+});
+jest.mock('@vercel/analytics/react', () => ({ Analytics: () => null }), { virtual: true });
 
 declare global {
   interface HTMLMediaElement {
@@ -148,7 +198,7 @@ beforeEach(() => {
 });
 
 type MockUseTranslationReturn = {
-  t: (key: string, options?: Record<string, unknown>) => string;
+  t: (key: string, options?: Record<string, unknown> | string) => string;
   i18n: {
     changeLanguage: jest.Mock;
     language: string;
@@ -160,25 +210,31 @@ type MockUseTranslationReturn = {
   };
 };
 
-const defaultUseTranslationImplementation = (): MockUseTranslationReturn => ({
-  t: (key: string, options?: Record<string, unknown> | string) => {
-    if (typeof options === 'string') return options;
-    if (options && typeof options === 'object') {
-      const defaultValue = options['defaultValue'];
-      if (typeof defaultValue === 'string') return defaultValue;
-    }
+const defaultT = (key: string, options?: Record<string, unknown> | string) => {
+  if (typeof options === 'string') return options;
+  if (options && typeof options === 'object') {
+    const defaultValue = options['defaultValue'];
+    if (typeof defaultValue === 'string') return defaultValue;
+  }
 
-    return typeof key === 'string' ? key : String(key);
-  },
-  i18n: {
-    changeLanguage: jest.fn(),
-    language: 'en',
-    languages: ['en'],
-    on: jest.fn(),
-    off: jest.fn(),
-    exists: jest.fn(() => false),
-    t: jest.fn((key: string) => key),
-  },
+  return typeof key === 'string' ? key : String(key);
+};
+
+// Keep a stable i18n reference across renders to avoid infinite effect loops in
+// providers that depend on `i18n` identity (e.g. `[i18n]` dependencies).
+const stableMockI18n: MockUseTranslationReturn['i18n'] = {
+  changeLanguage: jest.fn(),
+  language: 'en',
+  languages: ['en'],
+  on: jest.fn(),
+  off: jest.fn(),
+  exists: jest.fn(() => false),
+  t: jest.fn((key: string) => key),
+};
+
+const defaultUseTranslationImplementation = (): MockUseTranslationReturn => ({
+  t: defaultT,
+  i18n: stableMockI18n,
 });
 
 const mockUseTranslation = jest.fn(defaultUseTranslationImplementation);

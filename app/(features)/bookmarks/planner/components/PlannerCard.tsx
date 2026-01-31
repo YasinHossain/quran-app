@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,6 +9,7 @@ import { PlannerCardHeader } from '@/app/(features)/bookmarks/planner/components
 import { PlannerProgressSection } from '@/app/(features)/bookmarks/planner/components/PlannerProgressSection';
 import { PlannerStatsSection } from '@/app/(features)/bookmarks/planner/components/PlannerStatsSection';
 import { createPlannerCardViewModel } from '@/app/(features)/bookmarks/planner/utils/plannerCard';
+import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { CloseIcon } from '@/app/shared/icons';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 
@@ -97,6 +98,7 @@ const usePlannerNavigation = (
   continueVerse: PlannerCardProps['continueVerse']
 ): (() => void) => {
   const router = useRouter();
+  const pathname = usePathname();
 
   return React.useCallback(() => {
     const parsedSurahId = Number.parseInt(surahId, 10);
@@ -108,8 +110,9 @@ const usePlannerNavigation = (
         ? { startVerse: continueVerse.verse, forceSeq: true }
         : undefined
     );
-    router.push(targetPath, { scroll: false });
-  }, [continueVerse, router, surahId]);
+    const locale = getLocaleFromPathname(pathname) ?? 'en';
+    router.push(localizeHref(targetPath, locale), { scroll: false });
+  }, [continueVerse, pathname, router, surahId]);
 };
 
 const PlannerCardDeleteButton = ({

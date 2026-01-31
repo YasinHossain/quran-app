@@ -1,7 +1,8 @@
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useSettings } from '@/app/providers/SettingsContext';
+import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
@@ -33,6 +34,7 @@ interface UsePlaybackOptionsReturn {
 
 export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePlaybackOptionsReturn {
   const router = useRouter();
+  const pathname = usePathname();
   const {
     reciter,
     setReciterId,
@@ -194,7 +196,8 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
           setRepeatOptions(nextRepeat);
 
           const href = buildSurahRoute(surahId, { startVerse: normalizedVerse, forceSeq: true });
-          router.push(href, { scroll: false });
+          const locale = getLocaleFromPathname(pathname) ?? 'en';
+          router.push(localizeHref(href, locale), { scroll: false });
 
           onClose();
         } catch {
@@ -232,7 +235,8 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
           setRepeatOptions(nextRepeat);
 
           const href = buildSurahRoute(surahId, { startVerse: 1, forceSeq: true });
-          router.push(href, { scroll: false });
+          const locale = getLocaleFromPathname(pathname) ?? 'en';
+          router.push(localizeHref(href, locale), { scroll: false });
 
           onClose();
         } catch {
@@ -276,7 +280,8 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
             startVerse: range.startVerseNumber,
             forceSeq: true,
           });
-          router.push(href, { scroll: false });
+          const locale = getLocaleFromPathname(pathname) ?? 'en';
+          router.push(localizeHref(href, locale), { scroll: false });
 
           onClose();
         } catch {

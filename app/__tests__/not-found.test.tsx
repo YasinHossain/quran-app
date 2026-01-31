@@ -14,6 +14,8 @@ jest.mock('next/link', () => {
   );
 });
 
+jest.mock('next/navigation', () => ({ usePathname: () => '/en/missing' }));
+
 beforeEach(() => {
   useTranslationMock.mockImplementation(() => ({
     t: (key: string) => ({ page_not_found: 'Page not found', home: 'Home' })[key] ?? key,

@@ -5,10 +5,33 @@ import { useTranslation } from 'react-i18next';
 
 import { resolveVerseTranslation } from '@/app/(features)/home/utils/resolveVerseTranslation';
 import { useSettings } from '@/app/providers/SettingsContext';
+import { getVerseTranslationByKey } from '@/lib/api/verses/extras';
 import { cleanTranslationText } from '@/lib/text/cleanTranslationText';
 import { localizeDigits } from '@/lib/text/localizeNumbers';
 
 import type { Chapter, Verse } from '@/types';
+
+const VOTD_TRANSLATION_CACHE = new Map<string, string>();
+
+const createTranslationCacheKey = (verseKey: string, translationId: number): string =>
+  `${verseKey}:${translationId}`;
+
+const scheduleIdleWork = (work: () => void): (() => void) => {
+  const win = window as unknown as {
+    requestIdleCallback?: (cb: () => void, options?: { timeout: number }) => number;
+    cancelIdleCallback?: (id: number) => void;
+  };
+
+  if (typeof win.requestIdleCallback === 'function') {
+    const handle = win.requestIdleCallback(work, { timeout: 1200 });
+    return () => {
+      win.cancelIdleCallback?.(handle);
+    };
+  }
+
+  const timer = window.setTimeout(work, 0);
+  return () => window.clearTimeout(timer);
+};
 
 // Renamed from VerseOfDaySimple
 interface VerseOfDayProps {
@@ -38,10 +61,20 @@ export const VerseOfDay = memo(function VerseOfDay({
   const { settings } = useSettings();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [translationOverrides, setTranslationOverrides] = useState<Record<string, string>>({});
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const hasVerses = verses && verses.length > 0;
   const versesLength = verses?.length ?? 0;
+
+  const isTranslationDisabled = Boolean(
+    settings.translationIds && settings.translationIds.length === 0
+  );
+  const activeTranslationId = useMemo(() => {
+    if (isTranslationDisabled) return null;
+    return settings.translationIds?.[0] ?? settings.translationId ?? null;
+  }, [isTranslationDisabled, settings.translationIds, settings.translationId]);
 
   const chapterNameById = useMemo(() => {
     const map = new Map<number, string>();
@@ -51,26 +84,114 @@ export const VerseOfDay = memo(function VerseOfDay({
     return map;
   }, [chapters]);
 
-  // Rotate verse every 15 seconds
   useEffect(() => {
-    if (!hasVerses || versesLength <= 1) return;
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setPrefersReducedMotion(mediaQuery.matches);
+    update();
 
-    timerRef.current = setInterval(() => {
-      setIsTransitioning(true);
+    mediaQuery.addEventListener('change', update);
+    return () => mediaQuery.removeEventListener('change', update);
+  }, []);
 
-      // After fade-out, change verse
-      setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % versesLength);
-        setIsTransitioning(false);
-      }, 300);
-    }, 15000);
+  useEffect(() => {
+    if (!hasVerses) return;
+    if (isTranslationDisabled) {
+      setTranslationOverrides({});
+      return;
+    }
+    if (typeof activeTranslationId !== 'number' || !Number.isFinite(activeTranslationId)) {
+      setTranslationOverrides({});
+      return;
+    }
+
+    // Clear any overrides from a previous translation selection immediately to avoid stale display.
+    setTranslationOverrides({});
+
+    let cancelled = false;
+
+    const cancelIdle = scheduleIdleWork(() => {
+      void (async () => {
+        const next: Record<string, string> = {};
+
+        await Promise.all(
+          verses.map(async (verse) => {
+            const verseKey = verse.verse_key;
+            if (!verseKey) return;
+
+            if (verse.translations?.some((t) => t.resource_id === activeTranslationId)) {
+              return;
+            }
+
+            const cacheKey = createTranslationCacheKey(verseKey, activeTranslationId);
+            const cached = VOTD_TRANSLATION_CACHE.get(cacheKey);
+            if (cached) {
+              next[verseKey] = cached;
+              return;
+            }
+
+            try {
+              const text = await getVerseTranslationByKey(verseKey, activeTranslationId);
+              if (!text) return;
+
+              VOTD_TRANSLATION_CACHE.set(cacheKey, text);
+              next[verseKey] = text;
+            } catch {
+              // Silent failure: fall back to whatever is already present in the initial payload.
+            }
+          })
+        );
+
+        if (cancelled) return;
+        setTranslationOverrides(next);
+      })();
+    });
 
     return () => {
+      cancelled = true;
+      cancelIdle();
+    };
+  }, [activeTranslationId, hasVerses, isTranslationDisabled, verses]);
+
+  // Rotate verse every 15 seconds
+  useEffect(() => {
+    if (!hasVerses || versesLength <= 1 || prefersReducedMotion) return;
+
+    const stop = () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
+        timerRef.current = null;
       }
     };
-  }, [hasVerses, versesLength]);
+
+    const start = () => {
+      stop();
+      timerRef.current = setInterval(() => {
+        setIsTransitioning(true);
+
+        // After fade-out, change verse
+        setTimeout(() => {
+          setCurrentIndex((prev) => (prev + 1) % versesLength);
+          setIsTransitioning(false);
+        }, 300);
+      }, 15000);
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        start();
+      } else {
+        stop();
+      }
+    };
+
+    onVisibilityChange();
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      stop();
+    };
+  }, [hasVerses, prefersReducedMotion, versesLength]);
 
   // Memoize current verse data
   const verseData = useMemo(() => {
@@ -79,14 +200,25 @@ export const VerseOfDay = memo(function VerseOfDay({
     if (!verse) return null;
 
     const [surahNum, ayahNum] = verse.verse_key.split(':');
-    const translation = resolveVerseTranslation(verse, settings.translationId);
+    const translation =
+      isTranslationDisabled || typeof activeTranslationId !== 'number'
+        ? undefined
+        : (translationOverrides[verse.verse_key] ??
+          resolveVerseTranslation(verse, activeTranslationId));
     return {
       text: verse.text_uthmani,
       translation,
       surahNum,
       ayahNum,
     };
-  }, [hasVerses, verses, currentIndex, settings.translationId]);
+  }, [
+    activeTranslationId,
+    currentIndex,
+    hasVerses,
+    isTranslationDisabled,
+    translationOverrides,
+    verses,
+  ]);
 
   // Don't render if no verses available
   if (!verseData) {
@@ -106,13 +238,15 @@ export const VerseOfDay = memo(function VerseOfDay({
     ? cleanTranslationText(verseData.translation)
     : null;
 
+  const contentClassName = prefersReducedMotion
+    ? 'space-y-4'
+    : `transition-opacity duration-300 ease-in-out space-y-4 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`;
+
   return (
     <div
       className={`w-full p-4 md:p-6 lg:p-8 rounded-2xl shadow-lg bg-surface-navigation border border-border/30 dark:border-border/20 min-h-[180px] ${className || ''}`}
     >
-      <div
-        className={`transition-opacity duration-300 ease-in-out space-y-4 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
-      >
+      <div className={contentClassName}>
         {/* Arabic text - uses preloaded UthmanicHafs font */}
         <h3
           className="text-2xl md:text-3xl lg:text-4xl leading-relaxed text-right text-content-accent"

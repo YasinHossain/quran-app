@@ -68,12 +68,18 @@ claude_desktop_config.json
 
 # temporary artifacts/logs
 codex-artifacts/
+.tmp/
 .dev.log
 .dev.pid
 
 # generated reports
 lighthouse-report.json
+.lighthouse-report.json
 design-system.json
+.lighthouseci/
+lighthouseci/
+lighthouseci*/
+lighthouse-build/
 
 # temporary scripts
 analyze-chars.js

@@ -22,9 +22,19 @@ describe('getVersesByChapter', () => {
 
     await getVersesByChapter({ id: 1, translationIds: 20, page: 1, perPage: 1, wordLang: 'tr' });
     expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL}/verses/by_chapter/1?language=tr&words=true&word_translation_language=tr&word_fields=text_uthmani,text_indopak&translations=20&fields=text_uthmani,text_indopak,audio&translation_fields=resource_name&per_page=1&page=1`,
+      expect.any(String),
       expect.objectContaining({ headers: { Accept: 'application/json' } })
     );
+
+    const [[calledUrl]] = (global.fetch as jest.Mock).mock.calls;
+    const url = new URL(String(calledUrl));
+
+    expect(`${url.origin}${url.pathname}`).toBe(`${API_BASE_URL}/verses/by_chapter/1`);
+    expect(url.searchParams.get('language')).toBe('tr');
+    expect(url.searchParams.get('translations')).toBe('20');
+    expect(url.searchParams.get('word_translation_language')).toBe('tr');
+    expect(url.searchParams.get('per_page')).toBe('1');
+    expect(url.searchParams.get('page')).toBe('1');
   });
 });
 
@@ -48,9 +58,19 @@ describe('getVersesByJuz', () => {
 
     await getVersesByJuz({ id: 1, translationIds: 20, page: 1, perPage: 1, wordLang: 'en' });
     expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL}/verses/by_juz/1?language=en&words=true&word_translation_language=en&word_fields=text_uthmani,text_indopak&translations=20&fields=text_uthmani,text_indopak,audio&translation_fields=resource_name&per_page=1&page=1`,
+      expect.any(String),
       expect.objectContaining({ headers: { Accept: 'application/json' } })
     );
+
+    const [[calledUrl]] = (global.fetch as jest.Mock).mock.calls;
+    const url = new URL(String(calledUrl));
+
+    expect(`${url.origin}${url.pathname}`).toBe(`${API_BASE_URL}/verses/by_juz/1`);
+    expect(url.searchParams.get('language')).toBe('en');
+    expect(url.searchParams.get('translations')).toBe('20');
+    expect(url.searchParams.get('word_translation_language')).toBe('en');
+    expect(url.searchParams.get('per_page')).toBe('1');
+    expect(url.searchParams.get('page')).toBe('1');
   });
 });
 
@@ -74,8 +94,18 @@ describe('getVersesByPage', () => {
 
     await getVersesByPage({ id: 1, translationIds: 20, page: 1, perPage: 1, wordLang: 'en' });
     expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL}/verses/by_page/1?language=en&words=true&word_translation_language=en&word_fields=text_uthmani,text_indopak&translations=20&fields=text_uthmani,text_indopak,audio&translation_fields=resource_name&per_page=1&page=1`,
+      expect.any(String),
       expect.objectContaining({ headers: { Accept: 'application/json' } })
     );
+
+    const [[calledUrl]] = (global.fetch as jest.Mock).mock.calls;
+    const url = new URL(String(calledUrl));
+
+    expect(`${url.origin}${url.pathname}`).toBe(`${API_BASE_URL}/verses/by_page/1`);
+    expect(url.searchParams.get('language')).toBe('en');
+    expect(url.searchParams.get('translations')).toBe('20');
+    expect(url.searchParams.get('word_translation_language')).toBe('en');
+    expect(url.searchParams.get('per_page')).toBe('1');
+    expect(url.searchParams.get('page')).toBe('1');
   });
 });

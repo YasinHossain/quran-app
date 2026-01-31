@@ -1,11 +1,21 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 
 import { getSurahList } from '@/lib/api';
+import { SITE_DESCRIPTION, SITE_NAME, absoluteUrl } from '@/lib/seo/site';
 
 // Cache this page for 1 hour - makes subsequent visits instant
 export const revalidate = 3600;
 
 import type { Surah } from '@/types';
+
+export const metadata: Metadata = {
+  title: 'Surah',
+  description: `Browse all surahs of the Holy Quran on ${SITE_NAME}. ${SITE_DESCRIPTION}`,
+  alternates: {
+    canonical: absoluteUrl('/surah'),
+  },
+};
 
 export default async function SurahIndexPage(): Promise<React.JSX.Element> {
   const surahs: Surah[] = await getSurahList();

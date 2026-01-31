@@ -38,12 +38,16 @@ function useSearchPanelToggles(): {
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
 
-  const selectedTranslationName = useMemo(
-    () =>
+  const selectedTranslationName = useMemo(() => {
+    if (settings.translationIds?.length === 0) {
+      return t('no_translation_selected');
+    }
+
+    return (
       translationOptions.find((o) => o.id === settings.translationId)?.name ||
-      t('select_translation'),
-    [settings.translationId, translationOptions, t]
-  );
+      t('select_translation')
+    );
+  }, [settings.translationIds, settings.translationId, translationOptions, t]);
 
   const selectedWordLanguageName = useMemo(
     () =>

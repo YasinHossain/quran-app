@@ -2,26 +2,26 @@
 
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
-import {
-  UI_LANGUAGES,
-  UI_LANGUAGE_STORAGE_KEY,
-  isUiLanguageCode,
-  type UiLanguageCode,
-} from '@/app/shared/i18n/uiLanguages';
+import { UI_LANGUAGES, isUiLanguageCode, type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
+import { ensureUiResourcesLoaded } from '@/app/shared/i18n/uiResourcesClient';
+import { getLocaleFromPathname, setLocaleInPathnameForSwitch } from '@/app/shared/i18n/localeRouting';
 import { cn } from '@/lib/utils/cn';
 
 interface LanguageButtonProps {
   language: (typeof UI_LANGUAGES)[number];
   currentLanguage: UiLanguageCode;
   onClick: () => void;
+  onPrefetch?: () => void;
 }
 
 const LanguageButton = memo(function LanguageButton({
   language,
   currentLanguage,
   onClick,
+  onPrefetch,
 }: LanguageButtonProps): React.JSX.Element {
   const isActive = currentLanguage === language.code;
   const buttonClass = isActive
@@ -31,6 +31,8 @@ const LanguageButton = memo(function LanguageButton({
   return (
     <button
       onClick={onClick}
+      onMouseEnter={onPrefetch}
+      onFocus={onPrefetch}
       className={cn(
         'min-h-touch min-w-touch flex items-center justify-center px-3 py-2 rounded-full text-sm font-semibold transition-colors touch-manipulation',
         buttonClass
@@ -53,31 +55,45 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
   className,
 }: LanguageSwitcherProps): React.JSX.Element {
   const { i18n } = useTranslation();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [currentLanguage, setCurrentLanguage] = useState<UiLanguageCode>('en');
   const [isClient, setIsClient] = useState(false);
 
   // Initialize language from localStorage on mount
   useEffect(() => {
     setIsClient(true);
-    const savedLanguage = localStorage.getItem(UI_LANGUAGE_STORAGE_KEY) as UiLanguageCode | null;
-    if (savedLanguage && UI_LANGUAGES.some((lang) => lang.code === savedLanguage)) {
-      setCurrentLanguage(savedLanguage);
-      setUiLanguage(i18n, savedLanguage);
-    } else {
-      const initial =
-        typeof i18n?.language === 'string' && isUiLanguageCode(i18n.language)
-          ? i18n.language
-          : 'en';
-      setCurrentLanguage(initial);
+
+    const fromPath = getLocaleFromPathname(pathname);
+    if (fromPath) {
+      setCurrentLanguage(fromPath);
+      return;
     }
-  }, [i18n]);
+
+    const initial =
+      typeof i18n?.language === 'string' && isUiLanguageCode(i18n.language) ? i18n.language : 'en';
+    setCurrentLanguage(initial);
+  }, [i18n, pathname]);
+
+  const prefetchUiLanguage = useCallback(
+    (languageCode: UiLanguageCode): void => {
+      void ensureUiResourcesLoaded(i18n, languageCode).catch(() => {});
+    },
+    [i18n]
+  );
 
   const handleLanguageChange = useCallback(
     (languageCode: UiLanguageCode): void => {
+      if (languageCode === currentLanguage) return;
+      const query = searchParams.toString();
+      const hash = typeof window !== 'undefined' ? window.location.hash : '';
+      const nextPath = setLocaleInPathnameForSwitch(pathname, languageCode);
       setUiLanguage(i18n, languageCode);
       setCurrentLanguage(languageCode);
+      router.replace(`${nextPath}${query ? `?${query}` : ''}${hash}`);
     },
-    [i18n]
+    [currentLanguage, i18n, pathname, router, searchParams]
   );
 
   // Don't render anything during SSR to prevent hydration mismatch
@@ -108,6 +124,7 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
             language={language}
             currentLanguage={currentLanguage}
             onClick={() => handleLanguageChange(language.code)}
+            onPrefetch={() => prefetchUiLanguage(language.code)}
           />
         ))}
       </div>

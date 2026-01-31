@@ -15,7 +15,7 @@ const DEFAULT_TIMEOUT_MS = (() => {
       return parsed;
     }
   }
-  return 4000;
+  return 10_000;
 })();
 
 function ensureTrailingSlash(value: string): string {

@@ -13,6 +13,7 @@ import type { Verse } from '@/types';
 export interface UseSingleVerseOptions {
   idOrKey: string;
   suspense?: boolean;
+  initialVerse?: Verse | undefined;
 }
 
 export interface UseSingleVerseReturn {
@@ -42,10 +43,14 @@ function fetchSingleVerse(
 }
 
 function resolveTranslationIds(translationIds: number[], fallbackTranslationId: number): number[] {
-  const validIds = translationIds.filter((id) => Number.isFinite(id));
-  if (validIds.length > 0) {
-    return validIds;
+  // An explicit empty array means "no translations selected".
+  if (Array.isArray(translationIds) && translationIds.length === 0) {
+    return [];
   }
+
+  const validIds = translationIds.filter((id) => Number.isFinite(id));
+  if (validIds.length > 0) return validIds;
+
   return [Number.isFinite(fallbackTranslationId) ? fallbackTranslationId : FALLBACK_TRANSLATION_ID];
 }
 
@@ -105,6 +110,7 @@ export function usePrefetchSingleVerse(): (
 export function useSingleVerse({
   idOrKey,
   suspense = false,
+  initialVerse,
 }: UseSingleVerseOptions): UseSingleVerseReturn {
   const { settings } = useSettings();
 
@@ -133,6 +139,7 @@ export function useSingleVerse({
 
   const { data, error, isLoading, mutate } = useSWR<Verse>(swrKey, fetchVerse, {
     suspense,
+    ...(initialVerse ? { fallbackData: initialVerse } : {}),
   });
 
   const normalizedError = error

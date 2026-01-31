@@ -75,14 +75,6 @@ jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
   useHeaderVisibility: () => ({ isHidden: false }),
 }));
 
-jest.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: any) => React.createElement('div', props, children),
-    aside: ({ children, ...props }: any) => React.createElement('aside', props, children),
-  },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
-}));
-
 jest.mock('@/app/shared/hooks/useSingleVerse', () => {
   const prefetchMock = jest.fn().mockResolvedValue(undefined);
   return {
