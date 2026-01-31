@@ -1,8 +1,8 @@
 export const SITE_DOMAIN = 'appquran.com';
-export const SITE_NAME = 'AppQuran';
+export const SITE_NAME = 'Al Quran';
 
 export const SITE_DESCRIPTION =
-  'AppQuran is a fast, modern Quran app to read, listen, and study the Holy Quran with translations, tafsir, and audio recitations.';
+  'Al Quran is a fast, modern Quran app to read, listen, and study the Holy Quran with translations, tafsir, and audio recitations.';
 
 export const SITE_KEYWORDS: ReadonlyArray<string> = [
   'AppQuran',
