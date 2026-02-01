@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect, useRef } from 'react';
+import { RefObject, startTransition, useCallback, useEffect, useRef } from 'react';
 
 interface ScrollPersistenceOptions<T extends string> {
   scrollRef: RefObject<HTMLDivElement | null>;
@@ -26,6 +26,8 @@ export const useScrollPersistence = <T extends string>({
   const enabled = isEnabled;
   const pendingUpdateRef = useRef<{ tab: T; top: number } | null>(null);
   const flushTimeoutRef = useRef<number | null>(null);
+  const pendingStorageWritesRef = useRef<Record<string, string>>({});
+  const storageWriteTimeoutRef = useRef<number | null>(null);
 
   const clearFlushTimer = useCallback((): void => {
     if (flushTimeoutRef.current === null) return;
@@ -33,15 +35,45 @@ export const useScrollPersistence = <T extends string>({
     flushTimeoutRef.current = null;
   }, []);
 
+  const flushStorageWrites = useCallback((): void => {
+    if (!enabled) return;
+    const entries = pendingStorageWritesRef.current;
+    pendingStorageWritesRef.current = {};
+
+    Object.entries(entries).forEach(([key, value]) => {
+      try {
+        sessionStorage.setItem(key, value);
+      } catch {
+        // Ignore storage access failures (blocked/denied in some environments).
+      }
+    });
+  }, [enabled]);
+
+  const scheduleStorageWrite = useCallback(
+    (key: string, value: string): void => {
+      if (!enabled) return;
+      pendingStorageWritesRef.current[key] = value;
+
+      if (storageWriteTimeoutRef.current !== null) return;
+      storageWriteTimeoutRef.current = window.setTimeout(() => {
+        storageWriteTimeoutRef.current = null;
+        flushStorageWrites();
+      }, 0);
+    },
+    [enabled, flushStorageWrites]
+  );
+
   const flushPending = useCallback((): void => {
     if (!enabled) return;
     const pending = pendingUpdateRef.current;
     if (!pending) return;
 
     pendingUpdateRef.current = null;
-    setScrollTops[pending.tab](pending.top);
-    sessionStorage.setItem(storageKeys[pending.tab], String(pending.top));
-  }, [enabled, setScrollTops, storageKeys]);
+    startTransition(() => {
+      setScrollTops[pending.tab](pending.top);
+    });
+    scheduleStorageWrite(storageKeys[pending.tab], String(pending.top));
+  }, [enabled, scheduleStorageWrite, setScrollTops, storageKeys]);
 
   useEffect(() => {
     return () => {
@@ -82,9 +114,11 @@ export const useScrollPersistence = <T extends string>({
     clearFlushTimer();
     const top = scrollRef.current?.scrollTop ?? 0;
     pendingUpdateRef.current = null;
-    setScrollTops[activeTab](top);
-    sessionStorage.setItem(storageKeys[activeTab], String(top));
-  }, [activeTab, clearFlushTimer, enabled, scrollRef, setScrollTops, storageKeys]);
+    startTransition(() => {
+      setScrollTops[activeTab](top);
+    });
+    scheduleStorageWrite(storageKeys[activeTab], String(top));
+  }, [activeTab, clearFlushTimer, enabled, scheduleStorageWrite, scrollRef, setScrollTops, storageKeys]);
 
   const rememberScroll = useCallback(
     (tab: T): void => {
@@ -92,10 +126,12 @@ export const useScrollPersistence = <T extends string>({
       clearFlushTimer();
       const top = scrollRef.current?.scrollTop ?? 0;
       pendingUpdateRef.current = null;
-      setScrollTops[tab](top);
-      sessionStorage.setItem(storageKeys[tab], String(top));
+      startTransition(() => {
+        setScrollTops[tab](top);
+      });
+      scheduleStorageWrite(storageKeys[tab], String(top));
     },
-    [clearFlushTimer, enabled, scrollRef, setScrollTops, storageKeys]
+    [clearFlushTimer, enabled, scheduleStorageWrite, scrollRef, setScrollTops, storageKeys]
   );
 
   return { handleScroll, prepareForTabSwitch, rememberScroll };
