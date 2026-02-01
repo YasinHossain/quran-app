@@ -3,6 +3,41 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { isUiLanguageCode, UI_LANGUAGE_STORAGE_KEY } from '@/app/shared/i18n/uiLanguages';
 
 const PUBLIC_FILE = /\.[^/]+$/;
+const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
+
+const isPrefetchRequest = (request: NextRequest): boolean => {
+  // Next.js sets `x-middleware-prefetch` for router prefetches.
+  // Browsers may also include `Purpose`/`Sec-Purpose` for speculative prefetching.
+  const middlewarePrefetch = request.headers.get('x-middleware-prefetch');
+  if (middlewarePrefetch) return true;
+
+  const purpose = request.headers.get('purpose') ?? request.headers.get('sec-purpose');
+  if (purpose && purpose.toLowerCase() === 'prefetch') return true;
+
+  const nextRouterPrefetch = request.headers.get('next-router-prefetch');
+  if (nextRouterPrefetch) return true;
+
+  return false;
+};
+
+const syncUiLanguageCookie = (
+  request: NextRequest,
+  response: NextResponse,
+  locale: string
+): void => {
+  // Never mutate cookies on prefetch requests; it can cause "language flip-flops"
+  // (a stale locale-prefetch response overwriting the user's current choice).
+  if (isPrefetchRequest(request)) return;
+
+  const current = request.cookies.get(UI_LANGUAGE_STORAGE_KEY)?.value;
+  if (current === locale) return;
+
+  response.cookies.set(UI_LANGUAGE_STORAGE_KEY, locale, {
+    path: '/',
+    maxAge: ONE_YEAR_SECONDS,
+    sameSite: 'lax',
+  });
+};
 
 const stripRegion = (languageTag: string): string =>
   String(languageTag).trim().toLowerCase().split(/[-_]/)[0] ?? '';
@@ -60,11 +95,7 @@ export function proxy(request: NextRequest): NextResponse {
     // Canonicalize English: `/en/...` -> `/<...>` (no locale prefix for default locale).
     if (maybeLocale === 'en') {
       const response = NextResponse.redirect(url);
-      response.cookies.set(UI_LANGUAGE_STORAGE_KEY, maybeLocale, {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 365,
-        sameSite: 'lax',
-      });
+      syncUiLanguageCookie(request, response, maybeLocale);
       return response;
     }
 
@@ -76,11 +107,7 @@ export function proxy(request: NextRequest): NextResponse {
     requestHeaders.set('x-ui-language', maybeLocale);
 
     const response = NextResponse.rewrite(url, { request: { headers: requestHeaders } });
-    response.cookies.set(UI_LANGUAGE_STORAGE_KEY, maybeLocale, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365,
-      sameSite: 'lax',
-    });
+    syncUiLanguageCookie(request, response, maybeLocale);
     return response;
   }
 
@@ -91,11 +118,7 @@ export function proxy(request: NextRequest): NextResponse {
     requestHeaders.set('x-ui-language', locale);
 
     const response = NextResponse.next({ request: { headers: requestHeaders } });
-    response.cookies.set(UI_LANGUAGE_STORAGE_KEY, locale, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365,
-      sameSite: 'lax',
-    });
+    syncUiLanguageCookie(request, response, locale);
     return response;
   }
 
@@ -103,11 +126,7 @@ export function proxy(request: NextRequest): NextResponse {
   url.pathname = pathname === '/' ? `/${locale}` : `/${locale}${pathname}`;
 
   const response = NextResponse.redirect(url);
-  response.cookies.set(UI_LANGUAGE_STORAGE_KEY, locale, {
-    path: '/',
-    maxAge: 60 * 60 * 24 * 365,
-    sameSite: 'lax',
-  });
+  syncUiLanguageCookie(request, response, locale);
   return response;
 }
 

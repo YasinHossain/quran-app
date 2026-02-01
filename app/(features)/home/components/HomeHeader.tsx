@@ -86,7 +86,9 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
                         type="button"
                         onClick={() => {
                           if (selectedCode === language.code) return;
-                          const query = searchParams.toString();
+                          const nextParams = new URLSearchParams(searchParams.toString());
+                          nextParams.delete('__uiLanguage');
+                          const query = nextParams.toString();
                           const hash = typeof window !== 'undefined' ? window.location.hash : '';
                           const nextPath = setLocaleInPathnameForSwitch(pathname, language.code);
                           setUiLanguage(i18n, language.code);
