@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { ArabicFontPanel } from '@/app/(features)/surah/components/ArabicFontPanel';
 import { WordLanguagePanel } from '@/app/(features)/surah/components/WordLanguagePanel';
@@ -57,6 +57,32 @@ export const SettingsPanels = ({
   onTajweedRulesPanelClose,
   onCloseSidebar,
 }: SettingsPanelsProps): ReactElement => {
+  const [hasOpenedTranslationPanel, setHasOpenedTranslationPanel] = useState(false);
+  const [hasOpenedTafsirPanel, setHasOpenedTafsirPanel] = useState(false);
+  const [hasOpenedMushafPanel, setHasOpenedMushafPanel] = useState(false);
+  const [hasOpenedTajweedRulesPanel, setHasOpenedTajweedRulesPanel] = useState(false);
+
+  const isTranslationOpen = Boolean(isTranslationPanelOpen);
+  const isTafsirOpen = Boolean(isTafsirPanelOpen);
+  const isMushafOpen = Boolean(isMushafPanelOpen);
+  const isTajweedRulesOpen = Boolean(isTajweedRulesPanelOpen);
+
+  useEffect(() => {
+    if (isTranslationOpen) setHasOpenedTranslationPanel(true);
+  }, [isTranslationOpen]);
+
+  useEffect(() => {
+    if (isTafsirOpen) setHasOpenedTafsirPanel(true);
+  }, [isTafsirOpen]);
+
+  useEffect(() => {
+    if (isMushafOpen) setHasOpenedMushafPanel(true);
+  }, [isMushafOpen]);
+
+  useEffect(() => {
+    if (isTajweedRulesOpen) setHasOpenedTajweedRulesPanel(true);
+  }, [isTajweedRulesOpen]);
+
   return (
     <>
       <ArabicFontPanel
@@ -64,20 +90,20 @@ export const SettingsPanels = ({
         onClose={onArabicFontPanelClose}
         {...(onCloseSidebar ? { onCloseSidebar } : {})}
       />
-      {onTranslationPanelClose && (
+      {onTranslationPanelClose && (hasOpenedTranslationPanel || isTranslationOpen) ? (
         <TranslationPanel
-          isOpen={!!isTranslationPanelOpen}
+          isOpen={isTranslationOpen}
           onClose={onTranslationPanelClose}
           {...(onCloseSidebar ? { onCloseSidebar } : {})}
         />
-      )}
-      {onTafsirPanelClose && (
+      ) : null}
+      {onTafsirPanelClose && (hasOpenedTafsirPanel || isTafsirOpen) ? (
         <TafsirPanel
-          isOpen={!!isTafsirPanelOpen}
+          isOpen={isTafsirOpen}
           onClose={onTafsirPanelClose}
           {...(onCloseSidebar ? { onCloseSidebar } : {})}
         />
-      )}
+      ) : null}
       {onWordLanguagePanelClose && (
         <WordLanguagePanel
           isOpen={!!isWordLanguagePanelOpen}
@@ -85,23 +111,26 @@ export const SettingsPanels = ({
           {...(onCloseSidebar ? { onCloseSidebar } : {})}
         />
       )}
-      {onMushafPanelClose && mushafOptions && onMushafChange && (
+      {onMushafPanelClose &&
+      mushafOptions &&
+      onMushafChange &&
+      (hasOpenedMushafPanel || isMushafOpen) ? (
         <MushafPanel
-          isOpen={!!isMushafPanelOpen}
+          isOpen={isMushafOpen}
           onClose={onMushafPanelClose}
           options={mushafOptions}
           selectedId={selectedMushafId}
           onSelect={onMushafChange}
           {...(onCloseSidebar ? { onCloseSidebar } : {})}
         />
-      )}
-      {onTajweedRulesPanelClose && (
+      ) : null}
+      {onTajweedRulesPanelClose && (hasOpenedTajweedRulesPanel || isTajweedRulesOpen) ? (
         <TajweedRulesPanel
-          isOpen={!!isTajweedRulesPanelOpen}
+          isOpen={isTajweedRulesOpen}
           onClose={onTajweedRulesPanelClose}
           {...(onCloseSidebar ? { onCloseSidebar } : {})}
         />
-      )}
+      ) : null}
     </>
   );
 };
