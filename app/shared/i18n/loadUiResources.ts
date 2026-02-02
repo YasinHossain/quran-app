@@ -34,9 +34,25 @@ const IMPORTERS: UiImporters = {
   },
 };
 
+const COMMON_CACHE = new Map<UiLanguageCode, Promise<UiJson>>();
+
+export const loadUiCommonJson = async (language: UiLanguageCode): Promise<UiJson> => {
+  const cached = COMMON_CACHE.get(language);
+  if (cached) return cached;
+
+  const promise = IMPORTERS[language]
+    .common()
+    .catch((error) => {
+      COMMON_CACHE.delete(language);
+      throw error;
+    });
+  COMMON_CACHE.set(language, promise);
+  return promise;
+};
+
 const loadLanguageResources = async (language: UiLanguageCode): Promise<UiResourceLanguage> => {
   const importer = IMPORTERS[language];
-  const [translation, player] = await Promise.all([importer.common(), importer.player()]);
+  const [translation, player] = await Promise.all([loadUiCommonJson(language), importer.player()]);
 
   return { translation, player };
 };

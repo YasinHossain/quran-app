@@ -17,6 +17,7 @@ export const useScrollPositions = (): UseScrollPositionsReturn => {
 
   const setScrollPosition = useCallback((key: string, position: number) => {
     setScrollPositions((prev) => {
+      if (prev[key] === position) return prev;
       const next = { ...prev, [key]: position };
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('uiScrollPositions', JSON.stringify(next));

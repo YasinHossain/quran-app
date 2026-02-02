@@ -16,7 +16,7 @@ interface VerseProps {
 export const Verse = memo(function Verse({ verse }: VerseProps): JSX.Element {
   const { verseRef, isPlaying, isCurrent, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
     useVerseCard(verse);
-  const { resourceLanguagesMap } = useTranslationOptions();
+  const { resourceLanguagesMap } = useTranslationOptions({ enabled: false });
   const [isPlannerModalOpen, setPlannerModalOpen] = useState(false);
   const { verse_key, text_uthmani, translations } = verse;
 

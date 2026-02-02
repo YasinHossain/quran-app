@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 
-import { loadUiResources, resolveUiLanguageFromHeader } from '@/app/shared/i18n/loadUiResources';
+import { loadUiCommonJson, resolveUiLanguageFromHeader } from '@/app/shared/i18n/loadUiResources';
 import { localizeHref } from '@/app/shared/i18n/localeRouting';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { buildTextClasses } from '@/app/shared/design-system/card-tokens';
@@ -88,9 +88,13 @@ export async function SurahGridStaticServer({
 }: SurahGridStaticServerProps): Promise<React.JSX.Element> {
   const headerStore = await headers();
   const locale = resolveUiLanguageFromHeader(headerStore.get('x-ui-language'));
-  const resources = await loadUiResources(locale);
 
-  const translationRaw = resources[locale]?.['translation'] ?? resources['en']?.['translation'];
+  const [enCommon, localeCommon] = await Promise.all([
+    loadUiCommonJson('en'),
+    locale === 'en' ? Promise.resolve(null) : loadUiCommonJson(locale),
+  ]);
+
+  const translationRaw = (localeCommon ?? enCommon) as unknown;
   const translation = isRecord(translationRaw) ? (translationRaw as TranslationJson) : {};
   const surahNames = resolveSurahNames(translation);
   const versesLabel = resolveString(translation['verses']) ?? 'verses';

@@ -60,7 +60,7 @@ export function useVerseListing({
   const errorState = useVerseListingErrorState();
   const settingsState = useSettings();
   const audio = useAudio();
-  const translation = useTranslationOptions();
+  const translation = useTranslationOptions({ enabled: false });
 
   const stableTranslationIds = useStableTranslationIds(settingsState.settings);
   const wordLang = settingsState.settings.wordLang;
