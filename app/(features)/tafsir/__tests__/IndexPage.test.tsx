@@ -34,6 +34,6 @@ test('renders list of tafsir links', async () => {
   await renderPage();
   await waitFor(() => {
     const link = screen.getByText('Al-Fatihah').closest('a');
-    expect(link).toHaveAttribute('href', '/tafsir/1');
+    expect(link).toHaveAttribute('href', '/tafsir/1/1');
   });
 });
