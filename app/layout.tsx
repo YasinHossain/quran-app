@@ -6,7 +6,7 @@ import './fonts.css';
 import './globals.css';
 import { getUiLanguageDirection, isUiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import { loadUiResources } from '@/app/shared/i18n/loadUiResources';
-import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, absoluteUrl, getSiteUrl } from '@/lib/seo/site';
+import { GOOGLE_SITE_VERIFICATION, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, absoluteUrl, getSiteUrl } from '@/lib/seo/site';
 
 import { ClientProviders } from './providers/ClientProviders';
 import { TranslationProvider } from './providers/TranslationProvider';
@@ -85,6 +85,9 @@ export const metadata = {
     description: SITE_DESCRIPTION,
     images: ['/twitter-image'],
   },
+  ...(GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: GOOGLE_SITE_VERIFICATION } }
+    : {}),
 } satisfies Metadata;
 
 export default async function RootLayout({
