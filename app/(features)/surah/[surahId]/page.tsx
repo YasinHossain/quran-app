@@ -142,7 +142,9 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
       wordLang: language,
       perPage: INITIAL_VERSES_PER_PAGE,
     }),
-    Number.isFinite(surahId) ? getChapterServer(surahId) : Promise.resolve(undefined),
+    Number.isFinite(surahId)
+      ? getChapterServer(surahId).catch(() => undefined)
+      : Promise.resolve(undefined),
   ]);
 
   totalVerses = initialData.totalVerses;
