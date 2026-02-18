@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { isUiLanguageCode, UI_LANGUAGE_STORAGE_KEY } from '@/app/shared/i18n/uiLanguages';
+import { SITE_DOMAIN } from '@/lib/seo/site';
 
 const PUBLIC_FILE = /\.[^/]+$/;
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
@@ -75,8 +76,30 @@ const shouldBypassI18n = (pathname: string): boolean => {
   return PUBLIC_FILE.test(pathname);
 };
 
+const normalizePathname = (pathname: string): string => {
+  if (pathname.length <= 1) return pathname;
+  if (!pathname.endsWith('/')) return pathname;
+  return pathname.replace(/\/+$/, '');
+};
+
 export function proxy(request: NextRequest): NextResponse {
-  const { pathname } = request.nextUrl;
+  const url = request.nextUrl.clone();
+
+  // Canonical host: `www.` -> apex.
+  // Only apply to the production domain; preview domains should not redirect.
+  if (url.hostname.toLowerCase() === `www.${SITE_DOMAIN}`) {
+    url.hostname = SITE_DOMAIN;
+    return NextResponse.redirect(url, 308);
+  }
+
+  // Canonical path: strip trailing slashes (except `/`).
+  const normalizedPathname = normalizePathname(url.pathname);
+  if (normalizedPathname !== url.pathname) {
+    url.pathname = normalizedPathname;
+    return NextResponse.redirect(url, 308);
+  }
+
+  const { pathname } = url;
 
   if (shouldBypassI18n(pathname)) {
     return NextResponse.next();
@@ -122,7 +145,6 @@ export function proxy(request: NextRequest): NextResponse {
     return response;
   }
 
-  const url = request.nextUrl.clone();
   url.pathname = pathname === '/' ? `/${locale}` : `/${locale}${pathname}`;
 
   const response = NextResponse.redirect(url);

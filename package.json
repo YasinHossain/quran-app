@@ -73,7 +73,8 @@
     "start:chrome": "google-chrome --headless=new --remote-debugging-port=9222 --remote-debugging-address=0.0.0.0 --no-sandbox --disable-gpu > /dev/null 2>&1 &",
     "audit:deps": "npm audit --omit=dev --audit-level=high",
     "audit-styles": "eslint app src lib --quiet --rule token-rules/no-raw-color-classes:2 --rule token-rules/no-theme-conditionals:2",
-    "lhci": "lhci autorun --config=./lighthouserc.cjs"
+    "lhci": "lhci autorun --config=./lighthouserc.cjs",
+    "lhci:mobile": "lhci autorun --config=./lighthouserc.mobile.cjs"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",

@@ -88,6 +88,8 @@ export const WorkspaceReaderLayout = ({
       {shouldRenderMobileRight ? <div className="2xl:hidden">{mobileRight}</div> : null}
 
       <ThreeColumnWorkspace
+        reserveLeftSpace
+        reserveRightSpace
         left={resolvedDesktopLeft}
         center={
           <WorkspaceMain
