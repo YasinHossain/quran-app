@@ -12,7 +12,6 @@ import {
   localizeHref,
   stripLocaleFromPathname,
 } from '@/app/shared/i18n/localeRouting';
-import { isUiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { getTafsirReturnHref } from '@/app/shared/navigation/tafsirReturn';
 import { cn } from '@/lib/utils/cn';
@@ -148,7 +147,7 @@ export const Navigation = memo(function Navigation({
   const rawPathname = usePathname();
   const localeFromPath = getLocaleFromPathname(rawPathname);
   const { i18n, t } = useTranslation();
-  const locale = localeFromPath ?? (isUiLanguageCode(i18n.language) ? i18n.language : 'en');
+  const locale = localeFromPath ?? 'en';
   const pathname = pathnameOverride ?? rawPathname;
   const routePathname = stripLocaleFromPathname(pathname);
   const router = useRouter();

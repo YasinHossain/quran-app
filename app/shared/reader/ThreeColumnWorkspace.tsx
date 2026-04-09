@@ -24,6 +24,8 @@ interface ThreeColumnWorkspaceProps {
   left?: React.ReactNode;
   center: React.ReactNode;
   right?: React.ReactNode;
+  reserveLeftSpace?: boolean;
+  reserveRightSpace?: boolean;
   className?: string;
   leftContainerClassName?: string;
   rightContainerClassName?: string;
@@ -34,6 +36,8 @@ export function ThreeColumnWorkspace({
   left,
   center,
   right,
+  reserveLeftSpace,
+  reserveRightSpace,
   className,
   leftContainerClassName,
   rightContainerClassName,
@@ -44,8 +48,8 @@ export function ThreeColumnWorkspace({
   // - Sidebars use `position: fixed` to stay in place while main content scrolls
   // - Header slides up/down based on scroll direction
   const { isHidden } = useHeaderVisibility();
-  const hasLeftSidebar = Boolean(left);
-  const hasRightSidebar = Boolean(right);
+  const hasLeftSidebar = Boolean(left) || Boolean(reserveLeftSpace);
+  const hasRightSidebar = Boolean(right) || Boolean(reserveRightSpace);
   const [isXlUp, setIsXlUp] = useState(true);
   const [is2xlUp, setIs2xlUp] = useState(true);
 
@@ -133,7 +137,7 @@ export function ThreeColumnWorkspace({
           className={cn(
             'flex min-w-0 flex-1 flex-col',
             // Account for icon sidebar (64px) + left sidebar on xl screens
-            hasLeftSidebar && 'xl:ml-[var(--reader-sidebar-width-left)]',
+            hasLeftSidebar && 'xl:ml-reader-sidebar-left',
             hasRightSidebar && '2xl:mr-reader-sidebar-right',
             centerContainerClassName
           )}

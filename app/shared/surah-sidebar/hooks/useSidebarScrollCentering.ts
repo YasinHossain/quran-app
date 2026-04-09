@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { useScrollCentering } from '@/lib/hooks/useScrollCentering';
@@ -24,19 +24,29 @@ export const useSidebarScrollCentering = ({
 }: Options): ReturnType<typeof useScrollCentering<TabKey>> => {
   const { surahScrollTop, juzScrollTop, pageScrollTop } = useSidebar();
 
-  return useScrollCentering<TabKey>({
-    scrollRef,
-    activeTab,
-    selectedIds: {
+  const selectedIds = useMemo(
+    () => ({
       Surah: selectedSurahId,
       Juz: selectedJuzId,
       Page: selectedPageId,
-    },
-    scrollTops: {
+    }),
+    [selectedJuzId, selectedPageId, selectedSurahId]
+  );
+
+  const scrollTops = useMemo(
+    () => ({
       Surah: surahScrollTop,
       Juz: juzScrollTop,
       Page: pageScrollTop,
-    },
+    }),
+    [juzScrollTop, pageScrollTop, surahScrollTop]
+  );
+
+  return useScrollCentering<TabKey>({
+    scrollRef,
+    activeTab,
+    selectedIds,
+    scrollTops,
     isEnabled,
   });
 };

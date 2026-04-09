@@ -1,5 +1,13 @@
 import { isUiLanguageCode, type UiLanguageCode } from './uiLanguages';
 
+const normalizePathname = (pathname: string | null | undefined): string => {
+  if (typeof pathname !== 'string' || pathname.length === 0) {
+    return '/';
+  }
+
+  return pathname.startsWith('/') ? pathname : `/${pathname}`;
+};
+
 const splitHref = (href: string): { path: string; query: string; hash: string } => {
   const [beforeHash, hashPart] = href.split('#', 2);
   const [pathPart, queryPart] = (beforeHash ?? '').split('?', 2);
@@ -10,34 +18,37 @@ const splitHref = (href: string): { path: string; query: string; hash: string } 
   };
 };
 
-export const getLocaleFromPathname = (pathname: string): UiLanguageCode | null => {
-  const first = String(pathname).split('/')[1];
-  return first && isUiLanguageCode(first) ? first : null;
+export const getLocaleFromPathname = (pathname: string | null | undefined): UiLanguageCode | null => {
+  const safePathname = normalizePathname(pathname);
+  const first = safePathname.split('/')[1];
+  const normalized = first ? first.toLowerCase() : '';
+  return normalized && isUiLanguageCode(normalized) ? normalized : null;
 };
 
-export const stripLocaleFromPathname = (pathname: string): string => {
-  const locale = getLocaleFromPathname(pathname);
-  if (!locale) return pathname;
+export const stripLocaleFromPathname = (pathname: string | null | undefined): string => {
+  const safePathname = normalizePathname(pathname);
+  const locale = getLocaleFromPathname(safePathname);
+  if (!locale) return safePathname;
 
-  const rest = String(pathname).split('/').slice(2).join('/');
+  const rest = safePathname.split('/').slice(2).join('/');
   return rest ? `/${rest}` : '/';
 };
 
-export const setLocaleInPathname = (pathname: string, locale: UiLanguageCode): string => {
-  const cleanPath = String(pathname || '/').startsWith('/') ? String(pathname || '/') : `/${pathname}`;
+export const setLocaleInPathname = (
+  pathname: string | null | undefined,
+  locale: UiLanguageCode
+): string => {
+  const cleanPath = normalizePathname(pathname);
   const withoutLocale = stripLocaleFromPathname(cleanPath);
   if (locale === 'en') return withoutLocale;
   return withoutLocale === '/' ? `/${locale}` : `/${locale}${withoutLocale}`;
 };
 
-export const setLocaleInPathnameForSwitch = (pathname: string, locale: UiLanguageCode): string => {
-  const cleanPath = String(pathname || '/').startsWith('/') ? String(pathname || '/') : `/${pathname}`;
-  const withoutLocale = stripLocaleFromPathname(cleanPath);
-
-  // For imperative language switching to English, route via `/en/...` so the server can
-  // persist the selection and then canonicalize back to non-prefixed English routes.
-  if (locale === 'en') return withoutLocale === '/' ? '/en' : `/en${withoutLocale}`;
-  return withoutLocale === '/' ? `/${locale}` : `/${locale}${withoutLocale}`;
+export const setLocaleInPathnameForSwitch = (
+  pathname: string | null | undefined,
+  locale: UiLanguageCode
+): string => {
+  return setLocaleInPathname(pathname, locale);
 };
 
 export const localizeHref = (href: string, locale: UiLanguageCode): string => {

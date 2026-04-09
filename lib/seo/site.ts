@@ -1,8 +1,14 @@
 export const SITE_DOMAIN = 'appquran.com';
-export const SITE_NAME = 'AppQuran';
+export const SITE_NAME = 'Al Quran';
 
 export const SITE_DESCRIPTION =
-  'AppQuran is a fast, modern Quran app to read, listen, and study the Holy Quran with translations, tafsir, and audio recitations.';
+  'Al Quran is a fast, modern Quran app to read, listen, and study the Holy Quran with translations, tafsir, and audio recitations.';
+
+/**
+ * Google Search Console verification code.
+ * Set via environment variable: NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+ */
+export const GOOGLE_SITE_VERIFICATION = process.env['NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION'] || '';
 
 export const SITE_KEYWORDS: ReadonlyArray<string> = [
   'AppQuran',
@@ -15,6 +21,15 @@ export const SITE_KEYWORDS: ReadonlyArray<string> = [
   'Quran audio',
   'Quran recitation',
   'Holy Quran',
+  'Surah Al-Fatiha',
+  'Surah Al-Baqarah',
+  'Surah Yasin',
+  'Surah Al-Mulk',
+  'Surah Ar-Rahman',
+  'Quran online free',
+  'listen Quran online',
+  'Quran with translation',
+  'Quran tafsir online',
 ];
 
 export function isProductionDeployment(): boolean {

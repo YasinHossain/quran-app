@@ -86,7 +86,9 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
   const handleLanguageChange = useCallback(
     (languageCode: UiLanguageCode): void => {
       if (languageCode === currentLanguage) return;
-      const query = searchParams.toString();
+      const nextParams = new URLSearchParams(searchParams.toString());
+      nextParams.delete('__uiLanguage');
+      const query = nextParams.toString();
       const hash = typeof window !== 'undefined' ? window.location.hash : '';
       const nextPath = setLocaleInPathnameForSwitch(pathname, languageCode);
       setUiLanguage(i18n, languageCode);
