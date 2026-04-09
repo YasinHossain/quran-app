@@ -1,11 +1,11 @@
-import type { Metadata } from 'next';
-
 import { getTafsirVersePageDataServer } from '@/lib/api/server';
 import { getChapterServer } from '@/lib/api/server';
 import { SITE_NAME, absoluteUrl } from '@/lib/seo/site';
 import { ensureLanguageCode } from '@/lib/text/languageCodes';
 
 import TafsirVersePageClient from './components/TafsirVersePageClient';
+
+import type { Metadata } from 'next';
 
 interface TafsirVersePageProps {
   params: Promise<{ surahId: string; ayahId: string }>;
@@ -18,9 +18,13 @@ export async function generateMetadata({ params }: TafsirVersePageProps): Promis
 
   const canonicalPath = `/tafsir/${encodeURIComponent(rawSurahId)}/${encodeURIComponent(rawAyahId)}`;
   const verseKey =
-    Number.isFinite(surahId) && Number.isFinite(ayahId) ? `${surahId}:${ayahId}` : `${rawSurahId}:${rawAyahId}`;
+    Number.isFinite(surahId) && Number.isFinite(ayahId)
+      ? `${surahId}:${ayahId}`
+      : `${rawSurahId}:${rawAyahId}`;
 
-  const chapter = Number.isFinite(surahId) ? await getChapterServer(surahId) : undefined;
+  const chapter = Number.isFinite(surahId)
+    ? await getChapterServer(surahId).catch(() => undefined)
+    : undefined;
   const chapterName = chapter?.name_simple || `Surah ${rawSurahId}`;
 
   const title = `Tafsir of ${chapterName} ${verseKey}`;

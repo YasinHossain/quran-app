@@ -6,16 +6,17 @@
  * shell never flashes on the homepage.
  */
 
-import type { Metadata } from 'next';
-
 import { getChaptersServer, getVersesOfDayServer } from '@/lib/api/server';
 import { SITE_DESCRIPTION, SITE_NAME, absoluteUrl } from '@/lib/seo/site';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import { HomePageClient } from './(features)/home/components/HomePageClient';
 import { SurahGridStaticServer } from './(features)/home/components/SurahGridStaticServer';
 import { HeaderVisibilityProvider } from './(features)/layout/context/HeaderVisibilityContext';
 import { Navigation } from './shared/IconSidebar';
 import { ModernLayout } from './shared/navigation/ModernLayout';
+
+import type { Metadata } from 'next';
 
 // This page reads user preferences (theme + UI language) from cookies in `app/layout.tsx`.
 // Marking it as static would cause the server HTML to always render with defaults (English + light),
@@ -37,7 +38,13 @@ export const metadata: Metadata = {
 };
 
 export default async function Page(): Promise<React.JSX.Element> {
-  const [chapters, versesOfDay] = await Promise.all([getChaptersServer(), getVersesOfDayServer()]);
+  const [chapters, versesOfDay] = await Promise.all([
+    getChaptersServer().catch((error) => {
+      logger.warn('Failed to load homepage chapters', undefined, error as Error);
+      return [];
+    }),
+    getVersesOfDayServer(),
+  ]);
 
   return (
     <HeaderVisibilityProvider>

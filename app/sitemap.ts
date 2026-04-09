@@ -1,6 +1,6 @@
-import type { MetadataRoute } from 'next';
-
 import { absoluteUrl } from '@/lib/seo/site';
+
+import type { MetadataRoute } from 'next';
 
 /**
  * Stable last-modified date — only update this when site content actually changes.
@@ -23,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/', priority: 1.0, changeFrequency: 'daily' },
     { path: '/surah', priority: 0.9, changeFrequency: 'weekly' },
     { path: '/tafsir', priority: 0.8, changeFrequency: 'weekly' },
+    { path: '/juz', priority: 0.6, changeFrequency: 'monthly' },
 
     // All 114 surahs — highest content priority
     ...buildNumericRoutes('/surah', 1, 114).map((path) => ({
@@ -57,4 +58,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority,
   }));
 }
-

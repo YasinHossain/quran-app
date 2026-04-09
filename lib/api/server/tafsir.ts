@@ -4,11 +4,17 @@ import { getVerseByKey } from '@/lib/api/verses';
 import { GetTafsirContentUseCase } from '@/src/application/use-cases/GetTafsirContent';
 import { GetTafsirResourcesUseCase } from '@/src/application/use-cases/GetTafsirResources';
 import { container } from '@/src/infrastructure/di/Container';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import type { TafsirResource, Verse } from '@/types';
 
 type TafsirResourceResult = { id: number; name: string; lang: string };
+
+function normaliseError(error: unknown): Error {
+  if (error instanceof Error) return error;
+  return new Error(typeof error === 'string' ? error : 'Unknown error');
+}
 
 const getTafsirResourcesServer = unstable_cache(
   async (): Promise<TafsirResourceResult[]> => {
@@ -63,18 +69,40 @@ export async function getTafsirVersePageDataServer(options: {
   const translationIdsKey = options.translationIds.join(',');
   const tajweed = options.tajweed ?? false;
 
-  const [verse, tafsirHtml, resources] = await Promise.all([
+  const [verseResult, tafsirHtmlResult, resourcesResult] = await Promise.allSettled([
     getVerseByKeyServer(options.verseKey, translationIdsKey, options.wordLang, tajweed),
     getTafsirHtmlServer(options.verseKey, options.tafsirId),
     getTafsirResourcesServer(),
   ]);
 
-  const tafsirResource = resources.find((t) => t.id === options.tafsirId);
+  if (verseResult.status !== 'fulfilled') {
+    throw normaliseError(verseResult.reason);
+  }
+
+  if (tafsirHtmlResult.status === 'rejected') {
+    logger.error(
+      'Failed to fetch tafsir HTML',
+      { verseKey: options.verseKey, tafsirId: options.tafsirId },
+      normaliseError(tafsirHtmlResult.reason)
+    );
+  }
+
+  if (resourcesResult.status === 'rejected') {
+    logger.error(
+      'Failed to fetch tafsir resources',
+      { verseKey: options.verseKey, tafsirId: options.tafsirId },
+      normaliseError(resourcesResult.reason)
+    );
+  }
+
+  const tafsirResource =
+    resourcesResult.status === 'fulfilled'
+      ? resourcesResult.value.find((t) => t.id === options.tafsirId)
+      : undefined;
 
   return {
-    verse,
-    tafsirHtml,
+    verse: verseResult.value,
+    tafsirHtml: tafsirHtmlResult.status === 'fulfilled' ? tafsirHtmlResult.value : '',
     tafsirResource,
   };
 }
-

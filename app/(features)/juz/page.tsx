@@ -1,18 +1,24 @@
 import Link from 'next/link';
-import type { Metadata } from 'next';
 
 import { getAllJuzs } from '@/app/shared/navigation/datasets';
 import { SITE_NAME, absoluteUrl } from '@/lib/seo/site';
 
+import type { Metadata } from 'next';
+
 export const metadata: Metadata = {
   title: 'Juz',
-  description: `Browse Quran by Juz on ${SITE_NAME}.`,
+  description: `Browse all 30 juz of the Holy Quran on ${SITE_NAME}.`,
   alternates: {
     canonical: absoluteUrl('/juz'),
   },
-  robots: {
-    index: false,
-    follow: true,
+  openGraph: {
+    title: `Juz | ${SITE_NAME}`,
+    description: `Browse all 30 juz of the Holy Quran on ${SITE_NAME}.`,
+    url: absoluteUrl('/juz'),
+  },
+  twitter: {
+    title: `Juz | ${SITE_NAME}`,
+    description: `Browse all 30 juz of the Holy Quran on ${SITE_NAME}.`,
   },
 };
 
