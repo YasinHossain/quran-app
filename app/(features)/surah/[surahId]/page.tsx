@@ -3,9 +3,9 @@ import { getSurahInitialDataServer } from '@/lib/api/server';
 import { getChapterServer } from '@/lib/api/server';
 import { SITE_NAME, absoluteUrl } from '@/lib/seo/site';
 import { ensureLanguageCode } from '@/lib/text/languageCodes';
-import type { Metadata } from 'next';
 
-import type { Chapter, Verse } from '@/types';
+import type { Chapter } from '@/types';
+import type { Metadata } from 'next';
 
 // Cache this page for 1 hour - makes subsequent visits instant
 // Translation changes are handled client-side by SWR
@@ -23,7 +23,11 @@ interface SurahPageProps {
 /**
  * Build a rich, keyword-bearing meta description from chapter data.
  */
-function buildSurahDescription(chapter: Chapter | undefined, rawId: string, surahId: number): string {
+function buildSurahDescription(
+  chapter: Chapter | undefined,
+  rawId: string,
+  surahId: number
+): string {
   if (!chapter) {
     return `Read Surah ${rawId} from the Holy Quran with translations, tafsir, and audio recitation on ${SITE_NAME}.`;
   }
@@ -41,7 +45,11 @@ function buildSurahDescription(chapter: Chapter | undefined, rawId: string, sura
  * - BreadcrumbList: enables breadcrumb display in search results
  * - Chapter: helps Google understand the content hierarchy
  */
-function buildSurahJsonLd(chapter: Chapter | undefined, rawId: string, surahId: number) {
+function buildSurahJsonLd(
+  chapter: Chapter | undefined,
+  rawId: string,
+  surahId: number
+): Array<Record<string, unknown>> {
   const chapterName = chapter?.name_simple || `Surah ${rawId}`;
   const canonicalUrl = absoluteUrl(`/surah/${Number.isFinite(surahId) ? surahId : rawId}`);
 
@@ -92,9 +100,13 @@ export async function generateMetadata({ params }: SurahPageProps): Promise<Meta
   const resolvedParams = await params;
   const rawId = resolvedParams.surahId;
   const surahId = Number.parseInt(String(rawId), 10);
-  const canonicalPath = Number.isFinite(surahId) ? `/surah/${surahId}` : `/surah/${encodeURIComponent(rawId)}`;
+  const canonicalPath = Number.isFinite(surahId)
+    ? `/surah/${surahId}`
+    : `/surah/${encodeURIComponent(rawId)}`;
 
-  const chapter = Number.isFinite(surahId) ? await getChapterServer(surahId) : undefined;
+  const chapter = Number.isFinite(surahId)
+    ? await getChapterServer(surahId).catch(() => undefined)
+    : undefined;
   const chapterName = chapter?.name_simple || `Surah ${rawId}`;
   const title = chapter ? `Surah ${chapterName} (${surahId})` : chapterName;
   const description = buildSurahDescription(chapter, rawId, surahId);
@@ -130,9 +142,6 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
   const DEFAULT_INITIAL_WORD_LANG = 'en';
   const INITIAL_VERSES_PER_PAGE = 20;
 
-  let totalVerses: number | undefined;
-  let initialVerses: Verse[] | undefined;
-
   const language = ensureLanguageCode(DEFAULT_INITIAL_WORD_LANG);
 
   const [initialData, chapter] = await Promise.all([
@@ -147,8 +156,7 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
       : Promise.resolve(undefined),
   ]);
 
-  totalVerses = initialData.totalVerses;
-  initialVerses = initialData.initialVerses;
+  const { totalVerses, initialVerses } = initialData;
 
   const jsonLd = buildSurahJsonLd(chapter, rawId, surahId);
 
@@ -173,4 +181,3 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
 }
 
 export default SurahPage;
-
