@@ -1,13 +1,22 @@
 'use client';
 
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+import { UI_LANGUAGE_QUERY_PARAM } from '@/app/shared/i18n/languageRegistry';
+import {
+  getLocaleFromPathname,
+  setLocaleInPathnameForSwitch,
+} from '@/app/shared/i18n/localeRouting';
 import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
-import { UI_LANGUAGES, isUiLanguageCode, type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
+import {
+  DEFAULT_UI_LANGUAGE,
+  UI_LANGUAGES,
+  isUiLanguageCode,
+  type UiLanguageCode,
+} from '@/app/shared/i18n/uiLanguages';
 import { ensureUiResourcesLoaded } from '@/app/shared/i18n/uiResourcesClient';
-import { getLocaleFromPathname, setLocaleInPathnameForSwitch } from '@/app/shared/i18n/localeRouting';
 import { cn } from '@/lib/utils/cn';
 
 interface LanguageButtonProps {
@@ -72,7 +81,9 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
     }
 
     const initial =
-      typeof i18n?.language === 'string' && isUiLanguageCode(i18n.language) ? i18n.language : 'en';
+      typeof i18n?.language === 'string' && isUiLanguageCode(i18n.language)
+        ? i18n.language
+        : DEFAULT_UI_LANGUAGE;
     setCurrentLanguage(initial);
   }, [i18n, pathname]);
 
@@ -87,7 +98,7 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
     (languageCode: UiLanguageCode): void => {
       if (languageCode === currentLanguage) return;
       const nextParams = new URLSearchParams(searchParams.toString());
-      nextParams.delete('__uiLanguage');
+      nextParams.delete(UI_LANGUAGE_QUERY_PARAM);
       const query = nextParams.toString();
       const hash = typeof window !== 'undefined' ? window.location.hash : '';
       const nextPath = setLocaleInPathnameForSwitch(pathname, languageCode);

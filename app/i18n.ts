@@ -1,13 +1,17 @@
 import i18next, { type i18n as I18nInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import { isUiLanguageCode, type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
+import {
+  DEFAULT_UI_LANGUAGE,
+  isUiLanguageCode,
+  type UiLanguageCode,
+} from '@/app/shared/i18n/uiLanguages';
 import { formatNumber } from '@/lib/text/localizeNumbers';
 
 import type { Resource } from 'i18next';
 
 export function resolveInitialUiLanguage(value: string | undefined | null): UiLanguageCode {
-  return value && isUiLanguageCode(value) ? value : 'en';
+  return value && isUiLanguageCode(value) ? value : DEFAULT_UI_LANGUAGE;
 }
 
 // Some Jest tests mock `react-i18next` without providing `initReactI18next`.

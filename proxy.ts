@@ -1,6 +1,13 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { isUiLanguageCode, UI_LANGUAGE_STORAGE_KEY } from '@/app/shared/i18n/uiLanguages';
+import { UI_LANGUAGE_HEADER, UI_LANGUAGE_QUERY_PARAM } from '@/app/shared/i18n/languageRegistry';
+import {
+  DEFAULT_UI_LANGUAGE,
+  isUiLanguageCode,
+  resolveUiLanguageTag,
+  UI_LANGUAGE_STORAGE_KEY,
+  type UiLanguageCode,
+} from '@/app/shared/i18n/uiLanguages';
 import { SITE_DOMAIN } from '@/lib/seo/site';
 
 const PUBLIC_FILE = /\.[^/]+$/;
@@ -40,31 +47,25 @@ const syncUiLanguageCookie = (
   });
 };
 
-const stripRegion = (languageTag: string): string =>
-  String(languageTag).trim().toLowerCase().split(/[-_]/)[0] ?? '';
-
-const getPreferredLocale = (request: NextRequest): string => {
+/**
+ * Language for an unprefixed URL: the saved cookie, then Accept-Language, then the default.
+ * Crawlers send neither, so they always get the default language with a 200.
+ */
+const getPreferredLocale = (request: NextRequest): UiLanguageCode => {
   const fromCookie = request.cookies.get(UI_LANGUAGE_STORAGE_KEY)?.value;
   if (fromCookie && isUiLanguageCode(fromCookie)) {
     return fromCookie;
   }
 
   const acceptLanguage = request.headers.get('accept-language');
-  if (!acceptLanguage) return 'en';
+  if (!acceptLanguage) return DEFAULT_UI_LANGUAGE;
 
-  const candidates = acceptLanguage
-    .split(',')
-    .map((part) => part.split(';')[0] ?? '')
-    .map(stripRegion)
-    .filter(Boolean);
-
-  for (const candidate of candidates) {
-    if (isUiLanguageCode(candidate)) {
-      return candidate;
-    }
+  for (const part of acceptLanguage.split(',')) {
+    const candidate = resolveUiLanguageTag(part.split(';')[0]);
+    if (candidate) return candidate;
   }
 
-  return 'en';
+  return DEFAULT_UI_LANGUAGE;
 };
 
 const shouldBypassI18n = (pathname: string): boolean => {
@@ -115,30 +116,31 @@ export function proxy(request: NextRequest): NextResponse {
     const url = request.nextUrl.clone();
     url.pathname = strippedPath === '' ? '/' : strippedPath;
 
-    // Canonicalize English: `/en/...` -> `/<...>` (no locale prefix for default locale).
-    if (maybeLocale === 'en') {
-      const response = NextResponse.redirect(url);
+    // Canonicalize the default language: `/en/...` -> `/...` (permanent; no prefix for it).
+    if (maybeLocale === DEFAULT_UI_LANGUAGE) {
+      const response = NextResponse.redirect(url, 308);
       syncUiLanguageCookie(request, response, maybeLocale);
       return response;
     }
 
     // Important: make the rewrite destination unique per locale so Next's
     // client/router caches don't accidentally reuse RSC payloads across locales.
-    url.searchParams.set('__uiLanguage', maybeLocale);
+    url.searchParams.set(UI_LANGUAGE_QUERY_PARAM, maybeLocale);
 
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set('x-ui-language', maybeLocale);
+    requestHeaders.set(UI_LANGUAGE_HEADER, maybeLocale);
 
     const response = NextResponse.rewrite(url, { request: { headers: requestHeaders } });
     syncUiLanguageCookie(request, response, maybeLocale);
     return response;
   }
 
-  // No locale prefix -> redirect to preferred locale.
+  // No locale prefix: serve the default language, or send a returning/other-language user to
+  // their language with a temporary redirect (it depends on the visitor, not the URL).
   const locale = getPreferredLocale(request);
-  if (locale === 'en') {
+  if (locale === DEFAULT_UI_LANGUAGE) {
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set('x-ui-language', locale);
+    requestHeaders.set(UI_LANGUAGE_HEADER, locale);
 
     const response = NextResponse.next({ request: { headers: requestHeaders } });
     syncUiLanguageCookie(request, response, locale);

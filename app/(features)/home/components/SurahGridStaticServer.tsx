@@ -1,9 +1,10 @@
 import { headers } from 'next/headers';
 
+import { buildTextClasses } from '@/app/shared/design-system/card-tokens';
+import { UI_LANGUAGE_HEADER } from '@/app/shared/i18n/languageRegistry';
 import { loadUiCommonJson, resolveUiLanguageFromHeader } from '@/app/shared/i18n/loadUiResources';
 import { localizeHref } from '@/app/shared/i18n/localeRouting';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
-import { buildTextClasses } from '@/app/shared/design-system/card-tokens';
 import { renderCSS } from '@/app/shared/ui/base-card/renderers.css-renderer';
 import { useBaseCard as getBaseCard } from '@/app/shared/ui/base-card.utils';
 import { formatNumber } from '@/lib/text/localizeNumbers';
@@ -21,7 +22,8 @@ type TranslationJson = Record<string, unknown>;
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 
-const resolveString = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
+const resolveString = (value: unknown): string | undefined =>
+  typeof value === 'string' ? value : undefined;
 
 const resolveSurahNames = (translation: TranslationJson): Record<string, string> => {
   const surahNames = translation['surah_names'];
@@ -87,7 +89,7 @@ export async function SurahGridStaticServer({
   className,
 }: SurahGridStaticServerProps): Promise<React.JSX.Element> {
   const headerStore = await headers();
-  const locale = resolveUiLanguageFromHeader(headerStore.get('x-ui-language'));
+  const locale = resolveUiLanguageFromHeader(headerStore.get(UI_LANGUAGE_HEADER));
 
   const [enCommon, localeCommon] = await Promise.all([
     loadUiCommonJson('en'),

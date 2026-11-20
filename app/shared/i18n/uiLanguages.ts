@@ -1,26 +1,44 @@
+import {
+  DEFAULT_UI_LANGUAGE,
+  ENABLED_LANGUAGES,
+  getLanguageDefinition,
+  type UiLanguageCode,
+} from './languageRegistry';
+
+export type { UiLanguageCode } from './languageRegistry';
+export { DEFAULT_UI_LANGUAGE };
+
 export const UI_LANGUAGE_STORAGE_KEY = 'ui-language';
 
-export const UI_LANGUAGES = [
-  { code: 'en', label: 'English', nativeLabel: 'English' },
-  { code: 'bn', label: 'Bangla', nativeLabel: 'বাংলা' },
-  { code: 'ar', label: 'Arabic', nativeLabel: 'العربية' },
-  { code: 'ur', label: 'Urdu', nativeLabel: 'اردو' },
-  { code: 'hi', label: 'Hindi', nativeLabel: 'हिन्दी' },
-] as const;
-
-export type UiLanguageCode = (typeof UI_LANGUAGES)[number]['code'];
+/** Enabled UI languages, in picker order (derived from `languageRegistry`). */
+export const UI_LANGUAGES: ReadonlyArray<{
+  code: UiLanguageCode;
+  label: string;
+  nativeLabel: string;
+}> = ENABLED_LANGUAGES.map((language) => ({
+  code: language.code,
+  label: language.englishName,
+  nativeLabel: language.nativeName,
+}));
 
 export function isUiLanguageCode(value: string): value is UiLanguageCode {
   return UI_LANGUAGES.some((language) => language.code === value);
 }
 
-const RTL_LANGUAGES: ReadonlySet<UiLanguageCode> = new Set(['ar', 'ur']);
-
 export function getUiLanguageDirection(language: UiLanguageCode): 'ltr' | 'rtl' {
-  return RTL_LANGUAGES.has(language) ? 'rtl' : 'ltr';
+  return getLanguageDefinition(language).dir;
 }
 
 export function getUiLanguageLabel(code: string): string {
   const found = UI_LANGUAGES.find((language) => language.code === code);
   return found?.nativeLabel ?? code;
+}
+
+/** Normalises a header, cookie or Accept-Language tag (`bn-BD` -> `bn`) to an enabled language. */
+export function resolveUiLanguageTag(value: string | null | undefined): UiLanguageCode | null {
+  const normalized = String(value ?? '')
+    .trim()
+    .toLowerCase()
+    .split(/[-_]/)[0];
+  return normalized && isUiLanguageCode(normalized) ? normalized : null;
 }
