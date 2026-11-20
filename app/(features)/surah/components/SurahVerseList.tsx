@@ -11,7 +11,6 @@ import { useAdaptiveViewportBy } from '@/app/shared/hooks/useAdaptiveViewportBy'
 import { LoadingStatus } from '@/app/shared/LoadingStatus';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { ReaderResourceNavigation } from '@/app/shared/reader/ReaderResourceNavigation';
-import { PrerenderedVerseList } from '@/app/shared/reader/ReaderServerData';
 import { Spinner } from '@/app/shared/Spinner';
 
 import { SurahNavigation } from './SurahNavigation';
@@ -22,7 +21,8 @@ import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVers
 import type { Verse } from '@/types';
 
 const SCROLL_OFFSET_TOP_PX = 65;
-const INFINITE_INITIAL_ITEM_COUNT = 1;
+// Rows rendered on the server and for the first client frame (as in the surah list).
+const INITIAL_ITEM_COUNT = 6;
 
 // Helps prevent a "footer flash" on initial load with `useWindowScroll`, where the end-of-list
 // navigation can briefly appear in the viewport before Virtuoso has enough measurements.
@@ -226,7 +226,10 @@ function QuranComList({
     [verseListing.settings.arabicFontSize, verseListing.settings.translationFontSize]
   );
   // Render enough initial items to stabilize measurements without fetching beyond the first API page.
-  const initialItemCount = Math.min(totalVerses, Math.max(1, Math.min(6, verseListing.perPage)));
+  const initialItemCount = Math.min(
+    totalVerses,
+    Math.max(1, Math.min(INITIAL_ITEM_COUNT, verseListing.perPage))
+  );
   const hasLoadedAnyPage = Object.keys(verseListing.apiPageToVersesMap).length > 0;
 
   useEffect(() => {
@@ -292,8 +295,6 @@ function QuranComList({
         computeItemKey={(index) => `${verseListing.resourceId}:${index + 1}`}
         itemContent={(index) => <QuranComVerseRow verseIdx={index} verseListing={verseListing} />}
       />
-      {/* Server HTML: the rest of the surah as text after the rows Virtuoso renders (until hydration). */}
-      {verseListing.initialVerses?.length ? <PrerenderedVerseList skip={initialItemCount} /> : null}
       {hasLoadedAnyPage ? (
         <VerseListEndSection
           resourceKind={resourceKind}
@@ -369,16 +370,12 @@ function InfiniteList({
         ref={virtuosoRef}
         useWindowScroll
         data={verseListing.verses}
-        initialItemCount={INFINITE_INITIAL_ITEM_COUNT}
+        initialItemCount={Math.min(verseListing.verses.length, INITIAL_ITEM_COUNT)}
         increaseViewportBy={increaseViewportBy}
         defaultItemHeight={defaultItemHeight}
         computeItemKey={(index, verse) => `${verse.verse_key}:${verse.id}:${index}`}
         itemContent={(_index, verse) => <VerseComponent verse={verse} />}
       />
-      {/* Server HTML: the remaining verses as text after the row Virtuoso renders (until hydration). */}
-      {verseListing.initialVerses?.length ? (
-        <PrerenderedVerseList skip={INFINITE_INITIAL_ITEM_COUNT} />
-      ) : null}
       {!verseListing.isReachingEnd ? (
         <LoadMoreFooter
           loadMoreRef={verseListing.loadMoreRef}
@@ -386,13 +383,12 @@ function InfiniteList({
           hasVerses={verseListing.verses.length > 0}
         />
       ) : null}
-      {verseListing.isReachingEnd ? (
-        <VerseListEndSection
-          resourceKind={resourceKind}
-          resourceId={verseListing.resourceId}
-          surahId={surahId}
-        />
-      ) : null}
+      {/* Always rendered (below the load-more sentinel) so previous/next links are crawlable. */}
+      <VerseListEndSection
+        resourceKind={resourceKind}
+        resourceId={verseListing.resourceId}
+        surahId={surahId}
+      />
     </div>
   );
 }

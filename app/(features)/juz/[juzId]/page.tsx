@@ -1,4 +1,5 @@
 import { getAllJuzs } from '@/app/shared/navigation/datasets';
+import { ReaderFullText, buildFullTextTitle } from '@/app/shared/reader/ReaderFullText';
 import { ReaderServerDataProvider } from '@/app/shared/reader/ReaderServerData';
 import { getJuzInitialDataServer, getPrerenderedVersesServer } from '@/lib/api/server';
 import { SITE_NAME, absoluteUrl } from '@/lib/seo/site';
@@ -73,7 +74,7 @@ export default async function Page({
       wordLang: DEFAULT_WORD_LANG,
       perPage: INITIAL_VERSES_PER_PAGE,
     }),
-    // Text of every verse for the server HTML; the interactive list is virtualized.
+    // Text of every verse for the full-text section; the interactive list is virtualized.
     isValidJuzId
       ? getPrerenderedVersesServer({
           group: 'by_juz',
@@ -85,7 +86,16 @@ export default async function Page({
 
   return (
     <div className="min-h-screen bg-background">
-      <ReaderServerDataProvider verses={prerenderedVerses}>
+      <ReaderServerDataProvider
+        fullText={
+          prerenderedVerses?.length ? (
+            <ReaderFullText
+              title={buildFullTextTitle(`Juz ${numericJuzId}`, prerenderedVerses)}
+              verses={prerenderedVerses}
+            />
+          ) : null
+        }
+      >
         <JuzClient
           juzId={juzId}
           {...(initialData.initialVerses ? { initialVerses: initialData.initialVerses } : {})}

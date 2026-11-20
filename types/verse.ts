@@ -36,11 +36,17 @@ export interface Verse {
 }
 
 /**
- * Text-only verse used for server-rendered reader HTML (crawlers and pre-hydration readers).
+ * Text-only verse for the reader's server-rendered full-text section.
  * Translation HTML is already sanitized and stripped of footnote markers.
  */
 export interface PrerenderedVerse {
   verseKey: string;
   arabic: string;
-  translations: Array<{ resourceId: number; html: string }>;
+  translations: Array<{
+    resourceId: number;
+    html: string;
+    resourceName?: string | undefined;
+    /** BCP 47 code for the `lang` attribute, when the API language is known. */
+    languageCode?: string | undefined;
+  }>;
 }

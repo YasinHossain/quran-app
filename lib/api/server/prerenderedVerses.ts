@@ -1,13 +1,14 @@
 import { unstable_cache } from 'next/cache';
 
 import { apiFetch } from '@/lib/api/client';
+import { toLanguageCode } from '@/lib/text/languageCodes';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import type { PrerenderedVerse } from '@/types';
 
 /**
- * Lightweight, text-only verse data for server-rendered reader HTML.
+ * Lightweight, text-only verse data for the reader's full-text section.
  *
  * The interactive reader still loads full verses (words, audio, etc.) page by page on the
  * client. This fetch only returns what crawlers and no-JS readers need: the verse key, the
@@ -19,7 +20,12 @@ type VerseGroup = 'by_chapter' | 'by_juz';
 interface TextOnlyApiVerse {
   verse_key: string;
   text_uthmani?: string;
-  translations?: Array<{ resource_id: number; text: string }>;
+  translations?: Array<{
+    resource_id: number;
+    text: string;
+    resource_name?: string;
+    language_name?: string;
+  }>;
 }
 
 interface TextOnlyApiResponse {
@@ -48,6 +54,10 @@ function toPrerenderedVerse(verse: TextOnlyApiVerse): PrerenderedVerse {
       resourceId: translation.resource_id,
       // Footnote markers point at notes we do not render here; drop them so the text reads cleanly.
       html: sanitizeHtml(translation.text.replace(FOOTNOTE_REGEX, '')).trim(),
+      ...(translation.resource_name ? { resourceName: translation.resource_name } : {}),
+      ...(toLanguageCode(translation.language_name)
+        ? { languageCode: toLanguageCode(translation.language_name) }
+        : {}),
     })),
   };
 }
@@ -63,7 +73,9 @@ function fetchTextPage(
     {
       words: 'false',
       fields: 'text_uthmani',
-      ...(translationIdsKey ? { translations: translationIdsKey } : {}),
+      ...(translationIdsKey
+        ? { translations: translationIdsKey, translation_fields: 'resource_name,language_name' }
+        : {}),
       per_page: String(PER_PAGE),
       page: String(page),
     },
@@ -94,7 +106,7 @@ async function fetchAllVerseText(
 const getPrerenderedVersesCached = unstable_cache(
   async (group: VerseGroup, id: string, translationIdsKey: string) =>
     fetchAllVerseText(group, id, translationIdsKey),
-  ['reader:prerendered-verses:v1'],
+  ['reader:prerendered-verses:v2'],
   { revalidate: 3600, tags: ['reader-prerendered-verses'] }
 );
 

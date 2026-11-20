@@ -1,4 +1,5 @@
 import { SurahView } from '@/app/(features)/surah/components';
+import { ReaderFullText, buildFullTextTitle } from '@/app/shared/reader/ReaderFullText';
 import { ReaderServerDataProvider } from '@/app/shared/reader/ReaderServerData';
 import {
   getChapterServer,
@@ -159,7 +160,7 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
     Number.isFinite(surahId)
       ? getChapterServer(surahId).catch(() => undefined)
       : Promise.resolve(undefined),
-    // Text of every verse for the server HTML; the interactive list is virtualized.
+    // Text of every verse for the full-text section; the interactive list is virtualized.
     Number.isFinite(surahId)
       ? getPrerenderedVersesServer({
           group: 'by_chapter',
@@ -199,7 +200,17 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
               }
             : undefined
         }
-        verses={prerenderedVerses}
+        fullText={
+          prerenderedVerses?.length ? (
+            <ReaderFullText
+              title={buildFullTextTitle(
+                `Surah ${chapter?.name_simple ?? rawId}`,
+                prerenderedVerses
+              )}
+              verses={prerenderedVerses}
+            />
+          ) : null
+        }
       >
         <SurahView surahId={resolvedParams.surahId} {...surahViewProps} />
       </ReaderServerDataProvider>
