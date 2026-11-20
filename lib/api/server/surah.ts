@@ -36,7 +36,7 @@ const getSurahInitialDataCached = unstable_cache(
       canFetchMetadata ? getChapterServer(surahNumber) : Promise.resolve(undefined),
       getVersesByChapter({
         id: surahId,
-        translationIds: translationIds.length ? translationIds : [20],
+        translationIds,
         page: 1,
         perPage,
         wordLang,
@@ -67,7 +67,7 @@ const getSurahInitialDataCached = unstable_cache(
 
     return result;
   },
-  ['surah:initial:v1'],
+  ['surah:initial:v2'],
   { revalidate: 3600, tags: ['surah-initial'] }
 );
 
@@ -78,12 +78,11 @@ export async function getSurahInitialDataServer(options: {
   perPage?: number | undefined;
 }): Promise<SurahInitialDataServerResult> {
   const perPage = options.perPage ?? 20;
-  const translationIdsKey =
-    Array.from(new Set(options.translationIds))
-      .filter((id) => Number.isFinite(id))
-      .sort((a, b) => a - b)
-      .join(',') || '20';
+  const translationIdsKey = Array.from(new Set(options.translationIds))
+    .filter((id) => Number.isFinite(id))
+    .sort((a, b) => a - b)
+    // An empty key is a real choice (Arabic UI: no translation line), not "use the default".
+    .join(',');
 
   return getSurahInitialDataCached(options.surahId, translationIdsKey, options.wordLang, perPage);
 }
-

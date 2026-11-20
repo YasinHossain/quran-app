@@ -95,7 +95,8 @@ export function useVerseListing({
     Boolean(initialVersesParams) &&
     !tajweed &&
     initialVersesParams?.wordLang === wordLang &&
-    (stableTranslationIds === '' || stableTranslationIds === initialStableTranslationIds);
+    // Both sides are '' for Arabic UI (no translation line), so that case matches exactly too.
+    stableTranslationIds === initialStableTranslationIds;
 
   // Without `initialVersesParams` (tests, legacy callers) infinite mode trusts `initialVerses` as-is.
   const effectiveInitialVerses =

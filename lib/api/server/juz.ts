@@ -32,7 +32,7 @@ const getJuzInitialDataCached = unstable_cache(
       getJuz(juzId),
       getVersesByJuz({
         id: juzId,
-        translationIds: translationIds.length ? translationIds : [20],
+        translationIds,
         page: 1,
         perPage,
         wordLang,
@@ -63,7 +63,7 @@ const getJuzInitialDataCached = unstable_cache(
 
     return result;
   },
-  ['juz:initial:v1'],
+  ['juz:initial:v2'],
   { revalidate: 3600, tags: ['juz-initial'] }
 );
 
@@ -74,11 +74,11 @@ export async function getJuzInitialDataServer(options: {
   perPage?: number | undefined;
 }): Promise<JuzInitialDataServerResult> {
   const perPage = options.perPage ?? 20;
-  const translationIdsKey =
-    Array.from(new Set(options.translationIds))
-      .filter((id) => Number.isFinite(id))
-      .sort((a, b) => a - b)
-      .join(',') || '20';
+  const translationIdsKey = Array.from(new Set(options.translationIds))
+    .filter((id) => Number.isFinite(id))
+    .sort((a, b) => a - b)
+    // An empty key is a real choice (Arabic UI: no translation line), not "use the default".
+    .join(',');
 
   return getJuzInitialDataCached(options.juzId, translationIdsKey, options.wordLang, perPage);
 }

@@ -13,16 +13,26 @@ import type { PrerenderedVerse } from '@/types';
 interface ReaderFullTextProps {
   title: string;
   verses: PrerenderedVerse[];
+  /** Language and direction of the summary label (the page's UI language). */
+  lang?: string | undefined;
+  dir?: 'ltr' | 'rtl' | undefined;
 }
 
 const ARABIC_FONT_FAMILY = "'UthmanicHafs1Ver18', serif";
 
-export function ReaderFullText({ title, verses }: ReaderFullTextProps): React.JSX.Element | null {
+export function ReaderFullText({
+  title,
+  verses,
+  lang,
+  dir,
+}: ReaderFullTextProps): React.JSX.Element | null {
   if (!verses.length) return null;
 
   return (
     <details
       data-slot="reader-full-text"
+      {...(lang ? { lang } : {})}
+      {...(dir ? { dir } : {})}
       className="group mt-10 w-full rounded-lg border border-border bg-surface"
     >
       <summary className="flex min-h-touch cursor-pointer list-none items-center justify-between gap-3 rounded-lg px-4 py-3 text-foreground hover:bg-interactive-hover [&::-webkit-details-marker]:hidden">
@@ -68,8 +78,26 @@ export function ReaderFullText({ title, verses }: ReaderFullTextProps): React.JS
   );
 }
 
+/**
+ * Summary label wording. Placeholders: `{{subject}}` and `{{translations}}`. The English defaults
+ * match the `reader_full_text_title*` locale keys.
+ */
+export interface FullTextTitleTemplates {
+  withTranslation: string;
+  arabicOnly: string;
+}
+
+const DEFAULT_FULL_TEXT_TITLE_TEMPLATES: FullTextTitleTemplates = {
+  withTranslation: 'Full text of {{subject}} — Arabic and {{translations}} translation',
+  arabicOnly: 'Full text of {{subject}} — Arabic',
+};
+
 /** Summary label, e.g. "Full text of Surah Al-Baqarah — Arabic and Saheeh International translation". */
-export function buildFullTextTitle(subject: string, verses: PrerenderedVerse[]): string {
+export function buildFullTextTitle(
+  subject: string,
+  verses: PrerenderedVerse[],
+  templates: FullTextTitleTemplates = DEFAULT_FULL_TEXT_TITLE_TEMPLATES
+): string {
   const translationNames = Array.from(
     new Set(
       (verses[0]?.translations ?? [])
@@ -77,8 +105,8 @@ export function buildFullTextTitle(subject: string, verses: PrerenderedVerse[]):
         .filter((name): name is string => Boolean(name))
     )
   );
-  const translationPart = translationNames.length
-    ? ` — Arabic and ${translationNames.join(', ')} translation`
-    : ' — Arabic';
-  return `Full text of ${subject}${translationPart}`;
+  const template = translationNames.length ? templates.withTranslation : templates.arabicOnly;
+  return template
+    .replace(/\{\{\s*subject\s*\}\}/g, () => subject)
+    .replace(/\{\{\s*translations\s*\}\}/g, () => translationNames.join(', '));
 }

@@ -34,30 +34,66 @@ export interface TafsirMetadataText {
   description: string;
 }
 
+/**
+ * Localisable wording. Placeholders: `{{chapter}}`, `{{verseKey}}`, `{{snippet}}`,
+ * `{{siteName}}`, `{{tafsirName}}`. The English defaults match the `seo_tafsir_*` locale keys.
+ */
+export interface TafsirMetadataTemplates {
+  title: string;
+  titleFallback: string;
+  descriptionFallback: string;
+  tail: string;
+  tailShort: string;
+  tafsirName: string;
+}
+
+export const DEFAULT_TAFSIR_METADATA_TEMPLATES: TafsirMetadataTemplates = {
+  title: '{{chapter}} {{verseKey}} Tafsir – {{snippet}}',
+  titleFallback: 'Tafsir of {{chapter}} {{verseKey}}',
+  descriptionFallback: 'Read tafsir for {{chapter}} {{verseKey}} on {{siteName}}.',
+  tail: '{{tafsirName}} tafsir of {{chapter}} {{verseKey}}.',
+  tailShort: '{{tafsirName}} tafsir.',
+  tafsirName: 'Ibn Kathir',
+};
+
+const fill = (template: string, vars: Record<string, string>): string =>
+  template.replace(/\{\{\s*(\w+)\s*\}\}/g, (match, name: string) => vars[name] ?? match);
+
 export function buildTafsirMetadataText(input: {
   chapterName: string;
   verseKey: string;
   translationText?: string | undefined;
+  templates?: TafsirMetadataTemplates | undefined;
 }): TafsirMetadataText {
   const { chapterName, verseKey } = input;
+  const templates = input.templates ?? DEFAULT_TAFSIR_METADATA_TEMPLATES;
   const translation = cleanTranslationText(input.translationText);
+  const vars = {
+    chapter: chapterName,
+    verseKey,
+    siteName: SITE_NAME,
+    tafsirName: templates.tafsirName,
+  };
 
   if (!translation) {
     return {
-      title: `Tafsir of ${chapterName} ${verseKey}`,
-      description: `Read tafsir for ${chapterName} ${verseKey} on ${SITE_NAME}.`,
+      title: fill(templates.titleFallback, vars),
+      description: fill(templates.descriptionFallback, vars),
     };
   }
 
-  const title = `${chapterName} ${verseKey} Tafsir – ${trimOnWordBoundary(translation, TITLE_SNIPPET_LENGTH)}`;
-  const tail = ` Ibn Kathir tafsir of ${chapterName} ${verseKey}.`;
+  const title = fill(templates.title, {
+    ...vars,
+    snippet: trimOnWordBoundary(translation, TITLE_SNIPPET_LENGTH),
+  });
+  const tail = ` ${fill(templates.tail, vars)}`;
+  const shortTail = ` ${fill(templates.tailShort, vars)}`;
   const lead = trimOnWordBoundary(translation, MAX_DESCRIPTION_LENGTH);
-  const withTail = `${lead}${tail}`;
-  // Only append the tafsir mention when the translation leaves room for it.
+  // Only append the full tafsir mention when the translation leaves room for it.
   const description =
     translation.length + tail.length <= MAX_DESCRIPTION_LENGTH + 5
-      ? withTail
-      : `${trimOnWordBoundary(translation, MAX_DESCRIPTION_LENGTH - ' Ibn Kathir tafsir.'.length)} Ibn Kathir tafsir.`;
+      ? `${lead}${tail}`
+      : `${trimOnWordBoundary(translation, MAX_DESCRIPTION_LENGTH - shortTail.length)}${shortTail}`;
 
   return { title, description };
 }

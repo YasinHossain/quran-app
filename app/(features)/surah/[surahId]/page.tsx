@@ -1,4 +1,12 @@
 import { SurahView } from '@/app/(features)/surah/components';
+import {
+  getFullTextTitleTemplates,
+  getRequestUiLanguage,
+  getServerReaderDefaults,
+  getServerTranslator,
+  type ServerTranslator,
+} from '@/app/shared/i18n/serverLocale';
+import { getUiLanguageDirection } from '@/app/shared/i18n/uiLanguages';
 import { ReaderFullText, buildFullTextTitle } from '@/app/shared/reader/ReaderFullText';
 import { ReaderServerDataProvider } from '@/app/shared/reader/ReaderServerData';
 import {
@@ -6,9 +14,10 @@ import {
   getPrerenderedVersesServer,
   getSurahInitialDataServer,
 } from '@/lib/api/server';
-import { SITE_NAME, absoluteUrl } from '@/lib/seo/site';
-import { ensureLanguageCode } from '@/lib/text/languageCodes';
+import { buildLocalizedPageMetadata, localizedUrl } from '@/lib/seo/localizedMetadata';
+import { SITE_NAME } from '@/lib/seo/site';
 
+import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import type { Chapter } from '@/types';
 import type { Metadata } from 'next';
 
@@ -25,24 +34,41 @@ interface SurahPageProps {
   params: Promise<{ surahId: string }>;
 }
 
+/** Name for descriptions; English adds the (English) meaning, e.g. "Ya-Sin (Ya Sin)". */
+function surahDisplayName(
+  translator: ServerTranslator,
+  chapter: Chapter | undefined,
+  rawId: string
+): string {
+  if (!chapter) return rawId;
+  const name = translator.chapterName(chapter);
+  const meaning = chapter.translated_name?.name;
+  return translator.locale === 'en' && meaning ? `${name} (${meaning})` : name;
+}
+
 /**
  * Build a rich, keyword-bearing meta description from chapter data.
  */
 function buildSurahDescription(
+  translator: ServerTranslator,
   chapter: Chapter | undefined,
   rawId: string,
   surahId: number
 ): string {
   if (!chapter) {
-    return `Read Surah ${rawId} from the Holy Quran with translations, tafsir, and audio recitation on ${SITE_NAME}.`;
+    return translator.t('seo_surah_description_fallback', { number: rawId, siteName: SITE_NAME });
   }
 
-  const chapterName = chapter.name_simple;
-  const translatedName = chapter.translated_name?.name;
-  const nameStr = translatedName ? `${chapterName} (${translatedName})` : chapterName;
-  const revelationType = chapter.revelation_place === 'makkah' ? 'Meccan' : 'Medinan';
-
-  return `Read Surah ${nameStr} — Chapter ${surahId} of the Holy Quran. ${revelationType} surah with ${chapter.verses_count} verses. Listen to audio recitation, read translations, and explore tafsir on ${SITE_NAME}.`;
+  const key =
+    chapter.revelation_place === 'makkah'
+      ? 'seo_surah_description_makkah'
+      : 'seo_surah_description_madinah';
+  return translator.t(key, {
+    name: surahDisplayName(translator, chapter, rawId),
+    number: surahId,
+    count: chapter.verses_count,
+    siteName: SITE_NAME,
+  });
 }
 
 /**
@@ -51,12 +77,14 @@ function buildSurahDescription(
  * - Chapter: helps Google understand the content hierarchy
  */
 function buildSurahJsonLd(
+  translator: ServerTranslator,
   chapter: Chapter | undefined,
   rawId: string,
   surahId: number
 ): Array<Record<string, unknown>> {
-  const chapterName = chapter?.name_simple || `Surah ${rawId}`;
-  const canonicalUrl = absoluteUrl(`/surah/${Number.isFinite(surahId) ? surahId : rawId}`);
+  const { locale } = translator;
+  const chapterName = chapter ? translator.chapterName(chapter) : rawId;
+  const canonicalUrl = localizedUrl(`/surah/${Number.isFinite(surahId) ? surahId : rawId}`, locale);
 
   const breadcrumb = {
     '@context': 'https://schema.org',
@@ -66,13 +94,13 @@ function buildSurahJsonLd(
         '@type': 'ListItem',
         position: 1,
         name: SITE_NAME,
-        item: absoluteUrl('/'),
+        item: localizedUrl('/', locale),
       },
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Surah',
-        item: absoluteUrl('/surah'),
+        name: translator.t('surah_tab'),
+        item: localizedUrl('/surah', locale),
       },
       {
         '@type': 'ListItem',
@@ -86,16 +114,17 @@ function buildSurahJsonLd(
   const chapterSchema = {
     '@context': 'https://schema.org',
     '@type': 'Chapter',
-    name: `Surah ${chapterName}`,
+    name: translator.t('seo_surah_name', { name: chapterName }),
     url: canonicalUrl,
+    inLanguage: locale,
     isPartOf: {
       '@type': 'Book',
       name: 'The Holy Quran',
-      url: absoluteUrl('/'),
+      url: localizedUrl('/', locale),
     },
     position: Number.isFinite(surahId) ? surahId : undefined,
     ...(chapter?.verses_count ? { numberOfPages: chapter.verses_count } : {}),
-    description: buildSurahDescription(chapter, rawId, surahId),
+    description: buildSurahDescription(translator, chapter, rawId, surahId),
   };
 
   return [breadcrumb, chapterSchema];
@@ -105,33 +134,30 @@ export async function generateMetadata({ params }: SurahPageProps): Promise<Meta
   const resolvedParams = await params;
   const rawId = resolvedParams.surahId;
   const surahId = Number.parseInt(String(rawId), 10);
-  const canonicalPath = Number.isFinite(surahId)
+  const path = Number.isFinite(surahId)
     ? `/surah/${surahId}`
     : `/surah/${encodeURIComponent(rawId)}`;
 
-  const chapter = Number.isFinite(surahId)
-    ? await getChapterServer(surahId).catch(() => undefined)
-    : undefined;
-  const chapterName = chapter?.name_simple || `Surah ${rawId}`;
-  const title = chapter ? `Surah ${chapterName} (${surahId})` : chapterName;
-  const description = buildSurahDescription(chapter, rawId, surahId);
+  const locale = await getRequestUiLanguage();
+  const [translator, chapter] = await Promise.all([
+    getServerTranslator(locale),
+    Number.isFinite(surahId)
+      ? getChapterServer(surahId).catch(() => undefined)
+      : Promise.resolve(undefined),
+  ]);
+  const title = chapter
+    ? translator.t('seo_surah_title', {
+        name: translator.chapterName(chapter),
+        number: surahId,
+      })
+    : translator.t('seo_surah_name', { name: rawId });
 
-  return {
+  return buildLocalizedPageMetadata({
+    path,
+    locale,
     title,
-    description,
-    alternates: {
-      canonical: absoluteUrl(canonicalPath),
-    },
-    openGraph: {
-      title: `${title} | ${SITE_NAME}`,
-      description,
-      url: absoluteUrl(canonicalPath),
-    },
-    twitter: {
-      title: `${title} | ${SITE_NAME}`,
-      description,
-    },
-  };
+    description: buildSurahDescription(translator, chapter, rawId, surahId),
+  });
 }
 
 /**
@@ -143,18 +169,19 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
   const rawId = resolvedParams.surahId;
   const surahId = Number.parseInt(String(rawId), 10);
 
-  const DEFAULT_INITIAL_TRANSLATION_IDS = [20];
-  const DEFAULT_INITIAL_WORD_LANG = 'en';
+  // Render exactly what the client reader starts with for this language, so the server page is
+  // reused as page 1 after hydration (no refetch, no flash of a different translation).
+  const locale: UiLanguageCode = await getRequestUiLanguage();
+  const { translationIds, wordLang } = getServerReaderDefaults(locale);
   // Matches the client reader's API page size (VERSES_PER_PAGE) so the SSR page is reused as page 1.
   const INITIAL_VERSES_PER_PAGE = 10;
 
-  const language = ensureLanguageCode(DEFAULT_INITIAL_WORD_LANG);
-
-  const [initialData, chapter, prerenderedVerses] = await Promise.all([
+  const [translator, initialData, chapter, prerenderedVerses] = await Promise.all([
+    getServerTranslator(locale),
     getSurahInitialDataServer({
       surahId: resolvedParams.surahId,
-      translationIds: DEFAULT_INITIAL_TRANSLATION_IDS,
-      wordLang: language,
+      translationIds,
+      wordLang,
       perPage: INITIAL_VERSES_PER_PAGE,
     }),
     Number.isFinite(surahId)
@@ -165,22 +192,22 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
       ? getPrerenderedVersesServer({
           group: 'by_chapter',
           id: String(surahId),
-          translationIds: DEFAULT_INITIAL_TRANSLATION_IDS,
+          translationIds,
         })
       : Promise.resolve(undefined),
   ]);
 
   const { totalVerses, initialVerses } = initialData;
 
-  const jsonLd = buildSurahJsonLd(chapter, rawId, surahId);
+  const jsonLd = buildSurahJsonLd(translator, chapter, rawId, surahId);
+  const fullTextSubject = translator.t('seo_surah_name', {
+    name: chapter ? translator.chapterName(chapter) : rawId,
+  });
 
   const surahViewProps = {
     ...(typeof totalVerses === 'number' ? { totalVerses } : {}),
     ...(initialVerses ? { initialVerses } : {}),
-    initialVersesParams: {
-      translationIds: DEFAULT_INITIAL_TRANSLATION_IDS,
-      wordLang: language,
-    },
+    initialVersesParams: { translationIds, wordLang },
   } satisfies Record<string, unknown>;
 
   return (
@@ -204,10 +231,13 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
           prerenderedVerses?.length ? (
             <ReaderFullText
               title={buildFullTextTitle(
-                `Surah ${chapter?.name_simple ?? rawId}`,
-                prerenderedVerses
+                fullTextSubject,
+                prerenderedVerses,
+                getFullTextTitleTemplates(translator)
               )}
               verses={prerenderedVerses}
+              lang={locale}
+              dir={getUiLanguageDirection(locale)}
             />
           ) : null
         }

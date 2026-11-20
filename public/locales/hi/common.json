@@ -430,5 +430,25 @@
     "112": "अल-इख़लास",
     "113": "अल-फ़लक़",
     "114": "अन-नास"
-  }
+  },
+  "seo_home_title": "पवित्र क़ुरआन पढ़ें, सुनें और समझें",
+  "seo_site_description": "{{siteName}} एक तेज़ और आधुनिक क़ुरआन ऐप है। अनुवाद, तफ़सीर और ऑडियो तिलावत के साथ पवित्र क़ुरआन पढ़ें, सुनें और उसका अध्ययन करें।",
+  "seo_surah_name": "सूरह {{name}}",
+  "seo_surah_title": "सूरह {{name}} ({{number}})",
+  "seo_surah_description_makkah": "सूरह {{name}} पढ़ें — पवित्र क़ुरआन की सूरह नंबर {{number}}। मक्की सूरह, {{count}} आयतें। {{siteName}} पर ऑडियो तिलावत सुनें, अनुवाद पढ़ें और तफ़सीर देखें।",
+  "seo_surah_description_madinah": "सूरह {{name}} पढ़ें — पवित्र क़ुरआन की सूरह नंबर {{number}}। मदनी सूरह, {{count}} आयतें। {{siteName}} पर ऑडियो तिलावत सुनें, अनुवाद पढ़ें और तफ़सीर देखें।",
+  "seo_surah_description_fallback": "{{siteName}} पर अनुवाद, तफ़सीर और ऑडियो तिलावत के साथ पवित्र क़ुरआन की सूरह {{number}} पढ़ें।",
+  "seo_surah_index_description": "{{siteName}} पर पवित्र क़ुरआन की सभी सूरहें देखें।",
+  "seo_juz_description": "पवित्र क़ुरआन का पारा {{number}} ({{range}}) पढ़ें — अरबी पाठ, अनुवाद और ऑडियो के साथ, {{siteName}} पर।",
+  "seo_juz_description_fallback": "{{siteName}} पर पारा {{number}} के अनुसार क़ुरआन पढ़ें।",
+  "seo_juz_index_description": "{{siteName}} पर पवित्र क़ुरआन के सभी 30 पारे देखें।",
+  "seo_tafsir_index_description": "{{siteName}} पर सूरह और आयत के अनुसार तफ़सीर देखें।",
+  "seo_tafsir_title": "{{chapter}} {{verseKey}} की तफ़सीर – {{snippet}}",
+  "seo_tafsir_title_fallback": "{{chapter}} {{verseKey}} की तफ़सीर",
+  "seo_tafsir_description_fallback": "{{siteName}} पर {{chapter}} {{verseKey}} की तफ़सीर पढ़ें।",
+  "seo_tafsir_description_tail": "{{chapter}} {{verseKey}} की तफ़सीर ({{tafsirName}})।",
+  "seo_tafsir_description_tail_short": "तफ़सीर {{tafsirName}}।",
+  "seo_default_tafsir_name": "इब्ने कसीर",
+  "reader_full_text_title": "{{subject}} — पूरा अरबी पाठ और {{translations}} अनुवाद",
+  "reader_full_text_title_arabic": "{{subject}} — पूरा अरबी पाठ"
 }
