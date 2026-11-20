@@ -16,7 +16,7 @@ function normaliseError(error: unknown): Error {
   return new Error(typeof error === 'string' ? error : 'Unknown error');
 }
 
-const getTafsirResourcesServer = unstable_cache(
+export const getTafsirResourcesServer = unstable_cache(
   async (): Promise<TafsirResourceResult[]> => {
     const repository = container.getTafsirRepository();
     const useCase = new GetTafsirResourcesUseCase(repository);
@@ -27,7 +27,7 @@ const getTafsirResourcesServer = unstable_cache(
   { revalidate: 3600, tags: ['tafsir-resources'] }
 );
 
-const getTafsirHtmlServer = unstable_cache(
+export const getTafsirHtmlServer = unstable_cache(
   async (verseKey: string, tafsirId: number): Promise<string> => {
     const repository = container.getTafsirRepository();
     const useCase = new GetTafsirContentUseCase(repository);

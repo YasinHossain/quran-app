@@ -450,5 +450,20 @@
   "seo_tafsir_description_tail_short": "तफ़सीर {{tafsirName}}।",
   "seo_default_tafsir_name": "इब्ने कसीर",
   "reader_full_text_title": "{{subject}} — पूरा अरबी पाठ और {{translations}} अनुवाद",
-  "reader_full_text_title_arabic": "{{subject}} — पूरा अरबी पाठ"
+  "reader_full_text_title_arabic": "{{subject}} — पूरा अरबी पाठ",
+  "seo_verse_title": "{{surah}} {{verseKey}} – {{snippet}}",
+  "seo_verse_title_fallback": "{{surah}} {{verseKey}}",
+  "seo_verse_description_fallback": "{{siteName}} पर अरबी पाठ, अनुवाद और तफ़सीर के साथ {{surah}} {{verseKey}} पढ़ें।",
+  "seo_verse_description_tail": "अरबी पाठ और तफ़सीर के साथ {{surah}} {{verseKey}}।",
+  "seo_verse_description_tail_short": "{{surah}} {{verseKey}}।",
+  "verse_page_breadcrumb": "पेज का रास्ता",
+  "verse_page_navigation": "आयत नेविगेशन",
+  "verse_page_previous": "पिछली आयत",
+  "verse_page_next": "अगली आयत",
+  "verse_page_tafsir_source": "स्रोत: {{name}}",
+  "verse_page_read_full_tafsir": "पूरी तफ़सीर पढ़ें",
+  "verse_page_read_surah": "{{surah}} पढ़ें",
+  "verse_page_open": "आयत का पेज खोलें",
+  "verse_page_context_heading": "संदर्भ में पढ़ें",
+  "verse_page_continue_reading": "पढ़ना जारी रखें"
 }

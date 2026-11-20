@@ -1,5 +1,10 @@
+import Link from 'next/link';
 import React from 'react';
 
+import { localizeHref } from '@/app/shared/i18n/localeRouting';
+import { buildVerseRoute } from '@/app/shared/navigation/routes';
+
+import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import type { PrerenderedVerse } from '@/types';
 
 /**
@@ -16,7 +21,14 @@ interface ReaderFullTextProps {
   /** Language and direction of the summary label (the page's UI language). */
   lang?: string | undefined;
   dir?: 'ltr' | 'rtl' | undefined;
+  /** Language of the verse page links (each verse key links to `/surah/s/v` in it). */
+  locale?: UiLanguageCode | undefined;
 }
+
+const verseHref = (verseKey: string, locale: UiLanguageCode): string | null => {
+  const [surahId, verseId] = verseKey.split(':');
+  return surahId && verseId ? localizeHref(buildVerseRoute(surahId, verseId), locale) : null;
+};
 
 const ARABIC_FONT_FAMILY = "'UthmanicHafs1Ver18', serif";
 
@@ -25,6 +37,7 @@ export function ReaderFullText({
   verses,
   lang,
   dir,
+  locale = 'en',
 }: ReaderFullTextProps): React.JSX.Element | null {
   if (!verses.length) return null;
 
@@ -51,28 +64,43 @@ export function ReaderFullText({
         </svg>
       </summary>
       <ol className="divide-y divide-border border-t border-border px-4">
-        {verses.map((verse) => (
-          <li key={verse.verseKey} data-verse-key={verse.verseKey} className="space-y-3 py-5">
-            <p className="text-xs font-semibold text-muted">{verse.verseKey}</p>
-            <p
-              lang="ar"
-              dir="rtl"
-              className="text-right text-2xl leading-loose text-foreground"
-              style={{ fontFamily: ARABIC_FONT_FAMILY }}
-            >
-              {verse.arabic}
-            </p>
-            {verse.translations.map((translation) => (
+        {verses.map((verse) => {
+          const href = verseHref(verse.verseKey, locale);
+          return (
+            <li key={verse.verseKey} data-verse-key={verse.verseKey} className="space-y-3 py-5">
+              <p className="text-xs font-semibold text-muted">
+                {href ? (
+                  <Link
+                    href={href}
+                    prefetch={false}
+                    className="rounded-sm hover:text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                  >
+                    {verse.verseKey}
+                  </Link>
+                ) : (
+                  verse.verseKey
+                )}
+              </p>
               <p
-                key={translation.resourceId}
-                {...(translation.languageCode ? { lang: translation.languageCode } : {})}
-                dir="auto"
-                className="text-base leading-relaxed text-foreground"
-                dangerouslySetInnerHTML={{ __html: translation.html }}
-              />
-            ))}
-          </li>
-        ))}
+                lang="ar"
+                dir="rtl"
+                className="text-right text-2xl leading-loose text-foreground"
+                style={{ fontFamily: ARABIC_FONT_FAMILY }}
+              >
+                {verse.arabic}
+              </p>
+              {verse.translations.map((translation) => (
+                <p
+                  key={translation.resourceId}
+                  {...(translation.languageCode ? { lang: translation.languageCode } : {})}
+                  dir="auto"
+                  className="text-base leading-relaxed text-foreground"
+                  dangerouslySetInnerHTML={{ __html: translation.html }}
+                />
+              ))}
+            </li>
+          );
+        })}
       </ol>
     </details>
   );

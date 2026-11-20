@@ -17,7 +17,7 @@ import type { PrerenderedVerse } from '@/types';
 
 type VerseGroup = 'by_chapter' | 'by_juz';
 
-interface TextOnlyApiVerse {
+export interface TextOnlyApiVerse {
   verse_key: string;
   text_uthmani?: string;
   translations?: Array<{
@@ -46,7 +46,7 @@ function normaliseError(error: unknown): Error {
   return new Error(typeof error === 'string' ? error : 'Unknown error');
 }
 
-function toPrerenderedVerse(verse: TextOnlyApiVerse): PrerenderedVerse {
+export function toPrerenderedVerse(verse: TextOnlyApiVerse): PrerenderedVerse {
   return {
     verseKey: verse.verse_key,
     arabic: (verse.text_uthmani ?? '').trim(),

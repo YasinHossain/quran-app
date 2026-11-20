@@ -450,5 +450,20 @@
   "seo_tafsir_description_tail_short": "تفسير {{tafsirName}}.",
   "seo_default_tafsir_name": "ابن كثير",
   "reader_full_text_title": "{{subject}} — النص العربي الكامل مع ترجمة {{translations}}",
-  "reader_full_text_title_arabic": "{{subject}} — النص الكامل"
+  "reader_full_text_title_arabic": "{{subject}} — النص الكامل",
+  "seo_verse_title": "{{surah}} {{verseKey}} – {{snippet}}",
+  "seo_verse_title_fallback": "{{surah}} {{verseKey}}",
+  "seo_verse_description_fallback": "اقرأ {{surah}} {{verseKey}} مع التفسير على {{siteName}}.",
+  "seo_verse_description_tail": "{{surah}} {{verseKey}} مع التفسير.",
+  "seo_verse_description_tail_short": "{{surah}} {{verseKey}}.",
+  "verse_page_breadcrumb": "مسار التنقل",
+  "verse_page_navigation": "التنقل بين الآيات",
+  "verse_page_previous": "الآية السابقة",
+  "verse_page_next": "الآية التالية",
+  "verse_page_tafsir_source": "المصدر: {{name}}",
+  "verse_page_read_full_tafsir": "اقرأ التفسير كاملًا",
+  "verse_page_read_surah": "اقرأ {{surah}}",
+  "verse_page_open": "افتح صفحة الآية",
+  "verse_page_context_heading": "اقرأ في السياق",
+  "verse_page_continue_reading": "تابع القراءة"
 }

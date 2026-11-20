@@ -11,6 +11,7 @@ import { DEFAULT_UI_LANGUAGE, type UiLanguageCode } from './uiLanguages';
 
 import type { FullTextTitleTemplates } from '@/app/shared/reader/ReaderFullText';
 import type { TafsirMetadataTemplates } from '@/lib/seo/tafsirMetadata';
+import type { VerseMetadataTemplates } from '@/lib/seo/verseMetadata';
 import type { Chapter } from '@/types';
 
 /**
@@ -115,5 +116,15 @@ export function getTafsirMetadataTemplates(translator: ServerTranslator): Tafsir
     tail: translator.t('seo_tafsir_description_tail'),
     tailShort: translator.t('seo_tafsir_description_tail_short'),
     tafsirName: translator.t('seo_default_tafsir_name'),
+  };
+}
+
+export function getVerseMetadataTemplates(translator: ServerTranslator): VerseMetadataTemplates {
+  return {
+    title: translator.t('seo_verse_title'),
+    titleFallback: translator.t('seo_verse_title_fallback'),
+    descriptionFallback: translator.t('seo_verse_description_fallback'),
+    tail: translator.t('seo_verse_description_tail'),
+    tailShort: translator.t('seo_verse_description_tail_short'),
   };
 }
