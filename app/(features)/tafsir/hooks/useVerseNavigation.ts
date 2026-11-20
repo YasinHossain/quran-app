@@ -4,6 +4,7 @@ import { useCallback, useMemo } from 'react';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { buildTafsirRoute } from '@/app/shared/navigation/routes';
 
 import type { Surah } from '@/types';
 
@@ -43,7 +44,7 @@ export const useVerseNavigation = (surahId: string, ayahId: string): UseVerseNav
       if (!target) return;
       setSurahListOpen(false);
       const locale = getLocaleFromPathname(pathname) ?? 'en';
-      router.push(localizeHref(`/tafsir/${target.surahId}/${target.ayahId}`, locale));
+      router.push(localizeHref(buildTafsirRoute(target.surahId, target.ayahId), locale));
     },
     [pathname, router, setSurahListOpen]
   );

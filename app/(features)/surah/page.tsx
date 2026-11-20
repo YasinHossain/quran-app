@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { localizeHref } from '@/app/shared/i18n/localeRouting';
 import { getRequestUiLanguage, getServerTranslator } from '@/app/shared/i18n/serverLocale';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { getSurahNavigationListServer } from '@/lib/api/server';
 import { buildLocalizedPageMetadata } from '@/lib/seo/localizedMetadata';
 import { SITE_NAME } from '@/lib/seo/site';
@@ -39,7 +40,7 @@ export default async function SurahIndexPage(): Promise<React.JSX.Element> {
       <ul className="space-y-2">
         {surahs.map((s) => (
           <li key={s.number}>
-            <Link href={localizeHref(`/surah/${s.number}`, locale)}>
+            <Link href={localizeHref(buildSurahRoute(s.number), locale)}>
               {translator.chapterName({ id: s.number, name_simple: s.name })}
             </Link>
           </li>

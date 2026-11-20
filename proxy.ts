@@ -8,6 +8,7 @@ import {
   UI_LANGUAGE_STORAGE_KEY,
   type UiLanguageCode,
 } from '@/app/shared/i18n/uiLanguages';
+import { getCanonicalQuranPath } from '@/lib/seo/canonicalQuranPath';
 import { SITE_DOMAIN } from '@/lib/seo/site';
 
 const PUBLIC_FILE = /\.[^/]+$/;
@@ -109,6 +110,20 @@ export function proxy(request: NextRequest): NextResponse {
   const segments = pathname.split('/');
   const rawLocale = segments[1];
   const maybeLocale = rawLocale ? rawLocale.toLowerCase() : '';
+
+  // Canonical surah/verse/tafsir URLs use the surah slug (`/surah/al-baqarah/255`). Numbers,
+  // loose spellings and the `/2/255` shortcut get one permanent redirect straight to it (keeping
+  // the language prefix, dropping `/en`). Unknown surahs fall through and 404.
+  const prefixLocale = maybeLocale && isUiLanguageCode(maybeLocale) ? maybeLocale : null;
+  const unprefixedPath = prefixLocale ? `/${segments.slice(2).join('/')}` : pathname;
+  const canonicalQuranPath = getCanonicalQuranPath(unprefixedPath);
+  if (canonicalQuranPath) {
+    url.pathname =
+      prefixLocale && prefixLocale !== DEFAULT_UI_LANGUAGE
+        ? `/${prefixLocale}${canonicalQuranPath}`
+        : canonicalQuranPath;
+    return NextResponse.redirect(url, 308);
+  }
 
   // Locale prefix present -> rewrite to existing (non-prefixed) routes.
   if (maybeLocale && isUiLanguageCode(maybeLocale)) {

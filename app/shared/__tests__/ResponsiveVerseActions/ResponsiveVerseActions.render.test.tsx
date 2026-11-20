@@ -161,12 +161,12 @@ describe('[Variants]', () => {
 describe('[Functionality]', () => {
   it('tafsir link has correct href', async () => {
     const link = await getTafsirLink();
-    expect(link).toHaveAttribute('href', '/tafsir/1/1');
+    expect(link).toHaveAttribute('href', '/tafsir/al-fatihah/1');
   });
 
   it('handles different verse keys', async () => {
     const link = await getTafsirLink({ verseKey: '2:255' });
-    expect(link).toHaveAttribute('href', '/tafsir/2/255');
+    expect(link).toHaveAttribute('href', '/tafsir/al-baqarah/255');
   });
 });
 
