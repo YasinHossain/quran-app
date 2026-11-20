@@ -1,5 +1,6 @@
 import { getAllJuzs } from '@/app/shared/navigation/datasets';
-import { getJuzInitialDataServer } from '@/lib/api/server';
+import { ReaderServerDataProvider } from '@/app/shared/reader/ReaderServerData';
+import { getJuzInitialDataServer, getPrerenderedVersesServer } from '@/lib/api/server';
 import { SITE_NAME, absoluteUrl } from '@/lib/seo/site';
 import { ensureLanguageCode } from '@/lib/text/languageCodes';
 
@@ -61,27 +62,42 @@ export default async function Page({
   const { juzId } = await params;
   const DEFAULT_TRANSLATION_IDS = [20];
   const DEFAULT_WORD_LANG = ensureLanguageCode('en');
-  const INITIAL_VERSES_PER_PAGE = 20;
-  const initialData = await getJuzInitialDataServer({
-    juzId,
-    translationIds: DEFAULT_TRANSLATION_IDS,
-    wordLang: DEFAULT_WORD_LANG,
-    perPage: INITIAL_VERSES_PER_PAGE,
-  });
+  // Matches the client reader's API page size (VERSES_PER_PAGE) so the SSR page is reused as page 1.
+  const INITIAL_VERSES_PER_PAGE = 10;
+  const numericJuzId = Number.parseInt(juzId, 10);
+  const isValidJuzId = Number.isFinite(numericJuzId) && numericJuzId >= 1 && numericJuzId <= 30;
+  const [initialData, prerenderedVerses] = await Promise.all([
+    getJuzInitialDataServer({
+      juzId,
+      translationIds: DEFAULT_TRANSLATION_IDS,
+      wordLang: DEFAULT_WORD_LANG,
+      perPage: INITIAL_VERSES_PER_PAGE,
+    }),
+    // Text of every verse for the server HTML; the interactive list is virtualized.
+    isValidJuzId
+      ? getPrerenderedVersesServer({
+          group: 'by_juz',
+          id: String(numericJuzId),
+          translationIds: DEFAULT_TRANSLATION_IDS,
+        })
+      : Promise.resolve(undefined),
+  ]);
 
   return (
     <div className="min-h-screen bg-background">
-      <JuzClient
-        juzId={juzId}
-        {...(initialData.initialVerses ? { initialVerses: initialData.initialVerses } : {})}
-        {...(typeof initialData.totalVerses === 'number'
-          ? { totalVerses: initialData.totalVerses }
-          : {})}
-        initialVersesParams={{
-          translationIds: DEFAULT_TRANSLATION_IDS,
-          wordLang: DEFAULT_WORD_LANG,
-        }}
-      />
+      <ReaderServerDataProvider verses={prerenderedVerses}>
+        <JuzClient
+          juzId={juzId}
+          {...(initialData.initialVerses ? { initialVerses: initialData.initialVerses } : {})}
+          {...(typeof initialData.totalVerses === 'number'
+            ? { totalVerses: initialData.totalVerses }
+            : {})}
+          initialVersesParams={{
+            translationIds: DEFAULT_TRANSLATION_IDS,
+            wordLang: DEFAULT_WORD_LANG,
+          }}
+        />
+      </ReaderServerDataProvider>
     </div>
   );
 }

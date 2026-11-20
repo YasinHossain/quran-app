@@ -34,3 +34,13 @@ export interface Verse {
   translations?: Translation[];
   words?: Word[];
 }
+
+/**
+ * Text-only verse used for server-rendered reader HTML (crawlers and pre-hydration readers).
+ * Translation HTML is already sanitized and stripped of footnote markers.
+ */
+export interface PrerenderedVerse {
+  verseKey: string;
+  arabic: string;
+  translations: Array<{ resourceId: number; html: string }>;
+}

@@ -1,6 +1,10 @@
 import { SurahView } from '@/app/(features)/surah/components';
-import { getSurahInitialDataServer } from '@/lib/api/server';
-import { getChapterServer } from '@/lib/api/server';
+import { ReaderServerDataProvider } from '@/app/shared/reader/ReaderServerData';
+import {
+  getChapterServer,
+  getPrerenderedVersesServer,
+  getSurahInitialDataServer,
+} from '@/lib/api/server';
 import { SITE_NAME, absoluteUrl } from '@/lib/seo/site';
 import { ensureLanguageCode } from '@/lib/text/languageCodes';
 
@@ -140,11 +144,12 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
 
   const DEFAULT_INITIAL_TRANSLATION_IDS = [20];
   const DEFAULT_INITIAL_WORD_LANG = 'en';
-  const INITIAL_VERSES_PER_PAGE = 20;
+  // Matches the client reader's API page size (VERSES_PER_PAGE) so the SSR page is reused as page 1.
+  const INITIAL_VERSES_PER_PAGE = 10;
 
   const language = ensureLanguageCode(DEFAULT_INITIAL_WORD_LANG);
 
-  const [initialData, chapter] = await Promise.all([
+  const [initialData, chapter, prerenderedVerses] = await Promise.all([
     getSurahInitialDataServer({
       surahId: resolvedParams.surahId,
       translationIds: DEFAULT_INITIAL_TRANSLATION_IDS,
@@ -153,6 +158,14 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
     }),
     Number.isFinite(surahId)
       ? getChapterServer(surahId).catch(() => undefined)
+      : Promise.resolve(undefined),
+    // Text of every verse for the server HTML; the interactive list is virtualized.
+    Number.isFinite(surahId)
+      ? getPrerenderedVersesServer({
+          group: 'by_chapter',
+          id: String(surahId),
+          translationIds: DEFAULT_INITIAL_TRANSLATION_IDS,
+        })
       : Promise.resolve(undefined),
   ]);
 
@@ -175,7 +188,21 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <SurahView surahId={resolvedParams.surahId} {...surahViewProps} />
+      <ReaderServerDataProvider
+        chapter={
+          chapter
+            ? {
+                id: chapter.id,
+                name_simple: chapter.name_simple,
+                verses_count: chapter.verses_count,
+                revelation_place: chapter.revelation_place,
+              }
+            : undefined
+        }
+        verses={prerenderedVerses}
+      >
+        <SurahView surahId={resolvedParams.surahId} {...surahViewProps} />
+      </ReaderServerDataProvider>
     </>
   );
 }

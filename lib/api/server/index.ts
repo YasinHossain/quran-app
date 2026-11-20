@@ -9,3 +9,4 @@ export { getTafsirVersePageDataServer } from './tafsir';
 export { getSurahInitialDataServer } from './surah';
 export { getJuzInitialDataServer } from './juz';
 export { getSurahNavigationListServer } from './navigation';
+export { getPrerenderedVersesServer } from './prerenderedVerses';

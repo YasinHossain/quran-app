@@ -11,6 +11,7 @@ import { useAdaptiveViewportBy } from '@/app/shared/hooks/useAdaptiveViewportBy'
 import { LoadingStatus } from '@/app/shared/LoadingStatus';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { ReaderResourceNavigation } from '@/app/shared/reader/ReaderResourceNavigation';
+import { PrerenderedVerseList } from '@/app/shared/reader/ReaderServerData';
 import { Spinner } from '@/app/shared/Spinner';
 
 import { SurahNavigation } from './SurahNavigation';
@@ -21,6 +22,7 @@ import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVers
 import type { Verse } from '@/types';
 
 const SCROLL_OFFSET_TOP_PX = 65;
+const INFINITE_INITIAL_ITEM_COUNT = 1;
 
 // Helps prevent a "footer flash" on initial load with `useWindowScroll`, where the end-of-list
 // navigation can briefly appear in the viewport before Virtuoso has enough measurements.
@@ -290,6 +292,8 @@ function QuranComList({
         computeItemKey={(index) => `${verseListing.resourceId}:${index + 1}`}
         itemContent={(index) => <QuranComVerseRow verseIdx={index} verseListing={verseListing} />}
       />
+      {/* Server HTML: the rest of the surah as text after the rows Virtuoso renders (until hydration). */}
+      {verseListing.initialVerses?.length ? <PrerenderedVerseList skip={initialItemCount} /> : null}
       {hasLoadedAnyPage ? (
         <VerseListEndSection
           resourceKind={resourceKind}
@@ -319,6 +323,16 @@ function InfiniteList({
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const activeVerse = verseListing.activeVerse;
   const increaseViewportBy = useAdaptiveViewportBy();
+  // Gives the list an estimated height before measurement so the footer does not flash into
+  // view when the server-rendered verse text is swapped for the virtualized list.
+  const defaultItemHeight = useMemo(
+    () =>
+      estimateVerseCardHeight(
+        verseListing.settings.arabicFontSize,
+        verseListing.settings.translationFontSize
+      ),
+    [verseListing.settings.arabicFontSize, verseListing.settings.translationFontSize]
+  );
 
   useEffect(() => {
     if (!initialVerseKey) return;
@@ -355,11 +369,16 @@ function InfiniteList({
         ref={virtuosoRef}
         useWindowScroll
         data={verseListing.verses}
-        initialItemCount={1}
+        initialItemCount={INFINITE_INITIAL_ITEM_COUNT}
         increaseViewportBy={increaseViewportBy}
+        defaultItemHeight={defaultItemHeight}
         computeItemKey={(index, verse) => `${verse.verse_key}:${verse.id}:${index}`}
         itemContent={(_index, verse) => <VerseComponent verse={verse} />}
       />
+      {/* Server HTML: the remaining verses as text after the row Virtuoso renders (until hydration). */}
+      {verseListing.initialVerses?.length ? (
+        <PrerenderedVerseList skip={INFINITE_INITIAL_ITEM_COUNT} />
+      ) : null}
       {!verseListing.isReachingEnd ? (
         <LoadMoreFooter
           loadMoreRef={verseListing.loadMoreRef}
