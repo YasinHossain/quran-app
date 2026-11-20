@@ -5,9 +5,11 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useTheme } from '@/app/providers/ThemeContext';
+import { UI_LANGUAGE_QUERY_PARAM } from '@/app/shared/i18n/languageRegistry';
 import { setLocaleInPathnameForSwitch } from '@/app/shared/i18n/localeRouting';
 import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
 import {
+  DEFAULT_UI_LANGUAGE,
   getUiLanguageLabel,
   isUiLanguageCode,
   UI_LANGUAGES,
@@ -32,7 +34,9 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
   const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
-  const selectedCode: UiLanguageCode = isUiLanguageCode(i18n.language) ? i18n.language : 'en';
+  const selectedCode: UiLanguageCode = isUiLanguageCode(i18n.language)
+    ? i18n.language
+    : DEFAULT_UI_LANGUAGE;
 
   useEffect(() => {
     setMounted(true);
@@ -87,7 +91,7 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
                         onClick={() => {
                           if (selectedCode === language.code) return;
                           const nextParams = new URLSearchParams(searchParams.toString());
-                          nextParams.delete('__uiLanguage');
+                          nextParams.delete(UI_LANGUAGE_QUERY_PARAM);
                           const query = nextParams.toString();
                           const hash = typeof window !== 'undefined' ? window.location.hash : '';
                           const nextPath = setLocaleInPathnameForSwitch(pathname, language.code);

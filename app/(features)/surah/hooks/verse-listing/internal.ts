@@ -28,5 +28,8 @@ export function resolveVerses(
   initialVerses: UseVerseListingParams['initialVerses'],
   loadedVerses: UseVerseListingReturn['verses']
 ): UseVerseListingReturn['verses'] {
-  return initialVerses?.length ? initialVerses : loadedVerses;
+  // Loaded pages reflect the current settings and grow with infinite scroll; server-provided
+  // verses only fill the gap until the first page arrives.
+  if (loadedVerses.length) return loadedVerses;
+  return initialVerses ?? [];
 }

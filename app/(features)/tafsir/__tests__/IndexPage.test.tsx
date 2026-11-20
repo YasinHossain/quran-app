@@ -8,8 +8,11 @@ import type { MockProps } from '@/tests/mocks';
 jest.mock('next/link', () => ({ href, children }: MockProps<{ href: string }>) => (
   <a href={href}>{children}</a>
 ));
-jest.mock('@/lib/api', () => ({
-  getSurahList: jest.fn().mockResolvedValue([
+jest.mock('next/headers', () => ({
+  headers: async () => new Headers({ 'x-ui-language': 'en' }),
+}));
+jest.mock('@/lib/api/server', () => ({
+  getSurahNavigationListServer: async () => [
     {
       number: 1,
       name: 'Al-Fatihah',
@@ -17,7 +20,7 @@ jest.mock('@/lib/api', () => ({
       verses: 7,
       meaning: 'The Opening',
     },
-  ]),
+  ],
 }));
 
 beforeAll(() => {

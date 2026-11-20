@@ -430,5 +430,25 @@
     "112": "Al-Ikhlas",
     "113": "Al-Falaq",
     "114": "An-Nas"
-  }
+  },
+  "seo_home_title": "Read, Listen, and Study the Holy Quran",
+  "seo_site_description": "{{siteName}} is a fast, modern Quran app to read, listen, and study the Holy Quran with translations, tafsir, and audio recitations.",
+  "seo_surah_name": "Surah {{name}}",
+  "seo_surah_title": "Surah {{name}} ({{number}})",
+  "seo_surah_description_makkah": "Read Surah {{name}} — Chapter {{number}} of the Holy Quran. Meccan surah with {{count}} verses. Listen to audio recitation, read translations, and explore tafsir on {{siteName}}.",
+  "seo_surah_description_madinah": "Read Surah {{name}} — Chapter {{number}} of the Holy Quran. Medinan surah with {{count}} verses. Listen to audio recitation, read translations, and explore tafsir on {{siteName}}.",
+  "seo_surah_description_fallback": "Read Surah {{number}} from the Holy Quran with translations, tafsir, and audio recitation on {{siteName}}.",
+  "seo_surah_index_description": "Browse all surahs of the Holy Quran on {{siteName}}.",
+  "seo_juz_description": "Read Juz {{number}} of the Holy Quran, covering {{range}}, with Arabic text, translations, and audio on {{siteName}}.",
+  "seo_juz_description_fallback": "Read Quran by Juz {{number}} on {{siteName}}.",
+  "seo_juz_index_description": "Browse all 30 juz of the Holy Quran on {{siteName}}.",
+  "seo_tafsir_index_description": "Browse tafsir by surah and verse on {{siteName}}.",
+  "seo_tafsir_title": "{{chapter}} {{verseKey}} Tafsir – {{snippet}}",
+  "seo_tafsir_title_fallback": "Tafsir of {{chapter}} {{verseKey}}",
+  "seo_tafsir_description_fallback": "Read tafsir for {{chapter}} {{verseKey}} on {{siteName}}.",
+  "seo_tafsir_description_tail": "{{tafsirName}} tafsir of {{chapter}} {{verseKey}}.",
+  "seo_tafsir_description_tail_short": "{{tafsirName}} tafsir.",
+  "seo_default_tafsir_name": "Ibn Kathir",
+  "reader_full_text_title": "Full text of {{subject}} — Arabic and {{translations}} translation",
+  "reader_full_text_title_arabic": "Full text of {{subject}} — Arabic"
 }

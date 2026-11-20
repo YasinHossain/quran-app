@@ -89,16 +89,22 @@ export function useVerseListing({
     [initialVersesParams?.translationIds]
   );
 
-  const canUseInitialVerses =
-    mode === 'quran-com' &&
+  // Server-fetched verses are only valid while the reader settings match how they were fetched.
+  const initialVersesMatchSettings =
     Boolean(initialVerses?.length) &&
     Boolean(initialVersesParams) &&
     !tajweed &&
     initialVersesParams?.wordLang === wordLang &&
-    (stableTranslationIds === '' || stableTranslationIds === initialStableTranslationIds);
+    // Both sides are '' for Arabic UI (no translation line), so that case matches exactly too.
+    stableTranslationIds === initialStableTranslationIds;
 
+  // Without `initialVersesParams` (tests, legacy callers) infinite mode trusts `initialVerses` as-is.
   const effectiveInitialVerses =
-    mode === 'quran-com' ? (canUseInitialVerses ? initialVerses : undefined) : initialVerses;
+    mode === 'quran-com' || initialVersesParams
+      ? initialVersesMatchSettings
+        ? initialVerses
+        : undefined
+      : initialVerses;
 
   const infiniteLoaderParams: Parameters<typeof useInfiniteVerseLoader>[0] = {
     lookup,
@@ -193,7 +199,7 @@ export function useVerseListing({
   const rawVerses =
     mode === 'quran-com'
       ? quranComLoadedVerses
-      : resolveVerses(initialVerses, infiniteState.verses);
+      : resolveVerses(effectiveInitialVerses, infiniteState.verses);
 
   const verses = useMemo(() => {
     if (!translation.translationOptions.length) {
@@ -276,10 +282,20 @@ export function useVerseListing({
     return true;
   }, [audio, getVerseByNumber, infiniteNavigation, mode, prefetchVersePage]);
 
+  // Until the first page loads, the infinite loader has no page count and reports the end as
+  // reached; while showing server-provided verses, derive it from the known total instead.
+  const isShowingInitialVersesOnly =
+    mode === 'infinite' &&
+    infiniteState.verses.length === 0 &&
+    Boolean(effectiveInitialVerses?.length);
+  const infiniteIsReachingEnd = isShowingInitialVersesOnly
+    ? typeof totalVerses === 'number' && (effectiveInitialVerses?.length ?? 0) >= totalVerses
+    : infiniteState.isReachingEnd;
+
   const isLoading =
     mode === 'quran-com'
       ? verses.length === 0 && !errorState.error && Boolean(id)
-      : infiniteState.isLoading;
+      : infiniteState.isLoading && !effectiveInitialVerses?.length;
 
   return {
     mode,
@@ -288,7 +304,7 @@ export function useVerseListing({
     isLoading,
     verses,
     isValidating: mode === 'quran-com' ? false : infiniteState.isValidating,
-    isReachingEnd: mode === 'quran-com' ? true : infiniteState.isReachingEnd,
+    isReachingEnd: mode === 'quran-com' ? true : infiniteIsReachingEnd,
     loadMoreRef: errorState.loadMoreRef,
     ...(typeof totalVerses === 'number' ? { totalVerses } : {}),
     perPage: VERSES_PER_PAGE,

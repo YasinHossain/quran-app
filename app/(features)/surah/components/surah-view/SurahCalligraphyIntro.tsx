@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { useReaderServerChapter } from '@/app/shared/reader/ReaderServerData';
 import { formatNumber } from '@/lib/text/localizeNumbers';
 import { cn } from '@/lib/utils/cn';
 
@@ -10,18 +11,21 @@ type SurahIntroDetails = {
   showBismillah: boolean;
   chapterId: number;
   surahName: string;
-  versesCount: number;
+  versesCount?: number | undefined;
 };
 
 const useSurahIntroDetails = (chapterId?: number | null): SurahIntroDetails | null => {
   const { chapters } = useSurahNavigationData();
+  // Chapter metadata fetched by the server route; the client chapter list is empty during SSR.
+  const serverChapter = useReaderServerChapter(chapterId);
 
   if (!chapterId) return null;
 
-  const chapter = chapters.find((item) => item.id === chapterId);
+  const chapter = serverChapter ?? chapters.find((item) => item.id === chapterId);
   const surahNumberLabel = chapter?.id ?? chapterId;
   const surahName = chapter?.name_simple ?? `Surah ${chapterId}`;
-  const versesCount = chapter?.verses_count ?? 0;
+  // Leave unknown metadata blank rather than showing a wrong count or revelation place.
+  const versesCount = chapter?.verses_count;
 
   return {
     revelationPlace: chapter?.revelation_place,
@@ -34,19 +38,25 @@ const useSurahIntroDetails = (chapterId?: number | null): SurahIntroDetails | nu
 
 const SurahMetadata = ({
   revelationPlace,
-}: Pick<SurahIntroDetails, 'revelationPlace'>): React.JSX.Element => (
-  <div className="flex items-center justify-center">
-    <span
-      className="text-xl text-foreground sm:text-3xl"
-      style={{
-        fontFamily: "'UthmanicHafs1Ver18', serif",
-        lineHeight: 1.4,
-      }}
-    >
-      {revelationPlace === 'makkah' ? 'مكية' : 'مدنية'}
-    </span>
-  </div>
-);
+}: Pick<SurahIntroDetails, 'revelationPlace'>): React.JSX.Element | null => {
+  const label =
+    revelationPlace === 'makkah' ? 'مكية' : revelationPlace === 'madinah' ? 'مدنية' : null;
+  if (!label) return null;
+
+  return (
+    <div className="flex items-center justify-center">
+      <span
+        className="text-xl text-foreground sm:text-3xl"
+        style={{
+          fontFamily: "'UthmanicHafs1Ver18', serif",
+          lineHeight: 1.4,
+        }}
+      >
+        {label}
+      </span>
+    </div>
+  );
+};
 
 const SurahIntroBismillah = ({ showBismillah }: { showBismillah: boolean }): React.JSX.Element => (
   <div
@@ -72,7 +82,7 @@ const SurahTitleBlock = ({
   versesLabel,
 }: {
   surahName: string;
-  versesLabel: string;
+  versesLabel: string | null;
 }): React.JSX.Element => (
   <div className="flex flex-col items-center justify-center gap-1">
     <h1
@@ -83,7 +93,9 @@ const SurahTitleBlock = ({
     >
       {surahName}
     </h1>
-    <span className="text-xs text-muted-foreground/50 sm:text-sm">{versesLabel}</span>
+    {versesLabel ? (
+      <span className="text-xs text-muted-foreground/50 sm:text-sm">{versesLabel}</span>
+    ) : null}
   </div>
 );
 
@@ -103,10 +115,10 @@ export const SurahCalligraphyIntro = ({
     defaultValue: introDetails.surahName,
   });
 
-  const translatedVersesLabel = `${formatNumber(
-    introDetails.versesCount,
-    i18n.language
-  )} ${t('verses')}`;
+  const translatedVersesLabel =
+    typeof introDetails.versesCount === 'number'
+      ? `${formatNumber(introDetails.versesCount, i18n.language)} ${t('verses')}`
+      : null;
 
   return (
     <div className={cn('mx-auto mb-4 -mt-4 w-full max-w-7xl sm:-mt-3', className)}>

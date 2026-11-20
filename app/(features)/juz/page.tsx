@@ -1,36 +1,38 @@
 import Link from 'next/link';
 
+import { localizeHref } from '@/app/shared/i18n/localeRouting';
+import { getRequestUiLanguage, getServerTranslator } from '@/app/shared/i18n/serverLocale';
 import { getAllJuzs } from '@/app/shared/navigation/datasets';
-import { SITE_NAME, absoluteUrl } from '@/lib/seo/site';
+import { buildLocalizedPageMetadata } from '@/lib/seo/localizedMetadata';
+import { SITE_NAME } from '@/lib/seo/site';
 
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Juz',
-  description: `Browse all 30 juz of the Holy Quran on ${SITE_NAME}.`,
-  alternates: {
-    canonical: absoluteUrl('/juz'),
-  },
-  openGraph: {
-    title: `Juz | ${SITE_NAME}`,
-    description: `Browse all 30 juz of the Holy Quran on ${SITE_NAME}.`,
-    url: absoluteUrl('/juz'),
-  },
-  twitter: {
-    title: `Juz | ${SITE_NAME}`,
-    description: `Browse all 30 juz of the Holy Quran on ${SITE_NAME}.`,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestUiLanguage();
+  const { t } = await getServerTranslator(locale);
 
-export default function JuzIndexPage(): React.JSX.Element {
+  return buildLocalizedPageMetadata({
+    path: '/juz',
+    locale,
+    title: t('juz_tab'),
+    description: t('seo_juz_index_description', { siteName: SITE_NAME }),
+  });
+}
+
+export default async function JuzIndexPage(): Promise<React.JSX.Element> {
+  const locale = await getRequestUiLanguage();
+  const { t } = await getServerTranslator(locale);
   const juzs = getAllJuzs();
   return (
     <div className="p-6">
-      <h1 className="text-xl font-bold mb-4">Juz</h1>
+      <h1 className="text-xl font-bold mb-4">{t('juz_tab')}</h1>
       <ul className="space-y-2">
         {juzs.map((j) => (
           <li key={j.number}>
-            <Link href={`/juz/${j.number}`}>{j.name}</Link>
+            <Link href={localizeHref(`/juz/${j.number}`, locale)}>
+              {t('juz_number', { number: j.number })}
+            </Link>
           </li>
         ))}
       </ul>

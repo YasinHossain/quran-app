@@ -1,4 +1,4 @@
-import { isUiLanguageCode, type UiLanguageCode } from './uiLanguages';
+import { DEFAULT_UI_LANGUAGE, isUiLanguageCode, type UiLanguageCode } from './uiLanguages';
 
 const normalizePathname = (pathname: string | null | undefined): string => {
   if (typeof pathname !== 'string' || pathname.length === 0) {
@@ -18,7 +18,9 @@ const splitHref = (href: string): { path: string; query: string; hash: string } 
   };
 };
 
-export const getLocaleFromPathname = (pathname: string | null | undefined): UiLanguageCode | null => {
+export const getLocaleFromPathname = (
+  pathname: string | null | undefined
+): UiLanguageCode | null => {
   const safePathname = normalizePathname(pathname);
   const first = safePathname.split('/')[1];
   const normalized = first ? first.toLowerCase() : '';
@@ -40,7 +42,7 @@ export const setLocaleInPathname = (
 ): string => {
   const cleanPath = normalizePathname(pathname);
   const withoutLocale = stripLocaleFromPathname(cleanPath);
-  if (locale === 'en') return withoutLocale;
+  if (locale === DEFAULT_UI_LANGUAGE) return withoutLocale;
   return withoutLocale === '/' ? `/${locale}` : `/${locale}${withoutLocale}`;
 };
 

@@ -21,6 +21,8 @@ import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVers
 import type { Verse } from '@/types';
 
 const SCROLL_OFFSET_TOP_PX = 65;
+// Rows rendered on the server and for the first client frame (as in the surah list).
+const INITIAL_ITEM_COUNT = 6;
 
 // Helps prevent a "footer flash" on initial load with `useWindowScroll`, where the end-of-list
 // navigation can briefly appear in the viewport before Virtuoso has enough measurements.
@@ -224,7 +226,10 @@ function QuranComList({
     [verseListing.settings.arabicFontSize, verseListing.settings.translationFontSize]
   );
   // Render enough initial items to stabilize measurements without fetching beyond the first API page.
-  const initialItemCount = Math.min(totalVerses, Math.max(1, Math.min(6, verseListing.perPage)));
+  const initialItemCount = Math.min(
+    totalVerses,
+    Math.max(1, Math.min(INITIAL_ITEM_COUNT, verseListing.perPage))
+  );
   const hasLoadedAnyPage = Object.keys(verseListing.apiPageToVersesMap).length > 0;
 
   useEffect(() => {
@@ -319,6 +324,16 @@ function InfiniteList({
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const activeVerse = verseListing.activeVerse;
   const increaseViewportBy = useAdaptiveViewportBy();
+  // Gives the list an estimated height before measurement so the footer does not flash into
+  // view when the server-rendered verse text is swapped for the virtualized list.
+  const defaultItemHeight = useMemo(
+    () =>
+      estimateVerseCardHeight(
+        verseListing.settings.arabicFontSize,
+        verseListing.settings.translationFontSize
+      ),
+    [verseListing.settings.arabicFontSize, verseListing.settings.translationFontSize]
+  );
 
   useEffect(() => {
     if (!initialVerseKey) return;
@@ -355,8 +370,9 @@ function InfiniteList({
         ref={virtuosoRef}
         useWindowScroll
         data={verseListing.verses}
-        initialItemCount={1}
+        initialItemCount={Math.min(verseListing.verses.length, INITIAL_ITEM_COUNT)}
         increaseViewportBy={increaseViewportBy}
+        defaultItemHeight={defaultItemHeight}
         computeItemKey={(index, verse) => `${verse.verse_key}:${verse.id}:${index}`}
         itemContent={(_index, verse) => <VerseComponent verse={verse} />}
       />
@@ -367,13 +383,12 @@ function InfiniteList({
           hasVerses={verseListing.verses.length > 0}
         />
       ) : null}
-      {verseListing.isReachingEnd ? (
-        <VerseListEndSection
-          resourceKind={resourceKind}
-          resourceId={verseListing.resourceId}
-          surahId={surahId}
-        />
-      ) : null}
+      {/* Always rendered (below the load-more sentinel) so previous/next links are crawlable. */}
+      <VerseListEndSection
+        resourceKind={resourceKind}
+        resourceId={verseListing.resourceId}
+        surahId={surahId}
+      />
     </div>
   );
 }
