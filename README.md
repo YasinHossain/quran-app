@@ -1,19 +1,30 @@
-# Quran App
+# Al Quran
 
-A modern Quran reading application built with Next.js, TypeScript, and Clean Architecture.
+A fast, modern Quran web app to read, listen to and study the Quran, with translations, tafsir and audio recitation.
+
+**Live: [appquran.com](https://appquran.com)**
+
+![Al Quran home page](docs/images/homepage.png)
 
 ## Features
 
-- **Progressive Web App (PWA)** with offline support
-- **Audio recitation** with multiple reciters and repeat modes
-- **Multiple translations and tafsir** with persistent selections
-- **Bookmarking system** for saved verses
-- **Advanced search** functionality across verses
-- **Dark/Light theme** support with semantic design tokens
-- **Mobile-first responsive design** with touch-friendly interactions
-- **AI-enhanced development** workflow with context-aware assistance
-- **Word-by-word study** in multiple languages (English, Bangla, Urdu, Hindi, Indonesian, Persian, Turkish, Tamil)
-- **Custom Arabic fonts** with proper licensing
+- Read by surah, juz or Quran page (1-604), or open a single verse on its own page
+- Arabic text with multiple translations and word-by-word translation
+- Tafsir (commentary) per verse
+- Audio recitation with a choice of reciters
+- Search across verses and surahs
+- Bookmarks, pinned verses, last-read position and a reading planner
+- Installable PWA with an offline page
+- Light and dark themes
+- Localized interface with right-to-left layout for Arabic and Urdu
+
+**Languages:** English, Bangla (bn), Urdu (ur), Hindi (hi), Arabic (ar)
+
+**License:** [MIT](./LICENSE)
+
+**Data:** Quran text, translations and tafsir via the [Quran.com API](https://api-docs.quran.com) (Quran Foundation).
+
+Built with Next.js, React, TypeScript and Tailwind CSS.
 
 ## Quick Start
 
