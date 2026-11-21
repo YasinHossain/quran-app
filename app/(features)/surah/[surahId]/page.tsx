@@ -75,10 +75,12 @@ function buildSurahDescription(
     return translator.t('seo_surah_description_fallback', { number: rawId, siteName: SITE_NAME });
   }
 
-  const key =
+  const base =
     chapter.revelation_place === 'makkah'
       ? 'seo_surah_description_makkah'
       : 'seo_surah_description_madinah';
+  // Only pages whose full text carries the transliteration mention it.
+  const key = hasFullTextTransliteration(surahId) ? `${base}_transliteration` : base;
   return translator.t(key, {
     name: surahDisplayName(translator, chapter, rawId),
     number: surahId,
@@ -159,10 +161,13 @@ export async function generateMetadata({ params }: SurahPageProps): Promise<Meta
       : Promise.resolve(undefined),
   ]);
   const title = chapter
-    ? translator.t('seo_surah_title', {
-        name: translator.chapterName(chapter),
-        number: surahId,
-      })
+    ? translator.t(
+        hasFullTextTransliteration(surahId) ? 'seo_surah_title_transliteration' : 'seo_surah_title',
+        {
+          name: translator.chapterName(chapter),
+          number: surahId,
+        }
+      )
     : translator.t('seo_surah_name', { name: rawId });
 
   return buildLocalizedPageMetadata({

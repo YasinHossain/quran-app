@@ -29,7 +29,7 @@ describe('buildVerseMetadataText', () => {
 
     expect(title).toBe('Surah Al-Ikhlas 112:1 – Say, "He is Allāh, [who is] One,');
     expect(description).toBe(
-      'Say, "He is Allāh, [who is] One, Surah Al-Ikhlas 112:1 with Arabic text and tafsir.'
+      'Say, "He is Allāh, [who is] One, Surah Al-Ikhlas 112:1 with Arabic text, transliteration and tafsir.'
     );
   });
 
@@ -90,7 +90,8 @@ describe('buildVerseMetadataText', () => {
       buildVerseMetadataText({ surahName: 'Surah Ya-Sin', verseKey: '36:45', leadText: '' })
     ).toEqual({
       title: 'Surah Ya-Sin 36:45',
-      description: 'Read Surah Ya-Sin 36:45 with Arabic text, translation and tafsir on Al Quran.',
+      description:
+        'Read Surah Ya-Sin 36:45 with Arabic text, transliteration, translation and tafsir on Al Quran.',
     });
   });
 });
