@@ -113,7 +113,9 @@ function ContextViewSwitch({
             className={cn(
               'min-h-touch rounded-md px-3 text-sm font-medium transition-colors lg:min-h-9',
               touchClasses.focus,
-              checked ? 'bg-surface text-foreground shadow-sm' : 'text-muted hover:text-foreground'
+              checked
+                ? 'bg-surface text-foreground shadow-sm'
+                : 'text-foreground/80 hover:text-foreground'
             )}
           >
             {labels[option]}

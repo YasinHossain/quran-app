@@ -6,6 +6,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { ResponsiveVerseActions } from '@/app/shared/ResponsiveVerseActions';
 import { VerseArabic } from '@/app/shared/VerseArabic';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import { toLanguageCode } from '@/lib/text/languageCodes';
 import { cn } from '@/lib/utils/cn';
 
 import type { VerseActionsProps } from '@/app/shared/verse-actions';
@@ -149,7 +150,7 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
                           'text-start leading-relaxed text-slate-900 dark:text-stone-200',
                           isEnglish ? 'font-[family-name:var(--font-crimson-text)]' : ''
                         )}
-                        lang={lang}
+                        lang={toLanguageCode(lang)}
                         dir="auto"
                         style={{ fontSize: `${fontSize}px` }}
                         dangerouslySetInnerHTML={{ __html: sanitizeHtml(translation.text) }}

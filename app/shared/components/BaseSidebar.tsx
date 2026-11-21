@@ -111,7 +111,7 @@ export const BaseSidebar = ({
         desktopBreakpoint={desktopBreakpoint}
       />
 
-      <aside
+      <div
         className={cn(
           getPositionClasses(),
           // Ensure we don't override fixed positioning from getPositionClasses
@@ -124,7 +124,7 @@ export const BaseSidebar = ({
         aria-modal={isOpen}
       >
         {shouldRenderContent ? children : null}
-      </aside>
+      </div>
     </>
   );
 };
