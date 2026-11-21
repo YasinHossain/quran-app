@@ -30,7 +30,7 @@ const SecondaryStat = ({
   return (
     <div className="text-lg font-semibold text-foreground break-words">
       {displayValue}
-      <span className="ml-1 text-xs font-medium text-muted">{unit}</span>
+      <span className="ms-1 text-xs font-medium text-muted">{unit}</span>
     </div>
   );
 };

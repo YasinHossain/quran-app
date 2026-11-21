@@ -75,7 +75,7 @@ export const LastReadCard = ({
     >
       <button
         onClick={handleRemove}
-        className="group absolute top-0.5 right-0.5 min-h-touch min-w-touch touch-manipulation grid place-items-center rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 focus:outline-none z-10"
+        className="group absolute top-0.5 end-0.5 min-h-touch min-w-touch touch-manipulation grid place-items-center rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 focus:outline-none z-10"
         aria-label={t('last_read_remove_aria', { defaultValue: 'Remove from recent' })}
       >
         <span className="rounded-full p-1.5 text-muted transition-colors group-hover:bg-red-500/10 group-hover:text-red-500 group-focus-visible:bg-red-500/10 group-focus-visible:text-red-500">

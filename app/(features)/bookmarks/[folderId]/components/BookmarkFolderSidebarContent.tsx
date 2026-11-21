@@ -39,10 +39,10 @@ export const BookmarkFolderSidebarContent = ({
       <button
         type="button"
         onClick={onBack}
-        className="p-1 -ml-1 hover:bg-interactive-hover rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        className="p-1 -ms-1 hover:bg-interactive-hover rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         aria-label="Back"
       >
-        <ArrowLeftIcon />
+        <ArrowLeftIcon className="rtl:-scale-x-100" />
       </button>
       <span className="font-semibold text-lg text-foreground">Folders</span>
       {/* Spacer to keep title centered */}

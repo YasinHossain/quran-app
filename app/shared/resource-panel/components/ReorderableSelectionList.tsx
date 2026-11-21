@@ -39,7 +39,7 @@ const VARIANT_STYLES: Record<SelectionListVariant, VariantStyles> = {
       'flex items-center justify-between p-3 rounded-lg bg-background border border-border hover:bg-accent/10 transition-colors',
     gripIconClassName: 'h-5 w-5',
     removeButtonClassName:
-      'hover:text-accent hover:bg-accent/10 transition-all duration-200 p-1.5 rounded-full flex-shrink-0 ml-2 text-muted',
+      'hover:text-accent hover:bg-accent/10 transition-all duration-200 p-1.5 rounded-full flex-shrink-0 ms-2 text-muted',
     removeIconSize: 14,
   },
   tafsir: {
@@ -51,7 +51,7 @@ const VARIANT_STYLES: Record<SelectionListVariant, VariantStyles> = {
       'flex items-center justify-between p-2 rounded-lg border bg-background border-border shadow-sm hover:bg-accent/5 transition-colors',
     gripIconClassName: 'h-5 w-5',
     removeButtonClassName:
-      'hover:text-accent transition-colors p-1 rounded-full flex-shrink-0 ml-2 text-muted',
+      'hover:text-accent transition-colors p-1 rounded-full flex-shrink-0 ms-2 text-muted',
     removeIconSize: 16,
   },
 };
@@ -188,7 +188,7 @@ function SelectionListItem({
   return (
     <div className={styles.itemRowClassName}>
       <div className="flex items-center min-w-0">
-        <div className="p-1 mr-2 text-muted">
+        <div className="p-1 me-2 text-muted">
           <GripVerticalIcon className={styles.gripIconClassName} />
         </div>
         <span className="font-medium text-sm truncate text-foreground select-none">

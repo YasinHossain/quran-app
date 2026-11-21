@@ -72,7 +72,7 @@ export const SlideOverPanel = ({
         'transition-transform duration-300 will-change-transform transform-gpu',
         isVisible
           ? 'translate-x-0 shadow-lg ease-in-out'
-          : 'translate-x-full shadow-none ease-in-out pointer-events-none',
+          : 'translate-x-full rtl:-translate-x-full shadow-none ease-in-out pointer-events-none',
         className
       )}
     >

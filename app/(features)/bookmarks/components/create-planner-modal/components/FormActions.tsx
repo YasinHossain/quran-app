@@ -27,7 +27,7 @@ export const FormActions = ({ canSubmit, formId }: FormActionsProps): React.JSX.
           disabled={!canSubmit}
           className="min-w-[120px]"
         >
-          <PlusIcon size={16} className="mr-2" />
+          <PlusIcon size={16} className="me-2" />
           {t('planner_create_plan')}
         </Button>
       }

@@ -12,7 +12,7 @@ import { Folder, Bookmark } from '@/types';
 
 const getButtonClasses = (isSelected: boolean): string =>
   cn(
-    'w-full flex items-center gap-4 p-4 rounded-lg transition-all duration-200 text-left tap-scale',
+    'w-full flex items-center gap-4 p-4 rounded-lg transition-all duration-200 text-start tap-scale',
     isSelected
       ? 'bg-accent border border-accent'
       : 'hover:bg-interactive-hover border border-transparent',

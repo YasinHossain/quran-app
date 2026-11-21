@@ -24,7 +24,7 @@ export function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps):
       <div className="max-w-md w-full bg-surface rounded-lg shadow-lg p-6">
         <div className="flex items-center mb-4">
           <ErrorIcon />
-          <div className="ml-3">
+          <div className="ms-3">
             <h3 className="text-lg font-medium text-foreground">Something went wrong</h3>
           </div>
         </div>

@@ -50,8 +50,8 @@ export function WorkspaceMain({
         'relative flex flex-1 flex-col text-foreground workspace-main-scroll',
         topClass,
         'pb-safe',
-        shouldReserveLeft && 'xl:pl-reader-sidebar-left',
-        shouldReserveRight && 'xl:pr-reader-sidebar-right',
+        shouldReserveLeft && 'xl:ps-reader-sidebar-left',
+        shouldReserveRight && 'xl:pe-reader-sidebar-right',
         className
       )}
     >

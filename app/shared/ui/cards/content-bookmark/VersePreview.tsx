@@ -37,7 +37,8 @@ export const VersePreview = memo(function VersePreview({
       {translation && (
         <div>
           <p
-            className="text-left leading-relaxed text-muted line-clamp-2 text-sm"
+            dir="auto"
+            className="text-start leading-relaxed text-muted line-clamp-2 text-sm"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(translation) }}
           />
         </div>

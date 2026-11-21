@@ -9,7 +9,7 @@ type SearchSize = 'sm' | 'md' | 'lg';
 type SizeStyles = {
   container: string;
   inputBase: string; // base padding without right pad
-  rightPad: string; // default right padding
+  endPad: string; // default right padding
   icon: { size: number; className: string };
 };
 
@@ -43,23 +43,23 @@ const getSizeStyles = (size: SearchSize): SizeStyles => {
     case 'sm':
       return {
         container: 'text-mobile-sm',
-        inputBase: 'pl-8 sm:pl-9 py-2 min-h-touch',
-        rightPad: 'pr-3',
-        icon: { size: 16, className: 'left-2.5 sm:left-3' },
+        inputBase: 'ps-8 sm:ps-9 py-2 min-h-touch',
+        endPad: 'pe-3',
+        icon: { size: 16, className: 'start-2.5 sm:start-3' },
       };
     case 'lg':
       return {
         container: 'text-mobile sm:text-lg',
-        inputBase: 'pl-11 sm:pl-12 py-3 sm:py-3.5 min-h-touch-lg',
-        rightPad: 'pr-4',
-        icon: { size: 20, className: 'left-3.5 sm:left-4' },
+        inputBase: 'ps-11 sm:ps-12 py-3 sm:py-3.5 min-h-touch-lg',
+        endPad: 'pe-4',
+        icon: { size: 20, className: 'start-3.5 sm:start-4' },
       };
     default: // md
       return {
         container: 'text-mobile',
-        inputBase: 'pl-9 sm:pl-10 py-2.5 min-h-touch',
-        rightPad: 'pr-4',
-        icon: { size: 18, className: 'left-3 sm:left-3.5' },
+        inputBase: 'ps-9 sm:ps-10 py-2.5 min-h-touch',
+        endPad: 'pe-4',
+        icon: { size: 18, className: 'start-3 sm:start-3.5' },
       };
   }
 };
@@ -104,7 +104,7 @@ export const SearchInput = ({
 
   const IconComponent = SearchIcon;
   const iconSize = sizeStyles.icon.size;
-  const rightPad = endAdornment ? 'pr-14' : sizeStyles.rightPad;
+  const endPad = endAdornment ? 'pe-14' : sizeStyles.endPad;
 
   return (
     <div className={`relative ${sizeStyles.container} ${className}`}>
@@ -119,7 +119,7 @@ export const SearchInput = ({
         placeholder={placeholder}
         onKeyDown={onKeyDown}
         onFocus={onFocus}
-        className={`w-full ${sizeStyles.inputBase} ${rightPad} rounded-lg outline-none focus:outline-none ${focusStyles} transition-all duration-300 ${hoverStyles} ${variantStyles} touch-manipulation`}
+        className={`w-full ${sizeStyles.inputBase} ${endPad} rounded-lg outline-none focus:outline-none ${focusStyles} transition-all duration-300 ${hoverStyles} ${variantStyles} touch-manipulation`}
         autoCapitalize="off"
         autoComplete="off"
         autoCorrect="off"
@@ -127,7 +127,7 @@ export const SearchInput = ({
         inputMode="search"
       />
       {endAdornment && (
-        <div className="absolute right-2.5 sm:right-3 top-1/2 -translate-y-1/2 pointer-events-none select-none">
+        <div className="absolute end-2.5 sm:end-3 top-1/2 -translate-y-1/2 pointer-events-none select-none">
           {endAdornment}
         </div>
       )}

@@ -23,13 +23,13 @@ function LayoutContent({ children }: { children: ReactNode }): ReactElement {
     <ModernLayout isNavHidden={isNavHidden}>
       <Header />
 
-      {/* Simple unified navigation: desktop left sidebar, mobile bottom */}
+      {/* Simple unified navigation: desktop start-side rail, mobile bottom */}
       <Navigation />
 
       {/* Sidebars are managed per-feature (ReaderShell/BookmarksLayout) */}
 
       {/* Main content area with proper margins for both sidebars */}
-      <div className="flex flex-col min-h-[100dvh] xl:pl-16">
+      <div className="flex flex-col min-h-[100dvh] xl:ps-16">
         <div className="flex-grow min-h-0 transition-all duration-300">{children}</div>
       </div>
     </ModernLayout>
