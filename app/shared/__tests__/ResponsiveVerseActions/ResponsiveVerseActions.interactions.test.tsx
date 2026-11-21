@@ -54,7 +54,7 @@ describe('ResponsiveVerseActions interactions · bookmarking', () => {
     const onBookmark = jest.fn();
     renderResponsiveVerseActions({ onBookmark, showRemove: true, isBookmarked: true });
 
-    const bookmarkButton = await screen.findByRole('button', { name: /remove bookmark/i });
+    const bookmarkButton = await screen.findByRole('button', { name: /remove_bookmark/i });
     await act(async () => {
       fireEvent.click(bookmarkButton);
     });
@@ -75,7 +75,7 @@ describe('ResponsiveVerseActions interactions · accessibility', () => {
   it('shows loading state', async () => {
     renderResponsiveVerseActions({ isLoadingAudio: true });
 
-    await screen.findByRole('button', { name: /play audio/i });
+    await screen.findByRole('button', { name: /play_audio/i });
   });
 
   it('supports keyboard navigation', async () => {

@@ -1,7 +1,6 @@
 import {
-  DEFAULT_UI_LANGUAGE,
   ENABLED_LANGUAGES,
-  getLanguageDefinition,
+  TAFSIR_LANGUAGES,
   type UiLanguageCode,
 } from '@/app/shared/i18n/languageRegistry';
 import { buildSurahRoute, buildTafsirRoute, buildVerseRoute } from '@/app/shared/navigation/routes';
@@ -112,16 +111,13 @@ export function buildSitemapEntries(
 type VerseCounts = ReadonlyArray<number>;
 
 /**
- * Languages whose tafsir pages are listed. A language that falls back to the default language's
- * tafsir (Hindi uses the English Ibn Kathir) would only list duplicates of the English pages; its
- * tafsir URLs still exist and keep their hreflang alternates.
+ * Languages whose tafsir pages are listed (`hasOwnTafsir` in the registry). A language that falls
+ * back to another language's tafsir (Hindi uses the English Ibn Kathir) would only list
+ * duplicates; its tafsir pages are `noindex` and left out of the tafsir hreflang alternates.
  */
-export const TAFSIR_SITEMAP_LANGUAGES: ReadonlyArray<UiLanguageCode> = ENABLED_LANGUAGES.filter(
-  (language) =>
-    language.code === DEFAULT_UI_LANGUAGE ||
-    language.content.tafsirIds[0] !==
-      getLanguageDefinition(DEFAULT_UI_LANGUAGE).content.tafsirIds[0]
-).map((language) => language.code);
+export const TAFSIR_SITEMAP_LANGUAGES: ReadonlyArray<UiLanguageCode> = TAFSIR_LANGUAGES.map(
+  (language) => language.code
+);
 
 export const SITEMAP_CHILD_IDS: ReadonlyArray<string> = [
   'core',
@@ -137,7 +133,8 @@ function buildPerVerseEntries(
   locale: UiLanguageCode,
   verseCounts: VerseCounts,
   buildPath: (surahId: number, verseId: number) => string,
-  priority: number
+  priority: number,
+  languages: Parameters<typeof buildHreflangAlternates>[1] = ENABLED_LANGUAGES
 ): MetadataRoute.Sitemap {
   return forEachVerse(verseCounts, (surahId, verseId) => {
     const path = buildPath(surahId, verseId);
@@ -146,7 +143,7 @@ function buildPerVerseEntries(
       lastModified: SEO_CONTENT_LAST_MODIFIED,
       changeFrequency: 'monthly' as const,
       priority,
-      alternates: { languages: buildHreflangAlternates(path) },
+      alternates: { languages: buildHreflangAlternates(path, languages) },
     };
   });
 }
@@ -166,7 +163,7 @@ export function buildSitemapChild(
   if (!isEnabledLanguage(code)) return null;
   return kind === 'verses'
     ? buildPerVerseEntries(code, verseCounts, buildVerseRoute, 0.7)
-    : buildPerVerseEntries(code, verseCounts, buildTafsirRoute, 0.6);
+    : buildPerVerseEntries(code, verseCounts, buildTafsirRoute, 0.6, TAFSIR_LANGUAGES);
 }
 
 export const sitemapChildUrl = (id: string): string => absoluteUrl(`/sitemaps/${id}.xml`);

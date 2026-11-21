@@ -17,6 +17,7 @@ import {
 } from '@/app/shared/navigation/routes';
 import {
   formatVerseKey,
+  getGlobalVerseId,
   getNextVerse,
   getPreviousVerse,
   parseVerseAddress,
@@ -24,12 +25,12 @@ import {
 } from '@/app/shared/navigation/verseNavigation';
 import {
   getChaptersServer,
-  getVersePageContextServer,
   getVersePageTafsirServer,
-  getVersePageVerseServer,
+  getVersePageVersesServer,
   toVerseCounts,
   type VersePageTafsir,
   type VersePageVerse,
+  type VersePageVerses,
 } from '@/lib/api/server';
 import { buildLocalizedPageMetadata, localizedUrl } from '@/lib/seo/localizedMetadata';
 import { SITE_NAME } from '@/lib/seo/site';
@@ -56,6 +57,8 @@ interface ResolvedVerse {
   address: VerseAddress;
   verseKey: string;
   chapter: Chapter;
+  /** Quran.com verse id (1–6236), from chapter data. */
+  globalVerseId: number;
   previous: VerseAddress | null;
   next: VerseAddress | null;
 }
@@ -78,10 +81,20 @@ async function resolveVerse(params: VersePageProps['params']): Promise<ResolvedV
     address,
     verseKey: formatVerseKey(address),
     chapter,
+    globalVerseId: getGlobalVerseId(address, verseCounts),
     previous: getPreviousVerse(address, verseCounts),
     next: getNextVerse(address, verseCounts),
   };
 }
+
+/** The verse and its context in one cached request; same arguments in metadata and page. */
+const loadVerses = (resolved: ResolvedVerse, locale: UiLanguageCode): Promise<VersePageVerses> =>
+  getVersePageVersesServer({
+    surahId: resolved.address.surahId,
+    verseKey: resolved.verseKey,
+    globalVerseId: resolved.globalVerseId,
+    translationIds: getServerReaderDefaults(locale).translationIds,
+  });
 
 const surahTitle = (translator: ServerTranslator, chapter: Chapter): string =>
   translator.t('seo_surah_name', { name: translator.chapterName(chapter) });
@@ -91,12 +104,15 @@ const leadText = (verse: VersePageVerse | undefined): string | undefined =>
   verse ? (verse.translations[0]?.html ?? verse.arabic) : undefined;
 
 export async function generateMetadata({ params }: VersePageProps): Promise<Metadata> {
-  const { address, verseKey, chapter } = await resolveVerse(params);
+  const resolved = await resolveVerse(params);
+  const { address, verseKey, chapter } = resolved;
   const locale = await getRequestUiLanguage();
-  const { translationIds } = getServerReaderDefaults(locale);
   const [translator, verse] = await Promise.all([
     getServerTranslator(locale),
-    getVersePageVerseServer(verseKey, translationIds).catch(() => undefined),
+    loadVerses(resolved, locale).then(
+      (verses) => verses.verse,
+      () => undefined
+    ),
   ]);
 
   const { title, description } = buildVerseMetadataText({
@@ -437,17 +453,17 @@ function VerseContext({
 }
 
 export default async function VersePage({ params }: VersePageProps): Promise<React.JSX.Element> {
-  const { address, verseKey, chapter, previous, next } = await resolveVerse(params);
+  const resolved = await resolveVerse(params);
+  const { address, verseKey, chapter, previous, next } = resolved;
   const locale = await getRequestUiLanguage();
-  const { translationIds, tafsirId } = getServerReaderDefaults(locale);
+  const { tafsirId } = getServerReaderDefaults(locale);
 
-  const [translator, verse, tafsir] = await Promise.all([
+  // No waterfall: the range request already contains the verse itself.
+  const [translator, { verse, context }, tafsir] = await Promise.all([
     getServerTranslator(locale),
-    getVersePageVerseServer(verseKey, translationIds),
+    loadVerses(resolved, locale),
     getVersePageTafsirServer(verseKey, tafsirId),
   ]);
-  // Neighbours in one cached range request (needs the verse id from the fetch above).
-  const context = await getVersePageContextServer(address.surahId, verse, translationIds[0]);
 
   const surahName = surahTitle(translator, chapter);
   const heading = translator.t('seo_verse_title_fallback', { surah: surahName, verseKey });
@@ -476,15 +492,16 @@ export default async function VersePage({ params }: VersePageProps): Promise<Rea
         <VerseLocation translator={translator} verse={verse} />
       </header>
 
-      {/* Mobile: one column in DOM order. Desktop: the context list becomes a side column. */}
-      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-x-8">
+      {/* Mobile: one column in DOM order. Desktop: the context list becomes a side column spanning
+          every row; the trailing `1fr` row absorbs its extra height so the main cards stay stacked. */}
+      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:grid-rows-[auto_auto_auto_auto_1fr] lg:items-start lg:gap-x-8">
         <VerseTextCard translator={translator} verse={verse} verseKey={verseKey} />
 
         <VerseContext
           translator={translator}
           address={address}
           verses={context}
-          className="lg:sticky lg:top-[calc(var(--reader-header-height)+1rem)] lg:col-start-2 lg:row-span-4 lg:row-start-1"
+          className="lg:sticky lg:top-[calc(var(--reader-header-height)+1rem)] lg:col-start-2 lg:row-span-5 lg:row-start-1"
         />
 
         <VerseTafsirExcerpt translator={translator} address={address} tafsir={tafsir} />

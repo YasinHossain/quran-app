@@ -43,6 +43,7 @@ Add an entry to `LANGUAGE_REGISTRY` in `app/shared/i18n/languageRegistry.ts`:
   content: {
     translationIds: [TRANSLATION_ID], // from step 1; [] = Arabic text only
     tafsirIds: [TAFSIR_ID],           // from step 1, or 169 (English) with a comment
+    hasOwnTafsir: true,               // false when tafsirIds falls back to another language
     wordLang: 'id',                   // word-by-word language, or 'en' if unsupported
     wordTranslationId: TRANSLATION_ID,
   },
@@ -87,7 +88,8 @@ Check that:
   (`…/id/surah/36`), `hreflang` links for every enabled language plus `x-default`, a localized
   `<title>`, and the full-text `<details>` with 83 verses in the chosen translation.
 - `/sitemap.xml` (a sitemap index) lists `verses-id`, and `tafsir-id` when the language has its
-  own tafsir (a language that falls back to the English tafsir gets no tafsir child).
+  own tafsir (a language that falls back to the English tafsir, `hasOwnTafsir: false`, gets no
+  tafsir child; its tafsir pages are `noindex, follow` and left out of tafsir hreflang).
 - Unprefixed `/surah/36` with no cookie and no `Accept-Language` still returns 200 in English.
 - In a browser (DevTools or Playwright, phone viewport, after network idle) the page keeps the 83
   verses in the full-text section, the console has no hydration errors, and no request refetches

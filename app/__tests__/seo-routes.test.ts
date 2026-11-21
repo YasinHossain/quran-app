@@ -23,15 +23,25 @@ jest.mock('@/lib/api/server', () => ({
   getJuzInitialDataServer: jest.fn(),
   getChaptersServer: async () => CHAPTERS,
   toVerseCounts: (chapters: typeof CHAPTERS) => chapters.map((c) => c.verses_count),
-  getVersePageVerseServer: async (verseKey: string, translationIds: number[]) => {
+  getVersePageVersesServer: async (input: {
+    verseKey: string;
+    globalVerseId: number;
+    translationIds: number[];
+  }) => {
     if (mockVerseText === undefined) throw new Error('upstream down');
-    return {
-      id: 262,
-      verseKey,
+    const verse = {
+      id: input.globalVerseId,
+      verseKey: input.verseKey,
       arabic: 'ٱللَّهُ لَآ إِلَـٰهَ إِلَّا هُوَ',
-      translations: translationIds.map((resourceId) => ({ resourceId, html: mockVerseText })),
+      translations: input.translationIds.map((resourceId) => ({ resourceId, html: mockVerseText })),
     };
+    return { verse, context: [verse] };
   },
+  getTafsirVersePageDataServer: async ({ verseKey }: { verseKey: string }) => ({
+    verse: { verse_key: verseKey, text_uthmani: 'ٱللَّهُ', translations: [] },
+    tafsirHtml: '<p>Tafsir</p>',
+    tafsirResource: undefined,
+  }),
   getVersePageTafsirServer: async () => undefined,
   // Plain function: the Jest config resets `jest.fn` implementations between tests.
   getChapterServer: async (id: number) => ({
@@ -48,6 +58,9 @@ import { generateMetadata as generateJuzMetadata } from '@/app/(features)/juz/[j
 import { generateMetadata as generateJuzIndexMetadata } from '@/app/(features)/juz/page';
 import { generateMetadata as generateVerseMetadata } from '@/app/(features)/surah/[surahId]/[verseId]/page';
 import { generateMetadata as generateSurahMetadata } from '@/app/(features)/surah/[surahId]/page';
+import TafsirVersePage, {
+  generateMetadata as generateTafsirMetadata,
+} from '@/app/(features)/tafsir/[surahId]/[ayahId]/page';
 import robots from '@/app/robots';
 import { ENABLED_LANGUAGES } from '@/app/shared/i18n/languageRegistry';
 import {
@@ -177,7 +190,17 @@ describe('SEO routes', () => {
     const tafsir = buildSitemapChild('tafsir-ur', verseCounts) ?? [];
     expect(tafsir).toHaveLength(293);
     expect(tafsir[0]?.url).toBe(`${BASE}/ur/tafsir/al-fatihah/1`);
-    expect(tafsir[0]?.alternates?.languages).toHaveProperty('hi', `${BASE}/hi/tafsir/al-fatihah/1`);
+    // Hindi tafsir pages duplicate the English text, so they are not an alternate.
+    expect(tafsir[0]?.alternates?.languages).toEqual({
+      en: `${BASE}/tafsir/al-fatihah/1`,
+      bn: `${BASE}/bn/tafsir/al-fatihah/1`,
+      ar: `${BASE}/ar/tafsir/al-fatihah/1`,
+      ur: `${BASE}/ur/tafsir/al-fatihah/1`,
+      'x-default': `${BASE}/tafsir/al-fatihah/1`,
+    });
+    expect(renderSitemapXml(buildSitemapChild('tafsir-en', [7]) ?? [])).not.toContain(
+      'hreflang="hi"'
+    );
 
     expect(buildSitemapChild('tafsir-hi', verseCounts)).toBeNull();
     expect(buildSitemapChild('verses-fr', verseCounts)).toBeNull();
@@ -243,6 +266,49 @@ describe('SEO routes', () => {
       await expect(verseMetadata(surahId, verseId)).rejects.toMatchObject({
         digest: expect.stringContaining('404'),
       });
+    });
+  });
+
+  describe('tafsir pages', () => {
+    const tafsirParams = (surahId: string, ayahId: string) => ({
+      params: Promise.resolve({ surahId, ayahId }),
+    });
+
+    it('is indexable with hreflang for the languages that have their own tafsir', async () => {
+      const metadata = await generateTafsirMetadata(tafsirParams('al-baqarah', '255'));
+
+      expect(metadata.robots).toBeUndefined();
+      expect(metadata.alternates?.canonical).toBe(`${BASE}/tafsir/al-baqarah/255`);
+      expect(Object.keys(metadata.alternates?.languages ?? {})).toEqual([
+        'en',
+        'bn',
+        'ar',
+        'ur',
+        'x-default',
+      ]);
+    });
+
+    it('keeps /hi tafsir pages (English tafsir text) out of the index', async () => {
+      mockUiLanguage = 'hi';
+      const metadata = await generateTafsirMetadata(tafsirParams('al-baqarah', '255'));
+
+      expect(metadata.robots).toEqual({ index: false, follow: true });
+      expect(metadata.alternates?.languages).not.toHaveProperty('hi');
+    });
+
+    it.each([
+      ['al-baqarah', '999'],
+      ['al-baqarah', '287'],
+      ['al-baqarah', '0'],
+      ['al-baqarah', 'abc'],
+      ['al-baqarah', '02'],
+      ['not-a-surah', '1'],
+    ])('404s for %s:%s', async (surahId, ayahId) => {
+      const notFound = { digest: expect.stringContaining('404') };
+      await expect(generateTafsirMetadata(tafsirParams(surahId, ayahId))).rejects.toMatchObject(
+        notFound
+      );
+      await expect(TafsirVersePage(tafsirParams(surahId, ayahId))).rejects.toMatchObject(notFound);
     });
   });
 });

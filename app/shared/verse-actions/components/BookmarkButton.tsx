@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { BookmarkIcon, BookmarkOutlineIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
@@ -17,10 +18,13 @@ export const BookmarkButton = memo(function BookmarkButton({
   showRemove,
   onClick,
 }: BookmarkButtonProps): React.JSX.Element {
+  const { t } = useTranslation();
+  // Same wording as the verse actions menu (the button opens the pin/bookmark dialog).
+  const label = showRemove ? t('remove_bookmark') : t('pin_or_bookmark');
   return (
     <button
-      aria-label={showRemove ? 'Remove bookmark' : 'Bookmark'}
-      title={showRemove ? 'Remove bookmark' : 'Bookmark'}
+      aria-label={label}
+      title={label}
       onClick={onClick}
       className={cn(
         'p-1.5 rounded-full hover:bg-interactive-hover transition flex items-center justify-center',

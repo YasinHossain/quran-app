@@ -13,9 +13,8 @@ export { getPrerenderedVersesServer } from './prerenderedVerses';
 export {
   CONTEXT_VERSES_EACH_SIDE,
   getVerseCountsServer,
-  getVersePageContextServer,
   getVersePageTafsirServer,
-  getVersePageVerseServer,
+  getVersePageVersesServer,
   toVerseCounts,
 } from './versePage';
-export type { VersePageTafsir, VersePageVerse } from './versePage';
+export type { VersePageTafsir, VersePageVerse, VersePageVerses } from './versePage';

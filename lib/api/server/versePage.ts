@@ -59,40 +59,6 @@ export async function getVerseCountsServer(): Promise<VerseCounts> {
   return toVerseCounts(await getChaptersServer());
 }
 
-const getVerseTextCached = unstable_cache(
-  async (verseKey: string, translationIdsKey: string): Promise<VersePageVerse> => {
-    const data = await apiFetch<{ verse: ApiVerse }>(
-      `verses/by_key/${encodeURIComponent(verseKey)}`,
-      {
-        words: 'false',
-        fields: 'text_uthmani',
-        ...(translationIdsKey
-          ? { translations: translationIdsKey, translation_fields: 'resource_name,language_name' }
-          : {}),
-      },
-      'Failed to fetch verse text'
-    );
-    return toVersePageVerse(data.verse);
-  },
-  ['verse-page:verse:v2'],
-  { revalidate: 86400, tags: ['verse-page-verse'] }
-);
-
-/** One verse as text with the given translations, in the order of `translationIds`. */
-export async function getVersePageVerseServer(
-  verseKey: string,
-  translationIds: ReadonlyArray<number>
-): Promise<VersePageVerse> {
-  const verse = await getVerseTextCached(verseKey, translationIds.join(','));
-  const order = new Map(translationIds.map((id, index) => [id, index]));
-  return {
-    ...verse,
-    translations: verse.translations
-      .filter((translation) => order.has(translation.resourceId))
-      .sort((a, b) => (order.get(a.resourceId) ?? 0) - (order.get(b.resourceId) ?? 0)),
-  };
-}
-
 /** Verses read around the current one on the verse page (same surah only). */
 export const CONTEXT_VERSES_EACH_SIDE = 2;
 
@@ -120,34 +86,45 @@ const getVerseRangeCached = unstable_cache(
     );
     return data.verses.map(toVersePageVerse);
   },
-  ['verse-page:range:v1'],
+  ['verse-page:range:v2'],
   { revalidate: 86400, tags: ['verse-page-verse'] }
 );
 
+export interface VersePageVerses {
+  /** The requested verse with every translation in `translationIds`, in that order. */
+  verse: VersePageVerse;
+  /** Up to `CONTEXT_VERSES_EACH_SIDE` verses on each side in the same surah, including `verse`. */
+  context: VersePageVerse[];
+}
+
 /**
- * Up to `CONTEXT_VERSES_EACH_SIDE` verses before and after `verse` in its surah (including it), in
- * one cached request, with at most one translation. Empty when the range cannot be loaded.
+ * The verse and its neighbours in one cached range request (shared by `generateMetadata` and the
+ * page). `globalVerseId` is the Quran.com verse id (1–6236), computed from chapter data, so the
+ * range does not wait for a separate verse request. Throws when the verse cannot be loaded.
  */
-export async function getVersePageContextServer(
-  surahId: number,
-  verse: Pick<VersePageVerse, 'id' | 'verseKey'>,
-  translationId: number | undefined
-): Promise<VersePageVerse[]> {
-  try {
-    return await getVerseRangeCached(
-      surahId,
-      Math.max(1, verse.id - CONTEXT_VERSES_EACH_SIDE),
-      verse.id + CONTEXT_VERSES_EACH_SIDE,
-      translationId === undefined ? '' : String(translationId)
-    );
-  } catch (error) {
-    logger.error(
-      'Failed to fetch verse context',
-      { verseKey: verse.verseKey },
-      normaliseError(error)
-    );
-    return [];
-  }
+export async function getVersePageVersesServer(input: {
+  surahId: number;
+  verseKey: string;
+  globalVerseId: number;
+  translationIds: ReadonlyArray<number>;
+}): Promise<VersePageVerses> {
+  const { surahId, verseKey, globalVerseId, translationIds } = input;
+  const range = await getVerseRangeCached(
+    surahId,
+    Math.max(1, globalVerseId - CONTEXT_VERSES_EACH_SIDE),
+    globalVerseId + CONTEXT_VERSES_EACH_SIDE,
+    translationIds.join(',')
+  );
+  const order = new Map(translationIds.map((id, index) => [id, index]));
+  const context = range.map((verse) => ({
+    ...verse,
+    translations: verse.translations
+      .filter((translation) => order.has(translation.resourceId))
+      .sort((a, b) => (order.get(a.resourceId) ?? 0) - (order.get(b.resourceId) ?? 0)),
+  }));
+  const verse = context.find((candidate) => candidate.verseKey === verseKey);
+  if (!verse) throw new Error(`Verse ${verseKey} missing from its context range`);
+  return { verse, context };
 }
 
 /** Tafsir HTML and attribution; `undefined` when it cannot be loaded (the page still renders). */

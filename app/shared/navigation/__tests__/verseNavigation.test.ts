@@ -1,8 +1,10 @@
 import {
+  getGlobalVerseId,
   getNextVerse,
   getPreviousVerse,
   parseVerseAddress,
 } from '@/app/shared/navigation/verseNavigation';
+import { SURAH_VERSE_COUNTS } from '@/lib/seo/surahSlugs';
 
 // Real counts for the surahs used here; 2..113 only need to exist.
 const verseCounts = Array.from({ length: 114 }, (_, index) =>
@@ -50,5 +52,14 @@ describe('verse addressing', () => {
   it('has no previous before 1:1 and no next after 114:6', () => {
     expect(getPreviousVerse({ surahId: 1, verseId: 1 }, verseCounts)).toBeNull();
     expect(getNextVerse({ surahId: 114, verseId: 6 }, verseCounts)).toBeNull();
+  });
+});
+
+describe('getGlobalVerseId', () => {
+  it('numbers verses in mushaf order (the Quran.com verse id)', () => {
+    expect(getGlobalVerseId({ surahId: 1, verseId: 1 }, verseCounts)).toBe(1);
+    expect(getGlobalVerseId({ surahId: 2, verseId: 1 }, verseCounts)).toBe(8);
+    expect(getGlobalVerseId({ surahId: 2, verseId: 255 }, verseCounts)).toBe(262);
+    expect(getGlobalVerseId({ surahId: 114, verseId: 6 }, SURAH_VERSE_COUNTS)).toBe(6236);
   });
 });

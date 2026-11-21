@@ -38,6 +38,13 @@ export function parseVerseAddress(
   return { surahId, verseId };
 }
 
+/** Quran.com verse id (1–6236) of `address`: its position in mushaf order (2:255 → 262). */
+export function getGlobalVerseId(address: VerseAddress, verseCounts: VerseCounts): number {
+  let id = address.verseId;
+  for (let surah = 1; surah < address.surahId; surah += 1) id += getVerseCount(verseCounts, surah);
+  return id;
+}
+
 /** Previous verse in mushaf order; crosses into the previous surah (2:1 → 1:7). */
 export function getPreviousVerse(
   address: VerseAddress,
