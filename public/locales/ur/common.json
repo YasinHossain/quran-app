@@ -460,6 +460,7 @@
   "verse_page_navigation": "آیات کی نیویگیشن",
   "verse_page_previous": "پچھلی آیت",
   "verse_page_next": "اگلی آیت",
+  "verse_page_transliteration": "رومن تلفظ",
   "verse_page_tafsir_source": "ماخذ: {{name}}",
   "verse_page_read_full_tafsir": "مکمل تفسیر پڑھیں",
   "verse_page_read_surah": "{{surah}} پڑھیں",

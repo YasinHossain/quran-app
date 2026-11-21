@@ -55,6 +55,25 @@ describe('ReaderFullText', () => {
   });
 });
 
+describe('ReaderFullText transliteration', () => {
+  it('reads the Latin transliteration left to right inside an RTL page', () => {
+    const container = renderToContainer(
+      <ReaderFullText
+        title="النص الكامل"
+        lang="ar"
+        dir="rtl"
+        verses={[
+          { verseKey: '108:2', arabic: 'arabic', translations: [], transliteration: 'latin' },
+        ]}
+      />
+    );
+
+    const line = container.querySelector('[data-verse-key="108:2"] [lang="ar-Latn"]');
+    expect(line?.textContent).toBe('latin');
+    expect(line?.getAttribute('dir')).toBe('ltr');
+  });
+});
+
 describe('ReaderFullText verse links', () => {
   const sample = verses.slice(254, 256);
 

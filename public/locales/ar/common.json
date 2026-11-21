@@ -460,6 +460,7 @@
   "verse_page_navigation": "التنقل بين الآيات",
   "verse_page_previous": "الآية السابقة",
   "verse_page_next": "الآية التالية",
+  "verse_page_transliteration": "النطق بالحروف اللاتينية",
   "verse_page_tafsir_source": "المصدر: {{name}}",
   "verse_page_read_full_tafsir": "اقرأ التفسير كاملًا",
   "verse_page_read_surah": "اقرأ {{surah}}",

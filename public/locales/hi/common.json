@@ -460,6 +460,7 @@
   "verse_page_navigation": "आयत नेविगेशन",
   "verse_page_previous": "पिछली आयत",
   "verse_page_next": "अगली आयत",
+  "verse_page_transliteration": "लिप्यंतरण",
   "verse_page_tafsir_source": "स्रोत: {{name}}",
   "verse_page_read_full_tafsir": "पूरी तफ़सीर पढ़ें",
   "verse_page_read_surah": "{{surah}} पढ़ें",

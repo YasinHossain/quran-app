@@ -17,6 +17,7 @@ import {
   getPrerenderedVersesServer,
   getSurahInitialDataServer,
 } from '@/lib/api/server';
+import { hasFullTextTransliteration } from '@/lib/seo/fullTextTransliteration';
 import { buildLocalizedPageMetadata, localizedUrl } from '@/lib/seo/localizedMetadata';
 import { SITE_NAME } from '@/lib/seo/site';
 import { SURAH_SLUGS, resolveSurahParam } from '@/lib/seo/surahSlugs';
@@ -204,6 +205,8 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
           group: 'by_chapter',
           id: String(surahId),
           translationIds,
+          // Long surahs skip it to keep the page light; see `hasFullTextTransliteration`.
+          transliteration: hasFullTextTransliteration(surahId),
         })
       : Promise.resolve(undefined),
   ]);
