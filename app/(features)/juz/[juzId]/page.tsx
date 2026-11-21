@@ -1,3 +1,5 @@
+import { notFound } from 'next/navigation';
+
 import {
   getFullTextTitleTemplates,
   getRequestUiLanguage,
@@ -6,10 +8,11 @@ import {
   type ServerTranslator,
 } from '@/app/shared/i18n/serverLocale';
 import { getUiLanguageDirection } from '@/app/shared/i18n/uiLanguages';
-import { getAllJuzs } from '@/app/shared/navigation/datasets';
+import { JuzSurahList } from '@/app/shared/reader/JuzSurahList';
 import { ReaderFullText, buildFullTextTitle } from '@/app/shared/reader/ReaderFullText';
 import { ReaderServerDataProvider } from '@/app/shared/reader/ReaderServerData';
 import { getJuzInitialDataServer, getPrerenderedVersesServer } from '@/lib/api/server';
+import { buildJuzTitle, findJuzById as findJuz } from '@/lib/seo/juzSurahs';
 import { buildLocalizedPageMetadata } from '@/lib/seo/localizedMetadata';
 import { SITE_NAME } from '@/lib/seo/site';
 
@@ -48,13 +51,6 @@ function buildJuzDescription(
   });
 }
 
-const findJuz = (juzId: string): JuzSummary | undefined => {
-  const numericJuzId = Number.parseInt(juzId, 10);
-  return Number.isFinite(numericJuzId)
-    ? getAllJuzs().find((juz) => juz.number === numericJuzId)
-    : undefined;
-};
-
 export async function generateMetadata({
   params,
 }: {
@@ -64,11 +60,12 @@ export async function generateMetadata({
   const locale = await getRequestUiLanguage();
   const translator = await getServerTranslator(locale);
   const juz = findJuz(juzId);
+  if (!juz) notFound();
 
   return buildLocalizedPageMetadata({
     path: `/juz/${encodeURIComponent(juzId)}`,
     locale,
-    title: translator.t('juz_number', { number: juz?.number ?? juzId }),
+    title: buildJuzTitle(translator, juzId, juz),
     description: buildJuzDescription(translator, juzId, juz),
   });
 }
@@ -85,6 +82,8 @@ export default async function Page({
   // Matches the client reader's API page size (VERSES_PER_PAGE) so the SSR page is reused as page 1.
   const INITIAL_VERSES_PER_PAGE = 10;
   const numericJuzId = Number.parseInt(juzId, 10);
+  const juz = findJuz(juzId);
+  if (!juz) notFound();
   const isValidJuzId = Number.isFinite(numericJuzId) && numericJuzId >= 1 && numericJuzId <= 30;
   const [translator, initialData, prerenderedVerses] = await Promise.all([
     getServerTranslator(locale),
@@ -107,6 +106,16 @@ export default async function Page({
   return (
     <div className="min-h-screen bg-background">
       <ReaderServerDataProvider
+        intro={
+          juz ? (
+            <JuzSurahList
+              juz={juz}
+              translator={translator}
+              locale={locale}
+              dir={getUiLanguageDirection(locale)}
+            />
+          ) : null
+        }
         fullText={
           prerenderedVerses?.length ? (
             <ReaderFullText
