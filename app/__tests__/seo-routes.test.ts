@@ -144,6 +144,35 @@ describe('SEO routes', () => {
     }
   );
 
+  it('keeps the site social image, with size and alt, on surah, verse and tafsir pages', async () => {
+    const pages = {
+      surah: await surahMetadata('al-baqarah'),
+      verse: await generateVerseMetadata({
+        params: Promise.resolve({ surahId: 'al-baqarah', verseId: '255' }),
+      }),
+      tafsir: await generateTafsirMetadata({
+        params: Promise.resolve({ surahId: 'al-baqarah', ayahId: '255' }),
+      }),
+    };
+
+    for (const metadata of Object.values(pages)) {
+      expect(metadata.openGraph?.images).toEqual([
+        expect.objectContaining({
+          url: '/opengraph-image',
+          width: 1200,
+          height: 630,
+          alt: expect.any(String),
+        }),
+      ]);
+      expect(metadata.twitter).toMatchObject({
+        card: 'summary_large_image',
+        images: [expect.objectContaining({ url: '/twitter-image' })],
+      });
+      // The page's own text still wins over the root layout's.
+      expect(metadata.openGraph?.url).toContain('/al-baqarah');
+    }
+  });
+
   it('lists core pages in every language with hreflang alternates', () => {
     const entries = buildSitemapChild('core', []) ?? [];
     const urls = entries.map((entry) => entry.url);

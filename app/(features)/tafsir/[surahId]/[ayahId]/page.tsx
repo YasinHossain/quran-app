@@ -8,7 +8,12 @@ import {
   getTafsirMetadataTemplates,
 } from '@/app/shared/i18n/serverLocale';
 import { buildTafsirRoute } from '@/app/shared/navigation/routes';
-import { parseVerseAddress } from '@/app/shared/navigation/verseNavigation';
+import {
+  getNextVerse,
+  getPreviousVerse,
+  parseVerseAddress,
+  type VerseAddress,
+} from '@/app/shared/navigation/verseNavigation';
 import { getChaptersServer, getTafsirVersePageDataServer, toVerseCounts } from '@/lib/api/server';
 import { buildLocalizedPageMetadata } from '@/lib/seo/localizedMetadata';
 import { resolveSurahParam } from '@/lib/seo/surahSlugs';
@@ -31,15 +36,24 @@ async function resolveTafsirParams(params: TafsirVersePageProps['params']): Prom
   surahId: number;
   ayahId: number;
   chapter: Awaited<ReturnType<typeof getChaptersServer>>[number];
+  previous: VerseAddress | null;
+  next: VerseAddress | null;
 }> {
   const { surahId, ayahId } = await params;
   const surah = resolveSurahParam(surahId);
   if (!surah) notFound();
   const chapters = await getChaptersServer();
-  const address = parseVerseAddress(String(surah.id), ayahId, toVerseCounts(chapters));
+  const verseCounts = toVerseCounts(chapters);
+  const address = parseVerseAddress(String(surah.id), ayahId, verseCounts);
   const chapter = address && chapters.find((c) => c.id === address.surahId);
   if (!address || !chapter) notFound();
-  return { surahId: address.surahId, ayahId: address.verseId, chapter };
+  return {
+    surahId: address.surahId,
+    ayahId: address.verseId,
+    chapter,
+    previous: getPreviousVerse(address, verseCounts),
+    next: getNextVerse(address, verseCounts),
+  };
 }
 
 /** Same arguments for metadata and page body, so the cached server fetches are shared. */
@@ -92,10 +106,13 @@ export async function generateMetadata({ params }: TafsirVersePageProps): Promis
   });
 }
 
+const toNavTarget = (address: VerseAddress | null) =>
+  address ? { surahId: String(address.surahId), ayahId: address.verseId } : null;
+
 export default async function TafsirVersePage({
   params,
 }: TafsirVersePageProps): Promise<React.JSX.Element> {
-  const { surahId, ayahId } = await resolveTafsirParams(params);
+  const { surahId, ayahId, previous, next } = await resolveTafsirParams(params);
   const verseKey = `${surahId}:${ayahId}`;
   const locale = await getRequestUiLanguage();
 
@@ -108,6 +125,8 @@ export default async function TafsirVersePage({
       initialVerse={verse}
       initialTafsirHtml={tafsirHtml}
       initialTafsirResource={tafsirResource}
+      initialPrev={toNavTarget(previous)}
+      initialNext={toNavTarget(next)}
     />
   );
 }

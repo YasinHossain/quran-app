@@ -4,6 +4,9 @@ import { SITE_NAME, absoluteUrl } from '@/lib/seo/site';
 
 import type { Metadata } from 'next';
 
+/** Dimensions of the shared `app/opengraph-image` and `app/twitter-image` routes. */
+const SOCIAL_IMAGE = { width: 1200, height: 630, alt: `${SITE_NAME} – Quran app` };
+
 /** Absolute URL of `path` (an unprefixed route such as `/surah/36`) in `locale`. */
 export function localizedUrl(path: string, locale: UiLanguageCode): string {
   return absoluteUrl(setLocaleInPathname(path, locale));
@@ -73,14 +76,21 @@ export function buildLocalizedPageMetadata(input: {
     description,
     alternates,
     ...(isOwnVersion ? {} : { robots: { index: false, follow: true } }),
+    // A page's `openGraph`/`twitter` replace the root layout's, so the shared site image (not a
+    // per-page image) is repeated here.
     openGraph: {
+      type: 'website',
+      siteName: SITE_NAME,
       title: socialTitle,
       description,
       url: alternates.canonical as string,
+      images: [{ url: '/opengraph-image', ...SOCIAL_IMAGE }],
     },
     twitter: {
+      card: 'summary_large_image',
       title: socialTitle,
       description,
+      images: [{ url: '/twitter-image', alt: SOCIAL_IMAGE.alt }],
     },
   };
 }
