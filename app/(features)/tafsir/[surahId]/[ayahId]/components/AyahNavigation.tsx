@@ -62,6 +62,7 @@ const NavLink = ({ label, target, side, locale }: NavLinkProps): JSX.Element => 
     <Link
       href={localizeHref(buildTafsirUrl(target), locale)}
       prefetch={true}
+      rel={side === 'left' ? 'prev' : 'next'}
       aria-label={label}
       className={baseClasses}
     >

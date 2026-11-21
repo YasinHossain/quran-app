@@ -40,12 +40,17 @@ export default function TafsirVersePageClient({
   initialVerse,
   initialTafsirHtml,
   initialTafsirResource,
+  initialPrev = null,
+  initialNext = null,
 }: {
   surahId: string;
   ayahId: string;
   initialVerse: Verse;
   initialTafsirHtml: string;
   initialTafsirResource?: TafsirResource | undefined;
+  /** Server-computed neighbours, so the first HTML has real prev/next links for crawlers. */
+  initialPrev?: { surahId: string; ayahId: number } | null;
+  initialNext?: { surahId: string; ayahId: number } | null;
 }): React.JSX.Element {
   const { activeVerse, isPlayerVisible, reciter } = useAudio();
   const tafsirDefaults = useMemo(
@@ -64,10 +69,14 @@ export default function TafsirVersePageClient({
     selectedTranslationName,
     selectedTafsirName,
     selectedWordLanguageName,
-    prev,
-    next,
+    prev: clientPrev,
+    next: clientNext,
     currentSurah,
   } = useTafsirVerseData(surahId, ayahId, tafsirDefaults);
+
+  // The client hook needs the chapter list, which is empty during server rendering.
+  const prev = clientPrev ?? initialPrev;
+  const next = clientNext ?? initialNext;
 
   const [isTranslationPanelOpen, openTranslationPanel, closeTranslationPanel] =
     useUIPanelVisibility(TRANSLATION_PANEL_ID);
