@@ -83,7 +83,9 @@
   font-size: 3em;
   line-height: 0.8;
   float: left;
-  margin: 0.1em 0.1em 0 0;
+  float: inline-start;
+  margin: 0.1em 0 0;
+  margin-inline-end: 0.1em;
   font-family: var(--font-libre-baskerville), serif;
   font-weight: 700;
   color: rgb(var(--color-accent));
@@ -91,8 +93,8 @@
 
 /* Improved quote styling */
 .tafsir-content blockquote {
-  border-left: 4px solid rgb(var(--color-accent));
-  padding-left: 1.5rem;
+  border-inline-start: 4px solid rgb(var(--color-accent));
+  padding-inline-start: 1.5rem;
   margin: 2rem 0;
   font-style: italic;
   color: rgb(var(--color-foreground));
@@ -165,7 +167,7 @@
   }
 
   .tafsir-content blockquote {
-    padding-left: 1rem;
+    padding-inline-start: 1rem;
     margin: 1rem 0;
   }
 

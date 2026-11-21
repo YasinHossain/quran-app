@@ -19,7 +19,7 @@ interface Props {
 
 function CoverAndText({ title, artist }: { title: string; artist: string }): React.JSX.Element {
   return (
-    <div className="flex items-center gap-2 min-w-0 pl-1">
+    <div className="flex items-center gap-2 min-w-0 ps-1">
       <div className="min-w-0">
         <div className="text-sm font-semibold tracking-[-0.01em] truncate text-foreground">
           {title}
@@ -91,7 +91,7 @@ export function MobileTopBar({
         <div className="text-sm font-semibold truncate text-foreground min-w-0">
           {formatMobileTitle(title, surahLabel)}
         </div>
-        <div className="text-xs text-muted truncate max-w-[50%] text-right shrink-0">{artist}</div>
+        <div className="text-xs text-muted truncate max-w-[50%] text-end shrink-0">{artist}</div>
       </div>
 
       {/* Desktop Text - Hidden on mobile */}

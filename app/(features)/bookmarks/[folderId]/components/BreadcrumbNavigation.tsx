@@ -16,7 +16,7 @@ export const BreadcrumbNavigation = ({
 
   return (
     <nav
-      className="flex items-center space-x-2 text-sm mb-6 hidden lg:flex"
+      className="flex items-center gap-2 text-sm mb-6 hidden lg:flex"
       aria-label={t('bookmarks_breadcrumb_label')}
     >
       <button

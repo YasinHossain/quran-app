@@ -42,7 +42,7 @@ export const TabNavigation = memo(function TabNavigation({
         <button
           onClick={onClose}
           className={cn(
-            'absolute right-3 top-3 p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center',
+            'absolute end-3 top-3 p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center',
             touchClasses.focus
           )}
           aria-label={t('close')}

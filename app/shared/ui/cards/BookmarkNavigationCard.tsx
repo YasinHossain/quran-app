@@ -119,7 +119,7 @@ export const BookmarkNavigationCard = memo(function BookmarkNavigationCard({
       {...props}
     >
       <IconBadge icon={icon} isActive={activeState} />
-      <div className="flex-1 min-w-0 ml-3">
+      <div className="flex-1 min-w-0 ms-3">
         <div
           className={cn(
             'font-semibold text-sm truncate transition-colors duration-200',

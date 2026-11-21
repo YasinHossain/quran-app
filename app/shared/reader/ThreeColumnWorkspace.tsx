@@ -119,7 +119,7 @@ export function ThreeColumnWorkspace({
           <aside
             className={cn(
               'hidden xl:flex xl:w-reader-sidebar-left xl:flex-col xl:gap-4',
-              'xl:fixed xl:left-16 xl:z-10',
+              'xl:fixed xl:start-16 xl:z-10',
               'workspace-sidebar-left',
               'transition-all duration-300',
               sidebarTopClass,
@@ -137,8 +137,8 @@ export function ThreeColumnWorkspace({
           className={cn(
             'flex min-w-0 flex-1 flex-col',
             // Account for icon sidebar (64px) + left sidebar on xl screens
-            hasLeftSidebar && 'xl:ml-reader-sidebar-left',
-            hasRightSidebar && '2xl:mr-reader-sidebar-right',
+            hasLeftSidebar && 'xl:ms-reader-sidebar-left',
+            hasRightSidebar && '2xl:me-reader-sidebar-right',
             centerContainerClassName
           )}
           data-slot="workspace-center"
@@ -151,7 +151,7 @@ export function ThreeColumnWorkspace({
           <aside
             className={cn(
               'hidden 2xl:flex 2xl:w-reader-sidebar-right 2xl:flex-col 2xl:gap-4',
-              '2xl:fixed 2xl:right-0 2xl:z-10',
+              '2xl:fixed 2xl:end-0 2xl:z-10',
               'workspace-sidebar-right',
               'transition-all duration-300',
               sidebarTopClass,

@@ -24,16 +24,19 @@ export const CollapsibleSection = ({
     <div className={isLast ? '' : 'border-b border-border'}>
       {' '}
       {/* Apply border only if not the last section */}
-      <button onClick={onToggle} className="w-full flex items-center justify-between p-4 text-left">
-        <div className="flex items-center space-x-3">
+      <button
+        onClick={onToggle}
+        className="w-full flex items-center justify-between p-4 text-start"
+      >
+        <div className="flex items-center gap-3">
           {icon}
           <span className="font-semibold text-foreground">{title}</span>
         </div>
         <ChevronRightIcon
           size={16}
           className={cn(
-            'text-muted-foreground transition-transform duration-300',
-            isOpen && 'rotate-90'
+            'text-muted-foreground transition-transform duration-300 rtl:-scale-x-100',
+            isOpen && 'rotate-90 rtl:-rotate-90'
           )}
         />
       </button>

@@ -44,7 +44,7 @@ const DesktopNavigation = memo(function DesktopNavigation({
 
   return (
     <nav
-      className="fixed left-0 top-reader-header bottom-0 hidden w-16 bg-background z-[5] xl:block"
+      className="fixed start-0 top-reader-header bottom-0 hidden w-16 bg-background z-[5] xl:block"
       aria-label="Primary navigation"
     >
       <div className="h-full flex flex-col items-center justify-center space-y-4">

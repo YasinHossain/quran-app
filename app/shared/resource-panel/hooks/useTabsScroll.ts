@@ -10,6 +10,31 @@ export interface UseTabsScrollReturn {
   readonly scrollTabsRight: () => void;
 }
 
+interface ScrollMetrics {
+  readonly scrollLeft: number;
+  readonly scrollWidth: number;
+  readonly clientWidth: number;
+  readonly isRtl: boolean;
+}
+
+/**
+ * Which physical directions still have hidden tabs. In RTL containers browsers
+ * report `scrollLeft` as 0 at the start (right edge) and negative toward the left.
+ */
+export const getPhysicalScrollState = ({
+  scrollLeft,
+  scrollWidth,
+  clientWidth,
+  isRtl,
+}: ScrollMetrics): { canScrollLeft: boolean; canScrollRight: boolean } => {
+  const maxScroll = Math.max(0, scrollWidth - clientWidth);
+  const distanceFromLeft = isRtl ? maxScroll + scrollLeft : scrollLeft;
+  return {
+    canScrollLeft: distanceFromLeft > 1,
+    canScrollRight: distanceFromLeft < maxScroll - 1,
+  };
+};
+
 export const useTabsScroll = (languages: string[], scrollAmount = 200): UseTabsScrollReturn => {
   const tabsContainerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -17,9 +42,15 @@ export const useTabsScroll = (languages: string[], scrollAmount = 200): UseTabsS
 
   const checkScrollState = useCallback(() => {
     if (!tabsContainerRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = tabsContainerRef.current;
-    setCanScrollLeft(scrollLeft > 0);
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1);
+    const container = tabsContainerRef.current;
+    const { canScrollLeft: left, canScrollRight: right } = getPhysicalScrollState({
+      scrollLeft: container.scrollLeft,
+      scrollWidth: container.scrollWidth,
+      clientWidth: container.clientWidth,
+      isRtl: getComputedStyle(container).direction === 'rtl',
+    });
+    setCanScrollLeft(left);
+    setCanScrollRight(right);
   }, []);
 
   const scrollTabsLeft = useCallback(() => {

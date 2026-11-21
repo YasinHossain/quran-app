@@ -78,7 +78,7 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
     const containerClasses = cn(getVariantClasses(variant, isPlaying), className);
     const fontSize = translationFontSize ?? settings.translationFontSize ?? 18;
     const arabicSelectionGutterClassName = extendArabicSelectionGutter
-      ? '-mr-4 pr-1 sm:-mr-6 sm:pr-3 xl:-mr-6 xl:pr-3'
+      ? '-me-4 pe-1 sm:-me-6 sm:pe-3 xl:-me-6 xl:pe-3'
       : undefined;
 
     const sortedTranslations = useMemo(() => {
@@ -146,7 +146,7 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
                       )}
                       <p
                         className={cn(
-                          'text-left leading-relaxed text-slate-900 dark:text-stone-200',
+                          'text-start leading-relaxed text-slate-900 dark:text-stone-200',
                           isEnglish ? 'font-[family-name:var(--font-crimson-text)]' : ''
                         )}
                         lang={lang}

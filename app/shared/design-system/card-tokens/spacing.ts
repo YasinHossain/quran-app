@@ -14,7 +14,7 @@ export const spacing = {
 
   // Margins
   listSpacing: 'space-y-2',
-  listMargin: 'ml-2',
+  listMargin: 'ms-2',
   listMarginBottom: 'mb-4',
   listMarginBottom6: 'mb-6',
 } as const;

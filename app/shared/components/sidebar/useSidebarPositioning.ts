@@ -64,31 +64,31 @@ export const useSidebarPositioning = ({
             : 'mobile-sidebar-shadow-left 2xl:shadow-none'
       : '';
     const panelZIndex = 'z-[120]';
-    const pinnedTranslateClass = `${breakpointClass}:translate-x-0`;
+    const pinnedTranslateClass = `${breakpointClass}:translate-x-0 rtl:${breakpointClass}:translate-x-0`;
 
     if (position === 'left') {
       return cn(
         baseClasses,
-        'left-0',
+        'start-0',
         breakpointClass === 'lg'
-          ? 'lg:left-16'
+          ? 'lg:start-16'
           : breakpointClass === 'xl'
-            ? 'xl:left-16'
-            : '2xl:left-16',
+            ? 'xl:start-16'
+            : '2xl:start-16',
         shadowClasses,
         headerAwareClasses,
         panelZIndex,
-        isOpen ? 'translate-x-0' : '-translate-x-full',
+        isOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full',
         pinnedTranslateClass
       );
     }
     return cn(
       baseClasses,
-      'right-0',
+      'end-0',
       shadowClasses,
       headerAwareClasses,
       panelZIndex,
-      isOpen ? 'translate-x-0' : 'translate-x-full',
+      isOpen ? 'translate-x-0' : 'translate-x-full rtl:-translate-x-full',
       pinnedTranslateClass
     );
   };
