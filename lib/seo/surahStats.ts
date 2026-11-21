@@ -52,3 +52,9 @@ export function splitDuration(durationMs: number): { minutes: number; seconds: n
   const total = Math.max(0, Math.round(durationMs / 1000));
   return { minutes: Math.floor(total / 60), seconds: total % 60 };
 }
+
+/** Hours and remaining minutes (rounded to the nearest minute), for recitations of an hour or more. */
+export function splitHoursMinutes(durationMs: number): { hours: number; minutes: number } {
+  const total = Math.max(0, Math.round(durationMs / 60000));
+  return { hours: Math.floor(total / 60), minutes: total % 60 };
+}

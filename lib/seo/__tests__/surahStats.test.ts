@@ -1,4 +1,4 @@
-import { buildSurahWordStats, splitDuration } from '@/lib/seo/surahStats';
+import { buildSurahWordStats, splitDuration, splitHoursMinutes } from '@/lib/seo/surahStats';
 
 describe('buildSurahWordStats', () => {
   it('totals words and finds the longest and shortest verse of Al-Fatihah', () => {
@@ -27,5 +27,13 @@ describe('splitDuration', () => {
     expect(splitDuration(104000)).toEqual({ minutes: 1, seconds: 44 });
     expect(splitDuration(59600)).toEqual({ minutes: 1, seconds: 0 });
     expect(splitDuration(-5)).toEqual({ minutes: 0, seconds: 0 });
+  });
+});
+
+describe('splitHoursMinutes', () => {
+  it('splits long recitations into hours and rounded minutes', () => {
+    expect(splitHoursMinutes((148 * 60 + 54) * 1000)).toEqual({ hours: 2, minutes: 29 });
+    expect(splitHoursMinutes((119 * 60 + 40) * 1000)).toEqual({ hours: 2, minutes: 0 });
+    expect(splitHoursMinutes(60 * 60 * 1000)).toEqual({ hours: 1, minutes: 0 });
   });
 });
