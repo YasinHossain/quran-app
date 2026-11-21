@@ -120,6 +120,26 @@ describe('SEO routes', () => {
     });
   });
 
+  it('mentions the transliteration in English meta only where the surah page shows it', async () => {
+    // Al-Mursalat (77) is the last surah before Juz 30.
+    for (const slug of ['al-baqarah', 'ya-sin', 'al-mursalat']) {
+      const longSurah = await surahMetadata(slug);
+      expect(longSurah.title).not.toMatch(/transliteration/i);
+      expect(longSurah.description).not.toMatch(/transliteration/i);
+    }
+
+    for (const slug of ['al-fatihah', 'an-naba', 'al-alaq', 'an-nas']) {
+      const shortSurah = await surahMetadata(slug);
+      expect(shortSurah.title).toMatch(/ – Arabic, Transliteration & English Translation$/);
+      expect(shortSurah.description).toContain('Arabic text with transliteration and translation');
+    }
+
+    // Localized titles are unchanged (no English wording falls through).
+    mockUiLanguage = 'bn';
+    const bengali = await surahMetadata('al-alaq');
+    expect(bengali.title).toMatch(/^সূরা .+ \(96\)$/);
+  });
+
   it.each([
     ['bn', 'সূরা', 'মাক্কী'],
     ['ur', 'سورۃ', 'مکی'],
@@ -313,7 +333,9 @@ describe('SEO routes', () => {
       const metadata = await verseMetadata('al-fatihah', '7');
 
       expect(metadata.title).toBe('Surah Al-Fatihah 1:7');
-      expect(metadata.description).toContain('with Arabic text, translation and tafsir');
+      expect(metadata.description).toContain(
+        'with Arabic text, transliteration, translation and tafsir'
+      );
     });
 
     it.each([

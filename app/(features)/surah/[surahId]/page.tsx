@@ -17,6 +17,7 @@ import {
   getPrerenderedVersesServer,
   getSurahInitialDataServer,
 } from '@/lib/api/server';
+import { hasFullTextTransliteration } from '@/lib/seo/fullTextTransliteration';
 import { buildLocalizedPageMetadata, localizedUrl } from '@/lib/seo/localizedMetadata';
 import { SITE_NAME } from '@/lib/seo/site';
 import { SURAH_SLUGS, resolveSurahParam } from '@/lib/seo/surahSlugs';
@@ -74,10 +75,12 @@ function buildSurahDescription(
     return translator.t('seo_surah_description_fallback', { number: rawId, siteName: SITE_NAME });
   }
 
-  const key =
+  const base =
     chapter.revelation_place === 'makkah'
       ? 'seo_surah_description_makkah'
       : 'seo_surah_description_madinah';
+  // Only pages whose full text carries the transliteration mention it.
+  const key = hasFullTextTransliteration(surahId) ? `${base}_transliteration` : base;
   return translator.t(key, {
     name: surahDisplayName(translator, chapter, rawId),
     number: surahId,
@@ -158,10 +161,13 @@ export async function generateMetadata({ params }: SurahPageProps): Promise<Meta
       : Promise.resolve(undefined),
   ]);
   const title = chapter
-    ? translator.t('seo_surah_title', {
-        name: translator.chapterName(chapter),
-        number: surahId,
-      })
+    ? translator.t(
+        hasFullTextTransliteration(surahId) ? 'seo_surah_title_transliteration' : 'seo_surah_title',
+        {
+          name: translator.chapterName(chapter),
+          number: surahId,
+        }
+      )
     : translator.t('seo_surah_name', { name: rawId });
 
   return buildLocalizedPageMetadata({
@@ -204,6 +210,8 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
           group: 'by_chapter',
           id: String(surahId),
           translationIds,
+          // Long surahs skip it to keep the page light; see `hasFullTextTransliteration`.
+          transliteration: hasFullTextTransliteration(surahId),
         })
       : Promise.resolve(undefined),
   ]);

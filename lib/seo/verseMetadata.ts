@@ -23,8 +23,8 @@ export const DEFAULT_VERSE_METADATA_TEMPLATES: VerseMetadataTemplates = {
   title: '{{surah}} {{verseKey}} – {{snippet}}',
   titleFallback: '{{surah}} {{verseKey}}',
   descriptionFallback:
-    'Read {{surah}} {{verseKey}} with Arabic text, translation and tafsir on {{siteName}}.',
-  tail: '{{surah}} {{verseKey}} with Arabic text and tafsir.',
+    'Read {{surah}} {{verseKey}} with Arabic text, transliteration, translation and tafsir on {{siteName}}.',
+  tail: '{{surah}} {{verseKey}} with Arabic text, transliteration and tafsir.',
   tailShort: '{{surah}} {{verseKey}}.',
 };
 
