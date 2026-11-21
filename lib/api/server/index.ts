@@ -18,3 +18,5 @@ export {
   toVerseCounts,
 } from './versePage';
 export type { VersePageTafsir, VersePageVerse, VersePageVerses } from './versePage';
+export { getReciterResourcesServer, getTranslationResourcesServer } from './resources';
+export type { ReciterResource } from './resources';
