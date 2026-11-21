@@ -27,7 +27,7 @@ const MushafMain = dynamic(
 
 import { ReaderAudioProps, WorkspaceReaderLayout } from './ReaderLayouts';
 import { ReaderResourceHeading } from './ReaderResourceHeading';
-import { useReaderFullText } from './ReaderServerData';
+import { useReaderFullText, useReaderIntro } from './ReaderServerData';
 import { useReaderView } from './useReaderView';
 
 import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
@@ -186,6 +186,7 @@ export function ReaderShell({
   const { verseListing, panels, mushafParams } = readerView;
   // Server-rendered full text of the surah/juz (collapsed); keeps every verse in the DOM.
   const fullText = useReaderFullText();
+  const intro = useReaderIntro();
 
   // Use a layout effect so mode changes (esp. `initialMode="mushaf"`) don't flash on refresh.
   useIsomorphicLayoutEffect(() => {
@@ -273,6 +274,7 @@ export function ReaderShell({
     ) : (
       <div className="w-full space-y-8">
         <ReaderResourceHeading resourceKind={resourceKind} resourceId={resourceId} />
+        {intro}
         {mainContent}
         {fullText}
       </div>
