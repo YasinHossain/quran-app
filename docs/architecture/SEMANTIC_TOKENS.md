@@ -4,12 +4,14 @@
 
 The Quran App uses a semantic token-based theming system that automatically adapts colors and styles based on the current theme (light/dark) without requiring theme conditionals in components.
 
+> Design direction and freedom: see [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md). This file is a reference for theme mechanics only. The variables live in `app/globals.css`; older mentions of `app/theme.css` below refer to it.
+
 ## Design Principles
 
 - **No Theme Conditionals**: Components should never contain `theme === 'light'` or `theme === 'dark'` conditionals for styling
 - **Semantic Naming**: Token names describe purpose, not appearance (`text-foreground` not `text-black`)
 - **Automatic Theme Switching**: CSS custom properties handle light/dark variations automatically
-- **Single Source of Truth**: All theme values defined in `app/theme.css`
+- **Single Source of Truth**: All theme values defined in `app/globals.css`
 
 ## Token Categories
 

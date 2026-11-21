@@ -6,10 +6,10 @@ This guide provides clear patterns and rules for AI assistants working on the Qu
 
 ## Core Principles
 
-1. **Use Semantic Tokens**: Always prefer semantic design tokens over raw colors/utilities
-2. **Component-First**: Use established UI primitives before creating new ones
-3. **Predictable Patterns**: Follow established patterns for state management and UI
-4. **Extension Points**: Leverage built-in extension mechanisms for new designs
+1. **Design freedom**: You decide the visual design. Existing UI is not a template; build modern, considered pages and redesign when it helps. See `docs/architecture/DESIGN_SYSTEM.md`.
+2. **Theme-aware colors**: Use the theme variables (or add new ones) so every design works in light and dark.
+3. **Reuse when it fits**: Use an existing primitive when it serves the design; create a new one when it doesn't.
+4. **Predictable state**: Follow the established patterns for state management and data fetching.
 
 ## UI Component Library
 
@@ -21,9 +21,6 @@ import { Button } from '@/app/shared/ui';
 // Standard usage
 <Button variant="primary" size="md">Save</Button>
 <Button variant="secondary" size="sm">Cancel</Button>
-
-// Custom variants (for new designs)
-<Button variant="bg-gradient-to-r from-purple-500 to-pink-500">Custom</Button>
 
 // Available variants: primary, secondary, ghost, outline, destructive
 // Available sizes: sm, md, lg, xl, icon
@@ -99,7 +96,9 @@ const { settings, setTranslationIds, setTafsirIds, setShowByWords } = useSetting
 
 ## Design System & Styling
 
-### Semantic Tokens (ALWAYS USE THESE)
+### Theme variables (reference)
+
+Design direction is yours; see `docs/architecture/DESIGN_SYSTEM.md`. These utilities keep it working in both themes:
 
 ```css
 /* Core tokens */
@@ -115,63 +114,9 @@ bg-interactive      /* Neutral interactive background */
 bg-interactive-hover /* Interactive hover state */
 ```
 
-### Extension Points for New Designs
+### New designs
 
-```typescript
-// Method 1: Custom variants in existing components
-<Button variant="bg-gradient-to-r from-blue-500 to-purple-600">
-  New Design
-</Button>
-
-// Method 2: Extend design system
-// Add to design-system.json
-{
-  "extensionPoints": {
-    "colors": {
-      "newFeature": "#your-color",
-      "newFeatureHover": "#your-hover-color"
-    }
-  }
-}
-
-// Method 3: Use className override
-<Panel
-  variant="sidebar"
-  className="bg-gradient-to-br from-indigo-50 to-blue-100"
->
-  Custom styled panel
-</Panel>
-```
-
-### Adding New Color Schemes
-
-1. Update `design-system.json` with new variant:
-
-```json
-{
-  "extensionPoints": {
-    "variants": {
-      "yourNewTheme": {
-        "description": "Your new theme description",
-        "colors": {
-          "accent": "#newcolor",
-          "surface": "#newsurface"
-        }
-      }
-    }
-  }
-}
-```
-
-2. Run `npm run generate:tokens` to update CSS variables
-
-3. Use the new tokens:
-
-```typescript
-<Button className="bg-your-new-theme-accent">
-  New Theme Button
-</Button>
-```
+Add whatever the design needs: new CSS variables in `app/globals.css` (for both `:root` and `.dark`), gradients, patterns, new components. Mechanics: `docs/development/STYLING.md`.
 
 ## Common Patterns
 
@@ -248,15 +193,15 @@ const [value, setValue] = useState(() => {
 // DO: Use semantic tokens
 <div className="bg-background text-foreground">
 
-// DO: Use CSS classes for theme-aware styling
-<div className="bg-surface dark:bg-surface-dark">
+// DO: Gradients, alpha and effects built from theme variables
+<div className="bg-gradient-to-br from-accent/10 via-surface to-surface">
 
 // DO: Use component variants
 <Button variant="primary">Action</Button>
 
-// DO: Extend with custom classes when needed
-<Button variant="primary" className="bg-gradient-to-r from-purple-500 to-pink-500">
-  Custom Design
+// DO: Give a page its own look when that serves it
+<Button variant="primary" className="rounded-full px-6 shadow-[0_8px_24px_-8px_rgb(var(--color-accent)/0.6)]">
+  Read Surah
 </Button>
 ```
 
@@ -279,7 +224,7 @@ npm run audit-styles      # Style violations
 
 1. Test both light and dark themes
 2. Test responsive behavior
-3. Test with different design variants
+3. Test in an RTL language (`/ar`, `/ur`)
 4. Verify accessibility (screen readers, keyboard navigation)
 
 ## Examples

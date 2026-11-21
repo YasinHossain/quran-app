@@ -1,6 +1,6 @@
 # Surah Feature - AI Development Guidelines
 
-This file contains specific guidance for AI developers working on the Surah reading feature. Follow these patterns exactly to maintain consistency with the existing codebase.
+This file contains guidance for AI developers working on the Surah reading feature. The patterns below are about behavior and integration (audio, settings, bookmarks, data loading). Visual design is free: see `docs/architecture/DESIGN_SYSTEM.md`. Some of the structure below is outdated; trust the code over this file.
 
 ## Feature Overview
 
@@ -453,4 +453,4 @@ For any Surah feature changes, verify:
 - [ ] **Accessibility**: Touch targets are 44px minimum?
 - [ ] **Testing**: All context providers included in test wrappers?
 
-**The Surah feature is critical to the app's functionality. Any deviations from these patterns will break existing functionality.**
+**The Surah feature is critical to the app's functionality. Keep its behavior (audio, reading progress, settings, data loading) working; its look is open to redesign.**
