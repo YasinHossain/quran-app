@@ -44,7 +44,7 @@ import { Analytics } from '@vercel/analytics/react';
  *    - All other Arabic fonts loaded via useDynamicFontLoader when user selects them
  *
  * 4. TRANSLATION FONTS (Lazy loaded):
- *    - Bengali, Crimson Text, Libre Baskerville - loaded when needed
+ *    - Noto Sans Bengali (unicode-range, only on Bengali text), Libre Baskerville - loaded when needed
  *
  * This strategy reduces initial font requests from 7+ to just 2,
  * significantly improving LCP (Largest Contentful Paint).

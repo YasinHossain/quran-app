@@ -137,7 +137,6 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
               <div className="space-y-6">
                 {sortedTranslations.map((translation: Translation) => {
                   const lang = resourceLanguages?.[translation.resource_id];
-                  const isEnglish = lang === 'en';
                   return (
                     <div key={translation.resource_id} className="group">
                       {translation.resource_name && (
@@ -147,8 +146,7 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
                       )}
                       <p
                         className={cn(
-                          'text-start leading-relaxed text-slate-900 dark:text-stone-200',
-                          isEnglish ? 'font-[family-name:var(--font-crimson-text)]' : ''
+                          'text-start leading-relaxed text-slate-900 dark:text-stone-200'
                         )}
                         lang={toLanguageCode(lang)}
                         dir="auto"
