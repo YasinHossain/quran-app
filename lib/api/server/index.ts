@@ -10,6 +10,8 @@ export { getSurahInitialDataServer } from './surah';
 export { getJuzInitialDataServer } from './juz';
 export { getSurahNavigationListServer } from './navigation';
 export { getPrerenderedVersesServer } from './prerenderedVerses';
+export { getSurahRecitationServer } from './recitation';
+export type { SurahRecitation } from './recitation';
 export {
   CONTEXT_VERSES_EACH_SIDE,
   getVerseCountsServer,

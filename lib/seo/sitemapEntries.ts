@@ -3,7 +3,12 @@ import {
   TAFSIR_LANGUAGES,
   type UiLanguageCode,
 } from '@/app/shared/i18n/languageRegistry';
-import { buildSurahRoute, buildTafsirRoute, buildVerseRoute } from '@/app/shared/navigation/routes';
+import {
+  buildSurahAboutRoute,
+  buildSurahRoute,
+  buildTafsirRoute,
+  buildVerseRoute,
+} from '@/app/shared/navigation/routes';
 import { buildHreflangAlternates, localizedUrl } from '@/lib/seo/localizedMetadata';
 import { absoluteUrl } from '@/lib/seo/site';
 
@@ -60,6 +65,16 @@ export const SITEMAP_SECTIONS: ReadonlyArray<SitemapSection> = [
       })),
   },
   {
+    id: 'surah-about',
+    routes: () =>
+      range(1, 114).map((id) => ({
+        path: buildSurahAboutRoute(id),
+        priority: 0.7,
+        changeFrequency: 'monthly' as const,
+        localized: true,
+      })),
+  },
+  {
     id: 'juz',
     routes: () =>
       range(1, 30).map((id) => ({
@@ -101,7 +116,7 @@ export function buildSitemapEntries(
 
 /*
  * Sitemap index (`/sitemap.xml`) and its children (`/sitemaps/<id>.xml`):
- * - `core`: home, indexes, surahs and juz in every language (~750 URLs).
+ * - `core`: home, indexes, surahs, surah overviews and juz in every language (~1,300 URLs).
  * - `verses-<lang>`: every verse page (`/surah/s/v`) in one language (6,236 URLs each).
  * - `tafsir-<lang>`: every tafsir page (`/tafsir/s/v`) in a language with its own tafsir.
  * Each child stays far below the 50,000-URL / 50MB limits (~4MB with hreflang alternates).

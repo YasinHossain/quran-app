@@ -39,6 +39,8 @@ describe('SurahCalligraphyIntro', () => {
     expect(html).toMatch(/7(<!-- -->)?\s*verses/);
     expect(html).toContain('مكية');
     expect(html).not.toContain('مدنية');
+    // Crawlable link to the surah's overview page.
+    expect(html).toContain('href="/surah/al-fatihah/about"');
   });
 
   it('labels a Medinan surah as Medinan with its verse count', async () => {
