@@ -537,6 +537,7 @@
   "surah_about_fact_words": "शब्द",
   "surah_about_fact_recitation": "तिलावत",
   "surah_about_minutes_unit": "मिनट",
+  "surah_about_hours_unit": "घंटे",
   "surah_about_play": "सूरह {{name}} की तिलावत सुनें",
   "surah_about_pause": "तिलावत रोकें",
   "surah_about_recited_by": "क़ारी: {{reciter}}",

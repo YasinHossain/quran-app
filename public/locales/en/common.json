@@ -537,6 +537,7 @@
   "surah_about_fact_words": "Words",
   "surah_about_fact_recitation": "Recitation",
   "surah_about_minutes_unit": "min",
+  "surah_about_hours_unit": "h",
   "surah_about_play": "Play the recitation of Surah {{name}}",
   "surah_about_pause": "Pause the recitation",
   "surah_about_recited_by": "Recited by {{reciter}}",

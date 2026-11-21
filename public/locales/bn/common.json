@@ -549,6 +549,7 @@
   "surah_about_fact_words": "শব্দ",
   "surah_about_fact_recitation": "তিলাওয়াত",
   "surah_about_minutes_unit": "মিনিট",
+  "surah_about_hours_unit": "ঘণ্টা",
   "surah_about_play": "সূরা {{name}}-এর তিলাওয়াত শুনুন",
   "surah_about_pause": "তিলাওয়াত থামান",
   "surah_about_recited_by": "তিলাওয়াত: {{reciter}}",

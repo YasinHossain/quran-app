@@ -4,7 +4,7 @@ import { localizeHref } from '@/app/shared/i18n/localeRouting';
 import { ChevronRightIcon } from '@/app/shared/icons';
 import { buildJuzRoute } from '@/app/shared/navigation/routes';
 import { JUZ_COUNT, MUSHAF_PAGE_COUNT, type SurahFacts } from '@/lib/seo/surahFacts';
-import { splitDuration } from '@/lib/seo/surahStats';
+import { splitDuration, splitHoursMinutes } from '@/lib/seo/surahStats';
 import { formatNumber, localizeDigits } from '@/lib/text/localizeNumbers';
 import { cn } from '@/lib/utils/cn';
 
@@ -177,12 +177,24 @@ function RecitationStat({
 }): React.JSX.Element {
   const { locale } = translator;
   const { minutes, seconds } = splitDuration(recitation.durationMs);
+  const long = minutes >= 60 ? splitHoursMinutes(recitation.durationMs) : null;
+  const value = long ? (
+    <>
+      {localizeDigits(String(long.hours), locale)}
+      <span className="ms-1 me-2 text-sm font-normal text-muted">
+        {translator.t('surah_about_hours_unit')}
+      </span>
+      {localizeDigits(String(long.minutes), locale)}
+    </>
+  ) : (
+    localizeDigits(`${minutes}:${String(seconds).padStart(2, '0')}`, locale)
+  );
 
   return (
     <Stat
       locale={locale}
       label={translator.t('surah_about_fact_recitation')}
-      value={localizeDigits(`${minutes}:${String(seconds).padStart(2, '0')}`, locale)}
+      value={value}
       detail={translator.t('surah_about_minutes_unit')}
       note={translator.t('surah_about_recited_by', { reciter: recitation.reciterName })}
     >
