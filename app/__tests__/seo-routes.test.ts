@@ -244,7 +244,7 @@ describe('SEO routes', () => {
       mockUiLanguage = 'bn';
       const metadata = await verseMetadata('al-baqarah', '255');
 
-      expect(metadata.title).toMatch(/^সূরা .+ 2:255 – Allāh/);
+      expect(metadata.title).toMatch(/^সূরা .+ ২:২৫৫ \(2:255\) – Allāh/);
       expect(metadata.alternates?.canonical).toBe(`${BASE}/bn/surah/al-baqarah/255`);
     });
 

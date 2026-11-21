@@ -1,5 +1,6 @@
 import { SITE_NAME } from '@/lib/seo/site';
 import { cleanTranslationText, trimOnWordBoundary } from '@/lib/seo/tafsirMetadata';
+import { localizeDigits } from '@/lib/text/localizeNumbers';
 
 const MAX_DESCRIPTION_LENGTH = 155;
 const TITLE_SNIPPET_LENGTH = 40;
@@ -31,8 +32,19 @@ const fill = (template: string, vars: Record<string, string>): string =>
   template.replace(/\{\{\s*(\w+)\s*\}\}/g, (match, name: string) => vars[name] ?? match);
 
 /**
+ * The verse key as it reads in the page language. Where the locale has its own digits the
+ * Western key follows once (`২:২৫৫ (2:255)`), since people search with either form.
+ */
+export function buildSearchableVerseKey(verseKey: string, locale: string | undefined): string {
+  const localized = locale ? localizeDigits(verseKey, locale) : verseKey;
+  return localized === verseKey ? verseKey : `${localized} (${verseKey})`;
+}
+
+/**
  * Title `Surah Al-Baqarah 2:255 – Allāh - there is no deity except Him…` and a description led by
- * the verse's translation (or the Arabic text where the page has no translation).
+ * the verse's translation (or the Arabic text where the page has no translation). With a `locale`
+ * that has its own digits, the key is localized and the Western key is added once
+ * (`সূরা আল-বাকারা ২:২৫৫ (2:255) – …`).
  */
 export function buildVerseMetadataText(input: {
   surahName: string;
@@ -40,10 +52,15 @@ export function buildVerseMetadataText(input: {
   /** Translation HTML/text that leads the snippet; the Arabic text for Arabic pages. */
   leadText?: string | undefined;
   templates?: VerseMetadataTemplates | undefined;
+  /** UI language of the page; decides the digits of the verse key. */
+  locale?: string | undefined;
 }): { title: string; description: string } {
   const templates = input.templates ?? DEFAULT_VERSE_METADATA_TEMPLATES;
   const lead = cleanTranslationText(input.leadText);
-  const vars = { surah: input.surahName, verseKey: input.verseKey, siteName: SITE_NAME };
+  const verseKey = buildSearchableVerseKey(input.verseKey, input.locale);
+  const vars = { surah: input.surahName, verseKey, siteName: SITE_NAME };
+  // The added Western key comes out of the snippet so titles keep their length.
+  const snippetLength = TITLE_SNIPPET_LENGTH - (verseKey.length - input.verseKey.length);
 
   if (!lead) {
     return {
@@ -54,7 +71,7 @@ export function buildVerseMetadataText(input: {
 
   const title = fill(templates.title, {
     ...vars,
-    snippet: trimOnWordBoundary(lead, TITLE_SNIPPET_LENGTH),
+    snippet: trimOnWordBoundary(lead, snippetLength),
   });
   const tail = ` ${fill(templates.tail, vars)}`;
   const shortTail = ` ${fill(templates.tailShort, vars)}`;

@@ -9,7 +9,7 @@ import {
   getVerseMetadataTemplates,
   type ServerTranslator,
 } from '@/app/shared/i18n/serverLocale';
-import { ArrowLeftIcon } from '@/app/shared/icons';
+import { ArrowLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
 import {
   buildJuzRoute,
   buildSurahRoute,
@@ -38,6 +38,7 @@ import { SITE_NAME } from '@/lib/seo/site';
 import { resolveSurahParam } from '@/lib/seo/surahSlugs';
 import { cleanTranslationText } from '@/lib/seo/tafsirMetadata';
 import { buildTafsirExcerpt, buildVerseMetadataText } from '@/lib/seo/verseMetadata';
+import { localizeDigits } from '@/lib/text/localizeNumbers';
 
 import { VerseContextPanel } from './components/VerseContextPanel';
 import { VersePageActions } from './components/VersePageActions';
@@ -102,6 +103,10 @@ const loadVerses = (resolved: ResolvedVerse, locale: UiLanguageCode): Promise<Ve
     translationIds: getServerReaderDefaults(locale).translationIds,
   });
 
+/** Visible numbers follow the page language (`২:২৫৫`); hrefs and data attributes keep `2:255`. */
+const localKey = (address: VerseAddress, locale: UiLanguageCode): string =>
+  localizeDigits(formatVerseKey(address), locale);
+
 const surahTitle = (translator: ServerTranslator, chapter: Chapter): string =>
   translator.t('seo_surah_name', { name: translator.chapterName(chapter) });
 
@@ -126,6 +131,7 @@ export async function generateMetadata({ params }: VersePageProps): Promise<Meta
     verseKey,
     leadText: leadText(verse),
     templates: getVerseMetadataTemplates(translator),
+    locale,
   });
 
   return buildLocalizedPageMetadata({
@@ -157,7 +163,7 @@ function buildVerseJsonLd(input: {
         { name: SITE_NAME, item: localizedUrl('/', locale) },
         { name: translator.t('surah_tab'), item: localizedUrl('/surah', locale) },
         { name: translator.chapterName(chapter), item: surahUrl },
-        { name: formatVerseKey(address), item: verseUrl },
+        { name: localKey(address, locale), item: verseUrl },
       ].map((crumb, index) => ({ '@type': 'ListItem', position: index + 1, ...crumb })),
     },
     {
@@ -231,7 +237,7 @@ function Breadcrumbs({
           </li>
         ))}
         <li aria-current="page" className="font-medium text-foreground">
-          {formatVerseKey(address)}
+          {localKey(address, locale)}
         </li>
       </ol>
     </nav>
@@ -260,7 +266,7 @@ function VerseNavLink({
       className={`flex min-h-touch flex-col justify-center gap-0.5 rounded-lg border border-border bg-surface px-4 py-3 transition-colors hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${alignment}`}
     >
       <span className="text-xs text-muted">{label}</span>
-      <span className="font-semibold text-accent">{formatVerseKey(target)}</span>
+      <span className="font-semibold text-accent">{localKey(target, locale)}</span>
     </Link>
   );
 }
@@ -282,7 +288,9 @@ function VerseTextCard({
       className="space-y-6 rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-6"
     >
       <div className="flex items-center justify-between gap-3">
-        <span className="text-sm font-semibold text-accent">{verseKey}</span>
+        <span className="text-sm font-semibold text-accent">
+          {localizeDigits(verseKey, translator.locale)}
+        </span>
         <VersePageActions
           verseId={verse.id}
           verseKey={verseKey}
@@ -373,8 +381,9 @@ function VerseTafsirExcerpt({
   );
 }
 
-/** One compact row under the H1: Arabic name (and English meaning), mushaf page and juz. The
- * mushaf page route is not indexable, so only the juz is a link. */
+/** One compact row beside the H1: Arabic name (and English meaning), mushaf page and juz. The
+ * mushaf page route is not indexable, so only the juz is a link, drawn as a tinted chip so it
+ * reads as clickable without a border. */
 function VerseMeta({
   translator,
   chapter,
@@ -385,31 +394,35 @@ function VerseMeta({
   verse: VersePageVerse;
 }): React.JSX.Element {
   const { pageNumber, juzNumber } = verse;
-  const meaning = translator.locale === 'en' ? chapter.translated_name?.name : undefined;
+  const { locale } = translator;
+  const meaning = locale === 'en' ? chapter.translated_name?.name : undefined;
   return (
     <ul
-      className="flex flex-wrap items-center gap-x-2 text-sm text-muted [&>li+li]:before:me-2 [&>li+li]:before:opacity-50 [&>li+li]:before:content-['·']"
+      className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-base text-muted [&>li+li]:before:me-2.5 [&>li+li]:before:opacity-50 [&>li+li]:before:content-['·']"
       data-slot="verse-meta"
     >
       {/* The Arabic heading already names the surah in Arabic. */}
-      {translator.locale === 'ar' ? null : (
-        <li>
-          <span lang="ar" dir="rtl" className="text-foreground">
+      {locale === 'ar' ? null : (
+        <li className="flex items-center">
+          <span lang="ar" dir="rtl" className="text-lg leading-none text-foreground">
             {chapter.name_arabic}
           </span>
           {meaning ? <span className="ms-1.5">({meaning})</span> : null}
         </li>
       )}
       {pageNumber ? (
-        <li data-slot="verse-location">{`${translator.t('page')} ${pageNumber}`}</li>
+        <li data-slot="verse-location">
+          {`${translator.t('page')} ${localizeDigits(String(pageNumber), locale)}`}
+        </li>
       ) : null}
       {juzNumber ? (
-        <li>
+        <li className="flex items-center">
           <Link
-            href={localizeHref(buildJuzRoute(juzNumber), translator.locale)}
-            className="rounded-sm font-medium text-accent underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            href={localizeHref(buildJuzRoute(juzNumber), locale)}
+            className="inline-flex items-center gap-0.5 rounded-md bg-accent/10 py-0.5 pe-1.5 ps-2 font-medium text-accent transition-colors hover:bg-accent/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
-            {translator.t('juz_number', { number: juzNumber })}
+            {localizeDigits(translator.t('juz_number', { number: juzNumber }), locale)}
+            <ChevronRightIcon size={14} aria-hidden="true" className="rtl:rotate-180" />
           </Link>
         </li>
       ) : null}
@@ -480,7 +493,7 @@ function VerseContext({
                 prefetch={false}
                 className={`text-xs font-semibold ${linkClass}`}
               >
-                {verse.verseKey}
+                {localizeDigits(verse.verseKey, locale)}
               </Link>
               <p
                 lang="ar"
@@ -526,7 +539,10 @@ export default async function VersePage({ params }: VersePageProps): Promise<Rea
   ]);
 
   const surahName = surahTitle(translator, chapter);
-  const heading = translator.t('seo_verse_title_fallback', { surah: surahName, verseKey });
+  const heading = translator.t('seo_verse_title_fallback', {
+    surah: surahName,
+    verseKey: localizeDigits(verseKey, locale),
+  });
   const readSurah = {
     href: localizeHref(buildSurahRoute(address.surahId, { startVerse: address.verseId }), locale),
     label: translator.t('verse_page_read_surah', { surah: surahName }),
@@ -544,7 +560,7 @@ export default async function VersePage({ params }: VersePageProps): Promise<Rea
       />
       <header className="flex flex-col gap-1.5">
         <Breadcrumbs translator={translator} chapter={chapter} address={address} />
-        <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
           <h1 className="text-xl font-bold sm:text-2xl">{heading}</h1>
           <VerseMeta translator={translator} chapter={chapter} verse={verse} />
         </div>
