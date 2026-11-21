@@ -56,6 +56,8 @@ interface VersePageProps {
 const ARABIC_FONT_FAMILY = "'UthmanicHafs1Ver18', serif";
 /** Quran text styling shared by the verse card and the context list. */
 const ARABIC_TEXT_CLASS = 'text-right text-3xl leading-[2.2] text-foreground';
+/** One step smaller in the narrow "Read in context" column. */
+const CONTEXT_ARABIC_TEXT_CLASS = 'text-right text-2xl leading-[2.1] text-foreground';
 
 interface ResolvedVerse {
   address: VerseAddress;
@@ -492,8 +494,8 @@ function VerseContext({
                 data-slot="context-arabic"
                 className={
                   translation
-                    ? `hidden group-data-[context-view=arabic]/context:block group-data-[context-view=both]/context:block ${ARABIC_TEXT_CLASS}`
-                    : ARABIC_TEXT_CLASS
+                    ? `hidden group-data-[context-view=arabic]/context:block group-data-[context-view=both]/context:block ${CONTEXT_ARABIC_TEXT_CLASS}`
+                    : CONTEXT_ARABIC_TEXT_CLASS
                 }
                 style={{ fontFamily: ARABIC_FONT_FAMILY }}
               >
