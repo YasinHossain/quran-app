@@ -34,9 +34,11 @@ interface TextOnlyApiResponse {
   meta?: { total_pages?: number };
 }
 
-// 50 is the documented per_page maximum on the public Quran.com API.
-const PER_PAGE = 50;
-// Upper bound on pages: the largest group (Juz 30, 564 verses) needs 12.
+// The Quran API accepts a per_page well above its documented 50 (verified up to 600 on both
+// api.qurancdn.com and api.quran.com), so the largest group (Juz 30, 564 verses) is one request.
+// If an API ever clamps this, `total_pages` in the response still drives the follow-up pages.
+const PER_PAGE = 600;
+// Upper bound on pages, in case the API clamps per_page back to its documented 50 (564 / 50 = 12).
 const MAX_PAGES = 20;
 
 const FOOTNOTE_REGEX = /<sup\b[^>]*>[\s\S]*?<\/sup>/gi;
