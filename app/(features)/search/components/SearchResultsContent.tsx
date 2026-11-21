@@ -358,7 +358,7 @@ const SearchVerseItem = ({ verse, index, query }: SearchVerseItemProps): React.J
             // Non-Arabic query: show highlighted translation
             <p
               dir="auto"
-              className="text-start leading-relaxed text-foreground font-[family-name:var(--font-crimson-text)] search-result-text"
+              className="text-start leading-relaxed text-foreground search-result-text"
               style={{ fontSize: `${translationFontSize}px` }}
               dangerouslySetInnerHTML={{ __html: highlightedText }}
             />

@@ -6,6 +6,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { ResponsiveVerseActions } from '@/app/shared/ResponsiveVerseActions';
 import { VerseArabic } from '@/app/shared/VerseArabic';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import { toLanguageCode } from '@/lib/text/languageCodes';
 import { cn } from '@/lib/utils/cn';
 
 import type { VerseActionsProps } from '@/app/shared/verse-actions';
@@ -136,7 +137,6 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
               <div className="space-y-6">
                 {sortedTranslations.map((translation: Translation) => {
                   const lang = resourceLanguages?.[translation.resource_id];
-                  const isEnglish = lang === 'en';
                   return (
                     <div key={translation.resource_id} className="group">
                       {translation.resource_name && (
@@ -146,10 +146,9 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
                       )}
                       <p
                         className={cn(
-                          'text-start leading-relaxed text-slate-900 dark:text-stone-200',
-                          isEnglish ? 'font-[family-name:var(--font-crimson-text)]' : ''
+                          'text-start leading-relaxed text-slate-900 dark:text-stone-200'
                         )}
-                        lang={lang}
+                        lang={toLanguageCode(lang)}
                         dir="auto"
                         style={{ fontSize: `${fontSize}px` }}
                         dangerouslySetInnerHTML={{ __html: sanitizeHtml(translation.text) }}

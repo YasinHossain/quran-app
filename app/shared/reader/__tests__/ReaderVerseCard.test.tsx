@@ -35,6 +35,31 @@ describe('ReaderVerseCard', () => {
     ).toBeInTheDocument();
   });
 
+  it('emits BCP-47 lang codes for translations and omits unknown languages', () => {
+    const verse: Verse = {
+      ...baseVerse,
+      translations: [
+        { resource_id: 20, text: 'English text' },
+        { resource_id: 21, text: 'Bangla text' },
+        { resource_id: 22, text: 'Unknown text' },
+      ],
+    };
+    localStorage.setItem(
+      'quranAppSettings',
+      JSON.stringify({ ...defaultSettings, translationIds: [20, 21, 22] })
+    );
+    renderWithProviders(
+      <ReaderVerseCard
+        verse={verse}
+        resourceLanguages={{ 20: 'English', 21: 'Bengali', 22: 'Klingon' }}
+      />
+    );
+
+    expect(screen.getByText('English text')).toHaveAttribute('lang', 'en');
+    expect(screen.getByText('Bangla text')).toHaveAttribute('lang', 'bn');
+    expect(screen.getByText('Unknown text')).not.toHaveAttribute('lang');
+  });
+
   it('supports slot customization through children and footer', () => {
     renderWithProviders(
       <ReaderVerseCard verse={baseVerse} footer={<div data-testid="footer-slot" />} />

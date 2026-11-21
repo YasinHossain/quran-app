@@ -106,6 +106,7 @@ export const VerseMarker = memo(function VerseMarker({
         height: '1em',
         unicodeBidi: 'isolate',
       }}
+      role="img"
       aria-label={`Verse ${verseNumber}`}
       dir="rtl"
     >
@@ -166,6 +167,7 @@ export const NativeVerseMarker = ({
         unicodeBidi: 'isolate',
         ...style,
       }}
+      role="img"
       aria-label={`Verse ${verseNumber}`}
     >
       <span

@@ -297,7 +297,7 @@
 
   html[lang='ar'],
   html[lang='ar'] body {
-    font-family: Inter, 'Noto Sans Arabic', 'Noto Naskh Arabic', serif;
+    font-family: Inter, 'Noto Naskh Arabic', serif;
   }
 
   html[lang='bn'],
