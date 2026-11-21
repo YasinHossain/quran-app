@@ -12,7 +12,7 @@ export default function PrivacyPolicyPage(): React.JSX.Element {
           href="/"
           className="inline-flex items-center gap-2 text-muted hover:text-accent transition-colors mb-8"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4 rtl:-scale-x-100" />
           <span>Back to Home</span>
         </Link>
 
@@ -42,7 +42,7 @@ export default function PrivacyPolicyPage(): React.JSX.Element {
               The Application is designed with privacy as a priority. We collect minimal information
               necessary to provide our services:
             </p>
-            <ul className="list-disc pl-6 space-y-2 text-foreground/90">
+            <ul className="list-disc ps-6 space-y-2 text-foreground/90">
               <li>
                 <strong>Local Storage Data:</strong> Your preferences (theme, font size, translation
                 choices), bookmarks, reading progress, and planner data are stored locally on your
@@ -66,7 +66,7 @@ export default function PrivacyPolicyPage(): React.JSX.Element {
               The Application utilizes the following third-party services to provide Quranic
               content:
             </p>
-            <ul className="list-disc pl-6 space-y-2 text-foreground/90">
+            <ul className="list-disc ps-6 space-y-2 text-foreground/90">
               <li>
                 <strong>Quran Foundation API:</strong> We retrieve Quranic verses, translations,
                 tafsir, and audio recitations from the Quran Foundation&apos;s public Content APIs.

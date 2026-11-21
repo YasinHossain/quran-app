@@ -23,7 +23,7 @@ export const VerseActionTrigger = memo(function VerseActionTrigger({
   const language = i18n?.language ?? 'en';
   return (
     <div className={cn('flex items-center justify-between', className)}>
-      <div className="flex-shrink-0 pl-1">
+      <div className="flex-shrink-0 ps-1">
         <span className="font-semibold text-accent text-sm">
           {localizeDigits(verseKey, language)}
         </span>
@@ -31,7 +31,7 @@ export const VerseActionTrigger = memo(function VerseActionTrigger({
       <button
         onClick={onOpen}
         className={cn(
-          'p-1.5 rounded-full hover:bg-interactive-hover transition-colors -mr-2 group flex items-center justify-center',
+          'p-1.5 rounded-full hover:bg-interactive-hover transition-colors -me-2 group flex items-center justify-center',
           touchClasses.target,
           touchClasses.gesture,
           touchClasses.focus

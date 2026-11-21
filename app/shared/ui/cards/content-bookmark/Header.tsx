@@ -57,7 +57,7 @@ export const Header = memo(function Header({
           {resolvedSurahName}
         </span>
       </div>
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-2">
         <span className="text-xs text-muted">{formatTimeAgo(createdAt, i18n.language)}</span>
         <div
           className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1"

@@ -13,7 +13,8 @@ import type { PrerenderedVerse } from '@/types';
  * The interactive reader above it is virtualized and only mounts the verses near the viewport,
  * so this section is what keeps every verse in the HTML and in the rendered DOM (search engines,
  * screen readers, find-in-page, copying text). It has no client code; it is rendered once on
- * the server and passed into the reader tree as a ready-made node.
+ * the server and passed into the reader tree as a ready-made node. Each verse shows its Arabic
+ * text, its Latin transliteration (when loaded) and the selected translations.
  */
 interface ReaderFullTextProps {
   title: string;
@@ -89,6 +90,12 @@ export function ReaderFullText({
               >
                 {verse.arabic}
               </p>
+              {verse.transliteration ? (
+                // Arabic in Latin script: left to right even inside an RTL page.
+                <p lang="ar-Latn" dir="ltr" className="text-sm italic leading-relaxed text-muted">
+                  {verse.transliteration}
+                </p>
+              ) : null}
               {verse.translations.map((translation) => (
                 <p
                   key={translation.resourceId}

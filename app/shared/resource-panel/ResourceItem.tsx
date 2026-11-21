@@ -44,7 +44,7 @@ export const ResourceItem = <T extends Resource>({
       }`}
       style={style}
     >
-      <div className="flex-1 min-w-0 pr-3">
+      <div className="flex-1 min-w-0 pe-3">
         <p
           className={`font-medium text-sm leading-tight truncate ${
             isSelected ? 'text-white' : 'text-foreground'

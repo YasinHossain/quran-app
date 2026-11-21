@@ -49,6 +49,7 @@ export const SITEMAP_SECTIONS: ReadonlyArray<SitemapSection> = [
       { path: '/surah', priority: 0.9, changeFrequency: 'weekly', localized: true },
       { path: '/tafsir', priority: 0.8, changeFrequency: 'weekly', localized: true },
       { path: '/juz', priority: 0.6, changeFrequency: 'monthly', localized: true },
+      { path: '/about', priority: 0.4, changeFrequency: 'monthly', localized: true },
       // Legal pages are English-only; their localized URLs canonicalize to English.
       { path: '/privacy', priority: 0.3, changeFrequency: 'yearly', localized: false },
       { path: '/terms', priority: 0.3, changeFrequency: 'yearly', localized: false },

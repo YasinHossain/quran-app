@@ -66,7 +66,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {isLoading && (
-          <svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24" aria-hidden="true">
+          <svg className="me-2 h-4 w-4 animate-spin" viewBox="0 0 24 24" aria-hidden="true">
             <circle
               className="opacity-25"
               cx="12"

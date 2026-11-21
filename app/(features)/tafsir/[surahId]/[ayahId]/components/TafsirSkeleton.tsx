@@ -22,7 +22,7 @@ export function TafsirSkeleton(): React.JSX.Element {
       </div>
 
       {/* Second paragraph skeleton */}
-      <div className="space-y-3 pl-6">
+      <div className="space-y-3 ps-6">
         <div className="h-4 w-full rounded bg-border/25" />
         <div className="h-4 w-11/12 rounded bg-border/25" />
         <div className="h-4 w-9/12 rounded bg-border/25" />
@@ -31,7 +31,7 @@ export function TafsirSkeleton(): React.JSX.Element {
       </div>
 
       {/* Third paragraph skeleton */}
-      <div className="space-y-3 pl-6">
+      <div className="space-y-3 ps-6">
         <div className="h-4 w-10/12 rounded bg-border/20" />
         <div className="h-4 w-full rounded bg-border/20" />
         <div className="h-4 w-11/12 rounded bg-border/20" />
@@ -44,7 +44,7 @@ export function TafsirSkeleton(): React.JSX.Element {
       </div>
 
       {/* Fourth paragraph skeleton */}
-      <div className="space-y-3 pl-6">
+      <div className="space-y-3 ps-6">
         <div className="h-4 w-full rounded bg-border/20" />
         <div className="h-4 w-9/12 rounded bg-border/20" />
         <div className="h-4 w-11/12 rounded bg-border/20" />

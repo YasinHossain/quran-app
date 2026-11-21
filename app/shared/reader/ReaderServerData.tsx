@@ -20,6 +20,8 @@ export type ReaderChapterSummary = Pick<
 interface ReaderServerDataValue {
   chapter?: ReaderChapterSummary | undefined;
   fullText?: React.ReactNode;
+  /** Server-rendered node shown under the juz/page heading (e.g. the surahs of a juz). */
+  intro?: React.ReactNode;
 }
 
 const ReaderServerDataContext = createContext<ReaderServerDataValue>({});
@@ -27,9 +29,10 @@ const ReaderServerDataContext = createContext<ReaderServerDataValue>({});
 export function ReaderServerDataProvider({
   chapter,
   fullText,
+  intro,
   children,
 }: ReaderServerDataValue & { children: React.ReactNode }): React.JSX.Element {
-  const value = useMemo(() => ({ chapter, fullText }), [chapter, fullText]);
+  const value = useMemo(() => ({ chapter, fullText, intro }), [chapter, fullText, intro]);
   return (
     <ReaderServerDataContext.Provider value={value}>{children}</ReaderServerDataContext.Provider>
   );
@@ -44,4 +47,8 @@ export function useReaderServerChapter(
 
 export function useReaderFullText(): React.ReactNode {
   return useContext(ReaderServerDataContext).fullText ?? null;
+}
+
+export function useReaderIntro(): React.ReactNode {
+  return useContext(ReaderServerDataContext).intro ?? null;
 }

@@ -26,9 +26,13 @@ interface AyahNavigationProps {
   surahId: string;
 }
 
-const ChevronLeft = (): JSX.Element => <ChevronLeftIcon size={20} className="text-accent" />;
+const ChevronLeft = (): JSX.Element => (
+  <ChevronLeftIcon size={20} className="text-accent rtl:-scale-x-100" />
+);
 
-const ChevronRight = (): JSX.Element => <ChevronRightIcon size={20} className="text-accent" />;
+const ChevronRight = (): JSX.Element => (
+  <ChevronRightIcon size={20} className="text-accent rtl:-scale-x-100" />
+);
 
 const buildTafsirUrl = (target: NavTarget): string =>
   buildTafsirRoute(target.surahId, target.ayahId);
@@ -45,8 +49,8 @@ const NavLink = ({ label, target, side, locale }: NavLinkProps): JSX.Element => 
     'flex items-center px-1 py-2 sm:px-4 rounded-full bg-accent text-on-accent font-bold';
   const iconWrapperClasses =
     side === 'left'
-      ? 'flex items-center justify-center w-9 h-9 rounded-full bg-surface mr-0 sm:mr-2'
-      : 'flex items-center justify-center w-9 h-9 rounded-full bg-surface ml-0 sm:ml-2';
+      ? 'flex items-center justify-center w-9 h-9 rounded-full bg-surface me-0 sm:me-2'
+      : 'flex items-center justify-center w-9 h-9 rounded-full bg-surface ms-0 sm:ms-2';
 
   if (!target) {
     return (
@@ -86,7 +90,7 @@ const BackLink = ({ href, locale }: BackLinkProps): JSX.Element => (
     className="flex items-center px-1 sm:px-3 py-2 rounded-full bg-accent text-on-accent"
   >
     <div className="flex items-center justify-center w-9 h-9 rounded-full bg-surface">
-      <ArrowLeftIcon size={18} className="text-accent" />
+      <ArrowLeftIcon size={18} className="text-accent rtl:-scale-x-100" />
     </div>
   </Link>
 );

@@ -258,7 +258,7 @@ export const VerseOfDay = memo(function VerseOfDay({
 
         {/* Translation - uses system font */}
         {cleanedTranslation && (
-          <p className="text-left text-sm md:text-base text-content-secondary">
+          <p dir="auto" className="text-start text-sm md:text-base text-content-secondary">
             &quot;{cleanedTranslation}&quot; - [{referenceText}]
           </p>
         )}

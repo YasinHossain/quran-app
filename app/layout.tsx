@@ -19,7 +19,7 @@ import {
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
   SITE_NAME,
-  absoluteUrl,
+  buildOrganizationJsonLd,
   getSiteUrl,
 } from '@/lib/seo/site';
 
@@ -131,13 +131,7 @@ export default async function RootLayout({
 
   const siteUrl = getSiteUrl();
   const jsonLd = [
-    {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: SITE_NAME,
-      url: siteUrl,
-      logo: absoluteUrl('/icons/icon-512x512.png'),
-    },
+    buildOrganizationJsonLd(),
     {
       '@context': 'https://schema.org',
       '@type': 'WebSite',

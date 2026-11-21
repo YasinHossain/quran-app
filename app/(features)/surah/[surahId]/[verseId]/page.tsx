@@ -59,6 +59,8 @@ const ARABIC_FONT_FAMILY = "'UthmanicHafs1Ver18', serif";
 const ARABIC_TEXT_CLASS = 'text-right text-3xl leading-[2.2] text-foreground';
 /** One step smaller in the narrow "Read in context" column. */
 const CONTEXT_ARABIC_TEXT_CLASS = 'text-right text-2xl leading-[2.1] text-foreground';
+/** BCP 47 tag of the transliteration: Arabic language written in Latin script. */
+const TRANSLITERATION_LANG = 'ar-Latn';
 
 interface ResolvedVerse {
   address: VerseAddress;
@@ -307,6 +309,21 @@ function VerseTextCard({
       >
         {verse.arabic}
       </p>
+      {verse.transliteration ? (
+        <figure className="space-y-2" data-slot="verse-transliteration">
+          <figcaption className="text-xs font-medium uppercase tracking-wide text-muted">
+            {translator.t('verse_page_transliteration')}
+          </figcaption>
+          {/* Arabic in Latin script: reads left to right in every UI language, RTL ones too. */}
+          <p
+            lang={TRANSLITERATION_LANG}
+            dir="ltr"
+            className="text-lg italic leading-relaxed text-muted"
+          >
+            {verse.transliteration}
+          </p>
+        </figure>
+      ) : null}
       {verse.translations.map((translation) => (
         <figure key={translation.resourceId} className="space-y-2" data-slot="verse-translation">
           {translation.resourceName ? (

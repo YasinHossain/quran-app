@@ -1,15 +1,19 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+
 /**
  * Footer component for the home page.
- * Displays beta notice and legal links (Privacy Policy, Terms of Use).
+ * Displays beta notice and legal links (About, Privacy Policy, Terms of Use).
  */
 export const HomeFooter = memo(function HomeFooter() {
   const { t } = useTranslation();
+  const locale = getLocaleFromPathname(usePathname()) ?? 'en';
 
   return (
     <footer className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 pb-20 md:pb-4">
@@ -29,6 +33,13 @@ export const HomeFooter = memo(function HomeFooter() {
 
         {/* Legal Links */}
         <div className="flex justify-center items-center gap-4 text-sm text-muted">
+          <Link
+            href={localizeHref('/about', locale)}
+            className="hover:text-accent transition-colors"
+          >
+            {t('home_footer_about')}
+          </Link>
+          <span className="text-border">•</span>
           <Link href="/privacy" className="hover:text-accent transition-colors">
             {t('home_footer_privacy_policy')}
           </Link>

@@ -12,7 +12,7 @@ export default function TermsOfUsePage(): React.JSX.Element {
           href="/"
           className="inline-flex items-center gap-2 text-muted hover:text-accent transition-colors mb-8"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4 rtl:-scale-x-100" />
           <span>Back to Home</span>
         </Link>
 
@@ -50,7 +50,7 @@ export default function TermsOfUsePage(): React.JSX.Element {
               The Quranic content provided through this Application is sourced from the Quran
               Foundation and is subject to the following conditions:
             </p>
-            <ul className="list-disc pl-6 space-y-2 text-foreground/90">
+            <ul className="list-disc ps-6 space-y-2 text-foreground/90">
               <li>
                 The Arabic text of the Quran is presented as received from authoritative sources and
                 must not be modified, altered, or misrepresented.
@@ -73,7 +73,7 @@ export default function TermsOfUsePage(): React.JSX.Element {
               You agree to use the Application only for lawful purposes and in accordance with these
               Terms. You agree not to:
             </p>
-            <ul className="list-disc pl-6 space-y-2 text-foreground/90">
+            <ul className="list-disc ps-6 space-y-2 text-foreground/90">
               <li>
                 Use the Application in any manner that could damage, disable, overburden, or impair
                 the service.
@@ -100,7 +100,7 @@ export default function TermsOfUsePage(): React.JSX.Element {
               respective license terms. However, the following content has separate ownership and
               licensing:
             </p>
-            <ul className="list-disc pl-6 space-y-2 text-foreground/90">
+            <ul className="list-disc ps-6 space-y-2 text-foreground/90">
               <li>
                 <strong>Quranic Content:</strong> The Arabic Quranic text, translations, tafsir, and
                 audio recitations are provided by the Quran Foundation and are subject to their

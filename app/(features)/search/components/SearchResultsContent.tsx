@@ -74,7 +74,7 @@ const SearchHeader = ({
                   }}
                 />
                 {totalPages > 1 ? (
-                  <span className="ml-2">
+                  <span className="ms-2">
                     {t('search_results_page_of', {
                       current: currentPage,
                       total: totalPages,
@@ -197,7 +197,7 @@ const Pagination = ({
         className="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-interactive/60 text-foreground"
         aria-label={t('search_previous_page_aria')}
       >
-        <ChevronLeftIcon size={16} />
+        <ChevronLeftIcon size={16} className="rtl:-scale-x-100" />
         <span className="hidden sm:inline">{t('previous')}</span>
       </button>
 
@@ -235,7 +235,7 @@ const Pagination = ({
         aria-label={t('search_next_page_aria')}
       >
         <span className="hidden sm:inline">{t('next')}</span>
-        <ChevronRightIcon size={16} />
+        <ChevronRightIcon size={16} className="rtl:-scale-x-100" />
       </button>
     </div>
   );
@@ -357,7 +357,8 @@ const SearchVerseItem = ({ verse, index, query }: SearchVerseItemProps): React.J
           ) : (
             // Non-Arabic query: show highlighted translation
             <p
-              className="text-left leading-relaxed text-foreground font-[family-name:var(--font-crimson-text)] search-result-text"
+              dir="auto"
+              className="text-start leading-relaxed text-foreground font-[family-name:var(--font-crimson-text)] search-result-text"
               style={{ fontSize: `${translationFontSize}px` }}
               dangerouslySetInnerHTML={{ __html: highlightedText }}
             />

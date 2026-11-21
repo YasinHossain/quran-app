@@ -106,7 +106,7 @@ export const QuickStartGuide = (): React.JSX.Element => {
         <h3 className="text-lg font-bold text-foreground">Quick Start Guide</h3>
       </div>
 
-      <div className="grid gap-6 text-left md:grid-cols-3">
+      <div className="grid gap-6 text-start md:grid-cols-3">
         <GuideStep
           step={1}
           title="Save Verses"

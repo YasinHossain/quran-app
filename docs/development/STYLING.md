@@ -30,6 +30,16 @@ Gradients, blur, masks, patterns, arbitrary values and new variables are all fin
 
 If a color you need doesn't exist yet, add a variable for both themes.
 
+## Right-to-left layout
+
+Arabic and Urdu set `dir="rtl"` on `<html>`, so layout must mirror without per-component checks.
+
+- Use logical utilities: `ms-*`/`me-*`, `ps-*`/`pe-*`, `start-*`/`end-*`, `text-start`/`text-end`. Avoid `ml-`, `mr-`, `pl-`, `pr-`, `left-`, `right-`, `text-left` and `text-right` unless the position is physical on purpose (centering with `left-1/2`, full-width `left-0 right-0`).
+- Use `gap-*` instead of `space-x-*` in rows; Tailwind 3's `space-x` uses physical margins.
+- Pair slide transforms: `-translate-x-full rtl:translate-x-full` for start-side panels, `translate-x-full rtl:-translate-x-full` for end-side panels.
+- Mirror arrows and chevrons that mean back, forward, previous, next or "opens a submenu" with `rtl:-scale-x-100`. Leave media icons (play, skip) and buttons that scroll in a physical direction unmirrored.
+- Quran Arabic stays `dir="rtl"`. Translation text gets `dir="auto"` with `text-start` so English and Urdu translations each align correctly.
+
 ## Checks
 
 ```bash

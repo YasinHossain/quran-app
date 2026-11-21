@@ -44,7 +44,7 @@ export const ReciterPanel = memo(function ReciterPanel({
                   }
                 }}
                 className={cn(
-                  'group relative flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-left transition-colors duration-200',
+                  'group relative flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-start transition-colors duration-200',
                   isSelected
                     ? 'border-accent bg-accent/10'
                     : 'border-border hover:border-accent/50 hover:bg-interactive-hover',

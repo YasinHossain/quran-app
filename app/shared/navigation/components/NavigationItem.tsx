@@ -18,7 +18,7 @@ export const NavigationItem = memo(function NavigationItem({
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-4 p-4 rounded-2xl hover:bg-interactive-hover transition-all duration-200 text-left group touch-manipulation tap-scale"
+      className="flex items-center gap-4 p-4 rounded-2xl hover:bg-interactive-hover transition-all duration-200 text-start group touch-manipulation tap-scale"
     >
       <div className="flex-shrink-0 w-10 h-10 bg-accent/10 text-accent rounded-xl flex items-center justify-center font-semibold text-sm group-hover:bg-accent group-hover:text-on-accent transition-colors">
         {number}

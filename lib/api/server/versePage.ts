@@ -5,16 +5,21 @@ import { toLanguageCode } from '@/lib/text/languageCodes';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import { getChaptersServer } from './chapters';
-import { toPrerenderedVerse, type TextOnlyApiVerse } from './prerenderedVerses';
+import {
+  TRANSLITERATION_QUERY,
+  toPrerenderedVerse,
+  type TextOnlyApiVerse,
+} from './prerenderedVerses';
 import { getTafsirHtmlServer, getTafsirResourcesServer } from './tafsir';
 
 import type { VerseCounts } from '@/app/shared/navigation/verseNavigation';
 import type { Chapter, PrerenderedVerse } from '@/types';
 
 /**
- * Data for the verse page (`/surah/[surahId]/[verseId]`): one verse as text (no words), the
- * language's default translations, and its default tafsir. Every fetch is cached and shared with
- * `generateMetadata`; the tafsir HTML cache is also shared with the tafsir page.
+ * Data for the verse page (`/surah/[surahId]/[verseId]`): one verse as text, its Latin
+ * transliteration (joined from the words), the language's default translations, and its default
+ * tafsir. Every fetch is cached and shared with `generateMetadata`; the tafsir HTML cache is also
+ * shared with the tafsir page.
  */
 
 export interface VersePageVerse extends PrerenderedVerse {
@@ -73,7 +78,8 @@ const getVerseRangeCached = unstable_cache(
     const data = await apiFetch<{ verses: ApiVerse[] }>(
       `verses/by_chapter/${surahId}`,
       {
-        words: 'false',
+        // The word-by-word transliteration is joined into one line per verse.
+        ...TRANSLITERATION_QUERY,
         fields: 'text_uthmani',
         from: String(fromVerseId),
         to: String(toVerseId),
@@ -86,7 +92,7 @@ const getVerseRangeCached = unstable_cache(
     );
     return data.verses.map(toVersePageVerse);
   },
-  ['verse-page:range:v3'],
+  ['verse-page:range:v5'],
   { revalidate: 86400, tags: ['verse-page-verse'] }
 );
 

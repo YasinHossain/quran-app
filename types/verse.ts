@@ -42,6 +42,11 @@ export interface Verse {
 export interface PrerenderedVerse {
   verseKey: string;
   arabic: string;
+  /**
+   * Latin transliteration of the Arabic as plain text (no markup), when it was requested. The
+   * same English-script text is shown in every UI language.
+   */
+  transliteration?: string | undefined;
   translations: Array<{
     resourceId: number;
     html: string;

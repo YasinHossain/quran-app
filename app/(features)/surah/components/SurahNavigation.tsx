@@ -77,7 +77,7 @@ export function SurahNavigation({
 
   const previousContent = (
     <>
-      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
+      <span className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
         <ChevronLeft />
       </span>
       <span>{t('previous')}</span>
@@ -86,7 +86,7 @@ export function SurahNavigation({
   const nextContent = (
     <>
       <span>{t('next')}</span>
-      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
+      <span className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
         <ChevronRight />
       </span>
     </>

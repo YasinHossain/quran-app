@@ -54,6 +54,7 @@ jest.mock('@/lib/api/server', () => ({
   }),
 }));
 
+import { generateMetadata as generateAboutMetadata } from '@/app/(features)/about/page';
 import { generateMetadata as generateJuzMetadata } from '@/app/(features)/juz/[juzId]/page';
 import { generateMetadata as generateJuzIndexMetadata } from '@/app/(features)/juz/page';
 import { generateMetadata as generateVerseMetadata } from '@/app/(features)/surah/[surahId]/[verseId]/page';
@@ -119,6 +120,26 @@ describe('SEO routes', () => {
     });
   });
 
+  it('mentions the transliteration in English meta only where the surah page shows it', async () => {
+    // Al-Mursalat (77) is the last surah before Juz 30.
+    for (const slug of ['al-baqarah', 'ya-sin', 'al-mursalat']) {
+      const longSurah = await surahMetadata(slug);
+      expect(longSurah.title).not.toMatch(/transliteration/i);
+      expect(longSurah.description).not.toMatch(/transliteration/i);
+    }
+
+    for (const slug of ['al-fatihah', 'an-naba', 'al-alaq', 'an-nas']) {
+      const shortSurah = await surahMetadata(slug);
+      expect(shortSurah.title).toMatch(/ – Arabic, Transliteration & English Translation$/);
+      expect(shortSurah.description).toContain('Arabic text with transliteration and translation');
+    }
+
+    // Localized titles are unchanged (no English wording falls through).
+    mockUiLanguage = 'bn';
+    const bengali = await surahMetadata('al-alaq');
+    expect(bengali.title).toMatch(/^সূরা .+ \(96\)$/);
+  });
+
   it.each([
     ['bn', 'সূরা', 'মাক্কী'],
     ['ur', 'سورۃ', 'مکی'],
@@ -173,18 +194,43 @@ describe('SEO routes', () => {
     }
   });
 
+  it.each(ENABLED_LANGUAGES.map((language) => language.code))(
+    'gives the About page a self canonical, hreflang and localized title in %s',
+    async (code) => {
+      mockUiLanguage = code;
+      const metadata = await generateAboutMetadata();
+      const prefix = code === 'en' ? '' : `/${code}`;
+
+      expect(metadata.robots).toBeUndefined();
+      expect(metadata.alternates?.canonical).toBe(`${BASE}${prefix}/about`);
+      expect(metadata.alternates?.languages).toMatchObject({
+        en: `${BASE}/about`,
+        bn: `${BASE}/bn/about`,
+        'x-default': `${BASE}/about`,
+      });
+      expect(Object.keys(metadata.alternates?.languages ?? {})).toHaveLength(
+        ENABLED_LANGUAGES.length + 1
+      );
+      expect(metadata.title).toBeTruthy();
+      expect(metadata.title).not.toBe('about_page_title');
+      expect(metadata.description).toContain('Al Quran');
+    }
+  );
+
   it('lists core pages in every language with hreflang alternates', () => {
     const entries = buildSitemapChild('core', []) ?? [];
     const urls = entries.map((entry) => entry.url);
 
-    // 262 localized routes (4 indexes, 114 surahs, 114 surah overviews, 30 juz) x languages + 2
+    // 263 localized routes (5 indexes, 114 surahs, 114 surah overviews, 30 juz) x languages + 2
     // English-only legal pages.
-    expect(entries).toHaveLength(262 * ENABLED_LANGUAGES.length + 2);
+    expect(entries).toHaveLength(263 * ENABLED_LANGUAGES.length + 2);
     expect(new Set(urls).size).toBe(urls.length);
     expect(urls).toEqual(
       expect.arrayContaining([
         `${BASE}/juz`,
         `${BASE}/bn/surah/ya-sin`,
+        `${BASE}/about`,
+        ...ENABLED_LANGUAGES.filter((l) => l.code !== 'en').map((l) => `${BASE}/${l.code}/about`),
         `${BASE}/surah/al-alaq/about`,
         `${BASE}/ur/surah/at-tawbah/about`,
       ])
@@ -290,7 +336,9 @@ describe('SEO routes', () => {
       const metadata = await verseMetadata('al-fatihah', '7');
 
       expect(metadata.title).toBe('Surah Al-Fatihah 1:7');
-      expect(metadata.description).toContain('with Arabic text, translation and tafsir');
+      expect(metadata.description).toContain(
+        'with Arabic text, transliteration, translation and tafsir'
+      );
     });
 
     it.each([

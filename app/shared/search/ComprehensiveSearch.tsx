@@ -274,7 +274,7 @@ const SearchDropdown = memo(function SearchDropdown({
               key={search.timestamp}
               type="button"
               onClick={() => onSelectRecent(search.query)}
-              className="w-full px-4 py-2.5 text-left hover:bg-interactive/60 transition-colors flex items-center gap-3"
+              className="w-full px-4 py-2.5 text-start hover:bg-interactive/60 transition-colors flex items-center gap-3"
             >
               <SearchIcon size={16} className="text-muted flex-shrink-0" />
               <span className="text-sm text-foreground truncate">{search.query}</span>
@@ -303,7 +303,7 @@ const SearchDropdown = memo(function SearchDropdown({
                 href={localizeHref(getNavResultHref(result, searchQuery), locale)}
                 prefetch={true}
                 onClick={onLinkClick}
-                className={`w-full px-4 py-3 text-left transition-colors flex items-center gap-3 ${
+                className={`w-full px-4 py-3 text-start transition-colors flex items-center gap-3 ${
                   isHighlighted ? 'bg-accent/20' : 'hover:bg-interactive/60'
                 }`}
               >
@@ -397,7 +397,7 @@ const SearchDropdown = memo(function SearchDropdown({
                 )}
                 prefetch={true}
                 onClick={onLinkClick}
-                className={`w-full block px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${
+                className={`w-full block px-4 py-4 text-start transition-colors border-b border-border/30 last:border-b-0 ${
                   isHighlighted ? 'bg-accent/15' : 'hover:bg-interactive/50'
                 }`}
               >
