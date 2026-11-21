@@ -33,7 +33,10 @@ export const DesktopVerseActions = ({
   const { i18n } = useTranslation();
   const language = i18n?.language ?? 'en';
   const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
-  const handleShare = onShare || defaultShare;
+  const handleShare = useCallback(
+    () => (onShare ? onShare() : defaultShare(verseKey)),
+    [onShare, verseKey]
+  );
   const handleAddToPlan = useCallback(() => {
     if (onAddToPlan) onAddToPlan();
   }, [onAddToPlan]);

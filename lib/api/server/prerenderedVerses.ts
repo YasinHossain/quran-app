@@ -17,7 +17,7 @@ import type { PrerenderedVerse } from '@/types';
 
 type VerseGroup = 'by_chapter' | 'by_juz';
 
-interface TextOnlyApiVerse {
+export interface TextOnlyApiVerse {
   verse_key: string;
   text_uthmani?: string;
   translations?: Array<{
@@ -40,16 +40,20 @@ const PER_PAGE = 50;
 const MAX_PAGES = 20;
 
 const FOOTNOTE_REGEX = /<sup\b[^>]*>[\s\S]*?<\/sup>/gi;
+// The default Quran font (QPC Uthmani Hafs) has no glyph for U+06DF (small high rounded zero), so
+// browsers draw a dotted circle in its place. The client reader strips it for this font too
+// (`app/shared/VerseArabic.tsx`); keep the server-rendered text consistent with it.
+const UNSUPPORTED_QPC_GLYPHS = /\u06DF/g;
 
 function normaliseError(error: unknown): Error {
   if (error instanceof Error) return error;
   return new Error(typeof error === 'string' ? error : 'Unknown error');
 }
 
-function toPrerenderedVerse(verse: TextOnlyApiVerse): PrerenderedVerse {
+export function toPrerenderedVerse(verse: TextOnlyApiVerse): PrerenderedVerse {
   return {
     verseKey: verse.verse_key,
-    arabic: (verse.text_uthmani ?? '').trim(),
+    arabic: (verse.text_uthmani ?? '').replace(UNSUPPORTED_QPC_GLYPHS, '').trim(),
     translations: (verse.translations ?? []).map((translation) => ({
       resourceId: translation.resource_id,
       // Footnote markers point at notes we do not render here; drop them so the text reads cleanly.
@@ -106,7 +110,7 @@ async function fetchAllVerseText(
 const getPrerenderedVersesCached = unstable_cache(
   async (group: VerseGroup, id: string, translationIdsKey: string) =>
     fetchAllVerseText(group, id, translationIdsKey),
-  ['reader:prerendered-verses:v2'],
+  ['reader:prerendered-verses:v3'],
   { revalidate: 3600, tags: ['reader-prerendered-verses'] }
 );
 

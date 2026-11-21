@@ -157,7 +157,7 @@ export const Navigation = memo(function Navigation({
   // We handle sidebar blur via z-index (nav is z-30, sidebar overlay is z-40).
   const hideMobileNav = isHidden;
 
-  const [readerHref, setReaderHref] = useState('/surah/1');
+  const [readerHref, setReaderHref] = useState(() => buildSurahRoute(1));
   const [tafsirReturnHref, setTafsirReturnHref] = useState<string | null>(null);
   const [prefetchEnabled] = useState(() => {
     // Prefetching is a major UX win for "tab-like" navigation, but we still

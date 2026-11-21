@@ -54,3 +54,25 @@ describe('ReaderFullText', () => {
     );
   });
 });
+
+describe('ReaderFullText verse links', () => {
+  const sample = verses.slice(254, 256);
+
+  it('links each verse key to its verse page', () => {
+    const container = renderToContainer(<ReaderFullText title="Full text" verses={sample} />);
+
+    const link = container.querySelector('[data-verse-key="2:255"] a');
+    expect(link?.textContent).toBe('2:255');
+    expect(link?.getAttribute('href')).toBe('/surah/al-baqarah/255');
+  });
+
+  it('links to the verse page in the page language', () => {
+    const container = renderToContainer(
+      <ReaderFullText title="Full text" verses={sample} locale="bn" />
+    );
+
+    expect(container.querySelector('[data-verse-key="2:256"] a')?.getAttribute('href')).toBe(
+      '/bn/surah/al-baqarah/256'
+    );
+  });
+});

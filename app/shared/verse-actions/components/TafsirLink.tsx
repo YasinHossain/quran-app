@@ -8,6 +8,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { usePrefetchSingleVerse } from '@/app/shared/hooks/useSingleVerse';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { BookReaderIcon } from '@/app/shared/icons';
+import { tafsirHrefForVerseKey } from '@/app/shared/navigation/routes';
 import { setTafsirReturnFromVerseKey } from '@/app/shared/navigation/tafsirReturn';
 import { touchClasses } from '@/lib/responsive';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
@@ -23,7 +24,7 @@ export const TafsirLink = memo(function TafsirLink({
   const router = useRouter();
   const rawPathname = usePathname();
   const locale = getLocaleFromPathname(rawPathname) ?? 'en';
-  const href = localizeHref(`/tafsir/${verseKey.replace(':', '/')}`, locale);
+  const href = localizeHref(tafsirHrefForVerseKey(verseKey), locale);
   const prefetchVerse = usePrefetchSingleVerse();
   const { settings } = useSettings();
   const firstTafsirId = settings.tafsirIds?.[0];

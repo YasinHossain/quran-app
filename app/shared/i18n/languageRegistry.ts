@@ -12,6 +12,12 @@ export interface LanguageContentDefaults {
   translationIds: ReadonlyArray<number>;
   /** Tafsir resource ids; the first is the server-rendered default. */
   tafsirIds: ReadonlyArray<number>;
+  /**
+   * Whether the default tafsir is written in this language. `false` (it falls back to another
+   * language's tafsir) makes this language's tafsir pages duplicates: they are `noindex`, left out
+   * of tafsir hreflang alternates, and get no tafsir sitemap.
+   */
+  hasOwnTafsir: boolean;
   /** Word-by-word gloss language. */
   wordLang: string;
   /** Word-by-word translation resource id used by the selector. */
@@ -45,6 +51,7 @@ export const LANGUAGE_REGISTRY = [
     content: {
       translationIds: [20], // Saheeh International
       tafsirIds: [169], // Tafsir Ibn Kathir (abridged, English)
+      hasOwnTafsir: true,
       wordLang: 'en',
       wordTranslationId: 85, // M.A.S. Abdel Haleem (used by the current WBW selector)
     },
@@ -59,6 +66,7 @@ export const LANGUAGE_REGISTRY = [
     content: {
       translationIds: [161], // Taisirul Quran
       tafsirIds: [164], // Tafseer ibn Kathir (Bangla)
+      hasOwnTafsir: true,
       wordLang: 'bn',
       wordTranslationId: 161, // Bengali entry from QDC resources list
     },
@@ -73,6 +81,7 @@ export const LANGUAGE_REGISTRY = [
     content: {
       translationIds: [], // Arabic readers get the Quran text itself; no translation line.
       tafsirIds: [14], // Tafsir Ibn Kathir (Arabic)
+      hasOwnTafsir: true,
       // Word-by-word is not required for Arabic UI; keep English hover defaults.
       wordLang: 'en',
       wordTranslationId: 85,
@@ -88,6 +97,7 @@ export const LANGUAGE_REGISTRY = [
     content: {
       translationIds: [54], // Maulana Muhammad Junagarhi
       tafsirIds: [160], // Tafsir Ibn Kathir (Urdu)
+      hasOwnTafsir: true,
       wordLang: 'ur',
       wordTranslationId: 54, // Urdu entry from QDC resources list
     },
@@ -102,6 +112,7 @@ export const LANGUAGE_REGISTRY = [
     content: {
       translationIds: [122], // Maulana Azizul Haque al-Umari
       tafsirIds: [169], // QDC has no Hindi tafsir resource; fall back to English.
+      hasOwnTafsir: false,
       wordLang: 'hi',
       wordTranslationId: 122, // Hindi entry from QDC resources list
     },
@@ -119,6 +130,10 @@ export const ENABLED_LANGUAGES: ReadonlyArray<(typeof LANGUAGE_REGISTRY)[number]
 export const ENABLED_LANGUAGE_CODES: ReadonlyArray<UiLanguageCode> = ENABLED_LANGUAGES.map(
   (language) => language.code
 );
+
+/** Languages whose tafsir pages are indexable (their default tafsir is in that language). */
+export const TAFSIR_LANGUAGES: ReadonlyArray<(typeof LANGUAGE_REGISTRY)[number]> =
+  ENABLED_LANGUAGES.filter((language) => language.content.hasOwnTafsir);
 
 export const RTL_LANGUAGE_CODES: ReadonlyArray<UiLanguageCode> = ENABLED_LANGUAGES.filter(
   (language) => language.dir === 'rtl'

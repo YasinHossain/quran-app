@@ -24,7 +24,7 @@ test('next link points to next verse', () => {
   );
 
   const nextLink = screen.getByLabelText('Next');
-  expect(nextLink).toHaveAttribute('href', '/tafsir/1/2');
+  expect(nextLink).toHaveAttribute('href', '/tafsir/al-fatihah/2');
 });
 
 test('previous link points to previous verse', () => {
@@ -39,5 +39,5 @@ test('previous link points to previous verse', () => {
   );
 
   const prevLink = screen.getByLabelText('Previous');
-  expect(prevLink).toHaveAttribute('href', '/tafsir/1/7');
+  expect(prevLink).toHaveAttribute('href', '/tafsir/al-fatihah/7');
 });

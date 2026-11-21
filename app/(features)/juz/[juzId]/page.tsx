@@ -118,6 +118,7 @@ export default async function Page({
               verses={prerenderedVerses}
               lang={locale}
               dir={getUiLanguageDirection(locale)}
+              locale={locale}
             />
           ) : null
         }

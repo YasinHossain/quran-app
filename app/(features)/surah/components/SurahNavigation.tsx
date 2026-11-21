@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
 
 interface SurahNavigationProps {
   currentSurahId: number;
@@ -96,7 +97,7 @@ export function SurahNavigation({
       <div className="inline-flex items-center gap-2 rounded-full bg-interactive p-1.5">
         {previousId ? (
           <Link
-            href={localizeHref(`/surah/${previousId}`, locale)}
+            href={localizeHref(buildSurahRoute(previousId), locale)}
             data-testid="previous-surah-button"
             className={NAV_ITEM_CLASS_NAME}
             aria-label={`${t('previous')}: ${nameOf(previousId)}`}
@@ -115,7 +116,7 @@ export function SurahNavigation({
 
         {nextId ? (
           <Link
-            href={localizeHref(`/surah/${nextId}`, locale)}
+            href={localizeHref(buildSurahRoute(nextId), locale)}
             data-testid="next-surah-button"
             className={NAV_ITEM_CLASS_NAME}
             aria-label={`${t('next')}: ${nameOf(nextId)}`}

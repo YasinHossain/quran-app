@@ -43,6 +43,7 @@ Add an entry to `LANGUAGE_REGISTRY` in `app/shared/i18n/languageRegistry.ts`:
   content: {
     translationIds: [TRANSLATION_ID], // from step 1; [] = Arabic text only
     tafsirIds: [TAFSIR_ID],           // from step 1, or 169 (English) with a comment
+    hasOwnTafsir: true,               // false when tafsirIds falls back to another language
     wordLang: 'id',                   // word-by-word language, or 'en' if unsupported
     wordTranslationId: TRANSLATION_ID,
   },
@@ -76,7 +77,9 @@ npm run build && PORT=3125 npm start
 UA='Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
 curl -s -A "$UA" http://localhost:3125/id/surah/36 | grep -oE '<html[^>]*>|<title>[^<]*|<link rel="(canonical|alternate)"[^>]*>'
 curl -s -A "$UA" http://localhost:3125/id/surah/36 | grep -c 'data-verse-key="36:'   # expect ≥ 83
-curl -s http://localhost:3125/sitemap.xml | grep -c '<loc>http[^<]*/id/'
+curl -s http://localhost:3125/sitemap.xml | grep -o '<loc>[^<]*'          # index: expect verses-id (+ tafsir-id)
+curl -s http://localhost:3125/sitemaps/core.xml | grep -c '<loc>http[^<]*/id/'
+curl -s http://localhost:3125/sitemaps/verses-id.xml | grep -c '<loc>'          # expect 6236
 ```
 
 Check that:
@@ -84,6 +87,9 @@ Check that:
 - `/id/surah/36` returns 200 with `<html lang="id" dir="…">`, a self canonical
   (`…/id/surah/36`), `hreflang` links for every enabled language plus `x-default`, a localized
   `<title>`, and the full-text `<details>` with 83 verses in the chosen translation.
+- `/sitemap.xml` (a sitemap index) lists `verses-id`, and `tafsir-id` when the language has its
+  own tafsir (a language that falls back to the English tafsir, `hasOwnTafsir: false`, gets no
+  tafsir child; its tafsir pages are `noindex, follow` and left out of tafsir hreflang).
 - Unprefixed `/surah/36` with no cookie and no `Accept-Language` still returns 200 in English.
 - In a browser (DevTools or Playwright, phone viewport, after network idle) the page keeps the 83
   verses in the full-text section, the console has no hydration errors, and no request refetches

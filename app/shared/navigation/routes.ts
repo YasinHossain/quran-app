@@ -1,4 +1,13 @@
+import { resolveSurahParam } from '@/lib/seo/surahSlugs';
+
 const encodeParam = (value: number | string): string => encodeURIComponent(String(value));
+
+/**
+ * Surah URL segment: the canonical slug (`al-baqarah`) for a surah number, slug or known spelling;
+ * anything else is passed through encoded (and 404s).
+ */
+export const surahSegment = (surahId: number | string): string =>
+  resolveSurahParam(String(surahId).trim())?.slug ?? encodeParam(surahId);
 
 const normalizeStartVerse = (startVerse?: number | string | null): string | null => {
   if (startVerse === undefined || startVerse === null) return null;
@@ -16,7 +25,7 @@ interface SurahRouteOptions {
 }
 
 export const buildSurahRoute = (surahId: number | string, options?: SurahRouteOptions): string => {
-  const base = `/surah/${encodeParam(surahId)}`;
+  const base = `/surah/${surahSegment(surahId)}`;
   const normalizedStartVerse = normalizeStartVerse(options?.startVerse);
   const shouldIncludeSeq = options?.forceSeq === true;
 
@@ -35,12 +44,25 @@ export const buildSurahRoute = (surahId: number | string, options?: SurahRouteOp
   return `${base}#${params.toString()}`;
 };
 
+/**
+ * Dedicated, indexable page for one verse (`/surah/al-baqarah/255`). Use it for links meant to be shared
+ * or crawled; in-reader jumps keep `buildSurahRoute(id, { startVerse })` (no page load).
+ */
+export const buildVerseRoute = (surahId: number | string, verseId: number | string): string =>
+  `/surah/${surahSegment(surahId)}/${encodeParam(verseId)}`;
+
 export const buildJuzRoute = (juzId: number | string): string => `/juz/${encodeParam(juzId)}`;
 
 export const buildPageRoute = (pageNumber: number | string): string =>
   `/page/${encodeParam(pageNumber)}`;
 
 export const buildTafsirRoute = (surahId: number | string, verseId: number | string): string =>
-  `/tafsir/${encodeParam(surahId)}/${encodeParam(verseId)}`;
+  `/tafsir/${surahSegment(surahId)}/${encodeParam(verseId)}`;
+
+/** Tafsir route for a `surah:verse` key (`2:255` -> `/tafsir/al-baqarah/255`). */
+export const tafsirHrefForVerseKey = (verseKey: string): string => {
+  const [surahId = '', verseId = ''] = verseKey.split(':');
+  return buildTafsirRoute(surahId, verseId);
+};
 
 export const buildSearchRoute = (query: string): string => `/search?query=${encodeParam(query)}`;

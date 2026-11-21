@@ -1,3 +1,5 @@
+import { notFound } from 'next/navigation';
+
 import { SurahView } from '@/app/(features)/surah/components';
 import {
   getFullTextTitleTemplates,
@@ -8,6 +10,7 @@ import {
 } from '@/app/shared/i18n/serverLocale';
 import { getUiLanguageDirection } from '@/app/shared/i18n/uiLanguages';
 import { ReaderFullText, buildFullTextTitle } from '@/app/shared/reader/ReaderFullText';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { ReaderServerDataProvider } from '@/app/shared/reader/ReaderServerData';
 import {
   getChapterServer,
@@ -16,6 +19,7 @@ import {
 } from '@/lib/api/server';
 import { buildLocalizedPageMetadata, localizedUrl } from '@/lib/seo/localizedMetadata';
 import { SITE_NAME } from '@/lib/seo/site';
+import { SURAH_SLUGS, resolveSurahParam } from '@/lib/seo/surahSlugs';
 
 import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import type { Chapter } from '@/types';
@@ -26,12 +30,23 @@ import type { Metadata } from 'next';
 export const revalidate = 3600;
 
 export async function generateStaticParams(): Promise<Array<{ surahId: string }>> {
-  // Pre-render all 114 surahs at build time for faster Googlebot crawling
-  return Array.from({ length: 114 }, (_, i) => ({ surahId: String(i + 1) }));
+  // Pre-render all 114 surahs (by canonical slug) at build time for faster Googlebot crawling
+  return SURAH_SLUGS.map((slug) => ({ surahId: slug }));
 }
 
 interface SurahPageProps {
   params: Promise<{ surahId: string }>;
+}
+
+/**
+ * The route segment is the surah slug (`al-baqarah`); `proxy.ts` redirects numbers and other
+ * spellings to it. Resolved to the surah number once here; unknown surahs 404.
+ */
+async function resolveSurahId(params: SurahPageProps['params']): Promise<number> {
+  const { surahId } = await params;
+  const surah = resolveSurahParam(surahId);
+  if (!surah) notFound();
+  return surah.id;
 }
 
 /** Name for descriptions; English adds the (English) meaning, e.g. "Ya-Sin (Ya Sin)". */
@@ -84,7 +99,7 @@ function buildSurahJsonLd(
 ): Array<Record<string, unknown>> {
   const { locale } = translator;
   const chapterName = chapter ? translator.chapterName(chapter) : rawId;
-  const canonicalUrl = localizedUrl(`/surah/${Number.isFinite(surahId) ? surahId : rawId}`, locale);
+  const canonicalUrl = localizedUrl(buildSurahRoute(surahId), locale);
 
   const breadcrumb = {
     '@context': 'https://schema.org',
@@ -131,12 +146,9 @@ function buildSurahJsonLd(
 }
 
 export async function generateMetadata({ params }: SurahPageProps): Promise<Metadata> {
-  const resolvedParams = await params;
-  const rawId = resolvedParams.surahId;
-  const surahId = Number.parseInt(String(rawId), 10);
-  const path = Number.isFinite(surahId)
-    ? `/surah/${surahId}`
-    : `/surah/${encodeURIComponent(rawId)}`;
+  const surahId = await resolveSurahId(params);
+  const rawId = String(surahId);
+  const path = buildSurahRoute(surahId);
 
   const locale = await getRequestUiLanguage();
   const [translator, chapter] = await Promise.all([
@@ -165,9 +177,8 @@ export async function generateMetadata({ params }: SurahPageProps): Promise<Meta
  * Server component that handles async params and renders the SurahView.
  */
 async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element> {
-  const resolvedParams = await params;
-  const rawId = resolvedParams.surahId;
-  const surahId = Number.parseInt(String(rawId), 10);
+  const surahId = await resolveSurahId(params);
+  const rawId = String(surahId);
 
   // Render exactly what the client reader starts with for this language, so the server page is
   // reused as page 1 after hydration (no refetch, no flash of a different translation).
@@ -179,7 +190,7 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
   const [translator, initialData, chapter, prerenderedVerses] = await Promise.all([
     getServerTranslator(locale),
     getSurahInitialDataServer({
-      surahId: resolvedParams.surahId,
+      surahId: rawId,
       translationIds,
       wordLang,
       perPage: INITIAL_VERSES_PER_PAGE,
@@ -238,11 +249,12 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
               verses={prerenderedVerses}
               lang={locale}
               dir={getUiLanguageDirection(locale)}
+              locale={locale}
             />
           ) : null
         }
       >
-        <SurahView surahId={resolvedParams.surahId} {...surahViewProps} />
+        <SurahView surahId={rawId} {...surahViewProps} />
       </ReaderServerDataProvider>
     </>
   );
