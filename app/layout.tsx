@@ -1,17 +1,33 @@
 // app/layout.tsx
 import { cookies, headers } from 'next/headers';
+
 import type { Metadata } from 'next';
 
 import './fonts.css';
 import './globals.css';
-import { getUiLanguageDirection, isUiLanguageCode } from '@/app/shared/i18n/uiLanguages';
+import { buildInlineUiLanguageScript } from '@/app/shared/i18n/inlineUiLanguageScript';
+import { UI_LANGUAGE_HEADER } from '@/app/shared/i18n/languageRegistry';
+import {
+  DEFAULT_UI_LANGUAGE,
+  UI_LANGUAGE_STORAGE_KEY,
+  getUiLanguageDirection,
+  isUiLanguageCode,
+} from '@/app/shared/i18n/uiLanguages';
 import { loadUiResources } from '@/app/shared/i18n/loadUiResources';
-import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_NAME, absoluteUrl, getSiteUrl } from '@/lib/seo/site';
+import {
+  GOOGLE_SITE_VERIFICATION,
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  SITE_NAME,
+  absoluteUrl,
+  getSiteUrl,
+} from '@/lib/seo/site';
 
 import { ClientProviders } from './providers/ClientProviders';
 import { TranslationProvider } from './providers/TranslationProvider';
 import { ErrorBoundary } from './shared/components/error-boundary';
 import { WebVitals } from './shared/components/WebVitals';
+
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
 
@@ -40,7 +56,7 @@ import { Analytics } from '@vercel/analytics/react';
  */
 export const INLINE_THEME_SCRIPT = `(function(){try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){try{var m=document.cookie.match(/(?:^|; )theme=([^;]+)/);t=m?decodeURIComponent(m[1]):null}catch(e){}}if(t!=='light'&&t!=='dark'){try{var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');if(mq&&mq.matches)t='dark'}catch(e){} }var r=document.documentElement;r.classList.remove('light');r.classList.toggle('dark',t==='dark');r.setAttribute('data-theme',t==='dark'?'dark':'light');try{r.style.colorScheme=t==='dark'?'dark':'light'}catch(e){}}catch(e){}})()`;
 
-export const INLINE_UI_LANGUAGE_SCRIPT = `(function(){try{var k='ui-language';var s=['en','bn','ar','ur','hi'];var l=null;try{var p=location&&location.pathname?location.pathname.split('/')[1]:null;if(p&&s.indexOf(p)>-1)l=p}catch(e){}if(!l){try{l=localStorage.getItem(k)}catch(e){}}if(!l){try{var re=new RegExp('(?:^|; )'+k+'=([^;]+)');var m=document.cookie.match(re);l=m?decodeURIComponent(m[1]):null}catch(e){}}if(!l||s.indexOf(l)===-1)return;var r=document.documentElement;if(r){if(r.lang!==l)r.lang=l;try{r.dir=(l==='ar'||l==='ur')?'rtl':'ltr'}catch(e){}}try{var c=k+'='+encodeURIComponent(l)+'; path=/; max-age=31536000; SameSite=Lax';try{if(location&&location.protocol==='https:')c+='; Secure'}catch(e){}document.cookie=c}catch(e){}}catch(e){}})()`;
+export const INLINE_UI_LANGUAGE_SCRIPT = buildInlineUiLanguageScript();
 
 export const metadata = {
   metadataBase: new URL(getSiteUrl()),
@@ -85,6 +101,7 @@ export const metadata = {
     description: SITE_DESCRIPTION,
     images: ['/twitter-image'],
   },
+  ...(GOOGLE_SITE_VERIFICATION ? { verification: { google: GOOGLE_SITE_VERIFICATION } } : {}),
 } satisfies Metadata;
 
 export default async function RootLayout({
@@ -99,11 +116,13 @@ export default async function RootLayout({
     stored && (stored.value === 'light' || stored.value === 'dark')
       ? (stored.value as 'light' | 'dark')
       : 'light';
-  const uiLanguageHeader = headerStore.get('x-ui-language');
-  const storedUiLanguage = cookieStore.get('ui-language');
+  const uiLanguageHeader = headerStore.get(UI_LANGUAGE_HEADER);
+  const storedUiLanguage = cookieStore.get(UI_LANGUAGE_STORAGE_KEY);
   const uiLanguage =
     (uiLanguageHeader && isUiLanguageCode(uiLanguageHeader) ? uiLanguageHeader : null) ??
-    (storedUiLanguage && isUiLanguageCode(storedUiLanguage.value) ? storedUiLanguage.value : 'en');
+    (storedUiLanguage && isUiLanguageCode(storedUiLanguage.value)
+      ? storedUiLanguage.value
+      : DEFAULT_UI_LANGUAGE);
   const resources = await loadUiResources(uiLanguage);
   const htmlClassNameByTheme: Record<'light' | 'dark', string | undefined> = {
     light: undefined,

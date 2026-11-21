@@ -1,13 +1,16 @@
 'use client';
 
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SettingsSidebar } from '@/app/(features)/surah/components';
 import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
 import { useTafsirVerseData } from '@/app/(features)/tafsir/hooks/useTafsirVerseData';
 import { useUIState } from '@/app/providers/UIStateContext';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+import { buildTafsirRoute, buildVerseRoute } from '@/app/shared/navigation/routes';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
 import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
@@ -37,12 +40,17 @@ export default function TafsirVersePageClient({
   initialVerse,
   initialTafsirHtml,
   initialTafsirResource,
+  initialPrev = null,
+  initialNext = null,
 }: {
   surahId: string;
   ayahId: string;
   initialVerse: Verse;
   initialTafsirHtml: string;
   initialTafsirResource?: TafsirResource | undefined;
+  /** Server-computed neighbours, so the first HTML has real prev/next links for crawlers. */
+  initialPrev?: { surahId: string; ayahId: number } | null;
+  initialNext?: { surahId: string; ayahId: number } | null;
 }): React.JSX.Element {
   const { activeVerse, isPlayerVisible, reciter } = useAudio();
   const tafsirDefaults = useMemo(
@@ -61,10 +69,14 @@ export default function TafsirVersePageClient({
     selectedTranslationName,
     selectedTafsirName,
     selectedWordLanguageName,
-    prev,
-    next,
+    prev: clientPrev,
+    next: clientNext,
     currentSurah,
   } = useTafsirVerseData(surahId, ayahId, tafsirDefaults);
+
+  // The client hook needs the chapter list, which is empty during server rendering.
+  const prev = clientPrev ?? initialPrev;
+  const next = clientNext ?? initialNext;
 
   const [isTranslationPanelOpen, openTranslationPanel, closeTranslationPanel] =
     useUIPanelVisibility(TRANSLATION_PANEL_ID);
@@ -166,14 +178,15 @@ function TafsirContent({
 }): React.JSX.Element {
   const router = useRouter();
   const pathname = usePathname();
+  const { t } = useTranslation();
+  const locale = getLocaleFromPathname(pathname) ?? 'en';
   const touchStart = React.useRef<{ x: number; y: number } | null>(null);
 
   const navigateTo = React.useCallback(
     (target: { surahId: string; ayahId: number }) => {
-      const locale = getLocaleFromPathname(pathname) ?? 'en';
-      router.push(localizeHref(`/tafsir/${target.surahId}/${target.ayahId}`, locale));
+      router.push(localizeHref(buildTafsirRoute(target.surahId, target.ayahId), locale));
     },
-    [pathname, router]
+    [locale, router]
   );
 
   const onTouchStart = (e: React.TouchEvent) => {
@@ -211,6 +224,14 @@ function TafsirContent({
         ayahId={ayahId}
         surahId={surahId}
       />
+      <div className="mt-2 flex justify-end">
+        <Link
+          href={localizeHref(buildVerseRoute(surahId, ayahId), locale)}
+          className="inline-flex min-h-touch items-center rounded-sm px-2 text-sm font-semibold text-accent underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        >
+          {t('verse_page_open')}
+        </Link>
+      </div>
       <TafsirViewer
         {...(verse !== undefined ? { verse } : {})}
         {...(tafsirResource !== undefined ? { tafsirResource } : {})}

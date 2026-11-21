@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { ArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
-import { buildSurahRoute } from '@/app/shared/navigation/routes';
+import { buildSurahRoute, buildTafsirRoute } from '@/app/shared/navigation/routes';
 import { getTafsirReturnHref } from '@/app/shared/navigation/tafsirReturn';
 import { formatNumber } from '@/lib/text/localizeNumbers';
 import { Surah } from '@/types';
@@ -30,7 +30,8 @@ const ChevronLeft = (): JSX.Element => <ChevronLeftIcon size={20} className="tex
 
 const ChevronRight = (): JSX.Element => <ChevronRightIcon size={20} className="text-accent" />;
 
-const buildTafsirUrl = (target: NavTarget): string => `/tafsir/${target.surahId}/${target.ayahId}`;
+const buildTafsirUrl = (target: NavTarget): string =>
+  buildTafsirRoute(target.surahId, target.ayahId);
 
 interface NavLinkProps {
   label: string;
@@ -61,6 +62,7 @@ const NavLink = ({ label, target, side, locale }: NavLinkProps): JSX.Element => 
     <Link
       href={localizeHref(buildTafsirUrl(target), locale)}
       prefetch={true}
+      rel={side === 'left' ? 'prev' : 'next'}
       aria-label={label}
       className={baseClasses}
     >

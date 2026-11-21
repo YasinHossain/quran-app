@@ -1,11 +1,13 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
-import React, { useCallback } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
 
 interface SurahNavigationProps {
   currentSurahId: number;
@@ -42,74 +44,95 @@ const ChevronRight = (): React.JSX.Element => (
   </svg>
 );
 
+const SURAH_COUNT = 114;
+
+const NAV_ITEM_CLASS_NAME =
+  'group relative flex h-10 min-h-touch min-w-[130px] items-center justify-center rounded-full bg-surface px-8 text-sm font-medium text-foreground shadow-sm transition-all';
+const NAV_ITEM_DISABLED_CLASS_NAME = 'cursor-not-allowed opacity-50';
+
 /**
  * Navigation component for moving between surahs.
- * Displays Previous and Next buttons at the end of each surah.
+ * Displays Previous and Next links at the end of each surah. They are plain links (crawlable,
+ * rendered on the server); chapter names only enrich the accessible labels once loaded.
  */
 export function SurahNavigation({
   currentSurahId,
   className,
 }: SurahNavigationProps): React.JSX.Element | null {
   const { t } = useTranslation();
-  const router = useRouter();
   const pathname = usePathname();
-  const { chapters, isLoading, error } = useSurahNavigationData();
+  const { chapters } = useSurahNavigationData();
+  const locale = getLocaleFromPathname(pathname) ?? 'en';
 
-  const handleNavigation = useCallback(
-    (surahId: number) => {
-      const locale = getLocaleFromPathname(pathname) ?? 'en';
-      router.push(localizeHref(`/surah/${surahId}`, locale));
-    },
-    [pathname, router]
+  if (!Number.isInteger(currentSurahId) || currentSurahId < 1 || currentSurahId > SURAH_COUNT) {
+    return null;
+  }
+
+  const previousId = currentSurahId > 1 ? currentSurahId - 1 : null;
+  const nextId = currentSurahId < SURAH_COUNT ? currentSurahId + 1 : null;
+  const nameOf = (id: number): string =>
+    t(`surah_names.${id}`, {
+      defaultValue: chapters.find((chapter) => chapter.id === id)?.name_simple ?? String(id),
+    });
+
+  const previousContent = (
+    <>
+      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
+        <ChevronLeft />
+      </span>
+      <span>{t('previous')}</span>
+    </>
+  );
+  const nextContent = (
+    <>
+      <span>{t('next')}</span>
+      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
+        <ChevronRight />
+      </span>
+    </>
   );
 
-  if (isLoading || error || chapters.length === 0) {
-    return null;
-  }
-
-  const currentIndex = chapters.findIndex((ch) => ch.id === currentSurahId);
-  if (currentIndex === -1) {
-    return null;
-  }
-
-  const hasPrevious = currentIndex > 0;
-  const hasNext = currentIndex < chapters.length - 1;
-  const previousChapter = hasPrevious ? chapters[currentIndex - 1] : null;
-  const nextChapter = hasNext ? chapters[currentIndex + 1] : null;
-
   return (
-    <div className={`flex w-full items-center justify-center py-8 ${className || ''}`}>
+    <nav className={`flex w-full items-center justify-center py-8 ${className || ''}`}>
       <div className="inline-flex items-center gap-2 rounded-full bg-interactive p-1.5">
-        {/* Previous Button */}
-        <button
-          onClick={() => previousChapter && handleNavigation(previousChapter.id)}
-          disabled={!hasPrevious}
-          data-testid="previous-surah-button"
-          className="group relative flex h-10 min-h-touch min-w-[130px] items-center justify-center rounded-full bg-surface px-8 text-sm font-medium text-foreground shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50"
-          aria-label={
-            previousChapter ? `${t('previous')}: ${previousChapter.name_simple}` : t('previous')
-          }
-        >
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
-            <ChevronLeft />
+        {previousId ? (
+          <Link
+            href={localizeHref(buildSurahRoute(previousId), locale)}
+            data-testid="previous-surah-button"
+            className={NAV_ITEM_CLASS_NAME}
+            aria-label={`${t('previous')}: ${nameOf(previousId)}`}
+          >
+            {previousContent}
+          </Link>
+        ) : (
+          <span
+            aria-disabled="true"
+            data-testid="previous-surah-button"
+            className={`${NAV_ITEM_CLASS_NAME} ${NAV_ITEM_DISABLED_CLASS_NAME}`}
+          >
+            {previousContent}
           </span>
-          <span>{t('previous')}</span>
-        </button>
+        )}
 
-        {/* Next Button */}
-        <button
-          onClick={() => nextChapter && handleNavigation(nextChapter.id)}
-          disabled={!hasNext}
-          data-testid="next-surah-button"
-          className="group relative flex h-10 min-h-touch min-w-[130px] items-center justify-center rounded-full bg-surface px-8 text-sm font-medium text-foreground shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50"
-          aria-label={nextChapter ? `${t('next')}: ${nextChapter.name_simple}` : t('next')}
-        >
-          <span>{t('next')}</span>
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
-            <ChevronRight />
+        {nextId ? (
+          <Link
+            href={localizeHref(buildSurahRoute(nextId), locale)}
+            data-testid="next-surah-button"
+            className={NAV_ITEM_CLASS_NAME}
+            aria-label={`${t('next')}: ${nameOf(nextId)}`}
+          >
+            {nextContent}
+          </Link>
+        ) : (
+          <span
+            aria-disabled="true"
+            data-testid="next-surah-button"
+            className={`${NAV_ITEM_CLASS_NAME} ${NAV_ITEM_DISABLED_CLASS_NAME}`}
+          >
+            {nextContent}
           </span>
-        </button>
+        )}
       </div>
-    </div>
+    </nav>
   );
 }

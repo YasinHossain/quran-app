@@ -1,30 +1,38 @@
 import Link from 'next/link';
+
+import { localizeHref } from '@/app/shared/i18n/localeRouting';
+import { getRequestUiLanguage, getServerTranslator } from '@/app/shared/i18n/serverLocale';
+import { getAllJuzs } from '@/app/shared/navigation/datasets';
+import { buildLocalizedPageMetadata } from '@/lib/seo/localizedMetadata';
+import { SITE_NAME } from '@/lib/seo/site';
+
 import type { Metadata } from 'next';
 
-import { getAllJuzs } from '@/app/shared/navigation/datasets';
-import { SITE_NAME, absoluteUrl } from '@/lib/seo/site';
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestUiLanguage();
+  const { t } = await getServerTranslator(locale);
 
-export const metadata: Metadata = {
-  title: 'Juz',
-  description: `Browse Quran by Juz on ${SITE_NAME}.`,
-  alternates: {
-    canonical: absoluteUrl('/juz'),
-  },
-  robots: {
-    index: false,
-    follow: true,
-  },
-};
+  return buildLocalizedPageMetadata({
+    path: '/juz',
+    locale,
+    title: t('juz_tab'),
+    description: t('seo_juz_index_description', { siteName: SITE_NAME }),
+  });
+}
 
-export default function JuzIndexPage(): React.JSX.Element {
+export default async function JuzIndexPage(): Promise<React.JSX.Element> {
+  const locale = await getRequestUiLanguage();
+  const { t } = await getServerTranslator(locale);
   const juzs = getAllJuzs();
   return (
     <div className="p-6">
-      <h1 className="text-xl font-bold mb-4">Juz</h1>
+      <h1 className="text-xl font-bold mb-4">{t('juz_tab')}</h1>
       <ul className="space-y-2">
         {juzs.map((j) => (
           <li key={j.number}>
-            <Link href={`/juz/${j.number}`}>{j.name}</Link>
+            <Link href={localizeHref(`/juz/${j.number}`, locale)}>
+              {t('juz_number', { number: j.number })}
+            </Link>
           </li>
         ))}
       </ul>

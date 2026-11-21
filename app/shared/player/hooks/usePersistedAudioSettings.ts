@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { DEFAULT_RECITER, useReciters } from '@/app/shared/player/hooks/useReciters';
+import { DEFAULT_RECITER } from '@/app/shared/player/hooks/useReciters';
 
 import type { Reciter } from '@/app/shared/player/types';
 
@@ -14,6 +14,7 @@ interface UsePersistedAudioSettingsReturn {
 }
 
 const STORAGE_KEY_RECITER = 'reciterId';
+const STORAGE_KEY_RECITER_META = 'reciterMeta';
 const STORAGE_KEY_VOLUME = 'volume';
 const STORAGE_KEY_PLAYBACK_RATE = 'playbackRate';
 
@@ -23,9 +24,9 @@ const STORAGE_KEY_PLAYBACK_RATE = 'playbackRate';
  */
 export function usePersistedAudioSettings(): UsePersistedAudioSettingsReturn {
   const [reciterId, setReciterId] = useState<number>(DEFAULT_RECITER.id);
+  const [reciterMeta, setReciterMeta] = useState<Reciter | null>(null);
   const [volume, setVolume] = useState(0.9);
   const [playbackRate, setPlaybackRate] = useState(1);
-  const { reciters } = useReciters();
 
   // Load persisted settings on mount
   useEffect(() => {
@@ -36,6 +37,24 @@ export function usePersistedAudioSettings(): UsePersistedAudioSettingsReturn {
         const parsed = Number.parseInt(storedId, 10);
         if (Number.isFinite(parsed) && parsed > 0) {
           setReciterId(parsed);
+        }
+      }
+
+      const storedMeta = localStorage.getItem(STORAGE_KEY_RECITER_META);
+      if (storedMeta) {
+        const parsedMeta = JSON.parse(storedMeta) as unknown;
+        if (
+          parsedMeta &&
+          typeof parsedMeta === 'object' &&
+          'id' in parsedMeta &&
+          typeof (parsedMeta as { id?: unknown }).id === 'number' &&
+          'name' in parsedMeta &&
+          typeof (parsedMeta as { name?: unknown }).name === 'string'
+        ) {
+          const meta = parsedMeta as Reciter;
+          if (Number.isFinite(meta.id) && meta.id > 0 && meta.name.trim().length > 0) {
+            setReciterMeta(meta);
+          }
         }
       }
 
@@ -61,11 +80,38 @@ export function usePersistedAudioSettings(): UsePersistedAudioSettingsReturn {
     }
   }, [reciterId, volume, playbackRate]);
 
-  // Resolve reciter object from ID
-  const reciter: Reciter = reciters.find((r) => r.id === reciterId) ?? {
-    ...DEFAULT_RECITER,
-    id: reciterId,
-  };
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const storedMeta = localStorage.getItem(STORAGE_KEY_RECITER_META);
+      if (!storedMeta) {
+        setReciterMeta(null);
+        return;
+      }
+      const parsedMeta = JSON.parse(storedMeta) as unknown;
+      if (
+        parsedMeta &&
+        typeof parsedMeta === 'object' &&
+        'id' in parsedMeta &&
+        typeof (parsedMeta as { id?: unknown }).id === 'number' &&
+        'name' in parsedMeta &&
+        typeof (parsedMeta as { name?: unknown }).name === 'string'
+      ) {
+        const meta = parsedMeta as Reciter;
+        setReciterMeta(meta.id === reciterId ? meta : null);
+      } else {
+        setReciterMeta(null);
+      }
+    } catch {
+      setReciterMeta(null);
+    }
+  }, [reciterId]);
+
+  const reciter = useMemo<Reciter>(() => {
+    if (reciterMeta && reciterMeta.id === reciterId) return reciterMeta;
+    if (reciterId === DEFAULT_RECITER.id) return DEFAULT_RECITER;
+    return { ...DEFAULT_RECITER, id: reciterId };
+  }, [reciterId, reciterMeta]);
 
   return {
     reciter,

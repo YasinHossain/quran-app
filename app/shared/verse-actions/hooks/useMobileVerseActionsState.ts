@@ -5,6 +5,8 @@ import { useState, useCallback } from 'react';
 import { defaultShare } from '@/app/shared/verse-actions/utils';
 
 interface UseMobileVerseActionsStateParams {
+  /** Shared as the verse page URL when no `onShare` is given. */
+  verseKey?: string;
   onShare?: () => void | Promise<void>;
   onBookmark?: () => void;
   showRemove?: boolean;
@@ -23,6 +25,7 @@ interface MobileVerseActionsState {
   handleAddToPlan: () => void;
 }
 export function useMobileVerseActionsState({
+  verseKey,
   onShare,
   onBookmark,
   showRemove = false,
@@ -43,7 +46,10 @@ export function useMobileVerseActionsState({
     }
   }, [showRemove, onBookmark, openBookmarkModal]);
 
-  const handleShare = onShare || defaultShare;
+  const handleShare = useCallback(() => {
+    if (onShare) void onShare();
+    else defaultShare(verseKey);
+  }, [onShare, verseKey]);
   const handleAddToPlan = useCallback(() => {
     if (onAddToPlan) onAddToPlan();
   }, [onAddToPlan]);

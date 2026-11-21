@@ -6,6 +6,7 @@
     "node": ">=20"
   },
   "scripts": {
+    "seo:indexnow": "node scripts/indexnow-submit.mjs",
     "dev": "node node_modules/next/dist/bin/next dev --turbopack",
     "dev:turbo": "node node_modules/next/dist/bin/next dev --turbopack",
     "dev:lan": "node node_modules/next/dist/bin/next dev --webpack -H 0.0.0.0",
@@ -73,7 +74,8 @@
     "start:chrome": "google-chrome --headless=new --remote-debugging-port=9222 --remote-debugging-address=0.0.0.0 --no-sandbox --disable-gpu > /dev/null 2>&1 &",
     "audit:deps": "npm audit --omit=dev --audit-level=high",
     "audit-styles": "eslint app src lib --quiet --rule token-rules/no-raw-color-classes:2 --rule token-rules/no-theme-conditionals:2",
-    "lhci": "lhci autorun --config=./lighthouserc.cjs"
+    "lhci": "lhci autorun --config=./lighthouserc.cjs",
+    "lhci:mobile": "lhci autorun --config=./lighthouserc.mobile.cjs"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
@@ -158,46 +160,39 @@
   },
   "size-limit": [
     {
-      "name": "Surah Feature Bundle",
-      "path": ".next/static/chunks/app/(features)/surah/**/*.js",
-      "limit": "50 KB",
-      "webpack": false
-    },
-    {
-      "name": "Shared Components Bundle",
-      "path": ".next/static/chunks/app/shared/**/*.js",
-      "limit": "30 KB",
-      "webpack": false
-    },
-    {
-      "name": "Providers Bundle",
-      "path": ".next/static/chunks/app/providers/**/*.js",
-      "limit": "25 KB",
-      "webpack": false
-    },
-    {
-      "name": "Bookmarks Feature Bundle",
-      "path": ".next/static/chunks/app/(features)/bookmarks/**/*.js",
-      "limit": "45 KB",
-      "webpack": false
-    },
-    {
-      "name": "Tafsir Feature Bundle",
-      "path": ".next/static/chunks/app/(features)/tafsir/**/*.js",
-      "limit": "40 KB",
-      "webpack": false
-    },
-    {
-      "name": "Search Feature Bundle",
-      "path": ".next/static/chunks/app/(features)/search/**/*.js",
-      "limit": "35 KB",
-      "webpack": false
-    },
-    {
-      "name": "Main App Bundle",
+      "name": "Main runtime (main-*.js)",
       "path": ".next/static/chunks/main-*.js",
-      "limit": "200 KB",
-      "webpack": false
+      "limit": "40 KB",
+      "webpack": false,
+      "running": false
+    },
+    {
+      "name": "React framework (framework-*.js)",
+      "path": ".next/static/chunks/framework-*.js",
+      "limit": "58 KB",
+      "webpack": false,
+      "running": false
+    },
+    {
+      "name": "Polyfills (polyfills-*.js)",
+      "path": ".next/static/chunks/polyfills-*.js",
+      "limit": "40 KB",
+      "webpack": false,
+      "running": false
+    },
+    {
+      "name": "All client JS",
+      "path": ".next/static/chunks/**/*.js",
+      "limit": "600 KB",
+      "webpack": false,
+      "running": false
+    },
+    {
+      "name": "All CSS",
+      "path": ".next/static/css/*.css",
+      "limit": "17 KB",
+      "webpack": false,
+      "running": false
     }
   ],
   "volta": {

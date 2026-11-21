@@ -87,4 +87,60 @@ describe('useVerseListing', () => {
     expect(mockActiveVerse).toBe(verses[0]);
     expect(openPlayer).toHaveBeenCalledTimes(2);
   });
+
+  describe('infinite mode with server-provided verses (juz)', () => {
+    const serverVerses: Verse[] = [
+      { id: 101, verse_key: '2:1' } as Verse,
+      { id: 102, verse_key: '2:2' } as Verse,
+    ];
+    const serverParams = { translationIds: [1], wordLang: 'en' };
+    const getLoaderMock = (): jest.Mock =>
+      require('@/app/(features)/surah/hooks/useInfiniteVerseLoader').useInfiniteVerseLoader;
+
+    it('shows server verses while the first page loads, without reporting the end', () => {
+      getLoaderMock().mockImplementation(() => ({
+        verses: [],
+        isLoading: true,
+        isValidating: true,
+        isReachingEnd: true,
+      }));
+
+      const { result } = renderHook(() =>
+        useVerseListing({
+          id: '1',
+          resourceKind: 'juz',
+          totalVerses: 148,
+          lookup: jest.fn(),
+          initialVerses: serverVerses,
+          initialVersesParams: serverParams,
+        })
+      );
+
+      expect(result.current.verses).toEqual(serverVerses);
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.isReachingEnd).toBe(false);
+    });
+
+    it('switches to loaded pages so infinite scroll can grow past the server verses', () => {
+      getLoaderMock().mockImplementation(() => ({
+        verses,
+        isLoading: false,
+        isValidating: false,
+        isReachingEnd: false,
+      }));
+
+      const { result } = renderHook(() =>
+        useVerseListing({
+          id: '1',
+          resourceKind: 'juz',
+          totalVerses: 148,
+          lookup: jest.fn(),
+          initialVerses: [serverVerses[0]],
+          initialVersesParams: serverParams,
+        })
+      );
+
+      expect(result.current.verses).toEqual(verses);
+    });
+  });
 });

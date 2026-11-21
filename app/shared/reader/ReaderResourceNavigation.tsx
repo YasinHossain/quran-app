@@ -1,7 +1,8 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
-import React, { useCallback, useMemo } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
@@ -49,14 +50,18 @@ const toDisplayNumber = (value: string): number | null => {
   return Number.isFinite(parsed) ? parsed : null;
 };
 
+const NAV_ITEM_CLASS_NAME =
+  'group relative flex h-10 min-h-touch min-w-[130px] items-center justify-center rounded-full bg-surface px-8 text-sm font-medium text-foreground shadow-sm transition-all';
+const NAV_ITEM_DISABLED_CLASS_NAME = 'cursor-not-allowed opacity-50';
+
 export function ReaderResourceNavigation({
   resourceKind,
   resourceId,
   className,
 }: ReaderResourceNavigationProps): React.JSX.Element | null {
   const { t } = useTranslation();
-  const router = useRouter();
   const pathname = usePathname();
+  const locale = getLocaleFromPathname(pathname) ?? 'en';
 
   const current = toDisplayNumber(resourceId);
   const config = useMemo(() => {
@@ -66,50 +71,73 @@ export function ReaderResourceNavigation({
     return { label: t('juz'), total: 30, prefix: '/juz' } as const;
   }, [resourceKind, t]);
 
-  const handleNavigation = useCallback(
-    (nextId: number) => {
-      const locale = getLocaleFromPathname(pathname) ?? 'en';
-      router.push(localizeHref(`${config.prefix}/${nextId}`, locale));
-    },
-    [config.prefix, pathname, router]
-  );
-
   if (!current) return null;
 
-  const hasPrevious = current > 1;
-  const hasNext = current < config.total;
-  const prevId = hasPrevious ? current - 1 : null;
-  const nextId = hasNext ? current + 1 : null;
+  const prevId = current > 1 ? current - 1 : null;
+  const nextId = current < config.total ? current + 1 : null;
 
+  const previousContent = (
+    <>
+      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
+        <ChevronLeft />
+      </span>
+      <span>{t('previous')}</span>
+    </>
+  );
+  const nextContent = (
+    <>
+      <span>{t('next')}</span>
+      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
+        <ChevronRight />
+      </span>
+    </>
+  );
+
+  // Plain links so previous/next are crawlable and present in server HTML.
   return (
-    <div className={`flex w-full items-center justify-center py-8 ${className || ''}`}>
+    <nav
+      aria-label={config.label}
+      className={`flex w-full items-center justify-center py-8 ${className || ''}`}
+    >
       <div className="inline-flex items-center gap-2 rounded-full bg-interactive p-1.5">
-        <button
-          onClick={() => prevId && handleNavigation(prevId)}
-          disabled={!hasPrevious}
-          data-testid={`previous-${resourceKind}-button`}
-          className="group relative flex h-10 min-h-touch min-w-[130px] items-center justify-center rounded-full bg-surface px-8 text-sm font-medium text-foreground shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50"
-          aria-label={prevId ? `${t('previous')} ${config.label} ${prevId}` : t('previous')}
-        >
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
-            <ChevronLeft />
+        {prevId ? (
+          <Link
+            href={localizeHref(`${config.prefix}/${prevId}`, locale)}
+            data-testid={`previous-${resourceKind}-button`}
+            className={NAV_ITEM_CLASS_NAME}
+            aria-label={`${t('previous')} ${config.label} ${prevId}`}
+          >
+            {previousContent}
+          </Link>
+        ) : (
+          <span
+            aria-disabled="true"
+            data-testid={`previous-${resourceKind}-button`}
+            className={`${NAV_ITEM_CLASS_NAME} ${NAV_ITEM_DISABLED_CLASS_NAME}`}
+          >
+            {previousContent}
           </span>
-          <span>{t('previous')}</span>
-        </button>
+        )}
 
-        <button
-          onClick={() => nextId && handleNavigation(nextId)}
-          disabled={!hasNext}
-          data-testid={`next-${resourceKind}-button`}
-          className="group relative flex h-10 min-h-touch min-w-[130px] items-center justify-center rounded-full bg-surface px-8 text-sm font-medium text-foreground shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50"
-          aria-label={nextId ? `${t('next')} ${config.label} ${nextId}` : t('next')}
-        >
-          <span>{t('next')}</span>
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
-            <ChevronRight />
+        {nextId ? (
+          <Link
+            href={localizeHref(`${config.prefix}/${nextId}`, locale)}
+            data-testid={`next-${resourceKind}-button`}
+            className={NAV_ITEM_CLASS_NAME}
+            aria-label={`${t('next')} ${config.label} ${nextId}`}
+          >
+            {nextContent}
+          </Link>
+        ) : (
+          <span
+            aria-disabled="true"
+            data-testid={`next-${resourceKind}-button`}
+            className={`${NAV_ITEM_CLASS_NAME} ${NAV_ITEM_DISABLED_CLASS_NAME}`}
+          >
+            {nextContent}
           </span>
-        </button>
+        )}
       </div>
-    </div>
+    </nav>
   );
 }

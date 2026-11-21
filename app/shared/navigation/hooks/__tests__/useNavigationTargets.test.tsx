@@ -5,7 +5,7 @@ import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigatio
 describe('useNavigationTargets', () => {
   it('returns href builders that match route helpers', () => {
     const { result } = renderHook(() => useNavigationTargets());
-    expect(result.current.getSurahHref(5)).toBe('/surah/5');
+    expect(result.current.getSurahHref(5)).toBe('/surah/al-maidah');
     expect(result.current.getJuzHref(3)).toBe('/juz/3');
     expect(result.current.getPageHref(200)).toBe('/page/200');
   });
@@ -20,7 +20,7 @@ describe('useNavigationTargets', () => {
     });
 
     const push = globalThis.__NEXT_ROUTER_MOCK__?.push as unknown as jest.Mock;
-    expect(push).toHaveBeenNthCalledWith(1, '/surah/1');
+    expect(push).toHaveBeenNthCalledWith(1, '/surah/al-fatihah');
     expect(push).toHaveBeenNthCalledWith(2, '/juz/2');
     expect(push).toHaveBeenNthCalledWith(3, '/page/3');
   });

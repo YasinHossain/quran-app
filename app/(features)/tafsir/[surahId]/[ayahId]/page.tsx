@@ -1,74 +1,132 @@
-import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
-import { getTafsirVersePageDataServer } from '@/lib/api/server';
-import { getChapterServer } from '@/lib/api/server';
-import { SITE_NAME, absoluteUrl } from '@/lib/seo/site';
-import { ensureLanguageCode } from '@/lib/text/languageCodes';
+import { TAFSIR_LANGUAGES } from '@/app/shared/i18n/languageRegistry';
+import {
+  getRequestUiLanguage,
+  getServerReaderDefaults,
+  getServerTranslator,
+  getTafsirMetadataTemplates,
+} from '@/app/shared/i18n/serverLocale';
+import { buildTafsirRoute } from '@/app/shared/navigation/routes';
+import {
+  getNextVerse,
+  getPreviousVerse,
+  parseVerseAddress,
+  type VerseAddress,
+} from '@/app/shared/navigation/verseNavigation';
+import { getChaptersServer, getTafsirVersePageDataServer, toVerseCounts } from '@/lib/api/server';
+import { buildLocalizedPageMetadata } from '@/lib/seo/localizedMetadata';
+import { resolveSurahParam } from '@/lib/seo/surahSlugs';
+import { buildTafsirMetadataText } from '@/lib/seo/tafsirMetadata';
 
 import TafsirVersePageClient from './components/TafsirVersePageClient';
+
+import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
+import type { Metadata } from 'next';
 
 interface TafsirVersePageProps {
   params: Promise<{ surahId: string; ayahId: string }>;
 }
 
-export async function generateMetadata({ params }: TafsirVersePageProps): Promise<Metadata> {
-  const { surahId: rawSurahId, ayahId: rawAyahId } = await params;
-  const surahId = Number.parseInt(String(rawSurahId), 10);
-  const ayahId = Number.parseInt(String(rawAyahId), 10);
-
-  const canonicalPath = `/tafsir/${encodeURIComponent(rawSurahId)}/${encodeURIComponent(rawAyahId)}`;
-  const verseKey =
-    Number.isFinite(surahId) && Number.isFinite(ayahId) ? `${surahId}:${ayahId}` : `${rawSurahId}:${rawAyahId}`;
-
-  const chapter = Number.isFinite(surahId) ? await getChapterServer(surahId) : undefined;
-  const chapterName = chapter?.name_simple || `Surah ${rawSurahId}`;
-
-  const title = `Tafsir of ${chapterName} ${verseKey}`;
-  const description = `Read tafsir for ${chapterName} ${verseKey} on ${SITE_NAME}.`;
-
+/**
+ * The surah segment is the slug (`al-baqarah`); unknown surahs and verses that do not exist
+ * (`/tafsir/al-baqarah/999`, `/tafsir/al-baqarah/abc`) 404, validated like the verse page.
+ */
+async function resolveTafsirParams(params: TafsirVersePageProps['params']): Promise<{
+  surahId: number;
+  ayahId: number;
+  chapter: Awaited<ReturnType<typeof getChaptersServer>>[number];
+  previous: VerseAddress | null;
+  next: VerseAddress | null;
+}> {
+  const { surahId, ayahId } = await params;
+  const surah = resolveSurahParam(surahId);
+  if (!surah) notFound();
+  const chapters = await getChaptersServer();
+  const verseCounts = toVerseCounts(chapters);
+  const address = parseVerseAddress(String(surah.id), ayahId, verseCounts);
+  const chapter = address && chapters.find((c) => c.id === address.surahId);
+  if (!address || !chapter) notFound();
   return {
-    title,
-    description,
-    alternates: {
-      canonical: absoluteUrl(canonicalPath),
-    },
-    openGraph: {
-      title: `${title} | ${SITE_NAME}`,
-      description,
-      url: absoluteUrl(canonicalPath),
-    },
-    twitter: {
-      title: `${title} | ${SITE_NAME}`,
-      description,
-    },
+    surahId: address.surahId,
+    ayahId: address.verseId,
+    chapter,
+    previous: getPreviousVerse(address, verseCounts),
+    next: getNextVerse(address, verseCounts),
   };
 }
+
+/** Same arguments for metadata and page body, so the cached server fetches are shared. */
+const getPageData = (verseKey: string, locale: UiLanguageCode) => {
+  const { translationIds, wordLang, tafsirId } = getServerReaderDefaults(locale);
+  return getTafsirVersePageDataServer({
+    verseKey,
+    tafsirId,
+    translationIds,
+    wordLang,
+    tajweed: false,
+  });
+};
+
+export async function generateMetadata({ params }: TafsirVersePageProps): Promise<Metadata> {
+  const { surahId, ayahId, chapter } = await resolveTafsirParams(params);
+  const path = buildTafsirRoute(surahId, ayahId);
+  const verseKey = `${surahId}:${ayahId}`;
+
+  const locale = await getRequestUiLanguage();
+  const { translationIds } = getServerReaderDefaults(locale);
+  const [translator, pageData] = await Promise.all([
+    getServerTranslator(locale),
+    getPageData(verseKey, locale).catch(() => undefined),
+  ]);
+  const chapterName = translator.chapterName(chapter);
+
+  const translations = pageData?.verse.translations;
+  const translationText = translationIds.length
+    ? (translations?.find((t) => t.resource_id === translationIds[0])?.text ??
+      translations?.[0]?.text)
+    : // Arabic UI renders no translation; the verse itself leads the snippet.
+      pageData?.verse.text_uthmani;
+
+  const { title, description } = buildTafsirMetadataText({
+    chapterName,
+    verseKey,
+    translationText,
+    templates: getTafsirMetadataTemplates(translator),
+  });
+
+  // Languages without their own tafsir (Hindi) serve another language's text: noindex, and not
+  // an hreflang alternate.
+  return buildLocalizedPageMetadata({
+    path,
+    locale,
+    title,
+    description,
+    languages: TAFSIR_LANGUAGES,
+  });
+}
+
+const toNavTarget = (address: VerseAddress | null) =>
+  address ? { surahId: String(address.surahId), ayahId: address.verseId } : null;
 
 export default async function TafsirVersePage({
   params,
 }: TafsirVersePageProps): Promise<React.JSX.Element> {
-  const { surahId, ayahId } = await params;
+  const { surahId, ayahId, previous, next } = await resolveTafsirParams(params);
   const verseKey = `${surahId}:${ayahId}`;
+  const locale = await getRequestUiLanguage();
 
-  const DEFAULT_TRANSLATION_IDS = [20];
-  const DEFAULT_WORD_LANG = ensureLanguageCode('en');
-  const DEFAULT_TAFSIR_ID = 169;
-
-  const { verse, tafsirHtml, tafsirResource } = await getTafsirVersePageDataServer({
-    verseKey,
-    tafsirId: DEFAULT_TAFSIR_ID,
-    translationIds: DEFAULT_TRANSLATION_IDS,
-    wordLang: DEFAULT_WORD_LANG,
-    tajweed: false,
-  });
+  const { verse, tafsirHtml, tafsirResource } = await getPageData(verseKey, locale);
 
   return (
     <TafsirVersePageClient
-      surahId={surahId}
-      ayahId={ayahId}
+      surahId={String(surahId)}
+      ayahId={String(ayahId)}
       initialVerse={verse}
       initialTafsirHtml={tafsirHtml}
       initialTafsirResource={tafsirResource}
+      initialPrev={toNavTarget(previous)}
+      initialNext={toNavTarget(next)}
     />
   );
 }

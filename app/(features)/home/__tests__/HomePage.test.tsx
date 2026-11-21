@@ -178,7 +178,7 @@ it('theme toggle updates the dark class', async () => {
 it('tab switching between “Surah” and “Juz” changes rendered content and links', async () => {
   await renderHome();
   const surahLink = (await screen.findByText('Al-Fatihah')).closest('a');
-  expect(surahLink).toHaveAttribute('href', '/surah/1');
+  expect(surahLink).toHaveAttribute('href', '/surah/al-fatihah');
 
   await userEvent.click(screen.getByRole('button', { name: 'juz_tab' }));
   const juzLink = (await screen.findByText('Juz 1')).closest('a');

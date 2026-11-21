@@ -54,11 +54,11 @@ it('renders verse key and translation', () => {
 
 it('toggles play/pause on click', async () => {
   renderCard();
-  const playButton = screen.getByRole('button', { name: 'Play audio' });
+  const playButton = screen.getByRole('button', { name: 'play_audio' });
   await userEvent.click(playButton);
-  await waitFor(() => expect(playButton).toHaveAttribute('aria-label', 'Pause audio'));
+  await waitFor(() => expect(playButton).toHaveAttribute('aria-label', 'pause_audio'));
   await userEvent.click(playButton);
-  await waitFor(() => expect(playButton).toHaveAttribute('aria-label', 'Play audio'));
+  await waitFor(() => expect(playButton).toHaveAttribute('aria-label', 'play_audio'));
 });
 
 it('opens bookmark modal when icon clicked', async () => {
