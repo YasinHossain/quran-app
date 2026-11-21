@@ -314,14 +314,14 @@ function VerseTextCard({
           />
         </figure>
       ))}
-      <div className="flex justify-end border-t border-border pt-4">
+      <div className="-mt-3 flex justify-end">
         <Link
           href={readSurah.href}
           data-slot="verse-read-surah"
-          className="inline-flex min-h-touch items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-semibold text-accent transition-colors hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="inline-flex items-center gap-1.5 rounded-sm py-2 text-sm font-semibold text-accent underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           {readSurah.label}
-          <ArrowLeftIcon size={16} aria-hidden="true" className="rotate-180 rtl:rotate-0" />
+          <ArrowLeftIcon size={14} aria-hidden="true" className="rotate-180 rtl:rotate-0" />
         </Link>
       </div>
     </article>
@@ -373,9 +373,6 @@ function VerseTafsirExcerpt({
   );
 }
 
-const metaChipClass =
-  'inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-0.5';
-
 /** One compact row under the H1: Arabic name (and English meaning), mushaf page and juz. The
  * mushaf page route is not indexable, so only the juz is a link. */
 function VerseMeta({
@@ -390,30 +387,27 @@ function VerseMeta({
   const { pageNumber, juzNumber } = verse;
   const meaning = translator.locale === 'en' ? chapter.translated_name?.name : undefined;
   return (
-    <ul className="flex flex-wrap items-center gap-2 text-xs text-muted" data-slot="verse-meta">
-      <li className={metaChipClass}>
-        <span lang="ar" dir="rtl" className="text-sm text-foreground">
-          {chapter.name_arabic}
-        </span>
-        {meaning ? (
-          <>
-            <span aria-hidden="true" className="opacity-50">
-              ·
-            </span>
-            <span>{meaning}</span>
-          </>
-        ) : null}
-      </li>
-      {pageNumber ? (
-        <li className={metaChipClass} data-slot="verse-location">
-          {`${translator.t('page')} ${pageNumber}`}
+    <ul
+      className="flex flex-wrap items-center gap-x-2 text-sm text-muted [&>li+li]:before:me-2 [&>li+li]:before:opacity-50 [&>li+li]:before:content-['·']"
+      data-slot="verse-meta"
+    >
+      {/* The Arabic heading already names the surah in Arabic. */}
+      {translator.locale === 'ar' ? null : (
+        <li>
+          <span lang="ar" dir="rtl" className="text-foreground">
+            {chapter.name_arabic}
+          </span>
+          {meaning ? <span className="ms-1.5">({meaning})</span> : null}
         </li>
+      )}
+      {pageNumber ? (
+        <li data-slot="verse-location">{`${translator.t('page')} ${pageNumber}`}</li>
       ) : null}
       {juzNumber ? (
         <li>
           <Link
             href={localizeHref(buildJuzRoute(juzNumber), translator.locale)}
-            className={`${metaChipClass} relative font-medium text-accent transition-colors before:absolute before:-inset-y-2.5 before:inset-x-0 before:content-[''] hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
+            className="rounded-sm font-medium text-accent underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             {translator.t('juz_number', { number: juzNumber })}
           </Link>
@@ -542,16 +536,18 @@ export default async function VersePage({ params }: VersePageProps): Promise<Rea
   return (
     <main
       data-slot="verse-page"
-      className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 lg:max-w-7xl xl:max-w-[84rem] pb-28 pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top)+1.5rem)] text-foreground sm:px-6"
+      className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 lg:max-w-7xl xl:max-w-[84rem] pb-28 pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top)+1rem)] text-foreground sm:px-6"
     >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
-      <header className="flex flex-col gap-3">
+      <header className="flex flex-col gap-1.5">
         <Breadcrumbs translator={translator} chapter={chapter} address={address} />
-        <h1 className="mt-1 text-xl font-bold sm:text-2xl">{heading}</h1>
-        <VerseMeta translator={translator} chapter={chapter} verse={verse} />
+        <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <h1 className="text-xl font-bold sm:text-2xl">{heading}</h1>
+          <VerseMeta translator={translator} chapter={chapter} verse={verse} />
+        </div>
       </header>
 
       {/* Mobile: one column in DOM order. Desktop: the context list becomes a side column spanning
