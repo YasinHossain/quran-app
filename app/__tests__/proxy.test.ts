@@ -69,7 +69,6 @@ describe('proxy canonical surah slugs', () => {
     ['/bn/2/255', '/bn/surah/al-baqarah/255'],
     ['/en/2/255', '/surah/al-baqarah/255'],
     ['/114/6', '/surah/an-nas/6'],
-    ['/2/999', '/surah/al-baqarah/999'], // then 404s on the verse route
     ['/surah/2', '/surah/al-baqarah'],
     ['/ur/surah/36', '/ur/surah/ya-sin'],
     ['/en/surah/36', '/surah/ya-sin'],
@@ -80,6 +79,14 @@ describe('proxy canonical surah slugs', () => {
     ['/tafsir/2/255', '/tafsir/al-baqarah/255'],
     ['/ar/tafsir/fatiha/1', '/ar/tafsir/al-fatihah/1'],
     ['/2/255?ref=x', '/surah/al-baqarah/255?ref=x'],
+    ['/surah/2/', '/surah/al-baqarah'],
+    ['/surah/al-baqarah/', '/surah/al-baqarah'],
+    ['/bn/surah/2/255/', '/bn/surah/al-baqarah/255'],
+    ['/en/surah/2/255/?ref=x', '/surah/al-baqarah/255?ref=x'],
+    ['/2/255/', '/surah/al-baqarah/255'],
+    ['/tafsir/2/255/', '/tafsir/al-baqarah/255'],
+    ['/about/', '/about'],
+    ['/bn/juz/2/', '/bn/juz/2'],
   ])('redirects %s in one hop to %s', (path, target) => {
     const response = proxy(request(path));
 
@@ -112,6 +119,50 @@ describe('proxy canonical surah slugs', () => {
 
     expect(response.headers.get('location')).toBeNull();
     expect(response.status).toBe(200);
+  });
+
+  it.each([
+    '/surah/2/287',
+    '/surah/2/0',
+    '/surah/2/02',
+    '/surah/baqarah/287',
+    '/surah/1/abc',
+    '/2/287',
+    '/2/0',
+    '/1/abc',
+    '/bn/2/999',
+    '/tafsir/2/999',
+    '/tafsir/al-baqarah/999', // canonical slug: the route itself 404s
+  ])('does not redirect the non-existent verse %s (it 404s directly)', (path) => {
+    const response = proxy(request(path));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('location')).toBeNull();
+  });
+
+  it.each([
+    ['/2/255', { cookie: 'ui-language=bn' }, '/bn/surah/al-baqarah/255'],
+    ['/surah/2/255/?ref=x', { cookie: 'ui-language=bn' }, '/bn/surah/al-baqarah/255?ref=x'],
+    ['/surah/yaseen', { 'accept-language': 'ur-PK,ur;q=0.9' }, '/ur/surah/ya-sin'],
+    ['/tafsir/2/255', { 'accept-language': 'ar' }, '/ar/tafsir/al-baqarah/255'],
+    ['/about/', { cookie: 'ui-language=hi' }, '/hi/about'],
+  ])(
+    'sends %s with a language preference straight to its localized canonical URL',
+    (path, headers, target) => {
+      const response = proxy(request(path, headers));
+
+      expect(response.status).toBe(307);
+      expect(response.headers.get('location')).toBe(`https://appquran.com${target}`);
+      const next = proxy(request(target, headers));
+      expect(next.headers.get('location')).toBeNull();
+    }
+  );
+
+  it('keeps an explicit English cookie on the 308 to the unprefixed canonical URL', () => {
+    const response = proxy(request('/2/255', { cookie: 'ui-language=en' }));
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get('location')).toBe('https://appquran.com/surah/al-baqarah/255');
   });
 
   it.each([

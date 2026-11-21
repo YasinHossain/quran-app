@@ -1,8 +1,11 @@
+import { getCanonicalQuranPath } from '@/lib/seo/canonicalQuranPath';
 import {
   COMMON_SPELLINGS,
   SURAH_SLUGS,
+  SURAH_VERSE_COUNTS,
   getSurahAliasIndex,
   getSurahSlug,
+  getSurahVerseCount,
   normalizeSurahKey,
   resolveSurahParam,
 } from '@/lib/seo/surahSlugs';
@@ -87,4 +90,34 @@ describe('resolveSurahParam', () => {
       expect([alias, resolveSurahParam(alias)?.id]).toEqual([alias, id]);
     }
   });
+});
+
+describe('surah verse counts', () => {
+  it('has one count per surah, summing to the 6,236 verses of the Quran', () => {
+    expect(SURAH_VERSE_COUNTS).toHaveLength(114);
+    expect(SURAH_VERSE_COUNTS.reduce((sum, count) => sum + count, 0)).toBe(6236);
+    expect([getSurahVerseCount(1), getSurahVerseCount(2), getSurahVerseCount(114)]).toEqual([
+      7, 286, 6,
+    ]);
+    expect(getSurahVerseCount(115)).toBe(0);
+  });
+});
+
+describe('getCanonicalQuranPath', () => {
+  it.each([
+    ['/2/286', '/surah/al-baqarah/286'],
+    ['/surah/2/1', '/surah/al-baqarah/1'],
+    ['/tafsir/fatiha/7', '/tafsir/al-fatihah/7'],
+    ['/surah/an-nas', null],
+    ['/surah/al-baqarah/255', null],
+  ])('maps %s to %s', (path, expected) => {
+    expect(getCanonicalQuranPath(path)).toBe(expected);
+  });
+
+  it.each(['/2/287', '/2/0', '/1/8', '/1/abc', '/surah/2/287', '/surah/2/01', '/tafsir/2/999'])(
+    'does not redirect the non-existent verse %s',
+    (path) => {
+      expect(getCanonicalQuranPath(path)).toBeNull();
+    }
+  );
 });

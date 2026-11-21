@@ -76,6 +76,9 @@ const securityHeaders = isProd
     ];
 
 const nextConfig: NextConfig = {
+  // `proxy.ts` strips trailing slashes itself, in the same redirect as the other URL fixes
+  // (`/surah/2/` -> `/surah/al-baqarah` in one hop instead of two).
+  skipTrailingSlashRedirect: true,
   // Expose the Quran API base URL to the app
   env: {
     QURAN_API_BASE_URL: process.env['QURAN_API_BASE_URL'],
