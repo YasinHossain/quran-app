@@ -465,5 +465,10 @@
   "verse_page_read_surah": "{{surah}} پڑھیں",
   "verse_page_open": "آیت کا صفحہ کھولیں",
   "verse_page_context_heading": "سیاق و سباق میں پڑھیں",
-  "verse_page_continue_reading": "پڑھنا جاری رکھیں"
+  "verse_page_continue_reading": "پڑھنا جاری رکھیں",
+  "verse_page_context_view": "آیات دکھائیں",
+  "verse_page_context_translation": "ترجمہ",
+  "verse_page_context_arabic": "عربی",
+  "verse_page_context_both": "دونوں",
+  "verse_page_context_verses": "سیاق کی آیات"
 }

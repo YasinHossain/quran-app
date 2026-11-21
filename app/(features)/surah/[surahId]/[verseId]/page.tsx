@@ -9,6 +9,7 @@ import {
   getVerseMetadataTemplates,
   type ServerTranslator,
 } from '@/app/shared/i18n/serverLocale';
+import { ArrowLeftIcon } from '@/app/shared/icons';
 import {
   buildJuzRoute,
   buildSurahRoute,
@@ -38,6 +39,7 @@ import { resolveSurahParam } from '@/lib/seo/surahSlugs';
 import { cleanTranslationText } from '@/lib/seo/tafsirMetadata';
 import { buildTafsirExcerpt, buildVerseMetadataText } from '@/lib/seo/verseMetadata';
 
+import { VerseContextPanel } from './components/VerseContextPanel';
 import { VersePageActions } from './components/VersePageActions';
 
 import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
@@ -52,6 +54,8 @@ interface VersePageProps {
 }
 
 const ARABIC_FONT_FAMILY = "'UthmanicHafs1Ver18', serif";
+/** Quran text styling shared by the verse card and the context list. */
+const ARABIC_TEXT_CLASS = 'text-right text-3xl leading-[2.2] text-foreground';
 
 interface ResolvedVerse {
   address: VerseAddress;
@@ -209,16 +213,22 @@ function Breadcrumbs({
 
   return (
     <nav aria-label={translator.t('verse_page_breadcrumb')}>
-      <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
+      <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-muted">
         {crumbs.map((crumb) => (
-          <li key={crumb.href} className="flex items-center gap-2">
-            <Link href={crumb.href} prefetch={false} className={linkClass}>
+          <li key={crumb.href} className="flex items-center gap-1.5">
+            <Link
+              href={crumb.href}
+              prefetch={false}
+              className="rounded-sm underline-offset-4 transition-colors hover:text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            >
               {crumb.label}
             </Link>
-            <span aria-hidden="true">/</span>
+            <span aria-hidden="true" className="opacity-50">
+              /
+            </span>
           </li>
         ))}
-        <li aria-current="page" className="text-foreground">
+        <li aria-current="page" className="font-medium text-foreground">
           {formatVerseKey(address)}
         </li>
       </ol>
@@ -257,10 +267,12 @@ function VerseTextCard({
   translator,
   verse,
   verseKey,
+  readSurah,
 }: {
   translator: ServerTranslator;
   verse: VersePageVerse;
   verseKey: string;
+  readSurah: { href: string; label: string };
 }): React.JSX.Element {
   return (
     <article
@@ -280,24 +292,36 @@ function VerseTextCard({
         lang="ar"
         dir="rtl"
         data-slot="verse-arabic"
-        className="text-right text-3xl leading-[2.2] text-foreground"
+        className={ARABIC_TEXT_CLASS}
         style={{ fontFamily: ARABIC_FONT_FAMILY }}
       >
         {verse.arabic}
       </p>
       {verse.translations.map((translation) => (
         <figure key={translation.resourceId} className="space-y-2" data-slot="verse-translation">
+          {translation.resourceName ? (
+            <figcaption className="text-xs font-medium uppercase tracking-wide text-muted">
+              {translation.resourceName}
+            </figcaption>
+          ) : null}
           <p
             lang={translation.languageCode ?? translator.locale}
             dir="auto"
             className="text-lg leading-relaxed text-foreground"
             dangerouslySetInnerHTML={{ __html: translation.html }}
           />
-          {translation.resourceName ? (
-            <figcaption className="text-xs text-muted">— {translation.resourceName}</figcaption>
-          ) : null}
         </figure>
       ))}
+      <div className="flex justify-end border-t border-border pt-4">
+        <Link
+          href={readSurah.href}
+          data-slot="verse-read-surah"
+          className="inline-flex min-h-touch items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-semibold text-accent transition-colors hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        >
+          {readSurah.label}
+          <ArrowLeftIcon size={16} aria-hidden="true" className="rotate-180 rtl:rotate-0" />
+        </Link>
+      </div>
     </article>
   );
 }
@@ -347,34 +371,58 @@ function VerseTafsirExcerpt({
   );
 }
 
-/** "Page 42 · Juz 3" from the API's `page_number`/`juz_number`. The mushaf page route is not
- * indexable, so only the juz is a link. */
-function VerseLocation({
+const metaChipClass =
+  'inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-0.5';
+
+/** One compact row under the H1: Arabic name (and English meaning), mushaf page and juz. The
+ * mushaf page route is not indexable, so only the juz is a link. */
+function VerseMeta({
   translator,
+  chapter,
   verse,
 }: {
   translator: ServerTranslator;
+  chapter: Chapter;
   verse: VersePageVerse;
-}): React.JSX.Element | null {
+}): React.JSX.Element {
   const { pageNumber, juzNumber } = verse;
-  if (!pageNumber && !juzNumber) return null;
+  const meaning = translator.locale === 'en' ? chapter.translated_name?.name : undefined;
   return (
-    <p className="text-sm text-muted" data-slot="verse-location">
-      {pageNumber ? <span>{`${translator.t('page')} ${pageNumber}`}</span> : null}
-      {pageNumber && juzNumber ? <span aria-hidden="true"> · </span> : null}
-      {juzNumber ? (
-        <Link
-          href={localizeHref(buildJuzRoute(juzNumber), translator.locale)}
-          className={linkClass}
-        >
-          {translator.t('juz_number', { number: juzNumber })}
-        </Link>
+    <ul className="flex flex-wrap items-center gap-2 text-xs text-muted" data-slot="verse-meta">
+      <li className={metaChipClass}>
+        <span lang="ar" dir="rtl" className="text-sm text-foreground">
+          {chapter.name_arabic}
+        </span>
+        {meaning ? (
+          <>
+            <span aria-hidden="true" className="opacity-50">
+              ·
+            </span>
+            <span>{meaning}</span>
+          </>
+        ) : null}
+      </li>
+      {pageNumber ? (
+        <li className={metaChipClass} data-slot="verse-location">
+          {`${translator.t('page')} ${pageNumber}`}
+        </li>
       ) : null}
-    </p>
+      {juzNumber ? (
+        <li>
+          <Link
+            href={localizeHref(buildJuzRoute(juzNumber), translator.locale)}
+            className={`${metaChipClass} relative font-medium text-accent transition-colors before:absolute before:-inset-y-2.5 before:inset-x-0 before:content-[''] hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
+          >
+            {translator.t('juz_number', { number: juzNumber })}
+          </Link>
+        </li>
+      ) : null}
+    </ul>
   );
 }
 
-/** Neighbouring verses (same surah) with the current one highlighted. */
+/** Neighbouring verses (same surah) with the current one highlighted. Each verse carries both its
+ * translation and its Arabic text; the panel's switch only changes which one is visible. */
 function VerseContext({
   translator,
   address,
@@ -389,17 +437,37 @@ function VerseContext({
   if (verses.length < 2) return null;
   const { locale } = translator;
   const currentKey = formatVerseKey(address);
+  const hasTranslation = verses.some((verse) => verse.translations.length > 0);
 
   return (
-    <section
-      aria-labelledby="verse-context-heading"
-      data-slot="verse-context"
-      className={`space-y-3 rounded-lg border border-border bg-surface p-4 ${className ?? ''}`}
+    <VerseContextPanel
+      headingId="verse-context-heading"
+      heading={translator.t('verse_page_context_heading')}
+      listLabel={translator.t('verse_page_context_verses')}
+      {...(hasTranslation
+        ? {
+            viewLabels: {
+              group: translator.t('verse_page_context_view'),
+              translation: translator.t('verse_page_context_translation'),
+              arabic: translator.t('verse_page_context_arabic'),
+              both: translator.t('verse_page_context_both'),
+            },
+          }
+        : {})}
+      {...(className ? { className } : {})}
+      footer={
+        <Link
+          href={localizeHref(
+            buildSurahRoute(address.surahId, { startVerse: address.verseId }),
+            locale
+          )}
+          className={`inline-flex min-h-touch items-center self-start text-sm font-semibold ${linkClass}`}
+        >
+          {translator.t('verse_page_continue_reading')}
+        </Link>
+      }
     >
-      <h2 id="verse-context-heading" className="text-lg font-semibold">
-        {translator.t('verse_page_context_heading')}
-      </h2>
-      <ol className="space-y-2">
+      <ol className="space-y-2 py-1">
         {verses.map((verse) => {
           const isCurrent = verse.verseKey === currentKey;
           const [surahId = '', verseId = ''] = verse.verseKey.split(':');
@@ -409,7 +477,7 @@ function VerseContext({
               key={verse.verseKey}
               data-context-verse-key={verse.verseKey}
               {...(isCurrent ? { 'aria-current': 'true' as const } : {})}
-              className={`space-y-1 rounded-md p-3 ${isCurrent ? 'border-s-2 border-accent bg-accent/10' : ''}`}
+              className={`space-y-2 rounded-md p-3 ${isCurrent ? 'border-s-2 border-accent bg-accent/10' : ''}`}
             >
               <Link
                 href={localizeHref(buildVerseRoute(surahId, verseId), locale)}
@@ -418,37 +486,33 @@ function VerseContext({
               >
                 {verse.verseKey}
               </Link>
+              <p
+                lang="ar"
+                dir="rtl"
+                data-slot="context-arabic"
+                className={
+                  translation
+                    ? `hidden group-data-[context-view=arabic]/context:block group-data-[context-view=both]/context:block ${ARABIC_TEXT_CLASS}`
+                    : ARABIC_TEXT_CLASS
+                }
+                style={{ fontFamily: ARABIC_FONT_FAMILY }}
+              >
+                {verse.arabic}
+              </p>
               {translation ? (
                 <p
                   lang={translation.languageCode ?? locale}
                   dir="auto"
-                  className="text-sm leading-relaxed text-foreground"
+                  data-slot="context-translation"
+                  className="text-sm leading-relaxed text-foreground group-data-[context-view=arabic]/context:hidden"
                   dangerouslySetInnerHTML={{ __html: translation.html }}
                 />
-              ) : (
-                <p
-                  lang="ar"
-                  dir="rtl"
-                  className="text-right text-xl leading-loose text-foreground"
-                  style={{ fontFamily: ARABIC_FONT_FAMILY }}
-                >
-                  {verse.arabic}
-                </p>
-              )}
+              ) : null}
             </li>
           );
         })}
       </ol>
-      <Link
-        href={localizeHref(
-          buildSurahRoute(address.surahId, { startVerse: address.verseId }),
-          locale
-        )}
-        className={`inline-flex min-h-touch items-center text-sm font-semibold ${linkClass}`}
-      >
-        {translator.t('verse_page_continue_reading')}
-      </Link>
-    </section>
+    </VerseContextPanel>
   );
 }
 
@@ -467,41 +531,42 @@ export default async function VersePage({ params }: VersePageProps): Promise<Rea
 
   const surahName = surahTitle(translator, chapter);
   const heading = translator.t('seo_verse_title_fallback', { surah: surahName, verseKey });
-  const meaning = locale === 'en' ? chapter.translated_name?.name : undefined;
+  const readSurah = {
+    href: localizeHref(buildSurahRoute(address.surahId, { startVerse: address.verseId }), locale),
+    label: translator.t('verse_page_read_surah', { surah: surahName }),
+  };
   const jsonLd = buildVerseJsonLd({ translator, chapter, address, heading, verse });
 
   return (
     <main
       data-slot="verse-page"
-      className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 pb-28 pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top)+1.5rem)] text-foreground sm:px-6"
+      className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 lg:max-w-7xl xl:max-w-[84rem] pb-28 pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top)+1.5rem)] text-foreground sm:px-6"
     >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
-      <Breadcrumbs translator={translator} chapter={chapter} address={address} />
-
-      <header className="space-y-1">
-        <h1 className="text-2xl font-bold sm:text-3xl">{heading}</h1>
-        <p className="text-sm text-muted">
-          <span lang="ar" dir="rtl">
-            {chapter.name_arabic}
-          </span>
-          {meaning ? <span> · {meaning}</span> : null}
-        </p>
-        <VerseLocation translator={translator} verse={verse} />
+      <header className="flex flex-col gap-3">
+        <Breadcrumbs translator={translator} chapter={chapter} address={address} />
+        <h1 className="mt-1 text-xl font-bold sm:text-2xl">{heading}</h1>
+        <VerseMeta translator={translator} chapter={chapter} verse={verse} />
       </header>
 
       {/* Mobile: one column in DOM order. Desktop: the context list becomes a side column spanning
           every row; the trailing `1fr` row absorbs its extra height so the main cards stay stacked. */}
-      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:grid-rows-[auto_auto_auto_auto_1fr] lg:items-start lg:gap-x-8">
-        <VerseTextCard translator={translator} verse={verse} verseKey={verseKey} />
+      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(20rem,1fr)] lg:grid-rows-[auto_auto_auto_1fr] lg:items-start lg:gap-x-8">
+        <VerseTextCard
+          translator={translator}
+          verse={verse}
+          verseKey={verseKey}
+          readSurah={readSurah}
+        />
 
         <VerseContext
           translator={translator}
           address={address}
           verses={context}
-          className="lg:sticky lg:top-[calc(var(--reader-header-height)+1rem)] lg:col-start-2 lg:row-span-5 lg:row-start-1"
+          className="lg:sticky lg:top-[calc(var(--reader-header-height)+var(--reader-safe-area-top)+1rem)] lg:col-start-2 lg:row-span-4 lg:row-start-1 lg:max-h-[calc(100dvh-var(--reader-header-height)-var(--reader-safe-area-top)-2rem)]"
         />
 
         <VerseTafsirExcerpt translator={translator} address={address} tafsir={tafsir} />
@@ -520,16 +585,6 @@ export default async function VersePage({ params }: VersePageProps): Promise<Rea
             direction="next"
           />
         </nav>
-
-        <Link
-          href={localizeHref(
-            buildSurahRoute(address.surahId, { startVerse: address.verseId }),
-            locale
-          )}
-          className="flex min-h-touch items-center justify-center rounded-lg bg-accent px-4 py-3 font-semibold text-on-accent transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-        >
-          {translator.t('verse_page_read_surah', { surah: surahName })}
-        </Link>
       </div>
     </main>
   );

@@ -465,5 +465,10 @@
   "verse_page_read_surah": "Read {{surah}}",
   "verse_page_open": "Open verse page",
   "verse_page_context_heading": "Read in context",
-  "verse_page_continue_reading": "Continue reading"
+  "verse_page_continue_reading": "Continue reading",
+  "verse_page_context_view": "Show verses as",
+  "verse_page_context_translation": "Translation",
+  "verse_page_context_arabic": "Arabic",
+  "verse_page_context_both": "Both",
+  "verse_page_context_verses": "Context verses"
 }

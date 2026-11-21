@@ -465,5 +465,10 @@
   "verse_page_read_surah": "اقرأ {{surah}}",
   "verse_page_open": "افتح صفحة الآية",
   "verse_page_context_heading": "اقرأ في السياق",
-  "verse_page_continue_reading": "تابع القراءة"
+  "verse_page_continue_reading": "تابع القراءة",
+  "verse_page_context_view": "اعرض الآيات",
+  "verse_page_context_translation": "الترجمة",
+  "verse_page_context_arabic": "العربية",
+  "verse_page_context_both": "كلاهما",
+  "verse_page_context_verses": "آيات السياق"
 }
