@@ -51,6 +51,10 @@ export const buildSurahRoute = (surahId: number | string, options?: SurahRouteOp
 export const buildVerseRoute = (surahId: number | string, verseId: number | string): string =>
   `/surah/${surahSegment(surahId)}/${encodeParam(verseId)}`;
 
+/** Indexable overview of one surah (`/surah/al-alaq/about`): facts, position, first/last verse. */
+export const buildSurahAboutRoute = (surahId: number | string): string =>
+  `/surah/${surahSegment(surahId)}/about`;
+
 export const buildJuzRoute = (juzId: number | string): string => `/juz/${encodeParam(juzId)}`;
 
 export const buildPageRoute = (pageNumber: number | string): string =>

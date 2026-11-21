@@ -110,6 +110,12 @@ describe('getCanonicalQuranPath', () => {
     ['/tafsir/fatiha/7', '/tafsir/al-fatihah/7'],
     ['/surah/an-nas', null],
     ['/surah/al-baqarah/255', null],
+    ['/surah/96/about', '/surah/al-alaq/about'],
+    ['/surah/al-alaq/info', '/surah/al-alaq/about'],
+    ['/surah/alaq/Info', '/surah/al-alaq/about'],
+    ['/surah/al-alaq/About', '/surah/al-alaq/about'],
+    ['/surah/al-alaq/about', null],
+    ['/tafsir/al-alaq/about', null],
   ])('maps %s to %s', (path, expected) => {
     expect(getCanonicalQuranPath(path)).toBe(expected);
   });

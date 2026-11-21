@@ -24,7 +24,8 @@
 - Language: TypeScript with two-space indentation.
 - Lint/Format: ESLint + Prettier (use project configs).
 - Components: PascalCase file/folder names (e.g., `PlayerControls.tsx`).
-- Styling: Use semantic tokens (e.g., `text-primary`, `bg-surface`, `border-border`). Avoid raw Tailwind color utilities and `dark:` classes; don't use `useTheme` for colors. See `docs/architecture/SEMANTIC_TOKENS.md` and `docs/development/STYLING.md`.
+- Design: you have full creative freedom over visual design. Existing screens and older docs are not templates; build modern, considered pages, and redesign or add components and tokens when it improves the result. Keep light/dark themes, accessibility, RTL and Quran-text rules intact. See `docs/architecture/DESIGN_SYSTEM.md`.
+- Styling mechanics: theme variables in `app/globals.css` (`bg-surface`, `text-accent/60`, …). Raw palette classes and theme conditionals fail lint because they ignore the theme. See `docs/development/STYLING.md`.
 
 ## Testing Guidelines
 

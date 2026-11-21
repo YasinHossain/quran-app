@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
+import { DEFAULT_RECITER } from '@/app/shared/player/defaultReciter';
 import { getQdcAudioReciters } from '@/lib/audio/qdcAudio';
 
 import type { Reciter } from '@/app/shared/player/types';
@@ -9,12 +10,7 @@ import type { QdcAudioReciterApi } from '@/lib/audio/qdcAudio';
 
 const QDC_RECITERS_KEY = 'qdc-audio-reciters';
 
-// Default reciter to use while loading or if API fails
-export const DEFAULT_RECITER: Reciter = {
-  id: 173,
-  name: 'Mishari Rashid al-`Afasy',
-  locale: 'Murattal',
-};
+export { DEFAULT_RECITER };
 
 function mapQdcReciterToReciter(
   reciter: QdcAudioReciterApi,
@@ -41,9 +37,8 @@ interface UseRecitersReturn {
 
 export function useReciters(): UseRecitersReturn {
   const { t, i18n } = useTranslation();
-  const { data, error, isLoading } = useSWR(
-    [QDC_RECITERS_KEY, i18n.language],
-    ([_, lang]) => getQdcAudioReciters(lang?.split('-')[0])
+  const { data, error, isLoading } = useSWR([QDC_RECITERS_KEY, i18n.language], ([_, lang]) =>
+    getQdcAudioReciters(lang?.split('-')[0])
   );
 
   const reciters = useMemo(() => {

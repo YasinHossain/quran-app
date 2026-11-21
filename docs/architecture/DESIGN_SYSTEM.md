@@ -1,249 +1,62 @@
 # Design System
 
-A comprehensive design system for the Quran App with semantic design tokens, consistent components, and AI-friendly patterns.
+## Design freedom (read this first)
 
-## 🎨 Design Tokens
+Whoever works on the UI, a person or an AI agent, has full creative freedom over its visual design.
 
-Our design system uses CSS custom properties for theming and consistency. All tokens are semantic and adapt automatically to light/dark modes.
+- Existing screens, components and older docs record what was built. They are not templates, and many are outdated. Don't copy a pattern just because it exists, and don't keep a weak design for the sake of consistency.
+- Design new pages properly. Pick the layout, type scale, spacing, color use, decoration, motion and components that make the page look modern and considered. A page may have its own visual identity. Example: the surah overview page, `app/(features)/surah/[surahId]/about/`.
+- When you work on existing UI, you may redesign it if that improves the result. You may add CSS variables, utilities and components, and update these docs.
+- Prefer one strong, intentional direction over a safe average of what is already there.
 
-### Color Tokens
+## What still applies
 
-```css
-/* Primary colors */
---color-background    /* Page background */
---color-surface       /* Card/panel backgrounds */
---color-foreground    /* Primary text */
---color-muted         /* Secondary text */
+These rules are about quality, not style:
 
-/* Interactive colors */
---color-accent        /* Primary accent (emerald/teal) */
---color-accent-hover  /* Accent hover state */
---color-interactive   /* Interactive element background */
---color-interactive-hover /* Interactive hover state */
+- **Light and dark themes.** Every color must work in both. Use the theme variables (`bg-surface`, `text-accent`, `bg-accent/10`, or `rgb(var(--color-accent) / 0.2)` in raw CSS), or add new variables to `app/globals.css` for both themes. Raw palette classes (`bg-slate-100`, `text-emerald-600`) and `theme === 'dark'` conditionals fail lint (`npm run audit-styles`) because they ignore the active theme.
+- **Accessibility.**
+  - WCAG AA contrast
+  - visible keyboard focus
+  - real headings and landmarks
+  - 44px touch targets (`min-h-touch`)
+  - respect `prefers-reduced-motion` for anything beyond simple transitions
+- **Languages.**
+  - Arabic and Urdu are right-to-left: use logical utilities (`ms-`, `pe-`, `start-`, `text-start`) and flip directional icons (`rtl:rotate-180`).
+  - Don't add letter spacing to Arabic, Urdu, Bengali or Devanagari text; it breaks letter joining.
+  - Numbers follow the page language (`localizeDigits`).
+- **Quran text.**
+  - Use the Uthmanic Hafs font (`'UthmanicHafs1Ver18'`) with `lang="ar" dir="rtl"`.
+  - Styling must never change, cut or reorder the text.
+  - Facts about the Quran come from data, never hand-written per page.
+- **Performance and SEO.**
+  - Indexable content is server-rendered.
+  - Ship client JavaScript only for parts that are actually interactive.
 
-/* System colors */
---color-border        /* Border colors */
---color-error         /* Error states */
---color-on-accent     /* Text on accent backgrounds */
-```
+## Theme variables (reference)
 
-### Usage in Components
+Defined in `app/globals.css` (`:root` for light, `.dark` for dark) and mapped to Tailwind colors in `tailwind.config.mjs`. Every color supports alpha modifiers (`bg-accent/10`, `border-accent/30`).
 
-```tsx
-// ✅ Good - Using design tokens
-<div className="bg-surface text-foreground border-border">
-  <p className="text-muted">Secondary text</p>
-  <button className="bg-accent text-on-accent">Action</button>
-</div>
+| Utility | Use |
+|---|---|
+| `background` | page background |
+| `surface` | cards, panels |
+| `foreground` | main text |
+| `muted` | secondary text |
+| `accent`, `accent-hover` | brand / primary action |
+| `on-accent` | text on accent backgrounds |
+| `interactive`, `interactive-hover` | neutral controls and their hover state |
+| `border` | borders and dividers |
+| `error` | errors |
 
-// ❌ Avoid - Hardcoded colors
-<div className="bg-white text-slate-900 border-slate-200">
-  <p className="text-slate-600">Secondary text</p>
-  <button className="bg-emerald-600 text-white">Action</button>
-</div>
-```
+Also defined:
+- shadows: `shadow-card`, `shadow-card-hover`, `shadow-modal`
+- radius: `rounded-sm` … `rounded-2xl`
+- layout variables for the fixed header: `--reader-header-height`, `--reader-safe-area-top`
 
-### Shadow & Spacing Tokens
+Other utilities in the Tailwind config (`content-*`, `status-*`, `button-*`, …) exist for older components. Use them, replace them or add better ones as needed.
 
-```css
-/* Shadows */
---shadow-card         /* Default card shadow */
---shadow-card-hover   /* Card hover shadow */
---shadow-modal        /* Modal/dropdown shadow */
+## Adding to the system
 
-/* Border Radius */
---radius-sm           /* Small radius (buttons) */
---radius-md           /* Medium radius (cards) */
---radius-lg           /* Large radius (modals) */
---radius-xl           /* Extra large radius */
---radius-2xl          /* Hero elements */
-```
-
-### Z-Index Scale
-
-```css
---z-dropdown: 10; /* Dropdowns */
---z-sticky: 20; /* Sticky elements */
---z-fixed: 30; /* Fixed positioned */
---z-modal: 40; /* Modals */
---z-popover: 50; /* Popovers */
---z-tooltip: 60; /* Tooltips */
-```
-
-## 🧩 Component Patterns
-
-### Standard Component Interface
-
-All components should follow this interface pattern:
-
-```tsx
-interface ComponentProps {
-  /** Visual variant */
-  variant?: 'primary' | 'secondary' | 'ghost';
-
-  /** Size variant */
-  size?: 'sm' | 'md' | 'lg';
-
-  /** Additional CSS classes for composition */
-  className?: string;
-
-  /** Design tokens used by this component */
-  designTokens?: string[];
-
-  /** Whether component adapts to theme automatically */
-  themeAware?: boolean;
-}
-
-/**
- * Component description
- *
- * @designTokens surface, foreground, accent
- * @themeAware true
- * @accessibility WCAG AA compliant
- */
-export const Component: React.FC<ComponentProps> = ({
-  variant = 'primary',
-  size = 'md',
-  className,
-  ...props
-}) => {
-  return (
-    <div
-      className={cn(
-        // Base styles using tokens
-        'bg-surface text-foreground border-border',
-        // Variant styles
-        variantStyles[variant],
-        // Size styles
-        sizeStyles[size],
-        // Composition
-        className
-      )}
-      {...props}
-    />
-  );
-};
-```
-
-### Theme Detection
-
-Use the standardized theme context:
-
-```tsx
-import { useTheme } from '@/app/providers/ThemeContext';
-
-// ✅ Good - Use for complex logic only
-const { theme, setTheme } = useTheme();
-
-// ✅ Better - Use CSS classes for styling
-<div className="bg-surface dark:bg-slate-800">
-  Content adapts automatically
-</div>
-
-// ❌ Avoid - Theme conditionals in JSX
-<div className={theme === 'light' ? 'bg-white' : 'bg-slate-800'}>
-```
-
-## 🔧 Development Workflow
-
-### 1. Token Migration
-
-Use the migration script to convert hardcoded classes:
-
-```bash
-node scripts/migrate-tokens.mjs
-```
-
-### 2. Component Creation
-
-1. **Define the interface** with standard props
-2. **Use design tokens** for all styling
-3. **Add theme variants** with CSS classes
-4. **Document tokens used** in JSDoc
-5. **Add to Storybook** for visual testing
-
-### 3. ESLint Integration
-
-The project includes custom ESLint rules to enforce token usage:
-
-```javascript
-// Prevents theme conditionals in className
-"custom/no-theme-conditionals": "error"
-```
-
-### 4. Testing Components
-
-Test components with both themes:
-
-```tsx
-import { render } from '@testing-library/react';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
-
-test('renders in both themes', () => {
-  // Test light theme
-  render(
-    <ThemeProvider defaultTheme="light">
-      <Component />
-    </ThemeProvider>
-  );
-
-  // Test dark theme
-  render(
-    <ThemeProvider defaultTheme="dark">
-      <Component />
-    </ThemeProvider>
-  );
-});
-```
-
-## 🎯 Best Practices
-
-### For AI Development
-
-1. **Predictable Structure**: Use consistent naming and patterns
-2. **Self-Documenting**: Use semantic token names
-3. **Composition Over Conditionals**: Prefer CSS classes over JS logic
-4. **Single Responsibility**: Each component does one thing well
-
-### For Human Development
-
-1. **Design Tokens First**: Always use tokens over hardcoded values
-2. **Mobile First**: Design for mobile, enhance for desktop
-3. **Accessibility**: WCAG AA compliance by default
-4. **Performance**: Use content-visibility and lazy loading
-
-## 🚀 Migration Guide
-
-### From Hardcoded to Tokens
-
-1. **Run migration script**: `node scripts/migrate-tokens.mjs`
-2. **Review changes**: Check git diff for accuracy
-3. **Test thoroughly**: Ensure visual consistency
-4. **Update tests**: Verify component behavior
-
-### Common Replacements
-
-```tsx
-// Before
-bg-white → bg-surface
-text-slate-900 → text-foreground
-text-slate-400 → text-muted
-border-slate-200 → border-border
-shadow-lg → shadow-card
-text-emerald-600 → text-accent
-
-// After - automatic theme adaptation
-<div className="bg-surface text-foreground border-border shadow-card">
-```
-
-## 📚 Resources
-
-- **Tailwind Config**: `tailwind.config.mjs` - Token definitions
-- **Global Styles**: `app/globals.css` - CSS custom properties
-- **Theme Provider**: `app/providers/ThemeContext.tsx` - Theme management
-- **Component Library**: `app/shared/ui/` - Reusable components
-- **Migration Script**: `scripts/migrate-tokens.mjs` - Automated conversion
-
----
-
-**Note**: This design system prioritizes consistency, accessibility, and maintainability. When in doubt, choose semantic tokens over hardcoded values, and composition over complex conditionals.
+- **New color or effect:** add the variable to both `:root` and `.dark` in `app/globals.css`, map it in `tailwind.config.mjs` if you want a utility, and list it in the table above.
+- **New shared component:** put it in `app/shared/ui/` once a second screen needs it. Page-specific pieces can live next to the page.
+- **New or changed design direction:** update this file so the next person or agent builds on it.

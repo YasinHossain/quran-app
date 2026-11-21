@@ -1,7 +1,12 @@
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+import { InfoIcon } from '@/app/shared/icons';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { buildSurahAboutRoute } from '@/app/shared/navigation/routes';
 import { useReaderServerChapter } from '@/app/shared/reader/ReaderServerData';
 import { formatNumber } from '@/lib/text/localizeNumbers';
 import { cn } from '@/lib/utils/cn';
@@ -80,9 +85,11 @@ const SurahIntroBismillah = ({ showBismillah }: { showBismillah: boolean }): Rea
 const SurahTitleBlock = ({
   surahName,
   versesLabel,
+  about,
 }: {
   surahName: string;
   versesLabel: string | null;
+  about: { href: string; label: string };
 }): React.JSX.Element => (
   <div className="flex flex-col items-center justify-center gap-1">
     <h1
@@ -96,6 +103,15 @@ const SurahTitleBlock = ({
     {versesLabel ? (
       <span className="text-xs text-muted-foreground/50 sm:text-sm">{versesLabel}</span>
     ) : null}
+    <Link
+      href={about.href}
+      prefetch={false}
+      data-slot="surah-about-link"
+      className="-my-2 inline-flex min-h-touch items-center gap-1.5 rounded-full px-3 text-xs font-medium text-accent transition-colors hover:bg-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:text-sm"
+    >
+      <InfoIcon size={14} aria-hidden="true" />
+      {about.label}
+    </Link>
   </div>
 );
 
@@ -107,6 +123,7 @@ export const SurahCalligraphyIntro = ({
   className?: string;
 }): React.JSX.Element | null => {
   const { t, i18n } = useTranslation();
+  const pathname = usePathname();
   const introDetails = useSurahIntroDetails(chapterId);
 
   if (!introDetails) return null;
@@ -134,7 +151,17 @@ export const SurahCalligraphyIntro = ({
         </div>
 
         <div className="order-1 sm:order-3 sm:min-w-[6rem] sm:w-auto">
-          <SurahTitleBlock surahName={translatedSurahName} versesLabel={translatedVersesLabel} />
+          <SurahTitleBlock
+            surahName={translatedSurahName}
+            versesLabel={translatedVersesLabel}
+            about={{
+              href: localizeHref(
+                buildSurahAboutRoute(introDetails.chapterId),
+                getLocaleFromPathname(pathname) ?? 'en'
+              ),
+              label: t('surah_about_link'),
+            }}
+          />
         </div>
       </div>
     </div>

@@ -221,8 +221,9 @@ describe('SEO routes', () => {
     const entries = buildSitemapChild('core', []) ?? [];
     const urls = entries.map((entry) => entry.url);
 
-    // 149 localized routes (5 indexes, 114 surahs, 30 juz) x languages + 2 English-only legal pages.
-    expect(entries).toHaveLength(149 * ENABLED_LANGUAGES.length + 2);
+    // 263 localized routes (5 indexes, 114 surahs, 114 surah overviews, 30 juz) x languages + 2
+    // English-only legal pages.
+    expect(entries).toHaveLength(263 * ENABLED_LANGUAGES.length + 2);
     expect(new Set(urls).size).toBe(urls.length);
     expect(urls).toEqual(
       expect.arrayContaining([
@@ -230,6 +231,8 @@ describe('SEO routes', () => {
         `${BASE}/bn/surah/ya-sin`,
         `${BASE}/about`,
         ...ENABLED_LANGUAGES.filter((l) => l.code !== 'en').map((l) => `${BASE}/${l.code}/about`),
+        `${BASE}/surah/al-alaq/about`,
+        `${BASE}/ur/surah/at-tawbah/about`,
       ])
     );
     expect(urls).not.toContain(`${BASE}/bn/privacy`);
