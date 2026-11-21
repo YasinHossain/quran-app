@@ -86,7 +86,7 @@ const getVerseRangeCached = unstable_cache(
     );
     return data.verses.map(toVersePageVerse);
   },
-  ['verse-page:range:v2'],
+  ['verse-page:range:v3'],
   { revalidate: 86400, tags: ['verse-page-verse'] }
 );
 
