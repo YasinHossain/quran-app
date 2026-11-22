@@ -43,7 +43,12 @@ export function ReaderFullText({
   if (!verses.length) return null;
 
   return (
+    // The browser owns the `open` attribute and can set it before React hydrates: a click on the
+    // summary, find-in-page, or a `#:~:text=` link (e.g. from search results) that lands inside
+    // the collapsed text. React would then report the extra `open` as a hydration mismatch. The
+    // suppression covers this element's own attributes only; its children are still checked.
     <details
+      suppressHydrationWarning
       data-slot="reader-full-text"
       {...(lang ? { lang } : {})}
       {...(dir ? { dir } : {})}

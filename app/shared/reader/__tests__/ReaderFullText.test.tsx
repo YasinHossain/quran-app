@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { act } from 'react';
+import { hydrateRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
 
 import { ReaderFullText, buildFullTextTitle } from '@/app/shared/reader/ReaderFullText';
@@ -93,5 +94,28 @@ describe('ReaderFullText verse links', () => {
     expect(container.querySelector('[data-verse-key="2:256"] a')?.getAttribute('href')).toBe(
       '/bn/surah/al-baqarah/256'
     );
+  });
+});
+
+describe('ReaderFullText hydration', () => {
+  it('hydrates without a mismatch when the browser opened the section first', async () => {
+    const element = <ReaderFullText title="Full text" verses={verses.slice(0, 3)} />;
+    const container = renderToContainer(element);
+    document.body.appendChild(container);
+    // Find-in-page, a `#:~:text=` link or an early click expands the section before hydration.
+    container.querySelector('details')?.setAttribute('open', '');
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    try {
+      await act(async () => {
+        hydrateRoot(container, element);
+      });
+
+      expect(consoleError).not.toHaveBeenCalled();
+      expect(container.querySelector('details')?.hasAttribute('open')).toBe(true);
+    } finally {
+      consoleError.mockRestore();
+      container.remove();
+    }
   });
 });
