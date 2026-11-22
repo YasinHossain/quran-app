@@ -1,5 +1,5 @@
 import {
-  ENABLED_LANGUAGES,
+  INDEXABLE_LANGUAGES,
   TAFSIR_LANGUAGES,
   type UiLanguageCode,
 } from '@/app/shared/i18n/languageRegistry';
@@ -28,7 +28,7 @@ interface SitemapRoute {
   path: string;
   priority: number;
   changeFrequency: ChangeFrequency;
-  /** Page exists in every enabled language (self canonical + hreflang). */
+  /** Page exists in every language (self canonical + hreflang); listed for indexable ones. */
   localized: boolean;
 }
 
@@ -87,7 +87,10 @@ export const SITEMAP_SECTIONS: ReadonlyArray<SitemapSection> = [
   },
 ];
 
-/** One `<url>` per language version, each listing every version as an hreflang alternate. */
+/**
+ * One `<url>` per indexable language version, each listing every indexable version as an hreflang
+ * alternate.
+ */
 export function buildSitemapEntries(
   sections: ReadonlyArray<SitemapSection> = SITEMAP_SECTIONS
 ): MetadataRoute.Sitemap {
@@ -104,7 +107,7 @@ export function buildSitemapEntries(
         ];
       }
       const languages = buildHreflangAlternates(path);
-      return ENABLED_LANGUAGES.map((language) => ({
+      return INDEXABLE_LANGUAGES.map((language) => ({
         url: localizedUrl(path, language.code),
         lastModified: SEO_CONTENT_LAST_MODIFIED,
         changeFrequency,
@@ -120,6 +123,7 @@ export function buildSitemapEntries(
  * - `core`: home, indexes, surahs, surah overviews and juz in every language (~1,300 URLs).
  * - `verses-<lang>`: every verse page (`/surah/s/v`) in one language (6,236 URLs each).
  * - `tafsir-<lang>`: every tafsir page (`/tafsir/s/v`) in a language with its own tafsir.
+ * Only indexable languages are listed: one with `indexable: false` gets no URLs or children.
  * Each child stays far below the 50,000-URL / 50MB limits (~4MB with hreflang alternates).
  */
 
@@ -127,8 +131,8 @@ export function buildSitemapEntries(
 type VerseCounts = ReadonlyArray<number>;
 
 /**
- * Languages whose tafsir pages are listed (`hasOwnTafsir` in the registry). A language that falls
- * back to another language's tafsir (Hindi uses the English Ibn Kathir) would only list
+ * Languages whose tafsir pages are listed (`hasIndexableTafsir` in the registry). A language that
+ * falls back to another language's tafsir (Hindi uses the English Ibn Kathir) would only list
  * duplicates; its tafsir pages are `noindex` and left out of the tafsir hreflang alternates.
  */
 export const TAFSIR_SITEMAP_LANGUAGES: ReadonlyArray<UiLanguageCode> = TAFSIR_LANGUAGES.map(
@@ -137,7 +141,7 @@ export const TAFSIR_SITEMAP_LANGUAGES: ReadonlyArray<UiLanguageCode> = TAFSIR_LA
 
 export const SITEMAP_CHILD_IDS: ReadonlyArray<string> = [
   'core',
-  ...ENABLED_LANGUAGES.map((language) => `verses-${language.code}`),
+  ...INDEXABLE_LANGUAGES.map((language) => `verses-${language.code}`),
   ...TAFSIR_SITEMAP_LANGUAGES.map((code) => `tafsir-${code}`),
 ];
 
@@ -150,7 +154,7 @@ function buildPerVerseEntries(
   verseCounts: VerseCounts,
   buildPath: (surahId: number, verseId: number) => string,
   priority: number,
-  languages: Parameters<typeof buildHreflangAlternates>[1] = ENABLED_LANGUAGES
+  languages: Parameters<typeof buildHreflangAlternates>[1] = INDEXABLE_LANGUAGES
 ): MetadataRoute.Sitemap {
   return forEachVerse(verseCounts, (surahId, verseId) => {
     const path = buildPath(surahId, verseId);
@@ -164,8 +168,8 @@ function buildPerVerseEntries(
   });
 }
 
-const isEnabledLanguage = (code: string): code is UiLanguageCode =>
-  ENABLED_LANGUAGES.some((language) => language.code === code);
+const isIndexableCode = (code: string): code is UiLanguageCode =>
+  INDEXABLE_LANGUAGES.some((language) => language.code === code);
 
 /** Entries of child sitemap `id`, or `null` for an unknown id. */
 export function buildSitemapChild(
@@ -176,7 +180,7 @@ export function buildSitemapChild(
   if (id === 'core') return buildSitemapEntries();
 
   const [kind, code = ''] = id.split('-');
-  if (!isEnabledLanguage(code)) return null;
+  if (!isIndexableCode(code)) return null;
   return kind === 'verses'
     ? buildPerVerseEntries(code, verseCounts, buildVerseRoute, 0.7)
     : buildPerVerseEntries(code, verseCounts, buildTafsirRoute, 0.6, TAFSIR_LANGUAGES);

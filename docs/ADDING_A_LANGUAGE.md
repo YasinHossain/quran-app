@@ -3,7 +3,8 @@
 The website's languages come from one registry: `app/shared/i18n/languageRegistry.ts`. Routing
 (`proxy.ts`), the inline `<html lang/dir>` script, RTL, `hreflang`, canonical URLs, the sitemap, and
 the reader's server-rendered defaults all derive from it. Adding a language takes four steps: add a
-registry entry, add the JSON files, choose the content ids, and deploy.
+registry entry, add the JSON files, choose the content ids, and deploy. A new language launches for
+users first and is opened to search engines later (step 5).
 
 Example below: Indonesian (`id`).
 
@@ -40,6 +41,7 @@ Add an entry to `LANGUAGE_REGISTRY` in `app/shared/i18n/languageRegistry.ts`:
   dir: 'ltr',             // 'rtl' for Arabic-script languages
   hreflang: 'id',
   enabled: true,          // false hides a language (routes, pickers, sitemap) without deleting it
+  indexable: false,       // launch unindexed: noindex, no hreflang, not in the sitemap (step 5)
   content: {
     translationIds: [TRANSLATION_ID], // from step 1; [] = Arabic text only
     tafsirIds: [TAFSIR_ID],           // from step 1, or 169 (English) with a comment
@@ -77,28 +79,39 @@ npm run build && PORT=3125 npm start
 UA='Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
 curl -s -A "$UA" http://localhost:3125/id/surah/36 | grep -oE '<html[^>]*>|<title>[^<]*|<link rel="(canonical|alternate)"[^>]*>'
 curl -s -A "$UA" http://localhost:3125/id/surah/36 | grep -c 'data-verse-key="36:'   # expect ≥ 83
-curl -s http://localhost:3125/sitemap.xml | grep -o '<loc>[^<]*'          # index: expect verses-id (+ tafsir-id)
-curl -s http://localhost:3125/sitemaps/core.xml | grep -c '<loc>http[^<]*/id/'
-curl -s http://localhost:3125/sitemaps/verses-id.xml | grep -c '<loc>'          # expect 6236
+curl -s -A "$UA" http://localhost:3125/id/surah/36 | grep -o '<meta name="robots"[^>]*>'  # noindex, follow
+curl -s http://localhost:3125/sitemap.xml | grep -c 'verses-id'                 # expect 0 while unindexed
 ```
 
 Check that:
 
 - `/id/surah/36` returns 200 with `<html lang="id" dir="…">`, a self canonical
-  (`…/id/surah/36`), `hreflang` links for every enabled language plus `x-default`, a localized
-  `<title>`, and the full-text `<details>` with 83 verses in the chosen translation.
-- `/sitemap.xml` (a sitemap index) lists `verses-id`, and `tafsir-id` when the language has its
-  own tafsir (a language that falls back to the English tafsir, `hasOwnTafsir: false`, gets no
-  tafsir child; its tafsir pages are `noindex, follow` and left out of tafsir hreflang).
+  (`…/id/surah/36`), `noindex, follow`, `hreflang` links for the indexable languages (not `id`)
+  plus `x-default`, a localized `<title>`, and the full-text `<details>` with 83 verses in the
+  chosen translation.
+- `hreflang="id"` appears on no page, and `/sitemap.xml` has no `id` children.
 - Unprefixed `/surah/36` with no cookie and no `Accept-Language` still returns 200 in English.
 - In a browser (DevTools or Playwright, phone viewport, after network idle) the page keeps the 83
   verses in the full-text section, the console has no hydration errors, and no request refetches
   page 1 of the verses.
 
-Then deploy, resubmit `sitemap.xml` in Google Search Console and Bing Webmaster
-Tools, and request indexing for a few `/<code>/surah/*` URLs.
+Then deploy. The language is live for users but not indexed.
 
-## 5. Mobile app (quran-app-mobile)
+## 5. Open the language to search engines
+
+Once a native speaker has reviewed the UI strings and the Google Search Console check shows the
+existing languages indexed:
+
+1. Set `indexable: true` in the registry entry and deploy.
+2. Check that `/id/surah/36` no longer has `noindex`, other languages' pages list `hreflang="id"`,
+   and `/sitemap.xml` lists `verses-id` (and `tafsir-id` when `hasOwnTafsir: true`; a language
+   that falls back to the English tafsir gets no tafsir child, and its tafsir pages stay
+   `noindex, follow` and out of tafsir hreflang).
+3. Resubmit `sitemap.xml` in Google Search Console and Bing Webmaster Tools.
+4. Run `npm run seo:indexnow -- --sitemap --dry-run`, check the URLs, then
+   `npm run seo:indexnow -- --sitemap`.
+
+## 6. Mobile app (quran-app-mobile)
 
 The mobile app keeps its own language list; mirror the website entry there.
 

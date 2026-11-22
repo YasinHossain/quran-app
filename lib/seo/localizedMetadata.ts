@@ -1,4 +1,4 @@
-import { ENABLED_LANGUAGES, type UiLanguageCode } from '@/app/shared/i18n/languageRegistry';
+import { INDEXABLE_LANGUAGES, type UiLanguageCode } from '@/app/shared/i18n/languageRegistry';
 import { setLocaleInPathname } from '@/app/shared/i18n/localeRouting';
 import { SITE_NAME, absoluteUrl } from '@/lib/seo/site';
 
@@ -15,12 +15,12 @@ export function localizedUrl(path: string, locale: UiLanguageCode): string {
 type HreflangLanguages = ReadonlyArray<{ code: UiLanguageCode; hreflang: string }>;
 
 /**
- * hreflang map for `path`: one entry per language in `languages` (default: every enabled one)
+ * hreflang map for `path`: one entry per language in `languages` (default: every indexable one)
  * plus `x-default` (the unprefixed, default-language URL). Shared by page metadata and the sitemap.
  */
 export function buildHreflangAlternates(
   path: string,
-  languages: HreflangLanguages = ENABLED_LANGUAGES
+  languages: HreflangLanguages = INDEXABLE_LANGUAGES
 ): Record<string, string> {
   return {
     ...Object.fromEntries(
@@ -30,11 +30,14 @@ export function buildHreflangAlternates(
   };
 }
 
-/** Self-referencing canonical for the request's locale, with hreflang alternates. */
+/**
+ * Self-referencing canonical for the request's locale, with hreflang alternates. A locale outside
+ * `languages` keeps its self canonical (it is `noindex`, not a duplicate of another URL).
+ */
 export function buildLocalizedAlternates(
   path: string,
   locale: UiLanguageCode,
-  languages: HreflangLanguages = ENABLED_LANGUAGES
+  languages: HreflangLanguages = INDEXABLE_LANGUAGES
 ): NonNullable<Metadata['alternates']> {
   return {
     canonical: localizedUrl(path, locale),
@@ -43,8 +46,8 @@ export function buildLocalizedAlternates(
 }
 
 /**
- * Metadata for an indexable page that exists in every enabled language: title, description,
- * canonical + hreflang, and matching OpenGraph/Twitter text.
+ * Metadata for a page that exists in every enabled language: title, description, canonical +
+ * hreflang, and matching OpenGraph/Twitter text. Indexable only in `languages`.
  */
 export function buildLocalizedPageMetadata(input: {
   path: string;
@@ -54,8 +57,9 @@ export function buildLocalizedPageMetadata(input: {
   /** Use the title as-is instead of the root `%s | Site` template. */
   absoluteTitle?: boolean;
   /**
-   * Languages with their own version of this page (default: every enabled one). A request in
-   * another language is a duplicate: `noindex, follow`, and not listed as an alternate.
+   * Languages whose version of this page is indexed (default: every indexable one). A request in
+   * another language (not indexable, or a duplicate such as a fallback tafsir) is
+   * `noindex, follow` and not listed as an alternate.
    */
   languages?: HreflangLanguages;
 }): Metadata {
@@ -65,7 +69,7 @@ export function buildLocalizedPageMetadata(input: {
     title,
     description,
     absoluteTitle = false,
-    languages = ENABLED_LANGUAGES,
+    languages = INDEXABLE_LANGUAGES,
   } = input;
   const alternates = buildLocalizedAlternates(path, locale, languages);
   const isOwnVersion = languages.some((language) => language.code === locale);

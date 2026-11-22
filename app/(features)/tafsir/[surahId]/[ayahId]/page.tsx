@@ -95,8 +95,8 @@ export async function generateMetadata({ params }: TafsirVersePageProps): Promis
     templates: getTafsirMetadataTemplates(translator),
   });
 
-  // Languages without their own tafsir (Hindi) serve another language's text: noindex, and not
-  // an hreflang alternate.
+  // Languages without their own tafsir (Hindi) serve another language's text, and non-indexable
+  // languages stay out of search: both are noindex, and not an hreflang alternate.
   return buildLocalizedPageMetadata({
     path,
     locale,

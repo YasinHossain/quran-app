@@ -63,7 +63,11 @@ import TafsirVersePage, {
   generateMetadata as generateTafsirMetadata,
 } from '@/app/(features)/tafsir/[surahId]/[ayahId]/page';
 import robots from '@/app/robots';
-import { ENABLED_LANGUAGES } from '@/app/shared/i18n/languageRegistry';
+import {
+  DEFAULT_UI_LANGUAGE,
+  INDEXABLE_LANGUAGES,
+  getLanguageDefinition,
+} from '@/app/shared/i18n/languageRegistry';
 import {
   SEO_CONTENT_LAST_MODIFIED,
   SITEMAP_CHILD_IDS,
@@ -157,7 +161,7 @@ describe('SEO routes', () => {
       expect(metadata.alternates?.canonical).toBe(`${BASE}/${code}/surah/ya-sin`);
       expect(metadata.alternates?.canonical).not.toContain('__uiLanguage');
       expect(Object.keys(metadata.alternates?.languages ?? {})).toHaveLength(
-        ENABLED_LANGUAGES.length + 1
+        INDEXABLE_LANGUAGES.length + 1
       );
       expect(metadata.title).toBe(title);
       expect(metadata.description).toContain(revelation);
@@ -194,7 +198,7 @@ describe('SEO routes', () => {
     }
   });
 
-  it.each(ENABLED_LANGUAGES.map((language) => language.code))(
+  it.each(INDEXABLE_LANGUAGES.map((language) => language.code))(
     'gives the About page a self canonical, hreflang and localized title in %s',
     async (code) => {
       mockUiLanguage = code;
@@ -209,7 +213,7 @@ describe('SEO routes', () => {
         'x-default': `${BASE}/about`,
       });
       expect(Object.keys(metadata.alternates?.languages ?? {})).toHaveLength(
-        ENABLED_LANGUAGES.length + 1
+        INDEXABLE_LANGUAGES.length + 1
       );
       expect(metadata.title).toBeTruthy();
       expect(metadata.title).not.toBe('about_page_title');
@@ -223,14 +227,14 @@ describe('SEO routes', () => {
 
     // 263 localized routes (5 indexes, 114 surahs, 114 surah overviews, 30 juz) x languages + 2
     // English-only legal pages.
-    expect(entries).toHaveLength(263 * ENABLED_LANGUAGES.length + 2);
+    expect(entries).toHaveLength(263 * INDEXABLE_LANGUAGES.length + 2);
     expect(new Set(urls).size).toBe(urls.length);
     expect(urls).toEqual(
       expect.arrayContaining([
         `${BASE}/juz`,
         `${BASE}/bn/surah/ya-sin`,
         `${BASE}/about`,
-        ...ENABLED_LANGUAGES.filter((l) => l.code !== 'en').map((l) => `${BASE}/${l.code}/about`),
+        ...INDEXABLE_LANGUAGES.filter((l) => l.code !== 'en').map((l) => `${BASE}/${l.code}/about`),
         `${BASE}/surah/al-alaq/about`,
         `${BASE}/ur/surah/at-tawbah/about`,
       ])
@@ -319,7 +323,7 @@ describe('SEO routes', () => {
         'x-default': `${BASE}/surah/al-baqarah/255`,
       });
       expect(Object.keys(metadata.alternates?.languages ?? {})).toHaveLength(
-        ENABLED_LANGUAGES.length + 1
+        INDEXABLE_LANGUAGES.length + 1
       );
     });
 
@@ -395,5 +399,119 @@ describe('SEO routes', () => {
       );
       await expect(TafsirVersePage(tafsirParams(surahId, ayahId))).rejects.toMatchObject(notFound);
     });
+  });
+  describe('an enabled language that is not indexable yet', () => {
+    // Launch state of a new language: Urdu (which has its own tafsir) set to `indexable: false`.
+    type Modules = {
+      uiLanguages: typeof import('@/app/shared/i18n/uiLanguages');
+      sitemap: typeof import('@/lib/seo/sitemapEntries');
+      surah: typeof import('@/app/(features)/surah/[surahId]/page');
+      tafsir: typeof import('@/app/(features)/tafsir/[surahId]/[ayahId]/page');
+      llms: typeof import('@/lib/seo/llmsTxt');
+    };
+    let modules: Modules;
+
+    beforeAll(() => {
+      jest.isolateModules(() => {
+        jest.doMock('@/app/shared/i18n/languageRegistry', () => {
+          const actual = jest.requireActual<typeof import('@/app/shared/i18n/languageRegistry')>(
+            '@/app/shared/i18n/languageRegistry'
+          );
+          const registry = actual.LANGUAGE_REGISTRY.map((language) =>
+            language.code === 'ur' ? { ...language, indexable: false } : language
+          );
+          const enabled = registry.filter((language) => language.enabled);
+          return {
+            ...actual,
+            LANGUAGE_REGISTRY: registry,
+            ENABLED_LANGUAGES: enabled,
+            ENABLED_LANGUAGE_CODES: enabled.map((language) => language.code),
+            INDEXABLE_LANGUAGES: registry.filter(actual.isIndexableLanguage),
+            TAFSIR_LANGUAGES: registry.filter(actual.hasIndexableTafsir),
+          };
+        });
+        modules = {
+          uiLanguages: require('@/app/shared/i18n/uiLanguages'),
+          sitemap: require('@/lib/seo/sitemapEntries'),
+          surah: require('@/app/(features)/surah/[surahId]/page'),
+          tafsir: require('@/app/(features)/tafsir/[surahId]/[ayahId]/page'),
+          llms: require('@/lib/seo/llmsTxt'),
+        };
+      });
+    });
+
+    afterAll(() => {
+      jest.dontMock('@/app/shared/i18n/languageRegistry');
+    });
+
+    it('is still routed and offered in the language pickers', () => {
+      expect(modules.uiLanguages.isUiLanguageCode('ur')).toBe(true);
+      expect(modules.uiLanguages.resolveUiLanguageTag('ur-PK')).toBe('ur');
+      expect(modules.uiLanguages.UI_LANGUAGES.map((language) => language.code)).toContain('ur');
+    });
+
+    it('serves its pages noindex with a self canonical, outside every hreflang set', async () => {
+      const params = { params: Promise.resolve({ surahId: 'ya-sin' }) };
+      mockUiLanguage = 'ur';
+      const own = await modules.surah.generateMetadata(params);
+      expect(own.robots).toEqual({ index: false, follow: true });
+      expect(own.alternates?.canonical).toBe(`${BASE}/ur/surah/ya-sin`);
+      expect(own.alternates?.languages).not.toHaveProperty('ur');
+
+      mockUiLanguage = 'bn';
+      const other = await modules.surah.generateMetadata(params);
+      expect(other.robots).toBeUndefined();
+      expect(Object.keys(other.alternates?.languages ?? {})).toEqual([
+        'en',
+        'bn',
+        'ar',
+        'hi',
+        'x-default',
+      ]);
+    });
+
+    it('keeps its tafsir pages noindex even though it has its own tafsir', async () => {
+      mockUiLanguage = 'ur';
+      const metadata = await modules.tafsir.generateMetadata({
+        params: Promise.resolve({ surahId: 'al-baqarah', ayahId: '255' }),
+      });
+      expect(metadata.robots).toEqual({ index: false, follow: true });
+
+      mockUiLanguage = 'en';
+      const english = await modules.tafsir.generateMetadata({
+        params: Promise.resolve({ surahId: 'al-baqarah', ayahId: '255' }),
+      });
+      expect(Object.keys(english.alternates?.languages ?? {})).toEqual([
+        'en',
+        'bn',
+        'ar',
+        'x-default',
+      ]);
+    });
+
+    it('is left out of the sitemap and llms.txt', () => {
+      const { SITEMAP_CHILD_IDS: ids, buildSitemapChild: buildChild } = modules.sitemap;
+      expect(ids).not.toContain('verses-ur');
+      expect(ids).not.toContain('tafsir-ur');
+      expect(buildChild('verses-ur', [7])).toBeNull();
+      expect(buildChild('tafsir-ur', [7])).toBeNull();
+
+      const xml = renderSitemapXml([
+        ...(buildChild('core', []) ?? []),
+        ...(buildChild('verses-en', [7]) ?? []),
+        ...(buildChild('tafsir-en', [7]) ?? []),
+      ]);
+      expect(xml).toContain(`<loc>${BASE}/bn/surah/ya-sin</loc>`);
+      expect(xml).not.toContain('/ur/');
+      expect(xml).not.toContain('hreflang="ur"');
+
+      const llms = modules.llms.buildLlmsTxt(new Map());
+      expect(llms).not.toContain('Urdu');
+      expect(llms).not.toContain('`/ur`');
+    });
+  });
+
+  it('keeps the default language (the x-default target) indexable', () => {
+    expect(getLanguageDefinition(DEFAULT_UI_LANGUAGE).indexable).toBe(true);
   });
 });
