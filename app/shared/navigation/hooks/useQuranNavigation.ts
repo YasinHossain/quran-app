@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useNavigationDatasets } from '@/app/shared/navigation/hooks/useNavigationDatasets';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { foldSearchCase } from '@/lib/text/foldSearchCase';
 
 import type { JuzSummary } from '@/app/shared/navigation/types';
 import type { Surah } from '@/types';
@@ -35,18 +36,18 @@ export function useQuranNavigation(): QuranNavigationReturn {
     [t]
   );
 
-  const term = searchTerm.toLowerCase();
+  const term = foldSearchCase(searchTerm);
   const filteredSurahs = useMemo(
     () =>
       surahs.filter(
-        (s) => s.name.toLowerCase().includes(term) || s.number.toString().includes(searchTerm)
+        (s) => foldSearchCase(s.name).includes(term) || s.number.toString().includes(searchTerm)
       ),
     [surahs, term, searchTerm]
   );
   const filteredJuzs = useMemo(
     () =>
       juzs.filter(
-        (j) => j.name.toLowerCase().includes(term) || j.number.toString().includes(searchTerm)
+        (j) => foldSearchCase(j.name).includes(term) || j.number.toString().includes(searchTerm)
       ),
     [juzs, term, searchTerm]
   );

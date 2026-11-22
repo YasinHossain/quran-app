@@ -103,6 +103,7 @@ function removeArabicDiacritics(text: string): string {
  * - Normalize different forms of Alef: إ أ آ ٱ → ا
  * - Normalize different forms of Hamza: ء ئ ؤ → (removed or normalized)
  * - Normalize Teh Marbuta: ة → ه
+ * - Normalize Persian Yeh/Keheh: ی → ي, ک → ك
  * This allows flexible matching of Arabic text
  */
 function normalizeArabicLetters(text: string): string {
@@ -114,8 +115,10 @@ function normalizeArabicLetters(text: string): string {
       .replace(/[ئؤ]/g, 'ء')
       // Normalize Teh Marbuta to Heh
       .replace(/ة/g, 'ه')
-      // Normalize Yeh variations (if needed)
-      .replace(/ى/g, 'ي')
+      // Normalize Yeh variations, including Persian Yeh (ی) and Persian Keheh (ک) typed on
+      // Persian keyboards, so they match the Arabic letters of the Quran text
+      .replace(/[ىی]/g, 'ي')
+      .replace(/ک/g, 'ك')
   );
 }
 
@@ -214,8 +217,11 @@ export function highlightMissingQueryWords(highlightedText: string, query: strin
             // Match Heh or Teh Marbuta
             charPattern = '[هة]';
           } else if (char === 'ي') {
-            // Match Yeh variations
-            charPattern = '[يى]';
+            // Match Yeh variations (Arabic and Persian)
+            charPattern = '[يىی]';
+          } else if (char === 'ك') {
+            // Match Arabic Kaf and Persian Keheh
+            charPattern = '[كک]';
           } else if (char === 'ء') {
             // Match Hamza variations
             charPattern = '[ءئؤإأ]';

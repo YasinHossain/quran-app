@@ -295,8 +295,11 @@
     margin-bottom: 0;
   }
 
+  /* Persian shares the Naskh UI font, which covers its letters (پ چ ژ گ ک ی) and digits. */
   html[lang='ar'],
-  html[lang='ar'] body {
+  html[lang='ar'] body,
+  html[lang='fa'],
+  html[lang='fa'] body {
     font-family: Inter, 'Noto Naskh Arabic', serif;
   }
 

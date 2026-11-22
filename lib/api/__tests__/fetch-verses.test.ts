@@ -76,6 +76,29 @@ describe('fetchVerses', () => {
     await expect(fetchVerses(defaultArgs)).rejects.toThrow('Failed to fetch verses: 500');
   });
 
+  it('drops footnote markers from translations, as the server-rendered page does', async () => {
+    mockFetchJson({
+      pagination: { total_pages: 1 },
+      verses: [
+        {
+          ...mockVerse,
+          translations: [
+            {
+              resource_id: 31,
+              text: 'Au nom d’Allah, le Très Miséricordieux. <sup foot_note=211620>1</sup>',
+            },
+          ],
+        },
+      ],
+    });
+
+    const result = await fetchVerses({ ...defaultArgs, translationIds: 31 });
+
+    expect(result.verses[0]?.translations?.[0]?.text).toBe(
+      'Au nom d’Allah, le Très Miséricordieux.'
+    );
+  });
+
   it('omits translation params when translationIds is empty', async () => {
     mockFetchJson({ pagination: { total_pages: 1 }, verses: [mockVerse] });
 

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { foldSearchCase } from '@/lib/text/foldSearchCase';
 
 import type { Chapter } from '@/types';
 
@@ -25,13 +26,13 @@ export function useSurahSearch(
       return chapters;
     }
 
-    const normalizedQuery = trimmedQuery.toLowerCase();
+    const normalizedQuery = foldSearchCase(trimmedQuery);
 
     return chapters.filter((chapter) => {
       const translation = chapter.translated_name?.name ?? '';
       return (
-        chapter.name_simple.toLowerCase().includes(normalizedQuery) ||
-        translation.toLowerCase().includes(normalizedQuery) ||
+        foldSearchCase(chapter.name_simple).includes(normalizedQuery) ||
+        foldSearchCase(translation).includes(normalizedQuery) ||
         chapter.name_arabic.includes(trimmedQuery) ||
         chapter.id.toString().includes(normalizedQuery)
       );

@@ -56,7 +56,7 @@ describe('proxy locale routing', () => {
   });
 
   it('ignores unknown prefixes and languages', () => {
-    const response = proxy(request('/fr/surah/ya-sin', { 'accept-language': 'fr-FR' }));
+    const response = proxy(request('/de/surah/ya-sin', { 'accept-language': 'de-DE' }));
 
     expect(response.status).toBe(200);
     expect(response.headers.get('x-middleware-rewrite')).toBeNull();
@@ -109,7 +109,7 @@ describe('proxy canonical surah slugs', () => {
     '/02/255',
     '/2',
     '/2/255/1',
-    '/fr/2/255',
+    '/de/2/255',
     '/juz/30',
     '/bn/juz/2',
     '/page/2',

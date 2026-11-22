@@ -1,0 +1,11 @@
+{
+  "skip_back": "۱۰ ثانیه عقب",
+  "skip_forward": "۱۰ ثانیه جلو",
+  "pause_audio": "توقف صدا",
+  "play_audio": "پخش صدا",
+  "toggle_repeat": "روشن/خاموش کردن تکرار",
+  "toggle_mute": "قطع/وصل صدا",
+  "audio_settings": "تنظیمات صدا",
+  "microphone": "میکروفون",
+  "could_not_play_audio": "پخش صدا ممکن نشد."
+}
