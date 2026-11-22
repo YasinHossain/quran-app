@@ -1,7 +1,7 @@
 /**
  * The single list of website languages. Routing (`proxy.ts`), the inline language script, `<html
- * lang/dir>`, hreflang alternates, the sitemap and the server-rendered reader defaults all derive
- * from it. Adding a language: see `docs/ADDING_A_LANGUAGE.md`.
+ * lang/dir>`, hreflang alternates, robots metadata, the sitemap and the server-rendered reader
+ * defaults all derive from it. Adding a language: see `docs/ADDING_A_LANGUAGE.md`.
  *
  * Content ids are published, scholarly translations from the Quran.com API (never machine
  * translated). The same per-language translation defaults ship in the mobile app
@@ -15,7 +15,8 @@ export interface LanguageContentDefaults {
   /**
    * Whether the default tafsir is written in this language. `false` (it falls back to another
    * language's tafsir) makes this language's tafsir pages duplicates: they are `noindex`, left out
-   * of tafsir hreflang alternates, and get no tafsir sitemap.
+   * of tafsir hreflang alternates, and get no tafsir sitemap. Only applies to an `indexable`
+   * language (see `hasIndexableTafsir`).
    */
   hasOwnTafsir: boolean;
   /** Word-by-word gloss language. */
@@ -37,6 +38,14 @@ export interface LanguageDefinition {
   hreflang: string;
   /** Disabled languages are not routed, listed, or put in the sitemap. */
   enabled: boolean;
+  /**
+   * Whether search engines should index this (enabled) language. `false` launches it for users
+   * (routed, in pickers, normal pages) while keeping it out of search: its pages are
+   * `noindex, follow`, it is left out of every hreflang alternate and the sitemap (so IndexNow,
+   * which reads the sitemap, skips it too). New languages start `false`; see
+   * `docs/ADDING_A_LANGUAGE.md`. The default language must stay indexable (it is `x-default`).
+   */
+  indexable: boolean;
   content: LanguageContentDefaults;
 }
 
@@ -48,6 +57,7 @@ export const LANGUAGE_REGISTRY = [
     dir: 'ltr',
     hreflang: 'en',
     enabled: true,
+    indexable: true,
     content: {
       translationIds: [20], // Saheeh International
       tafsirIds: [169], // Tafsir Ibn Kathir (abridged, English)
@@ -63,6 +73,7 @@ export const LANGUAGE_REGISTRY = [
     dir: 'ltr',
     hreflang: 'bn',
     enabled: true,
+    indexable: true,
     content: {
       translationIds: [161], // Taisirul Quran
       tafsirIds: [164], // Tafseer ibn Kathir (Bangla)
@@ -78,6 +89,7 @@ export const LANGUAGE_REGISTRY = [
     dir: 'rtl',
     hreflang: 'ar',
     enabled: true,
+    indexable: true,
     content: {
       translationIds: [], // Arabic readers get the Quran text itself; no translation line.
       tafsirIds: [14], // Tafsir Ibn Kathir (Arabic)
@@ -94,6 +106,7 @@ export const LANGUAGE_REGISTRY = [
     dir: 'rtl',
     hreflang: 'ur',
     enabled: true,
+    indexable: true,
     content: {
       translationIds: [54], // Maulana Muhammad Junagarhi
       tafsirIds: [160], // Tafsir Ibn Kathir (Urdu)
@@ -109,6 +122,7 @@ export const LANGUAGE_REGISTRY = [
     dir: 'ltr',
     hreflang: 'hi',
     enabled: true,
+    indexable: true,
     content: {
       translationIds: [122], // Maulana Azizul Haque al-Umari
       tafsirIds: [169], // QDC has no Hindi tafsir resource; fall back to English.
@@ -131,9 +145,23 @@ export const ENABLED_LANGUAGE_CODES: ReadonlyArray<UiLanguageCode> = ENABLED_LAN
   (language) => language.code
 );
 
-/** Languages whose tafsir pages are indexable (their default tafsir is in that language). */
+/** Enabled and open to search engines: hreflang, the sitemap and `index` robots derive from it. */
+export function isIndexableLanguage(language: LanguageDefinition): boolean {
+  return language.enabled && language.indexable;
+}
+
+/** Tafsir pages are indexable only in an indexable language whose default tafsir is its own. */
+export function hasIndexableTafsir(language: LanguageDefinition): boolean {
+  return isIndexableLanguage(language) && language.content.hasOwnTafsir;
+}
+
+/** Languages whose pages are indexed and listed as hreflang alternates and in the sitemap. */
+export const INDEXABLE_LANGUAGES: ReadonlyArray<(typeof LANGUAGE_REGISTRY)[number]> =
+  LANGUAGE_REGISTRY.filter(isIndexableLanguage);
+
+/** Languages whose tafsir pages are indexable (see `hasIndexableTafsir`). */
 export const TAFSIR_LANGUAGES: ReadonlyArray<(typeof LANGUAGE_REGISTRY)[number]> =
-  ENABLED_LANGUAGES.filter((language) => language.content.hasOwnTafsir);
+  LANGUAGE_REGISTRY.filter(hasIndexableTafsir);
 
 export const RTL_LANGUAGE_CODES: ReadonlyArray<UiLanguageCode> = ENABLED_LANGUAGES.filter(
   (language) => language.dir === 'rtl'

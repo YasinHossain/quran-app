@@ -1,8 +1,11 @@
-import { ENABLED_LANGUAGES } from '@/app/shared/i18n/languageRegistry';
+import { DEFAULT_UI_LANGUAGE, INDEXABLE_LANGUAGES } from '@/app/shared/i18n/languageRegistry';
 import { absoluteUrl, getSiteUrl, SITE_NAME } from '@/lib/seo/site';
 import { SURAH_SLUGS } from '@/lib/seo/surahSlugs';
 
-/** Body of `/llms.txt` (https://llmstxt.org), built from the surah slugs and language registry. */
+/**
+ * Body of `/llms.txt` (https://llmstxt.org), built from the surah slugs and language registry.
+ * Lists only indexable languages, like the sitemap.
+ */
 const pattern = (path: string): string => `${getSiteUrl()}${path}`;
 
 // Names of the default sources in `languageRegistry.ts` (which only stores resource ids).
@@ -27,7 +30,7 @@ const slugToLabel = (slug: string): string =>
     .join('-');
 
 function languageLines(): string[] {
-  return ENABLED_LANGUAGES.map((language) => {
+  return INDEXABLE_LANGUAGES.map((language) => {
     const prefix = language.code === 'en' ? 'no prefix' : `\`/${language.code}\``;
     const translation = TRANSLATION_SOURCES[language.code];
     const tafsir = language.content.hasOwnTafsir ? TAFSIR_SOURCES[language.code] : undefined;
@@ -45,7 +48,10 @@ export function buildLlmsTxt(names: ReadonlyMap<number, string>): string {
     const name = names.get(id) ?? slugToLabel(slug);
     return `- [${id}. ${name}](${absoluteUrl(`/surah/${slug}`)})`;
   });
-  const languageNames = ENABLED_LANGUAGES.map((l) => l.englishName).join(', ');
+  const languageNames = INDEXABLE_LANGUAGES.map((l) => l.englishName).join(', ');
+  const localePrefixes = INDEXABLE_LANGUAGES.filter((l) => l.code !== DEFAULT_UI_LANGUAGE)
+    .map((l) => `\`/${l.code}\``)
+    .join(', ');
 
   return [
     `# ${SITE_NAME}`,
@@ -60,7 +66,7 @@ export function buildLlmsTxt(names: ReadonlyMap<number, string>): string {
     `- Verse: ${pattern('/surah/{slug}/{verse}')} (e.g. ${absoluteUrl('/surah/al-baqarah/255')})`,
     `- Tafsir for a verse: ${pattern('/tafsir/{slug}/{verse}')} (e.g. ${absoluteUrl('/tafsir/al-baqarah/255')})`,
     `- Juz: ${pattern('/juz/{1-30}')} (e.g. ${absoluteUrl('/juz/1')})`,
-    '- Locale prefixes: `/bn`, `/ur`, `/ar`, `/hi` before any path (e.g. `/bn/surah/al-baqarah/255`); English has no prefix.',
+    `- Locale prefixes: ${localePrefixes} before any path (e.g. \`/bn/surah/al-baqarah/255\`); English has no prefix.`,
     '- Shortcuts such as `/2/255` (surah number and verse) redirect to the canonical URL `/surah/al-baqarah/255`.',
     '- Slugs are the same Latin string in every language; the Surahs list below gives the slug of all 114 surahs.',
     '',
