@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 import { useNavigationDatasets } from '@/app/shared/navigation/hooks/useNavigationDatasets';
+import { foldSearchCase } from '@/lib/text/foldSearchCase';
 
 import type { JuzSummary } from '@/app/shared/navigation/types';
 import type { Chapter } from '@/types';
@@ -15,13 +16,13 @@ export function useSurahListFilters(
   chapters: ReadonlyArray<Chapter>,
   searchTerm: string
 ): SurahListFiltersResult {
-  const term = searchTerm.toLowerCase();
+  const term = foldSearchCase(searchTerm);
   const { juzs, pages } = useNavigationDatasets();
 
   const filteredChapters = useMemo(
     () =>
       chapters.filter(
-        (c) => c.name_simple.toLowerCase().includes(term) || c.id.toString().includes(searchTerm)
+        (c) => foldSearchCase(c.name_simple).includes(term) || c.id.toString().includes(searchTerm)
       ),
     [chapters, term, searchTerm]
   );

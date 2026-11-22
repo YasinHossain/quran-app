@@ -131,6 +131,89 @@ export const LANGUAGE_REGISTRY = [
       wordTranslationId: 122, // Hindi entry from QDC resources list
     },
   },
+  {
+    code: 'id',
+    englishName: 'Indonesian',
+    nativeName: 'Bahasa Indonesia',
+    dir: 'ltr',
+    hreflang: 'id',
+    enabled: true,
+    indexable: false,
+    content: {
+      translationIds: [33], // Indonesian Islamic Affairs Ministry (Kemenag)
+      tafsirIds: [169], // QDC has no Indonesian tafsir resource; fall back to English.
+      hasOwnTafsir: false,
+      wordLang: 'id',
+      wordTranslationId: 45, // Indonesian entry in the WBW selector (`LanguageList`)
+    },
+  },
+  {
+    code: 'tr',
+    englishName: 'Turkish',
+    nativeName: 'Türkçe',
+    dir: 'ltr',
+    hreflang: 'tr',
+    enabled: true,
+    indexable: false,
+    content: {
+      translationIds: [77], // Diyanet İşleri
+      tafsirIds: [169], // QDC has no Turkish tafsir resource; fall back to English.
+      hasOwnTafsir: false,
+      // QDC's Turkish word-by-word falls back to English for roughly one word in ten.
+      wordLang: 'tr',
+      wordTranslationId: 38, // Turkish entry in the WBW selector (`LanguageList`)
+    },
+  },
+  {
+    code: 'fa',
+    englishName: 'Persian',
+    nativeName: 'فارسی',
+    dir: 'rtl',
+    hreflang: 'fa',
+    enabled: true,
+    indexable: false,
+    content: {
+      translationIds: [135], // IslamHouse.com
+      tafsirIds: [169], // QDC has no Persian tafsir resource; fall back to English.
+      hasOwnTafsir: false,
+      wordLang: 'fa',
+      wordTranslationId: 46, // Persian entry in the WBW selector (`LanguageList`)
+    },
+  },
+  {
+    code: 'fr',
+    englishName: 'French',
+    nativeName: 'Français',
+    dir: 'ltr',
+    hreflang: 'fr',
+    enabled: true,
+    indexable: false,
+    content: {
+      translationIds: [31], // Muhammad Hamidullah
+      tafsirIds: [169], // QDC has no French tafsir resource; fall back to English.
+      hasOwnTafsir: false,
+      // QDC has no French word-by-word glosses; keep English.
+      wordLang: 'en',
+      wordTranslationId: 85,
+    },
+  },
+  {
+    code: 'ru',
+    englishName: 'Russian',
+    nativeName: 'Русский',
+    dir: 'ltr',
+    hreflang: 'ru',
+    enabled: true,
+    indexable: false,
+    content: {
+      translationIds: [45], // Elmir Kuliev
+      tafsirIds: [170], // Tafsir Al-Sa'di (Russian)
+      hasOwnTafsir: true,
+      // QDC has no Russian word-by-word glosses; keep English.
+      wordLang: 'en',
+      wordTranslationId: 85,
+    },
+  },
 ] as const satisfies ReadonlyArray<LanguageDefinition>;
 
 export type UiLanguageCode = (typeof LANGUAGE_REGISTRY)[number]['code'];

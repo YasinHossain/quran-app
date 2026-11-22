@@ -66,6 +66,8 @@ import robots from '@/app/robots';
 import {
   DEFAULT_UI_LANGUAGE,
   INDEXABLE_LANGUAGES,
+  LANGUAGE_REGISTRY,
+  RTL_LANGUAGE_CODES,
   getLanguageDefinition,
 } from '@/app/shared/i18n/languageRegistry';
 import {
@@ -513,5 +515,16 @@ describe('SEO routes', () => {
 
   it('keeps the default language (the x-default target) indexable', () => {
     expect(getLanguageDefinition(DEFAULT_UI_LANGUAGE).indexable).toBe(true);
+  });
+
+  it('gives every language a unique URL prefix and hreflang', () => {
+    const codes = LANGUAGE_REGISTRY.map((language) => language.code);
+    const hreflangs = LANGUAGE_REGISTRY.map((language) => language.hreflang);
+    expect(new Set(codes).size).toBe(codes.length);
+    expect(new Set(hreflangs).size).toBe(hreflangs.length);
+  });
+
+  it('lays out the Arabic-script languages right to left', () => {
+    expect([...RTL_LANGUAGE_CODES].sort()).toEqual(['ar', 'fa', 'ur']);
   });
 });

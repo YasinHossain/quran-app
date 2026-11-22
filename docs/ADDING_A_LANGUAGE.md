@@ -52,9 +52,16 @@ Add an entry to `LANGUAGE_REGISTRY` in `app/shared/i18n/languageRegistry.ts`:
 },
 ```
 
-Nothing else in the code needs the code added: language pickers, the proxy, `hreflang`, the
-sitemap and the reader defaults pick it up. If the language uses its own digits, also add it to
-`DIGIT_MAPS`/`LOCALE_OVERRIDES` in `lib/text/localizeNumbers.ts`.
+Language pickers, the proxy, `hreflang`, the sitemap and the reader defaults pick it up. A few
+places still need the code by hand:
+
+- Own digits: `DIGIT_MAPS`/`LOCALE_OVERRIDES` in `lib/text/localizeNumbers.ts`.
+- Arabic-script languages: the `html[lang=…]` UI font rule in `app/globals.css` and
+  `ARABIC_SCRIPT_LANGUAGES` in `app/(features)/surah/[surahId]/about/components/TafsirIntroCard.tsx`.
+- A tafsir in the language: the fallback language list in
+  `src/infrastructure/repositories/tafsir.utils.ts`.
+- Word-by-word: `wordTranslationId` must be the language's id in the WBW selector
+  (`app/(features)/surah/components/LanguageList.tsx`), or the selector shows nothing selected.
 
 ## 3. Locale JSON (website)
 
@@ -126,7 +133,13 @@ The mobile app keeps its own language list; mirror the website entry there.
 4. `src/data/initial-language-defaults.json`: the default translation id (same as the website
    registry's `translationIds[0]`, or `null` for Arabic text only).
 5. `src/data/essential-language-defaults.json`: mushaf pack, tafsir id, and word language.
-6. If the language has its own digits, add it to `lib/i18n/localizeNumbers.ts`; if Arabic plural
-   forms apply, check `getPluralSuffixes` in `lib/i18n/uiLanguages.ts`.
-7. Make sure the offline translation/tafsir packs for the chosen ids exist on the pack CDN, then
+6. If the language has its own digits, add it to `lib/i18n/localizeNumbers.ts` (and to the
+   `٪` check in `app/welcome.tsx` for Arabic-script languages). If counted nouns change form with
+   the number (Arabic, Russian), add its rule to `getPluralSuffixes` in `lib/i18n/uiLanguages.ts`.
+7. Add the code in the places nothing else derives it from: the welcome copy maps in
+   `app/welcome.tsx` (type-check fails until they have it), `PREFIXED_LOCALES` in
+   `lib/verse/verseShareUrl.ts` (shared verse links), the search words for "juz", "page" and
+   "surah" in `NAVIGATION_KEYWORDS` (`lib/api/search.ts`), and the expected defaults in
+   `tests/welcome-resource-setup` and the copy checks in `tests/i18n/locale-keys.test.cjs`.
+8. Make sure the offline translation/tafsir packs for the chosen ids exist on the pack CDN, then
    run the welcome flow on a device in the new language.

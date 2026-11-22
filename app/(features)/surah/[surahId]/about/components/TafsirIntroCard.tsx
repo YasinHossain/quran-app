@@ -18,7 +18,7 @@ export interface SurahTafsirIntro extends TafsirIntro {
 }
 
 /** Languages whose own script is Arabic: quoted Arabic is not set apart there. */
-const ARABIC_SCRIPT_LANGUAGES = new Set(['ar', 'ur']);
+const ARABIC_SCRIPT_LANGUAGES = new Set(['ar', 'ur', 'fa']);
 
 /**
  * The opening of Tafsir Ibn Kathir's commentary on the surah, as quoted text (never as HTML).

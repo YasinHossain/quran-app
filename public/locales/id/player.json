@@ -1,0 +1,11 @@
+{
+  "skip_back": "Mundur 10 detik",
+  "skip_forward": "Maju 10 detik",
+  "pause_audio": "Jeda audio",
+  "play_audio": "Putar audio",
+  "toggle_repeat": "Aktifkan/nonaktifkan ulangi",
+  "toggle_mute": "Aktifkan/nonaktifkan suara",
+  "audio_settings": "Pengaturan Audio",
+  "microphone": "Mikrofon",
+  "could_not_play_audio": "Audio tidak dapat diputar."
+}

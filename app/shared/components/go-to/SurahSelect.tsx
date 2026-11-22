@@ -20,6 +20,7 @@ import {
 import { createPortal } from 'react-dom';
 
 import { ChevronDownIcon } from '@/app/shared/icons';
+import { foldSearchCase } from '@/lib/text/foldSearchCase';
 
 const DROPDOWN_MAX_HEIGHT = 28 * 16;
 
@@ -204,11 +205,11 @@ export const SurahSelect = memo(
           return;
         }
 
-        const query = next.trim().toLowerCase();
+        const query = foldSearchCase(next.trim());
         const matchIndex = options.findIndex(
           (option) =>
-            option.value.toLowerCase().startsWith(query) ||
-            option.label.toLowerCase().includes(query)
+            foldSearchCase(option.value).startsWith(query) ||
+            foldSearchCase(option.label).includes(query)
         );
         if (matchIndex >= 0) {
           const matchedOption = options[matchIndex];
