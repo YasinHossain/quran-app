@@ -162,6 +162,7 @@
   },
   "overrides": {
     "diff": "^8.0.3",
+    "fast-uri": "^3.1.9",
     "@opennextjs/aws": {
       "cookie": "0.7.2"
     }
