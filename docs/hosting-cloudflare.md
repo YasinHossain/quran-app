@@ -32,11 +32,21 @@ echo 'NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=gSBPbpAerVlzfJAg94piKxCZr73fjpV0VQDD-
 
 ## Deploy
 
+Always use `opennextjs-cloudflare deploy`, never plain `wrangler deploy`. The OpenNext command also uploads the prerendered pages (about 186 entries) into the R2 cache.
+
+Deploy to the staging Worker first:
+
 ```bash
-npx wrangler whoami          # must show the account that owns appquran.com
-npm run cf:build             # build with OpenNext
-npx opennextjs-cloudflare deploy
+npx wrangler whoami                          # must show the account that owns appquran.com
+npm run cf:build                             # build with OpenNext
+npx opennextjs-cloudflare deploy --env staging
+# test https://appquran-staging.quran-app-v1.workers.dev (Googlebot checks below;
+# a second request to a content page must show a cache HIT)
+npx opennextjs-cloudflare deploy             # production
+npx wrangler delete --name appquran-staging --force   # remove the public test copy
 ```
+
+The `staging` env in `wrangler.jsonc` has `workers_dev: true`, `routes: []`, its own self-reference service, and shares the cache bucket (same build shares entries, a different build uses separate keys).
 
 Test locally on workerd before deploying:
 
@@ -60,9 +70,39 @@ npm run cf:preview
 - Redirects use relative `Location` headers, except www to apex.
 - One Jest failure (SettingsSidebar "opens and closes via header icon") also fails on origin/master. Not caused by this work.
 
-## Caching (pending)
+## Caching (live since 2026-11-25)
 
-Pages currently render on every request, because the root layout reads `headers()` and `cookies()`. The branch `hosting/cloudflare-cache` is in progress. It merges `perf/lang-segment` (the `app/[lang]` route refactor) and adds ISR with an R2 incremental cache. It is not deployed. Do not copy config from this doc for it.
+Caching went live in production on 2026-11-25 (Worker version `708e1249-2169-45ca-91f5-2d5da0a02798`). The previous uncached version was `92261336-8113-4242-8efb-b6c891c570c2`.
+
+How it works:
+
+- Pages live under `app/[lang]/`. The UI language comes from the URL, so surah, verse, tafsir, juz and about pages are ISR: `revalidate` 1 day plus stale-while-revalidate.
+- `proxy.ts` rewrites unprefixed URLs to `/en/...` internally and runs before the cache, so cookie and Accept-Language redirects still work for cached pages.
+- Routing rules (for example `usePublicPathname` instead of `usePathname`, never read `headers()` or `cookies()` in pages) are in `app/AGENTS.md`.
+
+OpenNext cache config (`open-next.config.ts`):
+
+- R2 incremental cache in bucket `appquran-opennext-cache` (binding `NEXT_INC_CACHE_R2_BUCKET`, location APAC), wrapped in a long-lived regional cache.
+- Durable Object queue `DOQueueHandler` (binding `NEXT_CACHE_DO_QUEUE`, migration tag `v1`) for background revalidation.
+- Cache interception is on: cached pages are served without booting Next.
+- No tag cache: the app never calls `revalidateTag` or `revalidatePath`.
+
+Bucket lifecycle and keys:
+
+- The bucket has a lifecycle rule `expire-30d`: objects are deleted 30 days after their last write.
+- Keys look like `<prefix>/<buildId>/<hash>`. Every deploy starts with a cold cache, except the prerendered entries uploaded by `opennextjs-cloudflare deploy`. Old builds' entries expire through the lifecycle rule.
+
+Measured behaviour:
+
+- A page's first visit takes about 1-2 s (mostly the upstream Quran API). Stored pages answer in 0.06-0.2 s with header `x-opennext-cache: HIT` (or `x-nextjs-cache: HIT`).
+- A request right after the first render may still say MISS, because the write finishes a moment later.
+
+Upstream failures:
+
+- Content loaders throw instead of rendering a degraded page. A first render then returns 500 and is not stored.
+- An already stored page keeps being served (stale). Revalidation retries about every 30 s while the page is requested.
+
+Favicon: it lives in `public/favicon.ico`. OpenNext stores `image/x-icon` as text and served it corrupted from the cache when it was an app route.
 
 ## Costs and safety
 
@@ -70,6 +110,10 @@ Pages currently render on every request, because the root layout reads `headers(
 - Extra: $0.30 per million requests, $0.02 per million CPU-ms.
 - Static asset requests are free. There is no bandwidth fee.
 - A usage billing email alert is set in Cloudflare Notifications.
+- R2 storage is roughly 0.2-0.3 MB per stored page (about 12-17 GB for 57k pages). 10 GB/month is free, then $0.015 per GB-month.
+- R2 operations after the free 1M Class A and 10M Class B per month: Class A $4.50/M, Class B $0.36/M.
+- Durable Object requests: $0.15/M on Workers Paid.
+- A billing budget alert "Account spend reached $15 (appquran Workers)" emails the account owner.
 - Optional Workers spending limit: it blocks all invocations at a threshold, so the site goes down. Use it only as a high safety net.
 
 ## DNS and the switch
@@ -84,7 +128,11 @@ Before the switch, both records were DNS-only (grey cloud) in the Cloudflare zon
 The switch replaces these with Worker Custom Domains for `appquran.com` and `www.appquran.com`:
 Workers, then `appquran`, then Settings, then Domains & Routes. `proxy.ts` redirects www to the apex with 308.
 
-## Rollback to Vercel
+## Rollback
+
+Between Worker versions: `npx wrangler rollback`. It works between versions that have the Durable Object class. Rolling back to a version from before the `v1` Durable Object migration (such as `92261336...`) may be refused by Cloudflare. In that case fix forward, or redeploy an older commit that still exports the class.
+
+### Rollback to Vercel
 
 This works only after the Vercel project is unpaused or moved to Pro.
 
@@ -115,13 +163,18 @@ c $H/surah/al-baqarah/999                    # 404
 c https://www.appquran.com/                  # 308 to apex
 
 # Page content
-curl -s -A "$UA" $H/surah/al-baqarah | grep -o 'data-verse-key' | wc -l   # 286
+curl -s -A "$UA" $H/surah/al-baqarah | grep -oE 'data-verse-key="[0-9]+:[0-9]+"' | sort -u | wc -l   # 286
 curl -s -A "$UA" $H/bn/surah/ya-sin | grep -o '<html[^>]*lang="bn"'       # found
-curl -s -A "$UA" $H/bn/surah/ya-sin | grep -o 'data-verse-key' | wc -l   # 83
+curl -s -A "$UA" $H/bn/surah/ya-sin | grep -oE 'data-verse-key="[0-9]+:[0-9]+"' | sort -u | wc -l   # 83
 curl -s -A "$UA" $H/ar/surah/ya-sin | grep -o '<html[^>]*dir="rtl"'      # found
 curl -s -A "$UA" $H/surah/ya-sin | grep -o 'rel="canonical" href="[^"]*"' # https://appquran.com/...
-curl -s -A "$UA" $H/surah/ya-sin | grep -o 'hreflang=' | wc -l            # 6
+curl -s -A "$UA" $H/surah/ya-sin | grep -oi 'hreflang="[^"]*"' | sort -u | wc -l   # 6
 curl -s -A "$UA" $H/surah/ya-sin | grep -o 'google-site-verification'     # present
+
+# Cache (request twice; the second answer must show a HIT header)
+for i in 1 2; do curl -sI -A "$UA" $H/surah/ya-sin | grep -i -E 'x-opennext-cache|x-nextjs-cache'; done
+curl -s -o /dev/null -w '%{size_download} %{content_type}\n' $H/favicon.ico   # 4696 image/x-icon (or similar icon type)
+curl -s -A "$UA" $H/hi/tafsir/al-baqarah/255 | grep -o '<meta name="robots" content="[^"]*"'   # noindex, follow
 
 # Sitemaps
 curl -s $H/sitemap.xml | grep -o '<loc>' | wc -l                  # 10 children
