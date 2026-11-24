@@ -56,13 +56,17 @@ describe('SettingsSidebar - Basic Interactions', () => {
   it('opens and closes via header icon', async () => {
     renderWithProviders(createTestComponent({}));
 
-    const aside = document.querySelector('aside');
-    expect(aside?.className).toContain('translate-x-full');
+    const dialog = screen.getByRole('dialog', { name: /settings panel/i });
+    expect(dialog).toHaveAttribute('aria-modal', 'false');
+    expect(screen.queryByText('reading_setting')).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByLabelText(/open settings/i));
     expect(await screen.findByText('reading_setting')).toBeInTheDocument();
+    expect(dialog).toHaveAttribute('aria-modal', 'true');
 
     await userEvent.click(screen.getByRole('button', { name: /close sidebar/i }));
+    expect(dialog).toHaveAttribute('aria-modal', 'false');
+    expect(screen.queryByText('reading_setting')).not.toBeInTheDocument();
   });
 
   it('switches font tabs correctly', async () => {
