@@ -6,8 +6,10 @@
 //
 // Routing by cache type:
 // - `fetch` (Next data cache: `fetch(..., { next })` and `unstable_cache`): the per-data-center
-//   Cache API under a build-independent key, so it survives deploys. Writes run in `waitUntil`.
-//   Next still decides staleness from `lastModified` + `revalidate`.
+//   Cache API under a build-independent key, so raw upstream responses survive deploys. Writes run
+//   in `waitUntil`. Next still decides staleness from `lastModified` + `revalidate`.
+//   `unstable_cache` results (stored with an empty `data.url`) come from our own code, whose output
+//   shape can change between builds, so they are only reused by the build that wrote them.
 // - `cache` (ISR pages, route handlers) and `composable` (`'use cache'`, unused today): two R2
 //   buckets, one per region, read from the nearest. Fronted by OpenNext's long-lived regional
 //   cache (Cache API per data center). Keys keep OpenNext's format (prefix/buildId/hash.type) so
@@ -51,6 +53,17 @@ interface R2BucketLike {
 }
 
 type Entry<T extends CacheEntryType> = WithLastModified<CacheValue<T>>;
+
+/** What a data-cache response body holds. */
+interface DataEnvelope extends Entry<'fetch'> {
+  /** Build that wrote the entry; `unstable_cache` results are ignored by other builds. */
+  buildId?: string;
+}
+
+/** `unstable_cache` stores its result as a FETCH entry with an empty `data.url`. */
+function isUnstableCacheResult(value: unknown): boolean {
+  return (value as { data?: { url?: unknown } } | undefined)?.data?.url === '';
+}
 
 function logError(message: string, e: unknown): void {
   console.error(`[incremental-cache] ${message}`, e);
@@ -169,8 +182,15 @@ const dataCache = {
       const response = await (await openDataCache()).match(dataCacheUrl(key));
       debug(`data get ${key}: ${response ? 'hit' : 'miss'}`);
       if (!response) return null;
-      const entry = (await response.json()) as Partial<Entry<'fetch'>>;
+      const entry = (await response.json()) as Partial<DataEnvelope>;
       if (!entry.value || typeof entry.lastModified !== 'number') return null;
+      if (
+        isUnstableCacheResult(entry.value) &&
+        entry.buildId !== process.env['OPEN_NEXT_BUILD_ID']
+      ) {
+        debug(`data get ${key}: unstable_cache result from another build, ignored`);
+        return null;
+      }
       return { value: entry.value, lastModified: entry.lastModified };
     } catch (e) {
       logError('data get failed', e);
@@ -180,7 +200,13 @@ const dataCache = {
 
   async set(key: string, value: CacheValue<'fetch'>): Promise<void> {
     try {
-      const body = JSON.stringify({ value, lastModified: Date.now() });
+      const buildId = process.env['OPEN_NEXT_BUILD_ID'];
+      const envelope: DataEnvelope = {
+        value,
+        lastModified: Date.now(),
+        ...(buildId ? { buildId } : {}),
+      };
+      const body = JSON.stringify(envelope);
       const write = openDataCache().then((cache) =>
         cache.put(
           dataCacheUrl(key),
