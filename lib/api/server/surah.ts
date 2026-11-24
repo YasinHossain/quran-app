@@ -68,7 +68,7 @@ const getSurahInitialDataCached = unstable_cache(
     return result;
   },
   ['surah:initial:v2'],
-  { revalidate: 3600, tags: ['surah-initial'] }
+  { revalidate: 86400, tags: ['surah-initial'] }
 );
 
 export async function getSurahInitialDataServer(options: {
