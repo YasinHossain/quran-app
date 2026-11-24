@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { SurahAudio } from '@/app/(features)/surah/components/surah-view/SurahAudio';
+import { SurahAudio } from '@/app/[lang]/(features)/surah/components/surah-view/SurahAudio';
 
 import { ThreeColumnWorkspace } from './ThreeColumnWorkspace';
 import { WorkspaceMain } from './WorkspaceMain';

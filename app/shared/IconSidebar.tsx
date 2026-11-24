@@ -1,17 +1,18 @@
 // app/shared/Navigation.tsx - Simple unified navigation
 'use client';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useHeaderVisibility } from '@/app/[lang]/(features)/layout/context/HeaderVisibilityContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import {
   getLocaleFromPathname,
   localizeHref,
   stripLocaleFromPathname,
 } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { getTafsirReturnHref } from '@/app/shared/navigation/tafsirReturn';
 import { cn } from '@/lib/utils/cn';
@@ -144,7 +145,7 @@ export const Navigation = memo(function Navigation({
 }: {
   pathnameOverride?: string;
 }) {
-  const rawPathname = usePathname();
+  const rawPathname = usePublicPathname();
   const localeFromPath = getLocaleFromPathname(rawPathname);
   const { i18n, t } = useTranslation();
   const locale = localeFromPath ?? 'en';

@@ -1,9 +1,10 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
 
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { buildJuzRoute, buildPageRoute, buildSurahRoute } from '@/app/shared/navigation/routes';
 
 interface NavigationTargets {
@@ -17,7 +18,7 @@ interface NavigationTargets {
 
 export function useNavigationTargets(): NavigationTargets {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePublicPathname();
   const locale = useMemo(() => getLocaleFromPathname(pathname) ?? 'en', [pathname]);
 
   const goToSurah = useCallback(

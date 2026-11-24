@@ -2,8 +2,16 @@
 
 ## Feature Folders
 
-- All user-facing routes live under `app/(features)/*`. Each folder represents a feature and should be named in lowercase.
-- Place non-routing, reusable modules (e.g., the player) in `app/shared` or another shared directory; reserve `app/(features)` strictly for routed features.
+- All user-facing routes live under `app/[lang]/(features)/*`. Each folder represents a feature and should be named in lowercase.
+- Place non-routing, reusable modules (e.g., the player) in `app/shared` or another shared directory; reserve `app/[lang]/(features)` strictly for routed features.
+
+## Language Routing and Caching
+
+- `app/[lang]/layout.tsx` is the root layout; the UI language comes from the URL. `proxy.ts` serves unprefixed (English) URLs from `/en/...` through an internal rewrite and passes `/<code>/...` through; public `/en/...` URLs redirect to the unprefixed form.
+- Pages are static or ISR. Never read `headers()` or `cookies()` in pages, layouts or their server components: it makes every page render per request. Get the language with `getPageUiLanguage(params)` and pass it down explicitly.
+- Content routes with dynamic segments export `revalidate` and a `generateStaticParams` (an empty array renders on first request and then caches). Do not set `dynamicParams = false` on `app/[lang]/layout.tsx`: it would apply to every child route.
+- In client components use `usePublicPathname()` instead of `usePathname()` (the raw value is `/en/...` while prerendering English pages), and avoid `useSearchParams()` in components that are server-rendered on content pages.
+- Routes without a file extension that live outside `app/[lang]` (route handlers, `opengraph-image`, `twitter-image`) must be listed in the proxy's `ROOT_ROUTES`.
 - A `page.tsx` entry file is only required for features with a root page (e.g., `/surah`). For features that only contain dynamic routes (e.g., `/surah/[slug]`), this file can be omitted. A `layout.tsx` is optional. Use `[param]` syntax for dynamic segments.
 - Place feature-specific components in a `components/` subfolder.
 

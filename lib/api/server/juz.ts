@@ -64,7 +64,7 @@ const getJuzInitialDataCached = unstable_cache(
     return result;
   },
   ['juz:initial:v2'],
-  { revalidate: 3600, tags: ['juz-initial'] }
+  { revalidate: 86400, tags: ['juz-initial'] }
 );
 
 export async function getJuzInitialDataServer(options: {

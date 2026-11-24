@@ -1,14 +1,10 @@
 'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { UI_LANGUAGE_QUERY_PARAM } from '@/app/shared/i18n/languageRegistry';
-import {
-  getLocaleFromPathname,
-  setLocaleInPathnameForSwitch,
-} from '@/app/shared/i18n/localeRouting';
+import { buildLocaleSwitchHref, getLocaleFromPathname } from '@/app/shared/i18n/localeRouting';
 import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
 import {
   DEFAULT_UI_LANGUAGE,
@@ -17,6 +13,7 @@ import {
   type UiLanguageCode,
 } from '@/app/shared/i18n/uiLanguages';
 import { ensureUiResourcesLoaded } from '@/app/shared/i18n/uiResourcesClient';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { cn } from '@/lib/utils/cn';
 
 interface LanguageButtonProps {
@@ -65,8 +62,7 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
 }: LanguageSwitcherProps): React.JSX.Element {
   const { i18n } = useTranslation();
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const pathname = usePublicPathname();
   const [currentLanguage, setCurrentLanguage] = useState<UiLanguageCode>('en');
   const [isClient, setIsClient] = useState(false);
 
@@ -97,16 +93,12 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
   const handleLanguageChange = useCallback(
     (languageCode: UiLanguageCode): void => {
       if (languageCode === currentLanguage) return;
-      const nextParams = new URLSearchParams(searchParams.toString());
-      nextParams.delete(UI_LANGUAGE_QUERY_PARAM);
-      const query = nextParams.toString();
-      const hash = typeof window !== 'undefined' ? window.location.hash : '';
-      const nextPath = setLocaleInPathnameForSwitch(pathname, languageCode);
+      const nextHref = buildLocaleSwitchHref(pathname, languageCode);
       setUiLanguage(i18n, languageCode);
       setCurrentLanguage(languageCode);
-      router.replace(`${nextPath}${query ? `?${query}` : ''}${hash}`);
+      router.replace(nextHref);
     },
-    [currentLanguage, i18n, pathname, router, searchParams]
+    [currentLanguage, i18n, pathname, router]
   );
 
   // Don't render anything during SSR to prevent hydration mismatch

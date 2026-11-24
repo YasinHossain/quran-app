@@ -149,7 +149,7 @@ const getPrerenderedVersesCached = unstable_cache(
   async (group: VerseGroup, id: string, translationIdsKey: string, transliteration: boolean) =>
     fetchAllVerseText(group, id, translationIdsKey, transliteration),
   ['reader:prerendered-verses:v5'],
-  { revalidate: 3600, tags: ['reader-prerendered-verses'] }
+  { revalidate: 86400, tags: ['reader-prerendered-verses'] }
 );
 
 /**

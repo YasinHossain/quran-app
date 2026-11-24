@@ -24,7 +24,7 @@ export const getTafsirResourcesServer = unstable_cache(
     return result.tafsirs.map((t) => ({ id: t.id, name: t.displayName, lang: t.language }));
   },
   ['tafsir:resources:v1'],
-  { revalidate: 3600, tags: ['tafsir-resources'] }
+  { revalidate: 86400, tags: ['tafsir-resources'] }
 );
 
 export const getTafsirHtmlServer = unstable_cache(
@@ -34,7 +34,7 @@ export const getTafsirHtmlServer = unstable_cache(
     return useCase.execute(verseKey, tafsirId);
   },
   ['tafsir:html:v1'],
-  { revalidate: 3600, tags: ['tafsir-html'] }
+  { revalidate: 86400, tags: ['tafsir-html'] }
 );
 
 const getVerseByKeyServer = unstable_cache(
@@ -52,7 +52,7 @@ const getVerseByKeyServer = unstable_cache(
     return getVerseByKey(verseKey, translationIds, wordLang, tajweed);
   },
   ['tafsir:verse:v1'],
-  { revalidate: 3600, tags: ['tafsir-verse'] }
+  { revalidate: 86400, tags: ['tafsir-verse'] }
 );
 
 export async function getTafsirVersePageDataServer(options: {

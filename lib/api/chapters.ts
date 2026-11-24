@@ -1,4 +1,4 @@
-import { surahImageMap } from '@/app/(features)/surah/lib/surahImageMap';
+import { surahImageMap } from '@/app/[lang]/(features)/surah/lib/surahImageMap';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Chapter, Surah } from '@/types';
 

@@ -256,12 +256,3 @@ export function getLanguageDefinition(code: UiLanguageCode): LanguageDefinition 
     (LANGUAGE_REGISTRY[0] as LanguageDefinition)
   );
 }
-
-/** Request header the proxy sets with the resolved UI language for server components. */
-export const UI_LANGUAGE_HEADER = 'x-ui-language';
-
-/**
- * Query param the proxy adds to locale rewrites so Next's router caches keep RSC payloads apart
- * per language. Never part of a canonical URL.
- */
-export const UI_LANGUAGE_QUERY_PARAM = '__uiLanguage';

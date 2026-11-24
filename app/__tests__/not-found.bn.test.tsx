@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
-import NotFound from '@/app/not-found';
+import NotFound from '@/app/[lang]/not-found';
 import { TranslationProvider } from '@/app/providers/TranslationProvider';
 
 import type { ReactNode } from 'react';

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import {
   memo,
   useCallback,
@@ -26,6 +26,7 @@ import {
   buildSearchRoute,
 } from '@/app/shared/navigation/routes';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import {
   quickSearch,
   analyzeQuery,
@@ -180,7 +181,7 @@ const SearchDropdown = memo(function SearchDropdown({
 }: SearchDropdownProps): ReactElement {
   const { settings } = useSettings();
   const { t, i18n } = useTranslation();
-  const rawPathname = usePathname();
+  const rawPathname = usePublicPathname();
   const locale = useMemo(() => getLocaleFromPathname(rawPathname) ?? 'en', [rawPathname]);
 
   // Load Arabic font dynamically when displaying search results
@@ -555,7 +556,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
   }, [isOpen]);
 
   // Close dropdown when route changes
-  const pathname = usePathname();
+  const pathname = usePublicPathname();
   const locale = useMemo(() => getLocaleFromPathname(pathname) ?? 'en', [pathname]);
   useEffect(() => {
     setIsOpen(false);

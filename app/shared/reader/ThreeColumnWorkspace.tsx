@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useHeaderVisibility } from '@/app/[lang]/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
 
 interface WorkspaceColumnsContextValue {

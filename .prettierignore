@@ -1,5 +1,5 @@
 templates
-app/(features)/bookmarks/components/SurahSelector.tsx
+app/\[lang\]/(features)/bookmarks/components/SurahSelector.tsx
 .next
 .vercel
 .swc

@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import { memo } from 'react';
-import { usePathname } from 'next/navigation';
 
 import {
   getLocaleFromPathname,
   localizeHref,
   stripLocaleFromPathname,
 } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { setTafsirReturnFromTafsirHref } from '@/app/shared/navigation/tafsirReturn';
 import { VerseActionItem } from '@/app/shared/verse-actions/types';
 import { touchClasses } from '@/lib/responsive';
@@ -23,7 +23,7 @@ export const ActionList = memo(function ActionList({
   actions,
   onClose,
 }: ActionListProps): React.JSX.Element {
-  const rawPathname = usePathname();
+  const rawPathname = usePublicPathname();
   const locale = getLocaleFromPathname(rawPathname) ?? 'en';
 
   return (

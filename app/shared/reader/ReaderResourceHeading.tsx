@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
+import type { MushafResourceKind } from '@/app/[lang]/(features)/surah/hooks/mushafReadingViewTypes';
 
 interface ReaderResourceHeadingProps {
   resourceKind: MushafResourceKind;

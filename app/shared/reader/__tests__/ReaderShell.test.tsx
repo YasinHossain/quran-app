@@ -17,11 +17,11 @@ jest.mock('@/app/providers/UIStateContext', () => ({
   useUIState: () => ({ setSettingsOpen: jest.fn() }),
 }));
 
-jest.mock('@/app/(features)/surah/components/surah-view/SurahMain', () => ({
+jest.mock('@/app/[lang]/(features)/surah/components/surah-view/SurahMain', () => ({
   SurahMain: () => null,
 }));
 
-jest.mock('@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation', () => ({
+jest.mock('@/app/[lang]/(features)/surah/components/surah-view/SurahWorkspaceNavigation', () => ({
   SurahWorkspaceNavigation: () => null,
 }));
 

@@ -1,4 +1,4 @@
-import { INLINE_THEME_SCRIPT } from '@/app/layout';
+import { INLINE_THEME_SCRIPT } from '@/app/[lang]/layout';
 
 describe('RootLayout theme script', () => {
   it('applies dark class from stored theme', () => {

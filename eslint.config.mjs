@@ -30,6 +30,14 @@ const architectureRules = {
   },
 };
 
+// English pages are served from `app/[lang]` through an internal `/en/...` rewrite, so the raw
+// `usePathname` differs between the prerender (`/en/surah/x`) and the browser (`/surah/x`).
+const USE_PATHNAME_RESTRICTION = {
+  name: 'next/navigation',
+  importNames: ['usePathname'],
+  message: "Use usePublicPathname from '@/app/shared/i18n/usePublicPathname' (hydration-safe).",
+};
+
 const eslintConfig = [
   {
     ignores: [
@@ -159,9 +167,17 @@ const eslintConfig = [
               name: 'lucide-react',
               message: "Use icons from '@/app/shared/icons' to keep consistency and theming.",
             },
+            USE_PATHNAME_RESTRICTION,
           ],
         },
       ],
+    },
+  },
+  {
+    files: ['**/*.ts'],
+    ignores: ['**/__tests__/**', '**/*.test.ts'],
+    rules: {
+      'no-restricted-imports': ['warn', { paths: [USE_PATHNAME_RESTRICTION] }],
     },
   },
   //
