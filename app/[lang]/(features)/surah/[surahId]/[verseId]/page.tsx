@@ -48,7 +48,7 @@ import type { Chapter } from '@/types';
 import type { Metadata } from 'next';
 
 // Rendered on first request (6,236 verses x languages are not pre-built), then cached for a day.
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days
 
 /** None at build time; defining it (even empty) makes the route ISR instead of per request. */
 export function generateStaticParams(): Array<{ surahId: string; verseId: string }> {

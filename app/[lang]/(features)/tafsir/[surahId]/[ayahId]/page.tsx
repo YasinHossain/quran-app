@@ -25,7 +25,7 @@ import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import type { Metadata } from 'next';
 
 // Rendered on first request (verses x languages are not pre-built), then cached for a day (ISR).
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days
 
 /** None at build time; defining it (even empty) makes the route ISR instead of per request. */
 export function generateStaticParams(): Array<{ surahId: string; ayahId: string }> {

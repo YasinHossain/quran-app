@@ -15,7 +15,7 @@ import type { Surah } from '@/types';
 import type { Metadata } from 'next';
 
 // Quran content does not change: cache for a day (ISR).
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days
 
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await getPageUiLanguage(params);

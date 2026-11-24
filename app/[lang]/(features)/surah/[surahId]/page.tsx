@@ -28,7 +28,7 @@ import type { Metadata } from 'next';
 
 // Quran content does not change: cache each page for a day (ISR). Translation changes are handled
 // client-side by SWR.
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days
 
 /**
  * None at build time: every surah page renders on its first request and is then cached (ISR).

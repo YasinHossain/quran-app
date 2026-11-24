@@ -22,7 +22,7 @@ import type { JuzSummary } from '@/app/shared/navigation/types';
 import type { Metadata } from 'next';
 
 // Quran content does not change: cache each page for a day (ISR).
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days
 
 /** None at build time: each juz page renders on its first request and is then cached (ISR). */
 export function generateStaticParams(): Array<{ juzId: string }> {
