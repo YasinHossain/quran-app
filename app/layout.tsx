@@ -31,6 +31,9 @@ import { WebVitals } from './shared/components/WebVitals';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
 
+// Vercel sets `VERCEL=1` at build and run time; other hosts (Cloudflare Workers) leave it unset.
+const IS_VERCEL = Boolean(process.env['VERCEL']);
+
 /**
  * FONT LOADING STRATEGY (Performance Optimized):
  *
@@ -193,8 +196,13 @@ export default async function RootLayout({
       </head>
       <body className="font-sans">
         <WebVitals />
-        <SpeedInsights />
-        <Analytics />
+        {/* Vercel-only: these post to `/_vercel/*`, which exists only on Vercel deployments. */}
+        {IS_VERCEL ? (
+          <>
+            <SpeedInsights />
+            <Analytics />
+          </>
+        ) : null}
         <ErrorBoundary>
           <TranslationProvider initialLanguage={uiLanguage} resources={resources}>
             <ClientProviders initialTheme={theme} initialUiLanguage={uiLanguage}>
