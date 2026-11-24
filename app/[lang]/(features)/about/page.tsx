@@ -26,7 +26,7 @@ import {
 import type { Metadata } from 'next';
 
 // The resource lists come from the API and rarely change: cache for a day (ISR).
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days
 
 const ABOUT_PATH = '/about';
 

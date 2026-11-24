@@ -32,23 +32,30 @@ echo 'NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=gSBPbpAerVlzfJAg94piKxCZr73fjpV0VQDD-
 
 ## Deploy
 
-Always use `opennextjs-cloudflare deploy`, never plain `wrangler deploy`. The OpenNext command also uploads the prerendered pages (about 186 entries) into the R2 cache.
+Always use the npm scripts below, never plain `wrangler deploy`. A deploy must upload the prerendered pages (about 185 entries) into **both** page-cache buckets:
+
+- `opennextjs-cloudflare deploy` uploads them into the bucket bound as `NEXT_INC_CACHE_R2_BUCKET` (ENAM), then runs `wrangler deploy`.
+- `npm run cf:populate:apac` runs `opennextjs-cloudflare populateCache remote --env populate-apac`. The `populate-apac` env in `wrangler.jsonc` binds `NEXT_INC_CACHE_R2_BUCKET` to the APAC bucket, so the same upload goes there. It is not a Worker; never deploy it.
+
+`cf:deploy` and `cf:deploy:staging` run build, APAC populate, then deploy (which fills ENAM), so both buckets are full before the new version serves traffic.
 
 Deploy to the staging Worker first:
 
 ```bash
 npx wrangler whoami                          # must show the account that owns appquran.com
-npm run cf:build                             # build with OpenNext
-npx opennextjs-cloudflare deploy --env staging
+npm run cf:deploy:staging                    # build + populate APAC + populate ENAM + deploy staging
 # test https://appquran-staging.quran-app-v1.workers.dev (Googlebot checks below;
 # a second request to a content page must show a cache HIT)
-npx opennextjs-cloudflare deploy             # production
+npm run cf:deploy                            # production (rebuilds; same code gives a new build ID)
+npm run cf:warm                              # render and store the 720 surah and juz pages
 npx wrangler delete --name appquran-staging --force   # remove the public test copy
 ```
 
-The `staging` env in `wrangler.jsonc` has `workers_dev: true`, `routes: []`, its own self-reference service, and shares the cache bucket (same build shares entries, a different build uses separate keys).
+The `staging` env in `wrangler.jsonc` has `workers_dev: true`, `routes: []`, its own self-reference service, and shares both buckets (same build shares page entries, a different build uses separate keys).
 
-Test locally on workerd before deploying:
+Warm-up (`scripts/cf-warm-cache.mjs`): reads `/sitemap.xml` and the core sitemap, requests every surah reader and juz page of each indexed language (720 pages today: 5 languages x 144) with concurrency 3, user agent `appquran-cache-warmer`, and no cookies or Accept-Language. It prints status counts, p50/p90 time and how many answers had a cache HIT header. Options: `--base <origin>` (for example the workers.dev URL), `--match <regex>`, `--limit <n>`, `--concurrency <n>`. Warming from one place renders each page once and fills both buckets; the per-city regional cache still fills on each city's first visit (from the nearest bucket, about 0.1-0.3 s instead of a render).
+
+Test locally on workerd before deploying (local R2 buckets in `.wrangler/state`; `cf:preview` fills both):
 
 ```bash
 npm run cf:preview
@@ -76,25 +83,37 @@ Caching went live in production on 2026-11-25 (Worker version `708e1249-2169-45c
 
 How it works:
 
-- Pages live under `app/[lang]/`. The UI language comes from the URL, so surah, verse, tafsir, juz and about pages are ISR: `revalidate` 1 day plus stale-while-revalidate.
+- Pages live under `app/[lang]/`. The UI language comes from the URL, so surah, verse, tafsir, juz and about pages are ISR: `revalidate` 7 days (604800) plus stale-while-revalidate. Quran text rarely changes; a longer interval means fewer re-renders and R2 writes. The home page keeps 1 hour (verse of the day). Upstream data (`fetch`/`unstable_cache` in `lib/api/server/*`) keeps `revalidate` 1 day.
 - `proxy.ts` rewrites unprefixed URLs to `/en/...` internally and runs before the cache, so cookie and Accept-Language redirects still work for cached pages.
 - Routing rules (for example `usePublicPathname` instead of `usePathname`, never read `headers()` or `cookies()` in pages) are in `app/AGENTS.md`.
 
-OpenNext cache config (`open-next.config.ts`):
+OpenNext cache config (`open-next.config.ts`, custom incremental cache in `cloudflare/incremental-cache.ts`):
 
-- R2 incremental cache in bucket `appquran-opennext-cache` (binding `NEXT_INC_CACHE_R2_BUCKET`, location APAC), wrapped in a long-lived regional cache.
+- Pages (cache type `cache`, and `composable` if `'use cache'` is ever used) live in two R2 buckets with the same keys:
+
+  | Binding | Bucket | Location | Read by visitors in |
+  | --- | --- | --- | --- |
+  | `NEXT_INC_CACHE_R2_BUCKET` | `appquran-cache-enam` | ENAM | everywhere else (default) |
+  | `NEXT_INC_CACHE_R2_BUCKET_APAC` | `appquran-opennext-cache` | APAC | Asia (`AS`) and Oceania (`OC`) |
+
+  The bucket is picked from `request.cf.continent`. Requests without `cf` (for example background revalidation through the self-reference binding) use ENAM. A read goes only to the nearest bucket. A write waits for the nearest bucket and writes the other one in the background (`waitUntil`), so both stay full wherever a revalidation runs. A delete removes from both. In front of the buckets sits OpenNext's long-lived regional cache (Cache API in each data center).
+- Fetch data (cache type `fetch`: `fetch(..., { next })` and `unstable_cache`) is not in R2. It lives in the Cache API of each data center under `https://data-cache.internal/v1/<sha256(key)>` as `{ value, lastModified }` with `max-age` 30 days. The key has no build ID, so upstream API answers survive deploys (as on Vercel). Writes run in `waitUntil` and do not block the render. Next still decides staleness from `lastModified` and `revalidate`. Bump `v1` in the code if Next changes its fetch-entry format.
+- Errors never break a page: a failed cache read is treated as a miss (the page renders), a failed write is logged.
+- Staging on `*.workers.dev`: the Cache API docs (https://developers.cloudflare.com/workers/runtime-apis/cache/) list only two exceptions, the dashboard editor and Playground (no effect) and Workers behind Cloudflare Access (not available). They do not exclude workers.dev, but they do not confirm it either. If Cache API writes were no-ops there, staging would still work and read pages from R2 and data from the Quran API. Check with the debug var below (`data get ...: hit` on a re-render).
+- Debug: set the var `NEXT_PRIVATE_DEBUG_CACHE=1` (for example `npx opennextjs-cloudflare preview -- --var NEXT_PRIVATE_DEBUG_CACHE:1`) to log which bucket served a page and data-cache hits and misses.
 - Durable Object queue `DOQueueHandler` (binding `NEXT_CACHE_DO_QUEUE`, migration tag `v1`) for background revalidation.
 - Cache interception is on: cached pages are served without booting Next.
 - No tag cache: the app never calls `revalidateTag` or `revalidatePath`.
 
 Bucket lifecycle and keys:
 
-- The bucket has a lifecycle rule `expire-30d`: objects are deleted 30 days after their last write.
-- Keys look like `<prefix>/<buildId>/<hash>`. Every deploy starts with a cold cache, except the prerendered entries uploaded by `opennextjs-cloudflare deploy`. Old builds' entries expire through the lifecycle rule.
+- Both buckets have a lifecycle rule `expire-30d`: objects are deleted 30 days after their last write.
+- Page keys look like `<prefix>/<buildId>/<hash>.cache`. Every deploy starts with cold pages, except the prerendered entries uploaded at deploy time; run `npm run cf:warm` after a deploy. Fetch data stays warm across deploys. Old builds' page entries expire through the lifecycle rule.
 
 Measured behaviour:
 
-- A page's first visit takes about 1-2 s (mostly the upstream Quran API). Stored pages answer in 0.06-0.2 s with header `x-opennext-cache: HIT` (or `x-nextjs-cache: HIT`).
+- Stored pages answer in 0.06-0.2 s with header `x-opennext-cache: HIT` (or `x-nextjs-cache: HIT`); a cached page takes about 9 ms in the Worker.
+- With one APAC bucket, a page not yet cached took about 2 s wall time but only about 77 ms CPU. The Quran API (`api.qurancdn.com`) answers in 0.04-0.32 s from 8 cities, so the upstream API was not the main cost. The time went to cross-region cache trips: most traffic (crawlers and many visitors) enters US data centers, and every page lookup and every fetch data-cache lookup and write went to the bucket in Asia. The two-bucket layout and the Cache API data cache remove those trips.
 - A request right after the first render may still say MISS, because the write finishes a moment later.
 
 Upstream failures:
@@ -110,7 +129,9 @@ Favicon: it lives in `public/favicon.ico`. OpenNext stores `image/x-icon` as tex
 - Extra: $0.30 per million requests, $0.02 per million CPU-ms.
 - Static asset requests are free. There is no bandwidth fee.
 - A usage billing email alert is set in Cloudflare Notifications.
-- R2 storage is roughly 0.2-0.3 MB per stored page (about 12-17 GB for 57k pages). 10 GB/month is free, then $0.015 per GB-month.
+- R2 storage is roughly 0.2-0.3 MB per stored page (about 12-17 GB for 57k pages). Pages are stored twice (ENAM and APAC), so plan for about 24-34 GB if every page is cached. 10 GB/month is free, then $0.015 per GB-month (about $0.35-0.40/month for the second copy).
+- Every page write is two Class A operations (one per bucket). The 7-day `revalidate` keeps re-renders, and so writes, low. Reads stay one Class B per regional-cache miss.
+- The Cache API (regional page cache and fetch data cache) has no charge.
 - R2 operations after the free 1M Class A and 10M Class B per month: Class A $4.50/M, Class B $0.36/M.
 - Durable Object requests: $0.15/M on Workers Paid.
 - A billing budget alert "Account spend reached $15 (appquran Workers)" emails the account owner.
