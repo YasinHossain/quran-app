@@ -1,13 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 
-import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
+import type { MushafResourceKind } from '@/app/[lang]/(features)/surah/hooks/mushafReadingViewTypes';
 
 interface ReaderResourceNavigationProps {
   resourceKind: Exclude<MushafResourceKind, 'surah'>;
@@ -60,7 +60,7 @@ export function ReaderResourceNavigation({
   className,
 }: ReaderResourceNavigationProps): React.JSX.Element | null {
   const { t } = useTranslation();
-  const pathname = usePathname();
+  const pathname = usePublicPathname();
   const locale = getLocaleFromPathname(pathname) ?? 'en';
 
   const current = toDisplayNumber(resourceId);

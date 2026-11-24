@@ -271,7 +271,7 @@ const createDefaultVerseCardState = (): VerseCardStateStub => ({
 const mockUseVerseCard = jest.fn(createDefaultVerseCardState);
 
 // Stub heavy verse-card hook to avoid observer/audio side-effects in DOM tests
-jest.mock('@/app/(features)/surah/components/verse-card/useVerseCard', () => ({
+jest.mock('@/app/[lang]/(features)/surah/components/verse-card/useVerseCard', () => ({
   useVerseCard: mockUseVerseCard,
 }));
 

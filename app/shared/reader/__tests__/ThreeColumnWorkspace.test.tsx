@@ -6,7 +6,7 @@ import { setMatchMedia } from '@/app/testUtils/matchMedia';
 
 const useHeaderVisibilityMock = jest.fn(() => ({ isHidden: false }));
 
-jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
+jest.mock('@/app/[lang]/(features)/layout/context/HeaderVisibilityContext', () => ({
   useHeaderVisibility: (): { isHidden: boolean } => useHeaderVisibilityMock(),
 }));
 

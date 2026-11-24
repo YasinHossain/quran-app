@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { memo, type ReactElement, useCallback } from 'react';
 
 import { useSidebar } from '@/app/providers/SidebarContext';
@@ -10,12 +9,13 @@ import {
   localizeHref,
   stripLocaleFromPathname,
 } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { BarsIcon } from '@/app/shared/icons';
 
 export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
   const { setSurahListOpen, setBookmarkSidebarOpen, setSearchSidebarOpen } = useSidebar();
 
-  const rawPathname = usePathname();
+  const rawPathname = usePublicPathname();
   const locale = getLocaleFromPathname(rawPathname) ?? 'en';
   const pathname = stripLocaleFromPathname(rawPathname);
 

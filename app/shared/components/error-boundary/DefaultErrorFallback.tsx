@@ -1,9 +1,10 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 
 import { ErrorActions } from './ErrorActions';
 import { ErrorDetails } from './ErrorDetails';
@@ -13,7 +14,7 @@ import type { ErrorFallbackProps } from './ErrorBoundary';
 
 export function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps): React.JSX.Element {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePublicPathname();
   const handleGoHome = useCallback(() => {
     const locale = getLocaleFromPathname(pathname) ?? 'en';
     router.push(localizeHref('/', locale));

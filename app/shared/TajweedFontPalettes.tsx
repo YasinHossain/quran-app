@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import type { QcfFontVersion } from '@/app/(features)/surah/hooks/useQcfMushafFont';
+import type { QcfFontVersion } from '@/app/[lang]/(features)/surah/hooks/useQcfMushafFont';
 
 type TajweedFontPalettesProps = {
   pageNumbers: number[];

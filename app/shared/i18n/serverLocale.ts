@@ -1,27 +1,30 @@
 import 'server-only';
 
-import { headers } from 'next/headers';
+import { notFound } from 'next/navigation';
 
 import { getUiLanguageContentDefaults } from '@/app/providers/uiLanguageContentDefaults';
 import { ensureLanguageCode, type LanguageCode } from '@/lib/text/languageCodes';
 
-import { UI_LANGUAGE_HEADER } from './languageRegistry';
-import { loadUiCommonJson, resolveUiLanguageFromHeader } from './loadUiResources';
-import { DEFAULT_UI_LANGUAGE, type UiLanguageCode } from './uiLanguages';
+import { loadUiCommonJson } from './loadUiResources';
+import { DEFAULT_UI_LANGUAGE, isUiLanguageCode, type UiLanguageCode } from './uiLanguages';
 
 import type { FullTextTitleTemplates } from '@/app/shared/reader/ReaderFullText';
 import type { TafsirMetadataTemplates } from '@/lib/seo/tafsirMetadata';
 import type { VerseMetadataTemplates } from '@/lib/seo/verseMetadata';
 import type { Chapter } from '@/types';
 
+/** Route params of every page under `app/[lang]`. */
+export type LangParams = Promise<{ lang: string }>;
+
 /**
- * UI language of the current request, as resolved by `proxy.ts` (URL prefix, or the default
- * language for unprefixed URLs). Server components and `generateMetadata` use it to render the
- * same content defaults the client reader starts with.
+ * UI language of a page, from its `[lang]` segment. `proxy.ts` serves unprefixed URLs from `/en/...`
+ * and `/<code>/...` as is, so this is the URL's language; anything else 404s. Server components
+ * and `generateMetadata` pass it down to render the content defaults the client reader starts with.
  */
-export async function getRequestUiLanguage(): Promise<UiLanguageCode> {
-  const headerStore = await headers();
-  return resolveUiLanguageFromHeader(headerStore.get(UI_LANGUAGE_HEADER));
+export async function getPageUiLanguage(params: LangParams): Promise<UiLanguageCode> {
+  const { lang } = await params;
+  if (!isUiLanguageCode(lang)) notFound();
+  return lang;
 }
 
 type Vars = Record<string, string | number>;

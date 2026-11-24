@@ -7,6 +7,15 @@ import type { Metadata } from 'next';
 /** Dimensions of the shared `app/opengraph-image` and `app/twitter-image` routes. */
 const SOCIAL_IMAGE = { width: 1200, height: 630, alt: `${SITE_NAME} – Quran app` };
 
+/**
+ * The root `opengraph-image`/`twitter-image` routes as metadata. Their file conventions in `app/`
+ * do not reach pages under the `app/[lang]` root layout, so the layout (and pages that replace its
+ * `twitter` field) declare them.
+ */
+const SITE_IMAGE = { type: 'image/png', width: SOCIAL_IMAGE.width, height: SOCIAL_IMAGE.height };
+export const SITE_OPENGRAPH_IMAGE = { url: '/opengraph-image', ...SITE_IMAGE };
+export const SITE_TWITTER_IMAGE = { url: '/twitter-image', ...SITE_IMAGE };
+
 /** Absolute URL of `path` (an unprefixed route such as `/surah/36`) in `locale`. */
 export function localizedUrl(path: string, locale: UiLanguageCode): string {
   return absoluteUrl(setLocaleInPathname(path, locale));

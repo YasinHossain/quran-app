@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useHeaderVisibility } from '@/app/[lang]/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
 
 import { SidebarOverlay } from './sidebar/SidebarOverlay';

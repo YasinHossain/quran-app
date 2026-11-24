@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { UI_LANGUAGE_HEADER, UI_LANGUAGE_QUERY_PARAM } from '@/app/shared/i18n/languageRegistry';
 import {
   DEFAULT_UI_LANGUAGE,
   isUiLanguageCode,
@@ -13,6 +12,17 @@ import { SITE_DOMAIN } from '@/lib/seo/site';
 
 const PUBLIC_FILE = /\.[^/]+$/;
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
+
+/**
+ * Routes outside `app/[lang]` whose path has no file extension (route handlers and the shared
+ * social images). Everything else that is not a file is a page under `app/[lang]`.
+ */
+const ROOT_ROUTES = new Set(['/opengraph-image', '/twitter-image']);
+const isRootRoute = (path: string): boolean =>
+  ROOT_ROUTES.has(path) || path === '/api' || path.startsWith('/api/');
+
+/** The service worker's offline fallback: always served in English, never redirected. */
+const OFFLINE_PATH = '/offline';
 
 const isPrefetchRequest = (request: NextRequest): boolean => {
   // Next.js sets `x-middleware-prefetch` for router prefetches.
@@ -71,8 +81,7 @@ const getPreferredLocale = (request: NextRequest): UiLanguageCode => {
 
 const shouldBypassI18n = (pathname: string): boolean => {
   if (pathname.startsWith('/_next')) return true;
-  if (pathname.startsWith('/api')) return true;
-  if (pathname.startsWith('/offline')) return true;
+  if (isRootRoute(pathname)) return true;
   if (pathname === '/sw.js') return true;
   if (pathname.startsWith('/workbox-')) return true;
   return PUBLIC_FILE.test(pathname);
@@ -92,23 +101,35 @@ const redirectTo = (request: NextRequest, pathname: string, status: 307 | 308): 
 const setLocalePrefix = (path: string, locale: UiLanguageCode): string =>
   path === '/' ? `/${locale}` : `/${locale}${path}`;
 
+/**
+ * Serve `path` from another route without changing the URL. Pages live under `app/[lang]`, so an
+ * unprefixed (English) URL is served from `/en/...`; that internal path is never a public URL
+ * (`/en/...` requests redirect, and rewrites do not run the proxy again).
+ */
+const rewriteTo = (request: NextRequest, pathname: string): NextResponse => {
+  const url = request.nextUrl.clone();
+  url.pathname = pathname;
+  return NextResponse.rewrite(url);
+};
+
 const normalizePathname = (pathname: string): string => {
   if (pathname.length <= 1) return pathname;
   if (!pathname.endsWith('/')) return pathname;
   return pathname.replace(/\/+$/, '');
 };
 
-/** `/<locale>/...`: canonical redirects (one hop), else a rewrite to the shared route. */
+/** `/<locale>/...`: canonical redirects (one hop), else the `app/[lang]` route as is. */
 function handlePrefixedPath(
   request: NextRequest,
   input: {
     locale: UiLanguageCode;
+    rawLocale: string;
     unprefixedPath: string;
     canonicalPath: string;
     needsRedirect: boolean;
   }
 ): NextResponse {
-  const { locale, unprefixedPath, canonicalPath, needsRedirect } = input;
+  const { locale, rawLocale, unprefixedPath, canonicalPath, needsRedirect } = input;
 
   // Canonicalize the default language: `/en/...` -> `/...` (permanent; no prefix for it).
   if (locale === DEFAULT_UI_LANGUAGE) {
@@ -119,16 +140,16 @@ function handlePrefixedPath(
 
   if (needsRedirect) return redirectTo(request, setLocalePrefix(canonicalPath, locale), 308);
 
-  // Rewrite to the existing (non-prefixed) route. Important: make the rewrite destination unique
-  // per locale so Next's client/router caches don't accidentally reuse RSC payloads across locales.
-  const url = request.nextUrl.clone();
-  url.pathname = unprefixedPath;
-  url.searchParams.set(UI_LANGUAGE_QUERY_PARAM, locale);
-
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set(UI_LANGUAGE_HEADER, locale);
-
-  const response = NextResponse.rewrite(url, { request: { headers: requestHeaders } });
+  let response: NextResponse;
+  if (isRootRoute(unprefixedPath)) {
+    // `/bn/opengraph-image`, `/bn/api/...`: these live outside `app/[lang]`.
+    response = rewriteTo(request, unprefixedPath);
+  } else if (rawLocale !== locale) {
+    // `/BN/surah/x` is served like `/bn/surah/x` (route params are case-sensitive).
+    response = rewriteTo(request, setLocalePrefix(unprefixedPath, locale));
+  } else {
+    response = NextResponse.next();
+  }
   syncUiLanguageCookie(request, response, locale);
   return response;
 }
@@ -154,8 +175,8 @@ export function proxy(request: NextRequest): NextResponse {
   }
 
   const segments = pathname.split('/');
-  const rawLocale = segments[1];
-  const maybeLocale = rawLocale ? rawLocale.toLowerCase() : '';
+  const rawLocale = segments[1] ?? '';
+  const maybeLocale = rawLocale.toLowerCase();
   const prefixLocale = maybeLocale && isUiLanguageCode(maybeLocale) ? maybeLocale : null;
   const unprefixedPath = prefixLocale ? `/${segments.slice(2).join('/')}` : pathname;
 
@@ -170,10 +191,17 @@ export function proxy(request: NextRequest): NextResponse {
   if (prefixLocale) {
     return handlePrefixedPath(request, {
       locale: prefixLocale,
+      rawLocale,
       unprefixedPath,
       canonicalPath,
       needsRedirect,
     });
+  }
+
+  if (pathname === OFFLINE_PATH) {
+    return hasTrailingSlash
+      ? redirectTo(request, pathname, 308)
+      : rewriteTo(request, setLocalePrefix(pathname, DEFAULT_UI_LANGUAGE));
   }
 
   // No locale prefix: send a returning/other-language visitor to their language (canonical form
@@ -188,14 +216,11 @@ export function proxy(request: NextRequest): NextResponse {
   // Default language (and every crawler): one permanent redirect to the canonical URL, if needed.
   if (needsRedirect) return redirectTo(request, canonicalPath, 308);
 
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set(UI_LANGUAGE_HEADER, locale);
-
-  const response = NextResponse.next({ request: { headers: requestHeaders } });
+  const response = rewriteTo(request, setLocalePrefix(pathname, DEFAULT_UI_LANGUAGE));
   syncUiLanguageCookie(request, response, locale);
   return response;
 }
 
 export const config = {
-  matcher: ['/((?!_next/|api/|offline$|offline/|sw\\.js$|workbox-).*)'],
+  matcher: ['/((?!_next/|api/|sw\\.js$|workbox-).*)'],
 };

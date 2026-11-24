@@ -2,11 +2,11 @@
 
 import { useMemo } from 'react';
 
-import { useSurahPanels, useVerseListing } from '@/app/(features)/surah/hooks';
-import { type MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
+import { useSurahPanels, useVerseListing } from '@/app/[lang]/(features)/surah/hooks';
+import { type MushafResourceKind } from '@/app/[lang]/(features)/surah/hooks/mushafReadingViewTypes';
 import { MUSHAF_OPTIONS } from '@/data/mushaf/options';
 
-import type { UseVerseListingParams } from '@/app/(features)/surah/hooks/useVerseListing';
+import type { UseVerseListingParams } from '@/app/[lang]/(features)/surah/hooks/useVerseListing';
 
 type UseReaderViewReturn = {
   verseListing: ReturnType<typeof useVerseListing>;

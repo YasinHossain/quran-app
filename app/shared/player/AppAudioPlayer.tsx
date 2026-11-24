@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useHeaderVisibility } from '@/app/[lang]/(features)/layout/context/HeaderVisibilityContext';
 import { useQdcAudioFile } from '@/app/shared/player/hooks/useQdcAudioFile';
 import { Spinner } from '@/app/shared/Spinner';
 

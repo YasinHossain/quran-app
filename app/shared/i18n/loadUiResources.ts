@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { DEFAULT_UI_LANGUAGE, resolveUiLanguageTag, type UiLanguageCode } from './uiLanguages';
+import { DEFAULT_UI_LANGUAGE, type UiLanguageCode } from './uiLanguages';
 
 import type { Resource } from 'i18next';
 
@@ -38,9 +38,6 @@ const loadLanguageResources = async (language: UiLanguageCode): Promise<UiResour
 
   return { translation, player };
 };
-
-export const resolveUiLanguageFromHeader = (value: string | null | undefined): UiLanguageCode =>
-  resolveUiLanguageTag(value) ?? DEFAULT_UI_LANGUAGE;
 
 export const loadUiResources = async (language: UiLanguageCode): Promise<Resource> => {
   const resources: Resource = {};

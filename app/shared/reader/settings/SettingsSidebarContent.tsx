@@ -3,7 +3,7 @@
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useSettingsSections, useSettingsTabState } from '@/app/(features)/surah/hooks';
+import { useSettingsSections, useSettingsTabState } from '@/app/[lang]/(features)/surah/hooks';
 import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
 
 import { SettingsContentWrapper } from './SettingsContentWrapper';
