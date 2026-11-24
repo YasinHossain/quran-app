@@ -19,6 +19,23 @@
       "service": "appquran"
     }
   ],
+  "r2_buckets": [
+    {
+      // OpenNext incremental cache: ISR pages and the `unstable_cache`/fetch data cache.
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "appquran-opennext-cache"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        // OpenNext revalidation queue for time-based ISR; the class is exported by .open-next/worker.js.
+        "name": "NEXT_CACHE_DO_QUEUE",
+        "class_name": "DOQueueHandler"
+      }
+    ]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["DOQueueHandler"] }],
   "images": {
     // next/image optimization. See https://opennext.js.org/cloudflare/howtos/image
     "binding": "IMAGES"
