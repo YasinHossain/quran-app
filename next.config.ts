@@ -11,12 +11,12 @@ const isE2E = process.env['PLAYWRIGHT_TEST'] === 'true';
 
 const cspHeader = `
   default-src 'self';
-  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net;
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://static.cloudflareinsights.com;
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   font-src 'self' https://fonts.gstatic.com data:;
   img-src 'self' data: https: blob:;
   media-src 'self' https: blob:;
-  connect-src 'self' https://api.quran.com https://api.quran.gading.dev https://api.qurancdn.com https://verses.quran.com https://download.quranicaudio.com https://raw.githubusercontent.com https://archive.org;
+  connect-src 'self' https://cloudflareinsights.com https://api.quran.com https://api.quran.gading.dev https://api.qurancdn.com https://verses.quran.com https://download.quranicaudio.com https://raw.githubusercontent.com https://archive.org;
   worker-src 'self' blob:;
   child-src 'self' blob:;
   form-action 'self';
