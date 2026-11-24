@@ -66,6 +66,9 @@ export const metadata = {
   },
   applicationName: SITE_NAME,
   description: SITE_DESCRIPTION,
+  // A static file in `public/`, not `app/favicon.ico`: OpenNext's cache stores `image/x-icon` route
+  // bodies as UTF-8 text and serves a corrupted icon (the type is missing from its binary list).
+  icons: { icon: [{ url: '/favicon.ico', type: 'image/x-icon', sizes: '16x16' }] },
   keywords: [...SITE_KEYWORDS],
   creator: SITE_NAME,
   publisher: SITE_NAME,
