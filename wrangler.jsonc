@@ -4,6 +4,9 @@
   "name": "appquran",
   "compatibility_date": "2026-11-20",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  // Cap CPU per request (default 30s) so one runaway render cannot run up the bill.
+  // Local renders of the largest page (/surah/al-baqarah, ~840 KB HTML) take well under 1s.
+  "limits": { "cpu_ms": 5000 },
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
