@@ -48,5 +48,23 @@
   },
   "vars": {
     "QURAN_API_BASE_URL": "https://api.qurancdn.com/api/qdc"
+  },
+  "env": {
+    // Test Worker `appquran-staging` (workers.dev only; deploy with `--env staging`). Bindings are not
+    // inherited, so they are repeated. It shares the cache bucket: keys include the build ID, so the
+    // same build reuses entries and a different build never mixes with production's.
+    "staging": {
+      "workers_dev": true,
+      "routes": [],
+      "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "appquran-staging" }],
+      "r2_buckets": [
+        { "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "appquran-opennext-cache" }
+      ],
+      "durable_objects": {
+        "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }]
+      },
+      "images": { "binding": "IMAGES" },
+      "vars": { "QURAN_API_BASE_URL": "https://api.qurancdn.com/api/qdc" }
+    }
   }
 }
