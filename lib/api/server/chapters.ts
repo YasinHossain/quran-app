@@ -30,7 +30,8 @@ async function fetchChaptersFromUrl(url: string): Promise<Chapter[]> {
     throw new Error(`Failed to fetch chapters: ${response.status}`);
   }
 
-  const data = (await response.json()) as { chapters: Chapter[] };
+  const data = (await response.json()) as { chapters?: Chapter[] };
+  if (!data.chapters?.length) throw new Error('Chapters response has no chapters');
   return data.chapters;
 }
 

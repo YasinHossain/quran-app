@@ -161,9 +161,7 @@ export async function generateMetadata({ params }: SurahPageProps): Promise<Meta
   const locale = await getPageUiLanguage(params);
   const [translator, chapter] = await Promise.all([
     getServerTranslator(locale),
-    Number.isFinite(surahId)
-      ? getChapterServer(surahId).catch(() => undefined)
-      : Promise.resolve(undefined),
+    Number.isFinite(surahId) ? getChapterServer(surahId) : Promise.resolve(undefined),
   ]);
   const title = chapter
     ? translator.t(
@@ -206,9 +204,7 @@ async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element>
       wordLang,
       perPage: INITIAL_VERSES_PER_PAGE,
     }),
-    Number.isFinite(surahId)
-      ? getChapterServer(surahId).catch(() => undefined)
-      : Promise.resolve(undefined),
+    Number.isFinite(surahId) ? getChapterServer(surahId) : Promise.resolve(undefined),
     // Text of every verse for the full-text section; the interactive list is virtualized.
     Number.isFinite(surahId)
       ? getPrerenderedVersesServer({

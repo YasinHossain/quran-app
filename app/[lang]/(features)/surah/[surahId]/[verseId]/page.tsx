@@ -127,10 +127,8 @@ export async function generateMetadata({ params }: VersePageProps): Promise<Meta
   const locale = await getPageUiLanguage(params);
   const [translator, verse] = await Promise.all([
     getServerTranslator(locale),
-    loadVerses(resolved, locale).then(
-      (verses) => verses.verse,
-      () => undefined
-    ),
+    // Throws on upstream failure (no fallback title is cached for a day); see loadVerses.
+    loadVerses(resolved, locale).then((verses) => verses.verse),
   ]);
 
   const { title, description } = buildVerseMetadataText({

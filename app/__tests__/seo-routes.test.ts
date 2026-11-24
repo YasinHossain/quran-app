@@ -337,14 +337,9 @@ describe('SEO routes', () => {
       expect(metadata.alternates?.canonical).toBe(`${BASE}/bn/surah/al-baqarah/255`);
     });
 
-    it('falls back to generic wording when the verse cannot be loaded', async () => {
+    it('fails (5xx, not cached) instead of a generic title when the verse cannot be loaded', async () => {
       mockVerseText = undefined;
-      const metadata = await verseMetadata('al-fatihah', '7');
-
-      expect(metadata.title).toBe('Surah Al-Fatihah 1:7');
-      expect(metadata.description).toContain(
-        'with Arabic text, transliteration, translation and tafsir'
-      );
+      await expect(verseMetadata('al-fatihah', '7')).rejects.toThrow('upstream down');
     });
 
     it.each([

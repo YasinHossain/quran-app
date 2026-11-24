@@ -74,17 +74,19 @@ function groupByLanguage(
     }));
 }
 
-/** Runs a resource fetch; a failure leaves that list empty (`null`) instead of failing the page. */
-async function loadList<T>(name: string, load: () => Promise<T[]>): Promise<T[] | null> {
+/**
+ * Runs a resource fetch. A failure (or an empty list) throws, so the cached (ISR) page is never
+ * stored with a missing source list; the last good version keeps being served instead.
+ */
+async function loadList<T>(name: string, load: () => Promise<T[]>): Promise<T[]> {
   try {
-    return await load();
+    const items = await load();
+    if (items.length === 0) throw new Error(`No ${name} returned`);
+    return items;
   } catch (error) {
-    logger.warn(
-      `About page: failed to load ${name}`,
-      undefined,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    return null;
+    const reason = error instanceof Error ? error : new Error(String(error));
+    logger.error(`About page: failed to load ${name}`, undefined, reason);
+    throw reason;
   }
 }
 

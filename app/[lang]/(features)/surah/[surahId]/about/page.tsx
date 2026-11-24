@@ -61,9 +61,10 @@ async function loadIbnKathir(tafsirId: number, verseKey: string, inEnglish: bool
 }
 
 /**
- * The opening of Ibn Kathir's commentary (its text for verse 1) in the page language. When that is
- * missing or fails to load, the English edition; when that fails too, `undefined` and the page
- * leaves the section out (the hero still links to the full tafsir).
+ * The opening of Ibn Kathir's commentary (its text for verse 1) in the page language. When that has
+ * no usable text, the English edition; when that has none either, `undefined` and the page leaves
+ * the section out (the hero still links to the full tafsir). A failed request throws, so the cached
+ * (ISR) page is not stored without it.
  */
 async function loadTafsirIntro(
   chapterId: number,
@@ -194,8 +195,8 @@ export default async function SurahAboutPage({
       group: 'by_chapter',
       id: String(chapter.id),
       translationIds,
-    }).catch(() => undefined),
-    loadTafsirIntro(chapter.id, locale).catch(() => undefined),
+    }),
+    loadTafsirIntro(chapter.id, locale),
     getSurahRecitationServer(DEFAULT_RECITER.id, chapter.id),
   ]);
 

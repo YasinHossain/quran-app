@@ -17,12 +17,13 @@ const mapChapterToSurah = (chapter: Chapter): Surah => ({
   meaning: chapter.translated_name?.name ?? '',
 });
 
+/** Throws when chapters cannot be loaded, so cached pages (ISR) never store an empty list. */
 export async function getSurahNavigationListServer(): Promise<Surah[]> {
   try {
     const chapters = await getChaptersServer();
     return chapters.map(mapChapterToSurah);
   } catch (error) {
-    logger.warn('Failed to load surah navigation list', undefined, normaliseError(error));
-    return [];
+    logger.error('Failed to load surah navigation list', undefined, normaliseError(error));
+    throw error;
   }
 }

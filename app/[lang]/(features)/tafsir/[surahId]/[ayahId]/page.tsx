@@ -85,7 +85,8 @@ export async function generateMetadata({ params }: TafsirVersePageProps): Promis
   const { translationIds } = getServerReaderDefaults(locale);
   const [translator, pageData] = await Promise.all([
     getServerTranslator(locale),
-    getPageData(verseKey, locale).catch(() => undefined),
+    // Throws on upstream failure, so no fallback title is cached with the page (ISR).
+    getPageData(verseKey, locale),
   ]);
   const chapterName = translator.chapterName(chapter);
 

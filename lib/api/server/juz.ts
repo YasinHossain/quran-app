@@ -39,29 +39,29 @@ const getJuzInitialDataCached = unstable_cache(
       }),
     ]);
 
-    const result: JuzInitialDataServerResult = {};
-
-    if (juzResult.status === 'fulfilled') {
-      result.totalVerses = juzResult.value.verses_count;
-    } else {
-      logger.error(
-        'Failed to fetch juz metadata',
-        { juzId, wordLang },
-        normaliseError(juzResult.reason)
-      );
+    // Upstream failures throw so neither this data cache nor the ISR page stores a degraded result.
+    if (juzResult.status === 'rejected') {
+      const error = normaliseError(juzResult.reason);
+      logger.error('Failed to fetch juz metadata', { juzId, wordLang }, error);
+      throw error;
     }
-
-    if (versesResult.status === 'fulfilled') {
-      result.initialVerses = versesResult.value.verses;
-    } else {
+    if (versesResult.status === 'rejected') {
+      const error = normaliseError(versesResult.reason);
       logger.error(
         'Failed to fetch initial juz verses',
         { juzId, wordLang, perPage, translationIdsKey },
-        normaliseError(versesResult.reason)
+        error
       );
+      throw error;
+    }
+    if (versesResult.value.verses.length === 0) {
+      throw new Error(`No verses returned for juz ${juzId}`);
     }
 
-    return result;
+    return {
+      totalVerses: juzResult.value.verses_count,
+      initialVerses: versesResult.value.verses,
+    };
   },
   ['juz:initial:v2'],
   { revalidate: 86400, tags: ['juz-initial'] }

@@ -21,6 +21,8 @@ export const getTafsirResourcesServer = unstable_cache(
     const repository = container.getTafsirRepository();
     const useCase = new GetTafsirResourcesUseCase(repository);
     const result = await useCase.execute();
+    // An empty list means every source failed; throw so it is not cached (attribution needs it).
+    if (result.tafsirs.length === 0) throw new Error('No tafsir resources available');
     return result.tafsirs.map((t) => ({ id: t.id, name: t.displayName, lang: t.language }));
   },
   ['tafsir:resources:v1'],
@@ -79,30 +81,31 @@ export async function getTafsirVersePageDataServer(options: {
     throw normaliseError(verseResult.reason);
   }
 
+  // Any upstream failure throws so the cached (ISR) tafsir page is never stored without its text
+  // or attribution; the last good version keeps being served instead.
   if (tafsirHtmlResult.status === 'rejected') {
+    const error = normaliseError(tafsirHtmlResult.reason);
     logger.error(
       'Failed to fetch tafsir HTML',
       { verseKey: options.verseKey, tafsirId: options.tafsirId },
-      normaliseError(tafsirHtmlResult.reason)
+      error
     );
+    throw error;
   }
 
   if (resourcesResult.status === 'rejected') {
+    const error = normaliseError(resourcesResult.reason);
     logger.error(
       'Failed to fetch tafsir resources',
       { verseKey: options.verseKey, tafsirId: options.tafsirId },
-      normaliseError(resourcesResult.reason)
+      error
     );
+    throw error;
   }
-
-  const tafsirResource =
-    resourcesResult.status === 'fulfilled'
-      ? resourcesResult.value.find((t) => t.id === options.tafsirId)
-      : undefined;
 
   return {
     verse: verseResult.value,
-    tafsirHtml: tafsirHtmlResult.status === 'fulfilled' ? tafsirHtmlResult.value : '',
-    tafsirResource,
+    tafsirHtml: tafsirHtmlResult.value,
+    tafsirResource: resourcesResult.value.find((t) => t.id === options.tafsirId),
   };
 }

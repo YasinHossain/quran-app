@@ -142,7 +142,9 @@ async function fetchAllVerseText(
     )
   );
 
-  return [first, ...rest].flatMap((page) => page.verses).map(toPrerenderedVerse);
+  const verses = [first, ...rest].flatMap((page) => page.verses).map(toPrerenderedVerse);
+  if (verses.length === 0) throw new Error(`No verse text returned for ${group}/${id}`);
+  return verses;
 }
 
 const getPrerenderedVersesCached = unstable_cache(
@@ -155,14 +157,15 @@ const getPrerenderedVersesCached = unstable_cache(
 /**
  * Fetch every verse of a surah or juz as text, for server-rendered HTML. `transliteration` also
  * loads each verse's word-by-word Latin transliteration (a heavier request; only some surahs show
- * it). Returns `undefined` on failure so the page still renders the interactive reader.
+ * it). Throws when the text cannot be loaded, so a cached (ISR) page never stores a reader without
+ * its full text; the last good version keeps being served instead.
  */
 export async function getPrerenderedVersesServer(options: {
   group: VerseGroup;
   id: string;
   translationIds: number[];
   transliteration?: boolean;
-}): Promise<PrerenderedVerse[] | undefined> {
+}): Promise<PrerenderedVerse[]> {
   const transliteration = options.transliteration ?? false;
   const translationIdsKey = Array.from(new Set(options.translationIds))
     .filter((id) => Number.isFinite(id))
@@ -182,6 +185,6 @@ export async function getPrerenderedVersesServer(options: {
       { group: options.group, id: options.id, translationIdsKey },
       normaliseError(error)
     );
-    return undefined;
+    throw error;
   }
 }

@@ -16,7 +16,6 @@ import { ModernLayout } from '@/app/shared/navigation/ModernLayout';
 import { getChaptersServer, getVersesOfDayServer } from '@/lib/api/server';
 import { SITE_TWITTER_IMAGE, buildLocalizedPageMetadata } from '@/lib/seo/localizedMetadata';
 import { SITE_NAME } from '@/lib/seo/site';
-import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import { HomePageClient } from './(features)/home/components/HomePageClient';
 import { SurahGridStaticServer } from './(features)/home/components/SurahGridStaticServer';
@@ -62,10 +61,8 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
 export default async function Page({ params }: HomePageProps): Promise<React.JSX.Element> {
   const locale = await getPageUiLanguage(params);
   const [chapters, versesOfDay] = await Promise.all([
-    getChaptersServer().catch((error) => {
-      logger.warn('Failed to load homepage chapters', undefined, error as Error);
-      return [];
-    }),
+    // Throws on upstream failure so the cached (ISR) home page is never stored without surahs.
+    getChaptersServer(),
     getVersesOfDayServer(),
   ]);
 

@@ -58,15 +58,9 @@ test('requests reciters in the page language', async () => {
   expect(mockReciters).toHaveBeenCalledWith('bn');
 });
 
-test('still renders every other section when one resource list fails to load', async () => {
+test('fails instead of rendering a page with a missing source list (not cached by ISR)', async () => {
   mockTranslations.mockRejectedValue(new Error('upstream down'));
-  mockReciters.mockRejectedValue(new Error('timeout'));
-  await renderPage();
-
-  expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
-  expect(screen.getByText('Ibn Kathir (Abridged)')).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: /Quran Foundation/ })).toBeInTheDocument();
-  expect(screen.getAllByText(/could not be loaded/i)).toHaveLength(2);
+  await expect(renderPage()).rejects.toThrow('upstream down');
 });
 
 test('emits AboutPage JSON-LD with the localized canonical URL', async () => {
