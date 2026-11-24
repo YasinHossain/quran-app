@@ -133,29 +133,33 @@ export async function getVersePageVersesServer(input: {
   return { verse, context };
 }
 
-/** Tafsir HTML and attribution; `undefined` when it cannot be loaded (the page still renders). */
+/**
+ * Tafsir HTML and attribution. Throws when either cannot be loaded, so a cached (ISR) page is never
+ * stored without them; the last good version keeps being served instead.
+ */
 export async function getVersePageTafsirServer(
   verseKey: string,
   tafsirId: number
-): Promise<VersePageTafsir | undefined> {
-  const [html, resources] = await Promise.allSettled([
-    getTafsirHtmlServer(verseKey, tafsirId),
-    getTafsirResourcesServer(),
-  ]);
-
-  if (html.status === 'rejected') {
+): Promise<VersePageTafsir> {
+  let html: string;
+  let resources: Awaited<ReturnType<typeof getTafsirResourcesServer>>;
+  try {
+    [html, resources] = await Promise.all([
+      getTafsirHtmlServer(verseKey, tafsirId),
+      getTafsirResourcesServer(),
+    ]);
+  } catch (error) {
     logger.error(
       'Failed to fetch tafsir for verse page',
       { verseKey, tafsirId },
-      normaliseError(html.reason)
+      normaliseError(error)
     );
-    return undefined;
+    throw error;
   }
 
-  const resource =
-    resources.status === 'fulfilled' ? resources.value.find((t) => t.id === tafsirId) : undefined;
+  const resource = resources.find((t) => t.id === tafsirId);
   return {
-    html: html.value,
+    html,
     name: resource?.name,
     languageCode: toLanguageCode(resource?.lang),
   };

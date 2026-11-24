@@ -3,8 +3,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { CollapsibleSection } from '@/app/(features)/surah/components/CollapsibleSection';
-import { useFontSize } from '@/app/(features)/surah/hooks/useFontSize';
+import { CollapsibleSection } from '@/app/[lang]/(features)/surah/components/CollapsibleSection';
+import { useFontSize } from '@/app/[lang]/(features)/surah/hooks/useFontSize';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { BookReaderIcon } from '@/app/shared/icons';
 import { SelectionBox } from '@/app/shared/SelectionBox';

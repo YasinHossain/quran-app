@@ -12,7 +12,7 @@ import {
   useState,
 } from 'react';
 
-import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
+import { useQcfMushafFont } from '@/app/[lang]/(features)/surah/hooks/useQcfMushafFont';
 import { useDynamicFontLoader } from '@/app/hooks/useDynamicFontLoader';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { HybridVerseMarker } from '@/app/shared/components/verse-marker/VerseMarker';

@@ -3,8 +3,8 @@
 import dynamic from 'next/dynamic';
 import React, { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
 
-import { SurahMain } from '@/app/(features)/surah/components/surah-view/SurahMain';
-import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
+import { SurahMain } from '@/app/[lang]/(features)/surah/components/surah-view/SurahMain';
+import { SurahWorkspaceNavigation } from '@/app/[lang]/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
 import { useReaderMode } from '@/app/providers/ReaderModeContext';
 import { useUIState } from '@/app/providers/UIStateContext';
 import { SettingsSidebar } from '@/app/shared/reader/settings';
@@ -14,7 +14,9 @@ import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 // Dynamic import for MushafMain - only loaded when user switches to reading/mushaf mode
 const MushafMain = dynamic(
   () =>
-    import('@/app/(features)/surah/components/surah-view/MushafMain').then((mod) => mod.MushafMain),
+    import('@/app/[lang]/(features)/surah/components/surah-view/MushafMain').then(
+      (mod) => mod.MushafMain
+    ),
   {
     loading: () => (
       <div className="flex items-center justify-center h-64">
@@ -30,8 +32,11 @@ import { ReaderResourceHeading } from './ReaderResourceHeading';
 import { useReaderFullText, useReaderIntro } from './ReaderServerData';
 import { useReaderView } from './useReaderView';
 
-import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
-import type { LookupFn, UseVerseListingParams } from '@/app/(features)/surah/hooks/useVerseListing';
+import type { MushafResourceKind } from '@/app/[lang]/(features)/surah/hooks/mushafReadingViewTypes';
+import type {
+  LookupFn,
+  UseVerseListingParams,
+} from '@/app/[lang]/(features)/surah/hooks/useVerseListing';
 
 type ReaderViewState = ReturnType<typeof useReaderView>;
 type VerseListingState = ReaderViewState['verseListing'];

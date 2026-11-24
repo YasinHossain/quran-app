@@ -1,8 +1,9 @@
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
@@ -34,7 +35,7 @@ interface UsePlaybackOptionsReturn {
 
 export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePlaybackOptionsReturn {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePublicPathname();
   const {
     reciter,
     setReciterId,

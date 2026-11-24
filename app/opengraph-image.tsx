@@ -2,8 +2,6 @@ import { ImageResponse } from 'next/og';
 
 import { SITE_DESCRIPTION, SITE_NAME } from '@/lib/seo/site';
 
-export const runtime = 'edge';
-
 export const size = {
   width: 1200,
   height: 630,

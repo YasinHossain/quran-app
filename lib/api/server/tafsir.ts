@@ -21,10 +21,12 @@ export const getTafsirResourcesServer = unstable_cache(
     const repository = container.getTafsirRepository();
     const useCase = new GetTafsirResourcesUseCase(repository);
     const result = await useCase.execute();
+    // An empty list means every source failed; throw so it is not cached (attribution needs it).
+    if (result.tafsirs.length === 0) throw new Error('No tafsir resources available');
     return result.tafsirs.map((t) => ({ id: t.id, name: t.displayName, lang: t.language }));
   },
   ['tafsir:resources:v1'],
-  { revalidate: 3600, tags: ['tafsir-resources'] }
+  { revalidate: 86400, tags: ['tafsir-resources'] }
 );
 
 export const getTafsirHtmlServer = unstable_cache(
@@ -34,7 +36,7 @@ export const getTafsirHtmlServer = unstable_cache(
     return useCase.execute(verseKey, tafsirId);
   },
   ['tafsir:html:v1'],
-  { revalidate: 3600, tags: ['tafsir-html'] }
+  { revalidate: 86400, tags: ['tafsir-html'] }
 );
 
 const getVerseByKeyServer = unstable_cache(
@@ -52,7 +54,7 @@ const getVerseByKeyServer = unstable_cache(
     return getVerseByKey(verseKey, translationIds, wordLang, tajweed);
   },
   ['tafsir:verse:v1'],
-  { revalidate: 3600, tags: ['tafsir-verse'] }
+  { revalidate: 86400, tags: ['tafsir-verse'] }
 );
 
 export async function getTafsirVersePageDataServer(options: {
@@ -79,30 +81,31 @@ export async function getTafsirVersePageDataServer(options: {
     throw normaliseError(verseResult.reason);
   }
 
+  // Any upstream failure throws so the cached (ISR) tafsir page is never stored without its text
+  // or attribution; the last good version keeps being served instead.
   if (tafsirHtmlResult.status === 'rejected') {
+    const error = normaliseError(tafsirHtmlResult.reason);
     logger.error(
       'Failed to fetch tafsir HTML',
       { verseKey: options.verseKey, tafsirId: options.tafsirId },
-      normaliseError(tafsirHtmlResult.reason)
+      error
     );
+    throw error;
   }
 
   if (resourcesResult.status === 'rejected') {
+    const error = normaliseError(resourcesResult.reason);
     logger.error(
       'Failed to fetch tafsir resources',
       { verseKey: options.verseKey, tafsirId: options.tafsirId },
-      normaliseError(resourcesResult.reason)
+      error
     );
+    throw error;
   }
-
-  const tafsirResource =
-    resourcesResult.status === 'fulfilled'
-      ? resourcesResult.value.find((t) => t.id === options.tafsirId)
-      : undefined;
 
   return {
     verse: verseResult.value,
-    tafsirHtml: tafsirHtmlResult.status === 'fulfilled' ? tafsirHtmlResult.value : '',
-    tafsirResource,
+    tafsirHtml: tafsirHtmlResult.value,
+    tafsirResource: resourcesResult.value.find((t) => t.id === options.tafsirId),
   };
 }

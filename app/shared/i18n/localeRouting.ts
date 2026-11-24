@@ -36,6 +36,17 @@ export const stripLocaleFromPathname = (pathname: string | null | undefined): st
   return rest ? `/${rest}` : '/';
 };
 
+/**
+ * `/en/surah/x` -> `/surah/x`. The default language is never a public prefix (`proxy.ts` redirects
+ * it away), so `/en/...` is always the internal path of an unprefixed page.
+ */
+export const stripDefaultLocalePrefix = (pathname: string | null | undefined): string => {
+  const safePathname = normalizePathname(pathname);
+  return getLocaleFromPathname(safePathname) === DEFAULT_UI_LANGUAGE
+    ? stripLocaleFromPathname(safePathname)
+    : safePathname;
+};
+
 export const setLocaleInPathname = (
   pathname: string | null | undefined,
   locale: UiLanguageCode
@@ -59,4 +70,11 @@ export const localizeHref = (href: string, locale: UiLanguageCode): string => {
   const { path, query, hash } = splitHref(href);
   const localizedPath = setLocaleInPathname(path || '/', locale);
   return `${localizedPath}${query}${hash}`;
+};
+
+/** The current page in `locale` (`/bn/surah/x`), keeping its query string and hash. */
+export const buildLocaleSwitchHref = (pathname: string, locale: UiLanguageCode): string => {
+  const { search, hash } =
+    typeof window === 'undefined' ? { search: '', hash: '' } : window.location;
+  return `${setLocaleInPathnameForSwitch(pathname, locale)}${search}${hash}`;
 };

@@ -20,7 +20,7 @@ export interface ReciterResource {
 export const getTranslationResourcesServer = unstable_cache(
   async (): Promise<TranslationResource[]> => getTranslations(),
   ['translation:resources:v1'],
-  { revalidate: 3600, tags: ['translation-resources'] }
+  { revalidate: 86400, tags: ['translation-resources'] }
 );
 
 export const getReciterResourcesServer = unstable_cache(
@@ -36,5 +36,5 @@ export const getReciterResourcesServer = unstable_cache(
     });
   },
   ['reciter:resources:v1'],
-  { revalidate: 3600, tags: ['reciter-resources'] }
+  { revalidate: 86400, tags: ['reciter-resources'] }
 );

@@ -2,7 +2,7 @@
 
 import React, { memo } from 'react';
 
-import { FolderContextMenu } from '@/app/(features)/bookmarks/components/FolderContextMenu';
+import { FolderContextMenu } from '@/app/[lang]/(features)/bookmarks/components/FolderContextMenu';
 import { ClockIcon } from '@/app/shared/icons';
 import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
 import { cn } from '@/lib/utils/cn';

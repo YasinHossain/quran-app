@@ -7,6 +7,11 @@ const getHashSnapshot = (): string => {
   return window.location.hash ?? '';
 };
 
+const getSearchSnapshot = (): string => {
+  if (typeof window === 'undefined') return '';
+  return window.location.search ?? '';
+};
+
 const listeners = new Set<() => void>();
 let isPatched = false;
 let originalPushState: History['pushState'] | null = null;
@@ -97,4 +102,14 @@ export function useHashSearchParams(): URLSearchParams {
     const raw = hash.startsWith('#') ? hash.slice(1) : hash;
     return new URLSearchParams(raw);
   }, [hash]);
+}
+
+/**
+ * The URL's query string, read on the client only (empty while prerendering and hydrating).
+ * Unlike `useSearchParams`, it keeps statically rendered pages fully server-rendered.
+ */
+export function useLocationSearchParams(): URLSearchParams {
+  const search = useSyncExternalStore(subscribeToHash, getSearchSnapshot, () => '');
+
+  return useMemo(() => new URLSearchParams(search), [search]);
 }

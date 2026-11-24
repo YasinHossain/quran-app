@@ -9,9 +9,9 @@ jest.mock('next/navigation', () => ({
   },
 }));
 
-jest.mock('next/headers', () => ({
-  headers: async () => new Headers({ 'x-ui-language': mockUiLanguage }),
-}));
+/** Page params as Next passes them: `lang` is the `[lang]` segment `proxy.ts` routes the URL to. */
+const routeParams = <T extends object>(params: T): Promise<T & { lang: string }> =>
+  Promise.resolve({ ...params, lang: mockUiLanguage });
 
 const CHAPTERS = [
   { id: 1, name_simple: 'Al-Fatihah', name_arabic: 'الفاتحة', verses_count: 7 },
@@ -54,14 +54,14 @@ jest.mock('@/lib/api/server', () => ({
   }),
 }));
 
-import { generateMetadata as generateAboutMetadata } from '@/app/(features)/about/page';
-import { generateMetadata as generateJuzMetadata } from '@/app/(features)/juz/[juzId]/page';
-import { generateMetadata as generateJuzIndexMetadata } from '@/app/(features)/juz/page';
-import { generateMetadata as generateVerseMetadata } from '@/app/(features)/surah/[surahId]/[verseId]/page';
-import { generateMetadata as generateSurahMetadata } from '@/app/(features)/surah/[surahId]/page';
+import { generateMetadata as generateAboutMetadata } from '@/app/[lang]/(features)/about/page';
+import { generateMetadata as generateJuzMetadata } from '@/app/[lang]/(features)/juz/[juzId]/page';
+import { generateMetadata as generateJuzIndexMetadata } from '@/app/[lang]/(features)/juz/page';
+import { generateMetadata as generateVerseMetadata } from '@/app/[lang]/(features)/surah/[surahId]/[verseId]/page';
+import { generateMetadata as generateSurahMetadata } from '@/app/[lang]/(features)/surah/[surahId]/page';
 import TafsirVersePage, {
   generateMetadata as generateTafsirMetadata,
-} from '@/app/(features)/tafsir/[surahId]/[ayahId]/page';
+} from '@/app/[lang]/(features)/tafsir/[surahId]/[ayahId]/page';
 import robots from '@/app/robots';
 import {
   DEFAULT_UI_LANGUAGE,
@@ -81,7 +81,7 @@ import { renderSitemapIndexXml, renderSitemapXml } from '@/lib/seo/sitemapXml';
 const BASE = 'http://localhost:3000';
 
 const surahMetadata = (surahId: string) =>
-  generateSurahMetadata({ params: Promise.resolve({ surahId }) });
+  generateSurahMetadata({ params: routeParams({ surahId }) });
 
 describe('SEO routes', () => {
   afterEach(() => {
@@ -98,11 +98,11 @@ describe('SEO routes', () => {
   });
 
   it('keeps juz routes indexable with descriptive metadata', async () => {
-    const indexMetadata = await generateJuzIndexMetadata();
+    const indexMetadata = await generateJuzIndexMetadata({ params: routeParams({}) });
     expect(indexMetadata.robots).toBeUndefined();
 
     const metadata = await generateJuzMetadata({
-      params: Promise.resolve({ juzId: '1' }),
+      params: routeParams({ juzId: '1' }),
     });
 
     expect(metadata.robots).toBeUndefined();
@@ -175,10 +175,10 @@ describe('SEO routes', () => {
     const pages = {
       surah: await surahMetadata('al-baqarah'),
       verse: await generateVerseMetadata({
-        params: Promise.resolve({ surahId: 'al-baqarah', verseId: '255' }),
+        params: routeParams({ surahId: 'al-baqarah', verseId: '255' }),
       }),
       tafsir: await generateTafsirMetadata({
-        params: Promise.resolve({ surahId: 'al-baqarah', ayahId: '255' }),
+        params: routeParams({ surahId: 'al-baqarah', ayahId: '255' }),
       }),
     };
 
@@ -204,7 +204,7 @@ describe('SEO routes', () => {
     'gives the About page a self canonical, hreflang and localized title in %s',
     async (code) => {
       mockUiLanguage = code;
-      const metadata = await generateAboutMetadata();
+      const metadata = await generateAboutMetadata({ params: routeParams({}) });
       const prefix = code === 'en' ? '' : `/${code}`;
 
       expect(metadata.robots).toBeUndefined();
@@ -312,7 +312,7 @@ describe('SEO routes', () => {
 
   describe('verse pages', () => {
     const verseMetadata = (surahId: string, verseId: string) =>
-      generateVerseMetadata({ params: Promise.resolve({ surahId, verseId }) });
+      generateVerseMetadata({ params: routeParams({ surahId, verseId }) });
 
     it('leads the title with the translation and self-canonicalizes', async () => {
       const metadata = await verseMetadata('al-baqarah', '255');
@@ -337,14 +337,9 @@ describe('SEO routes', () => {
       expect(metadata.alternates?.canonical).toBe(`${BASE}/bn/surah/al-baqarah/255`);
     });
 
-    it('falls back to generic wording when the verse cannot be loaded', async () => {
+    it('fails (5xx, not cached) instead of a generic title when the verse cannot be loaded', async () => {
       mockVerseText = undefined;
-      const metadata = await verseMetadata('al-fatihah', '7');
-
-      expect(metadata.title).toBe('Surah Al-Fatihah 1:7');
-      expect(metadata.description).toContain(
-        'with Arabic text, transliteration, translation and tafsir'
-      );
+      await expect(verseMetadata('al-fatihah', '7')).rejects.toThrow('upstream down');
     });
 
     it.each([
@@ -362,7 +357,7 @@ describe('SEO routes', () => {
 
   describe('tafsir pages', () => {
     const tafsirParams = (surahId: string, ayahId: string) => ({
-      params: Promise.resolve({ surahId, ayahId }),
+      params: routeParams({ surahId, ayahId }),
     });
 
     it('is indexable with hreflang for the languages that have their own tafsir', async () => {
@@ -407,8 +402,8 @@ describe('SEO routes', () => {
     type Modules = {
       uiLanguages: typeof import('@/app/shared/i18n/uiLanguages');
       sitemap: typeof import('@/lib/seo/sitemapEntries');
-      surah: typeof import('@/app/(features)/surah/[surahId]/page');
-      tafsir: typeof import('@/app/(features)/tafsir/[surahId]/[ayahId]/page');
+      surah: typeof import('@/app/[lang]/(features)/surah/[surahId]/page');
+      tafsir: typeof import('@/app/[lang]/(features)/tafsir/[surahId]/[ayahId]/page');
       llms: typeof import('@/lib/seo/llmsTxt');
     };
     let modules: Modules;
@@ -435,8 +430,8 @@ describe('SEO routes', () => {
         modules = {
           uiLanguages: require('@/app/shared/i18n/uiLanguages'),
           sitemap: require('@/lib/seo/sitemapEntries'),
-          surah: require('@/app/(features)/surah/[surahId]/page'),
-          tafsir: require('@/app/(features)/tafsir/[surahId]/[ayahId]/page'),
+          surah: require('@/app/[lang]/(features)/surah/[surahId]/page'),
+          tafsir: require('@/app/[lang]/(features)/tafsir/[surahId]/[ayahId]/page'),
           llms: require('@/lib/seo/llmsTxt'),
         };
       });
@@ -453,15 +448,15 @@ describe('SEO routes', () => {
     });
 
     it('serves its pages noindex with a self canonical, outside every hreflang set', async () => {
-      const params = { params: Promise.resolve({ surahId: 'ya-sin' }) };
+      const params = () => ({ params: routeParams({ surahId: 'ya-sin' }) });
       mockUiLanguage = 'ur';
-      const own = await modules.surah.generateMetadata(params);
+      const own = await modules.surah.generateMetadata(params());
       expect(own.robots).toEqual({ index: false, follow: true });
       expect(own.alternates?.canonical).toBe(`${BASE}/ur/surah/ya-sin`);
       expect(own.alternates?.languages).not.toHaveProperty('ur');
 
       mockUiLanguage = 'bn';
-      const other = await modules.surah.generateMetadata(params);
+      const other = await modules.surah.generateMetadata(params());
       expect(other.robots).toBeUndefined();
       expect(Object.keys(other.alternates?.languages ?? {})).toEqual([
         'en',
@@ -475,13 +470,13 @@ describe('SEO routes', () => {
     it('keeps its tafsir pages noindex even though it has its own tafsir', async () => {
       mockUiLanguage = 'ur';
       const metadata = await modules.tafsir.generateMetadata({
-        params: Promise.resolve({ surahId: 'al-baqarah', ayahId: '255' }),
+        params: routeParams({ surahId: 'al-baqarah', ayahId: '255' }),
       });
       expect(metadata.robots).toEqual({ index: false, follow: true });
 
       mockUiLanguage = 'en';
       const english = await modules.tafsir.generateMetadata({
-        params: Promise.resolve({ surahId: 'al-baqarah', ayahId: '255' }),
+        params: routeParams({ surahId: 'al-baqarah', ayahId: '255' }),
       });
       expect(Object.keys(english.alternates?.languages ?? {})).toEqual([
         'en',

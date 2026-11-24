@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { CollapsibleSection } from '@/app/(features)/surah/components/CollapsibleSection';
+import { CollapsibleSection } from '@/app/[lang]/(features)/surah/components/CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { FontSettingIcon } from '@/app/shared/icons';
 

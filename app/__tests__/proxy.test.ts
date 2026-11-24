@@ -13,15 +13,27 @@ const request = (path: string, headers: Record<string, string> = {}): NextReques
     headers: { 'user-agent': GOOGLEBOT_UA, ...headers },
   });
 
-describe('proxy locale routing', () => {
-  it('serves unprefixed URLs in English with a 200 to crawlers (no cookie, no Accept-Language)', () => {
-    const response = proxy(request('/surah/ya-sin'));
+/** Path the request is served from (`x-middleware-rewrite`), or `null` when served as is. */
+const rewrittenPath = (response: Response): string | null => {
+  const rewrite = response.headers.get('x-middleware-rewrite');
+  return rewrite ? new URL(rewrite).pathname : null;
+};
 
-    expect(response.status).toBe(200);
-    expect(response.headers.get('location')).toBeNull();
-    expect(response.headers.get('x-middleware-rewrite')).toBeNull();
-    expect(response.headers.get('x-middleware-request-x-ui-language')).toBe('en');
-  });
+describe('proxy locale routing', () => {
+  it.each([
+    ['/surah/ya-sin', '/en/surah/ya-sin'],
+    ['/', '/en'],
+    ['/about', '/en/about'],
+  ])(
+    'serves unprefixed %s in English from the [lang] route %s with a 200 to crawlers',
+    (path, target) => {
+      const response = proxy(request(path));
+
+      expect(response.status).toBe(200);
+      expect(response.headers.get('location')).toBeNull();
+      expect(rewrittenPath(response)).toBe(target);
+    }
+  );
 
   it('permanently redirects the default-language prefix to the unprefixed URL', () => {
     const response = proxy(request('/en/surah/ya-sin'));
@@ -30,18 +42,21 @@ describe('proxy locale routing', () => {
     expect(response.headers.get('location')).toBe('https://appquran.com/surah/ya-sin');
   });
 
-  it.each(['bn', 'ar', 'ur', 'hi'])(
-    'rewrites /%s/... to the shared route with the language',
-    (code) => {
-      const response = proxy(request(`/${code}/surah/ya-sin`));
+  it.each(['bn', 'ar', 'ur', 'hi'])('serves /%s/... from the [lang] route unchanged', (code) => {
+    const response = proxy(request(`/${code}/surah/ya-sin`));
 
-      expect(response.status).toBe(200);
-      const rewrite = new URL(response.headers.get('x-middleware-rewrite') ?? '');
-      expect(rewrite.pathname).toBe('/surah/ya-sin');
-      expect(rewrite.searchParams.get('__uiLanguage')).toBe(code);
-      expect(response.headers.get('x-middleware-request-x-ui-language')).toBe(code);
-    }
-  );
+    expect(response.status).toBe(200);
+    expect(response.headers.get('location')).toBeNull();
+    expect(rewrittenPath(response)).toBeNull();
+    expect(response.headers.get('x-middleware-next')).toBe('1');
+  });
+
+  it('serves an upper-case prefix from the lower-case [lang] route', () => {
+    const response = proxy(request('/BN/surah/ya-sin'));
+
+    expect(response.status).toBe(200);
+    expect(rewrittenPath(response)).toBe('/bn/surah/ya-sin');
+  });
 
   it('keeps sending visitors to their language with a temporary redirect', () => {
     const fromHeader = proxy(
@@ -55,12 +70,32 @@ describe('proxy locale routing', () => {
     expect(fromCookie.headers.get('location')).toBe('https://appquran.com/ur');
   });
 
-  it('ignores unknown prefixes and languages', () => {
+  it('treats unknown prefixes as English paths (they 404 in the [lang] route)', () => {
     const response = proxy(request('/de/surah/ya-sin', { 'accept-language': 'de-DE' }));
 
     expect(response.status).toBe(200);
-    expect(response.headers.get('x-middleware-rewrite')).toBeNull();
+    expect(rewrittenPath(response)).toBe('/en/de/surah/ya-sin');
   });
+
+  it('serves the offline fallback in English without a language redirect', () => {
+    const response = proxy(request('/offline', { cookie: 'ui-language=bn' }));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('location')).toBeNull();
+    expect(rewrittenPath(response)).toBe('/en/offline');
+  });
+
+  it.each(['/opengraph-image', '/twitter-image'])(
+    'leaves the root route %s outside [lang], with or without a prefix',
+    (path) => {
+      const plain = proxy(request(path, { cookie: 'ui-language=bn' }));
+      expect(plain.headers.get('location')).toBeNull();
+      expect(rewrittenPath(plain)).toBeNull();
+
+      const prefixed = proxy(request(`/bn${path}`));
+      expect(rewrittenPath(prefixed)).toBe(path);
+    }
+  );
 });
 
 describe('proxy canonical surah slugs', () => {

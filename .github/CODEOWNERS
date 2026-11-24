@@ -3,7 +3,7 @@
 
 # Frontend/UI components
 app/shared/ui/ @YasinHossain
-app/(features)/ @YasinHossain
+app/[lang]/(features)/ @YasinHossain
 
 # Core infrastructure
 lib/ @YasinHossain

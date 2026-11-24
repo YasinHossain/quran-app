@@ -7,7 +7,7 @@ import {
 } from '@/lib/api/chapters';
 import { Chapter, Surah } from '@/types';
 
-jest.mock('@/app/(features)/surah/lib/surahImageMap', () => ({
+jest.mock('@/app/[lang]/(features)/surah/lib/surahImageMap', () => ({
   surahImageMap: { 1: 'test.jpg' },
 }));
 

@@ -32,6 +32,7 @@ const getSurahInitialDataCached = unstable_cache(
       .map((id) => Number.parseInt(id, 10))
       .filter((id) => Number.isFinite(id));
 
+    // Upstream failures throw so neither this data cache nor the ISR page stores a degraded result.
     const [chapterResult, versesResult] = await Promise.allSettled([
       canFetchMetadata ? getChapterServer(surahNumber) : Promise.resolve(undefined),
       getVersesByChapter({
@@ -43,32 +44,33 @@ const getSurahInitialDataCached = unstable_cache(
       }),
     ]);
 
-    const result: SurahInitialDataServerResult = {};
-
-    if (chapterResult.status === 'fulfilled' && chapterResult.value) {
-      result.totalVerses = chapterResult.value.verses_count;
-    } else if (chapterResult.status === 'rejected') {
-      logger.error(
-        'Failed to fetch chapter metadata',
-        { surahId, wordLang },
-        normaliseError(chapterResult.reason)
-      );
+    if (chapterResult.status === 'rejected') {
+      const error = normaliseError(chapterResult.reason);
+      logger.error('Failed to fetch chapter metadata', { surahId, wordLang }, error);
+      throw error;
     }
-
-    if (versesResult.status === 'fulfilled') {
-      result.initialVerses = versesResult.value.verses;
-    } else {
+    if (versesResult.status === 'rejected') {
+      const error = normaliseError(versesResult.reason);
       logger.error(
         'Failed to fetch initial verses',
         { surahId, wordLang, perPage, translationIdsKey },
-        normaliseError(versesResult.reason)
+        error
       );
+      throw error;
+    }
+    if (canFetchMetadata && !chapterResult.value) {
+      throw new Error(`Chapter ${surahId} missing from chapter data`);
+    }
+    if (versesResult.value.verses.length === 0) {
+      throw new Error(`No verses returned for surah ${surahId}`);
     }
 
+    const result: SurahInitialDataServerResult = { initialVerses: versesResult.value.verses };
+    if (chapterResult.value) result.totalVerses = chapterResult.value.verses_count;
     return result;
   },
   ['surah:initial:v2'],
-  { revalidate: 3600, tags: ['surah-initial'] }
+  { revalidate: 86400, tags: ['surah-initial'] }
 );
 
 export async function getSurahInitialDataServer(options: {
