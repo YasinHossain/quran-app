@@ -45,7 +45,7 @@ const JuzItem = memo(function JuzItem({
       <JuzNavigationCard
         href={href}
         scroll={!isActive}
-        prefetch={true}
+        prefetch={false}
         data-active={isActive}
         isActive={isActive}
         content={{
