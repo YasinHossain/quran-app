@@ -1,9 +1,8 @@
-import { useRouter } from 'next/navigation';
-
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useModal } from '@/app/shared/hooks/useModal';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Chapter } from '@/types';
@@ -16,7 +15,7 @@ interface UsePlannerPageResult {
 }
 
 export const usePlannerPage = (): UsePlannerPageResult => {
-  const router = useRouter();
+  const router = useProgressRouter();
   const pathname = usePublicPathname();
   const { planner, chapters } = useBookmarks();
   const modal = useModal();

@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +11,7 @@ import { createPlannerCardViewModel } from '@/app/[lang]/(features)/bookmarks/pl
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { CloseIcon } from '@/app/shared/icons';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 
 import type { PlannerCardProps } from '@/app/[lang]/(features)/bookmarks/planner/components/PlannerCard.types';
@@ -98,7 +98,7 @@ const usePlannerNavigation = (
   surahId: string,
   continueVerse: PlannerCardProps['continueVerse']
 ): (() => void) => {
-  const router = useRouter();
+  const router = useProgressRouter();
   const pathname = usePublicPathname();
 
   return React.useCallback(() => {

@@ -1,4 +1,6 @@
 // app/[lang]/layout.tsx
+import { Suspense } from 'react';
+
 import type { Metadata } from 'next';
 
 import '@/app/fonts.css';
@@ -15,6 +17,7 @@ import { ClientProviders } from '@/app/providers/ClientProviders';
 import { TranslationProvider } from '@/app/providers/TranslationProvider';
 import { ErrorBoundary } from '@/app/shared/components/error-boundary';
 import { WebVitals } from '@/app/shared/components/WebVitals';
+import { RouteProgressBar } from '@/app/shared/navigation/progress/RouteProgressBar';
 import { SITE_OPENGRAPH_IMAGE, SITE_TWITTER_IMAGE } from '@/lib/seo/localizedMetadata';
 import {
   GOOGLE_SITE_VERIFICATION,
@@ -185,6 +188,10 @@ export default async function RootLayout({
       </head>
       <body className="font-sans">
         <WebVitals />
+        {/* `useSearchParams` needs a Suspense boundary so it doesn't opt pages out of prerendering. */}
+        <Suspense fallback={null}>
+          <RouteProgressBar />
+        </Suspense>
         {/* Vercel-only: these post to `/_vercel/*`, which exists only on Vercel deployments. */}
         {IS_VERCEL ? (
           <>

@@ -1,12 +1,12 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import { useVerseCard } from '@/app/[lang]/(features)/surah/components/verse-card/useVerseCard';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { parseVerseKey } from '@/lib/utils/verse';
 
@@ -33,7 +33,7 @@ export function useBookmarkVerseActions(
     showRemove: true;
   };
 } {
-  const router = useRouter();
+  const router = useProgressRouter();
   const pathname = usePublicPathname();
   const { removeBookmark, findBookmark } = useBookmarks();
   const card = useVerseCard(verse);

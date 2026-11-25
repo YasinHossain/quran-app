@@ -1,11 +1,11 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Bookmark } from '@/types';
@@ -17,7 +17,7 @@ interface UsePinnedPageReturn {
 }
 
 export const usePinnedPage = (): UsePinnedPageReturn => {
-  const router = useRouter();
+  const router = useProgressRouter();
   const pathname = usePublicPathname();
   const { pinnedVerses, chapters } = useBookmarks();
 

@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,6 +7,7 @@ import { CircularProgress } from '@/app/[lang]/(features)/bookmarks/components/C
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { CloseIcon } from '@/app/shared/icons';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { formatNumber } from '@/lib/text/localizeNumbers';
 import { Chapter } from '@/types';
@@ -28,7 +28,7 @@ export const LastReadCard = ({
   onRemove,
 }: LastReadCardProps): React.JSX.Element => {
   const { t, i18n } = useTranslation();
-  const router = useRouter();
+  const router = useProgressRouter();
   const pathname = usePublicPathname();
   const total = chapter?.verses_count || 0;
   const percent = Math.min(100, Math.max(0, Math.round((verseId / total) * 100)));

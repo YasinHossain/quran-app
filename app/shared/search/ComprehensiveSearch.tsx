@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import {
   memo,
   useCallback,
@@ -18,15 +17,16 @@ import { useDynamicFontLoader } from '@/app/hooks/useDynamicFontLoader';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { GoToSurahVerseForm } from '@/app/shared/components/go-to/GoToSurahVerseForm';
 import { SearchInput } from '@/app/shared/components/SearchInput';
+import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { SearchIcon, BookOpenIcon, HashIcon } from '@/app/shared/icons';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 import {
   buildSurahRoute,
   buildJuzRoute,
   buildPageRoute,
   buildSearchRoute,
 } from '@/app/shared/navigation/routes';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
-import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import {
   quickSearch,
   analyzeQuery,
@@ -508,7 +508,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
   showShortcuts = false,
 }: ComprehensiveSearchProps): ReactElement {
   const { t } = useTranslation();
-  const router = useRouter();
+  const router = useProgressRouter();
   const { settings } = useSettings();
   const containerRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);

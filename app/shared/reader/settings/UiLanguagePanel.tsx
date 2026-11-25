@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -15,6 +14,7 @@ import {
 } from '@/app/shared/i18n/uiLanguages';
 import { ensureUiResourcesLoaded } from '@/app/shared/i18n/uiResourcesClient';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 import { SettingsPanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
 import { ResourceItem } from '@/app/shared/resource-panel/ResourceItem';
 
@@ -30,7 +30,7 @@ export function UiLanguagePanel({
   onCloseSidebar,
 }: UiLanguagePanelProps): React.JSX.Element {
   const { t, i18n } = useTranslation();
-  const router = useRouter();
+  const router = useProgressRouter();
   const pathname = usePublicPathname();
   const selectedCode: UiLanguageCode = isUiLanguageCode(i18n.language)
     ? i18n.language

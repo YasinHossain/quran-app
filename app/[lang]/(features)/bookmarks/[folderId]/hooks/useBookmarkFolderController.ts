@@ -1,10 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import { useBookmarkFolderData, useBookmarkFolderPanels } from './index';
@@ -29,7 +28,7 @@ export type BookmarkFolderControllerReturn = {
 
 // Helper function to create navigation handler
 function useNavigationHandler(
-  router: ReturnType<typeof useRouter>,
+  router: ReturnType<typeof useProgressRouter>,
   setBookmarkSidebarOpen: (open: boolean) => void,
   locale: UiLanguageCode
 ): {
@@ -64,7 +63,7 @@ function useNavigationHandler(
 
 export function useBookmarkFolderController(folderId: string): BookmarkFolderControllerReturn {
   logger.debug('BookmarkFolderClient rendering', { folderId });
-  const router = useRouter();
+  const router = useProgressRouter();
   const pathname = usePublicPathname();
   const locale = (getLocaleFromPathname(pathname) ?? 'en') as UiLanguageCode;
   const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();

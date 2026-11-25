@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,6 +13,7 @@ import {
 } from '@/app/shared/i18n/uiLanguages';
 import { ensureUiResourcesLoaded } from '@/app/shared/i18n/uiResourcesClient';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 import { cn } from '@/lib/utils/cn';
 
 interface LanguageButtonProps {
@@ -61,7 +61,7 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
   className,
 }: LanguageSwitcherProps): React.JSX.Element {
   const { i18n } = useTranslation();
-  const router = useRouter();
+  const router = useProgressRouter();
   const pathname = usePublicPathname();
   const [currentLanguage, setCurrentLanguage] = useState<UiLanguageCode>('en');
   const [isClient, setIsClient] = useState(false);

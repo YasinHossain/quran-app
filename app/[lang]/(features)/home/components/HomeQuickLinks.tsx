@@ -1,13 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { memo, useCallback, useEffect, useMemo, type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { BookmarkOutlineIcon, CalendarIcon, ClockIcon, PinIcon } from '@/app/shared/icons';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { BookmarkOutlineIcon, CalendarIcon, ClockIcon, PinIcon } from '@/app/shared/icons';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 
 /**
  * Quick shortcut links to bookmark sections.
@@ -37,7 +37,7 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
   const { t } = useTranslation();
   const pathname = usePublicPathname();
   const locale = getLocaleFromPathname(pathname) ?? 'en';
-  const router = useRouter();
+  const router = useProgressRouter();
 
   const maxWidth = 'clamp(18rem, 80vw, 64rem)';
 

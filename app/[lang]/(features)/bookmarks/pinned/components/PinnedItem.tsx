@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import { useBookmarkVerse } from '@/app/[lang]/(features)/bookmarks/hooks/useBookmarkVerse';
@@ -9,6 +8,7 @@ import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { ReaderVerseCard } from '@/app/shared/reader';
 import { parseVerseKey } from '@/lib/utils/verse';
@@ -77,7 +77,7 @@ function usePinnedVerseActions(
     showRemove: boolean;
   };
 } {
-  const router = useRouter();
+  const router = useProgressRouter();
   const pathname = usePublicPathname();
   const { togglePinned, isPinned } = useBookmarks();
   const verseCard = useVerseCard(verse);

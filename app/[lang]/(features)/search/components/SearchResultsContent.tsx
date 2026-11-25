@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import React, { useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -9,6 +8,7 @@ import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { SearchIcon, ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { ReaderVerseCard } from '@/app/shared/reader/VerseCard';
 import { formatNumber } from '@/lib/text/localizeNumbers';
@@ -253,7 +253,7 @@ interface SearchVerseItemProps {
 }
 
 const SearchVerseItem = ({ verse, index, query }: SearchVerseItemProps): React.JSX.Element => {
-  const router = useRouter();
+  const router = useProgressRouter();
   const pathname = usePublicPathname();
   const { t } = useTranslation();
   const { settings } = useSettings();

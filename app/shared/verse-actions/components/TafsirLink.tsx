@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { memo, useCallback } from 'react';
 
 import { useSettings } from '@/app/providers/SettingsContext';
@@ -9,6 +8,7 @@ import { usePrefetchSingleVerse } from '@/app/shared/hooks/useSingleVerse';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { BookReaderIcon } from '@/app/shared/icons';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 import { tafsirHrefForVerseKey } from '@/app/shared/navigation/routes';
 import { setTafsirReturnFromVerseKey } from '@/app/shared/navigation/tafsirReturn';
 import { touchClasses } from '@/lib/responsive';
@@ -22,7 +22,7 @@ interface TafsirLinkProps {
 export const TafsirLink = memo(function TafsirLink({
   verseKey,
 }: TafsirLinkProps): React.JSX.Element {
-  const router = useRouter();
+  const router = useProgressRouter();
   const rawPathname = usePublicPathname();
   const locale = getLocaleFromPathname(rawPathname) ?? 'en';
   const href = localizeHref(tafsirHrefForVerseKey(verseKey), locale);

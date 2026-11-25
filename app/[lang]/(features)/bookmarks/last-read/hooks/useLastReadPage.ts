@@ -1,9 +1,9 @@
-import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Chapter, LastReadMap } from '@/types';
@@ -16,7 +16,7 @@ export interface UseLastReadPageReturn {
 }
 
 export const useLastReadPage = (): UseLastReadPageReturn => {
-  const router = useRouter();
+  const router = useProgressRouter();
   const pathname = usePublicPathname();
   const { lastRead, chapters, removeLastRead } = useBookmarks();
 

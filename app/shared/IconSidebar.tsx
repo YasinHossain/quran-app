@@ -1,7 +1,6 @@
 // app/shared/Navigation.tsx - Simple unified navigation
 'use client';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -13,6 +12,7 @@ import {
   stripLocaleFromPathname,
 } from '@/app/shared/i18n/localeRouting';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { getTafsirReturnHref } from '@/app/shared/navigation/tafsirReturn';
 import { cn } from '@/lib/utils/cn';
@@ -151,7 +151,7 @@ export const Navigation = memo(function Navigation({
   const locale = localeFromPath ?? 'en';
   const pathname = pathnameOverride ?? rawPathname;
   const routePathname = stripLocaleFromPathname(pathname);
-  const router = useRouter();
+  const router = useProgressRouter();
   const { isHidden } = useHeaderVisibility();
   const { lastRead } = useBookmarks();
   // Mobile nav only hides on scroll (isHidden), not when sidebar opens.

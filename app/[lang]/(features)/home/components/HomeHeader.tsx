@@ -1,6 +1,5 @@
 'use client';
 import * as Popover from '@radix-ui/react-popover';
-import { useRouter } from 'next/navigation';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -17,6 +16,7 @@ import {
 import { ensureUiResourcesLoaded } from '@/app/shared/i18n/uiResourcesClient';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { CheckIcon, ChevronDownIcon, GlobeIcon, MoonIcon, SunIcon } from '@/app/shared/icons';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 
 interface HomeHeaderProps {
   className?: string;
@@ -29,7 +29,7 @@ interface HomeHeaderProps {
 export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProps) {
   const { theme, setTheme } = useTheme();
   const { t, i18n } = useTranslation();
-  const router = useRouter();
+  const router = useProgressRouter();
   const pathname = usePublicPathname();
   const [mounted, setMounted] = useState(false);
   const [languageMenuOpen, setLanguageMenuOpen] = useState(false);

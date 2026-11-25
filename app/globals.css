@@ -911,3 +911,23 @@ html[data-glass='off'] .backdrop-saturate-150 {
 .animate-menu-out {
   animation: menu-out 0.15s ease-in forwards;
 }
+
+/* Top-of-page navigation progress (RouteProgressBar). Grows from the inline-start edge. */
+.route-progress-fill {
+  transform-origin: left center;
+  box-shadow:
+    0 0 10px rgb(var(--color-accent) / 0.7),
+    0 0 4px rgb(var(--color-accent) / 0.5);
+  border-start-end-radius: 9999px;
+  border-end-end-radius: 9999px;
+}
+
+[dir='rtl'] .route-progress-fill {
+  transform-origin: right center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-progress-fill {
+    transition: none !important;
+  }
+}
