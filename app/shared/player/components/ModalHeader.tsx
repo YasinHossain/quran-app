@@ -16,7 +16,7 @@ export const ModalHeader = memo(function ModalHeader({ onClose }: Props): React.
       </div>
       <div className="font-semibold text-foreground">{t('playback_options')}</div>
       <button
-        className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center ml-auto"
+        className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center ms-auto"
         onClick={onClose}
         aria-label={t('close')}
       >

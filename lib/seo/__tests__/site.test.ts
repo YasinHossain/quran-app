@@ -1,4 +1,10 @@
-import { absoluteUrl, getSiteUrl, isProductionDeployment, SITE_DOMAIN } from '../site';
+import {
+  buildOrganizationJsonLd,
+  absoluteUrl,
+  getSiteUrl,
+  isProductionDeployment,
+  SITE_DOMAIN,
+} from '../site';
 
 describe('seo/site', () => {
   const ORIGINAL_ENV = process.env;
@@ -50,5 +56,12 @@ describe('seo/site', () => {
     process.env.NEXT_PUBLIC_SITE_URL = 'https://example.com';
     expect(absoluteUrl('/surah/1')).toBe('https://example.com/surah/1');
     expect(absoluteUrl('surah/1')).toBe('https://example.com/surah/1');
+  });
+
+  it('lists the GitHub repository as sameAs on the Organization JSON-LD', () => {
+    const organization = buildOrganizationJsonLd();
+
+    expect(organization['@type']).toBe('Organization');
+    expect(organization['sameAs']).toEqual(['https://github.com/YasinHossain/quran-app']);
   });
 });

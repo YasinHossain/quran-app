@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { HeaderVisibilityProvider } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { HeaderVisibilityProvider } from '@/app/[lang]/(features)/layout/context/HeaderVisibilityContext';
 import { UIStateProvider } from '@/app/providers/UIStateContext';
 import { Header } from '@/app/shared/Header';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';

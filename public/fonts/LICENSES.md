@@ -12,10 +12,8 @@ The following fonts are licensed under the SIL Open Font License 1.1:
 - **Lateef.ttf** — Source: [SIL](https://software.sil.org/lateef)
 - **Noto-Naskh-Arabic.ttf** — Source: [Google Noto Fonts](http://www.google.com/get/noto/)
 - **Noto Nastaliq Urdu.ttf** — Source: [Google Noto Fonts](http://www.google.com/get/noto/)
-- **NotoSansArabic-\*.woff2** — Source: [Google Noto Fonts](http://www.google.com/get/noto/)
-- **NotoSansBengali-\*.woff2** — Source: [Google Noto Fonts](http://www.google.com/get/noto/)
 - **Inter-\*.woff2** — Source: [Inter Font by Rasmus Andersson](https://rsms.me/inter/)
-- **CrimsonText-\*.woff2** — Source: [Crimson Text](https://github.com/skosch/Crimson)
+- **NotoSansBengali-Variable.woff2** — Source: [Noto Sans Bengali](https://github.com/notofonts/bengali) via Fontsource `@fontsource-variable/noto-sans-bengali@5.3.0` (Bengali subset). SIL Open Font License 1.1.
 - **LibreBaskerville-\*.woff2** — Source: [Libre Baskerville by Impallari Type](https://github.com/impallari/Libre-Baskerville)
 
 ```

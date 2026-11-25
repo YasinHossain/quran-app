@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useFontSize } from '@/app/(features)/surah/hooks/useFontSize';
+import { useFontSize } from '@/app/[lang]/(features)/surah/hooks/useFontSize';
 import { useSettings } from '@/app/providers/SettingsContext';
 
 import { FontSettingsContent } from './font-settings/FontSettingsContent';

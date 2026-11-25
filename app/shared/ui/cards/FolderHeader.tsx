@@ -2,7 +2,7 @@
 
 import React, { memo } from 'react';
 
-import { FolderContextMenu } from '@/app/(features)/bookmarks/components/FolderContextMenu';
+import { FolderContextMenu } from '@/app/[lang]/(features)/bookmarks/components/FolderContextMenu';
 import { FolderIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
 
@@ -56,7 +56,7 @@ export const FolderHeader = memo(function FolderHeader({
 }: FolderHeaderProps): React.JSX.Element {
   return (
     <div className="flex items-start justify-between mb-4">
-      <div className="flex items-center space-x-4 flex-1 min-w-0">
+      <div className="flex items-center gap-4 flex-1 min-w-0">
         <FolderIconSection folder={folder} />
         <FolderInfoSection folder={folder} bookmarkCount={bookmarkCount} />
       </div>

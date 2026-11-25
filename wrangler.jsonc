@@ -1,0 +1,83 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "appquran",
+  "compatibility_date": "2026-11-20",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  // Cap CPU per request (default 30s) so one runaway render cannot run up the bill.
+  // Local renders of the largest page (/surah/al-baqarah, ~840 KB HTML) take well under 1s.
+  "limits": { "cpu_ms": 5000 },
+  // Production hostnames (Worker Custom Domains; Cloudflare manages their DNS records and certificates).
+  // proxy.ts 308-redirects www to the apex.
+  "routes": [
+    { "pattern": "appquran.com", "custom_domain": true },
+    { "pattern": "www.appquran.com", "custom_domain": true }
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      // Self-reference service binding; the service name must match the worker name.
+      // See https://opennext.js.org/cloudflare/caching
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "appquran"
+    }
+  ],
+  // Page cache in two regions; `cloudflare/incremental-cache.ts` reads the nearest bucket and writes
+  // both. Fetch data lives in the Cache API, not R2. `opennextjs-cloudflare deploy` populates only
+  // `NEXT_INC_CACHE_R2_BUCKET`; the `populate-apac` env below fills the APAC bucket.
+  "r2_buckets": [
+    // ENAM (US/Europe and the default): read by visitors outside Asia and Oceania.
+    { "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "appquran-cache-enam" },
+    // APAC: read by visitors in Asia (AS) and Oceania (OC).
+    { "binding": "NEXT_INC_CACHE_R2_BUCKET_APAC", "bucket_name": "appquran-opennext-cache" }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        // OpenNext revalidation queue for time-based ISR; the class is exported by .open-next/worker.js.
+        "name": "NEXT_CACHE_DO_QUEUE",
+        "class_name": "DOQueueHandler"
+      }
+    ]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["DOQueueHandler"] }],
+  "images": {
+    // next/image optimization. See https://opennext.js.org/cloudflare/howtos/image
+    "binding": "IMAGES"
+  },
+  "vars": {
+    "QURAN_API_BASE_URL": "https://api.qurancdn.com/api/qdc"
+  },
+  "env": {
+    // Test Worker `appquran-staging` (workers.dev only; `npm run cf:deploy:staging`). Bindings are not
+    // inherited, so they are repeated. It shares the cache buckets: page keys include the build ID, so
+    // the same build reuses entries and a different build never mixes with production's.
+    "staging": {
+      "workers_dev": true,
+      "routes": [],
+      "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "appquran-staging" }],
+      "r2_buckets": [
+        { "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "appquran-cache-enam" },
+        { "binding": "NEXT_INC_CACHE_R2_BUCKET_APAC", "bucket_name": "appquran-opennext-cache" }
+      ],
+      "durable_objects": {
+        "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }]
+      },
+      "images": { "binding": "IMAGES" },
+      "vars": { "QURAN_API_BASE_URL": "https://api.qurancdn.com/api/qdc" }
+    },
+    // Not a Worker: never deploy it. Only `opennextjs-cloudflare populateCache ... --env populate-apac`
+    // (`npm run cf:populate:apac`) uses it, to upload the prerendered pages into the APAC bucket.
+    // The CLI uploads to the bucket bound as `NEXT_INC_CACHE_R2_BUCKET`, so this env points it there.
+    "populate-apac": {
+      "workers_dev": false,
+      "routes": [],
+      "r2_buckets": [
+        { "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "appquran-opennext-cache" }
+      ]
+    }
+  }
+}

@@ -5,8 +5,8 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import React from 'react';
 import { SWRConfig } from 'swr';
 
-import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
-import { useTafsirVerseData } from '@/app/(features)/tafsir/hooks/useTafsirVerseData';
+import { useBookmarkVerse } from '@/app/[lang]/(features)/bookmarks/hooks/useBookmarkVerse';
+import { useTafsirVerseData } from '@/app/[lang]/(features)/tafsir/hooks/useTafsirVerseData';
 import { SettingsProvider, useSettings } from '@/app/providers/SettingsContext';
 import { Tafsir } from '@/src/domain/entities/Tafsir';
 import { container } from '@/src/infrastructure/di/Container';
@@ -27,7 +27,7 @@ jest.mock('@/app/providers/BookmarkContext', () => ({
   }),
 }));
 
-jest.mock('@/app/(features)/tafsir/hooks/useTafsirOptions', () => ({
+jest.mock('@/app/[lang]/(features)/tafsir/hooks/useTafsirOptions', () => ({
   useTafsirOptions: () => ({
     tafsirOptions: [{ id: 1, name: 'Sample Tafsir', lang: 'en' }],
     tafsirResource: { id: 1, name: 'Sample Tafsir', lang: 'en' },
@@ -35,7 +35,7 @@ jest.mock('@/app/(features)/tafsir/hooks/useTafsirOptions', () => ({
   }),
 }));
 
-jest.mock('@/app/(features)/tafsir/hooks/useTranslationOptions', () => ({
+jest.mock('@/app/[lang]/(features)/tafsir/hooks/useTranslationOptions', () => ({
   useTranslationOptions: () => ({
     translationOptions: [
       { id: 20, name: 'Translation 20', lang: 'en' },
@@ -45,7 +45,7 @@ jest.mock('@/app/(features)/tafsir/hooks/useTranslationOptions', () => ({
   }),
 }));
 
-jest.mock('@/app/(features)/tafsir/hooks/useWordTranslations', () => ({
+jest.mock('@/app/[lang]/(features)/tafsir/hooks/useWordTranslations', () => ({
   useWordTranslations: () => ({
     wordLanguageOptions: [
       { name: 'English', id: 85 },
@@ -62,7 +62,7 @@ jest.mock('@/app/(features)/tafsir/hooks/useWordTranslations', () => ({
   }),
 }));
 
-jest.mock('@/app/(features)/tafsir/hooks/useVerseNavigation', () => ({
+jest.mock('@/app/[lang]/(features)/tafsir/hooks/useVerseNavigation', () => ({
   useVerseNavigation: () => ({
     prev: null,
     next: null,

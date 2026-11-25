@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { memo, type ReactElement, useCallback } from 'react';
 
 import { useSidebar } from '@/app/providers/SidebarContext';
@@ -10,12 +9,13 @@ import {
   localizeHref,
   stripLocaleFromPathname,
 } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { BarsIcon } from '@/app/shared/icons';
 
 export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
   const { setSurahListOpen, setBookmarkSidebarOpen, setSearchSidebarOpen } = useSidebar();
 
-  const rawPathname = usePathname();
+  const rawPathname = usePublicPathname();
   const locale = getLocaleFromPathname(rawPathname) ?? 'en';
   const pathname = stripLocaleFromPathname(rawPathname);
 
@@ -64,7 +64,7 @@ export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
       {/* PC: Brand Link (Hidden on mobile) */}
       <Link
         href={localizeHref('/', locale)}
-        className="hidden xl:flex items-center space-x-2 hover:opacity-80 transition-opacity ml-2"
+        className="hidden xl:flex items-center gap-2 hover:opacity-80 transition-opacity ms-2"
       >
         {/* Logo Removed on PC as per request, implicitly */}
         <span className="font-semibold text-lg text-foreground">Al Quran</span>

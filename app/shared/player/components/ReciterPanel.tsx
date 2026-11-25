@@ -5,6 +5,8 @@ import { useReciters } from '@/app/shared/player/hooks/useReciters';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
+const STORAGE_KEY_RECITER_META = 'reciterMeta';
+
 interface Props {
   localReciter: number;
   setLocalReciter: (id: number) => void;
@@ -33,9 +35,16 @@ export const ReciterPanel = memo(function ReciterPanel({
             return (
               <button
                 key={r.id}
-                onClick={() => setLocalReciter(r.id)}
+                onClick={() => {
+                  setLocalReciter(r.id);
+                  try {
+                    localStorage.setItem(STORAGE_KEY_RECITER_META, JSON.stringify(r));
+                  } catch {
+                    // ignore storage errors
+                  }
+                }}
                 className={cn(
-                  'group relative flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-left transition-colors duration-200',
+                  'group relative flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-start transition-colors duration-200',
                   isSelected
                     ? 'border-accent bg-accent/10'
                     : 'border-border hover:border-accent/50 hover:bg-interactive-hover',

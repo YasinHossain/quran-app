@@ -28,21 +28,29 @@ function useStoredBookmarkState(): {
   const [pinnedVerses, setPinnedVerses] = useState<Bookmark[]>([]);
   const [lastRead, setLastReadState] = useState<LastReadMap>({});
   const [planner, setPlannerState] = useState<Record<string, PlannerPlan>>({});
+  // Saving the empty initial state before the stored data loads would overwrite it.
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const load = (): void => {
-      setFolders(loadBookmarksFromStorage());
-      setPinnedVerses(loadPinnedFromStorage());
-      setLastReadState(loadLastReadFromStorage());
-      setPlannerState(loadPlannerFromStorage());
-    };
-    load();
+    setFolders(loadBookmarksFromStorage());
+    setPinnedVerses(loadPinnedFromStorage());
+    setLastReadState(loadLastReadFromStorage());
+    setPlannerState(loadPlannerFromStorage());
+    setIsLoaded(true);
   }, []);
 
-  useEffect(() => saveBookmarksToStorage(folders), [folders]);
-  useEffect(() => savePinnedToStorage(pinnedVerses), [pinnedVerses]);
-  useEffect(() => saveLastReadToStorage(lastRead), [lastRead]);
-  useEffect(() => savePlannerToStorage(planner), [planner]);
+  useEffect(() => {
+    if (isLoaded) saveBookmarksToStorage(folders);
+  }, [folders, isLoaded]);
+  useEffect(() => {
+    if (isLoaded) savePinnedToStorage(pinnedVerses);
+  }, [pinnedVerses, isLoaded]);
+  useEffect(() => {
+    if (isLoaded) saveLastReadToStorage(lastRead);
+  }, [lastRead, isLoaded]);
+  useEffect(() => {
+    if (isLoaded) savePlannerToStorage(planner);
+  }, [planner, isLoaded]);
 
   return {
     folders,

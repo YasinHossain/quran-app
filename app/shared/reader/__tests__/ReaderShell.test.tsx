@@ -1,5 +1,7 @@
 import { render } from '@testing-library/react';
+import { renderToString } from 'react-dom/server';
 
+import { ReaderServerDataProvider } from '@/app/shared/reader/ReaderServerData';
 import { ReaderShell } from '@/app/shared/reader/ReaderShell';
 
 jest.mock('next/dynamic', () => {
@@ -15,11 +17,11 @@ jest.mock('@/app/providers/UIStateContext', () => ({
   useUIState: () => ({ setSettingsOpen: jest.fn() }),
 }));
 
-jest.mock('@/app/(features)/surah/components/surah-view/SurahMain', () => ({
+jest.mock('@/app/[lang]/(features)/surah/components/surah-view/SurahMain', () => ({
   SurahMain: () => null,
 }));
 
-jest.mock('@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation', () => ({
+jest.mock('@/app/[lang]/(features)/surah/components/surah-view/SurahWorkspaceNavigation', () => ({
   SurahWorkspaceNavigation: () => null,
 }));
 
@@ -40,7 +42,12 @@ jest.mock('@/app/shared/reader/settings/SettingsSidebarContent', () => ({
 }));
 
 jest.mock('@/app/shared/reader/ReaderLayouts', () => ({
-  WorkspaceReaderLayout: ({ desktopRight }: { desktopRight?: unknown }) => <>{desktopRight}</>,
+  WorkspaceReaderLayout: ({ main, desktopRight }: { main?: unknown; desktopRight?: unknown }) => (
+    <>
+      {main}
+      {desktopRight}
+    </>
+  ),
 }));
 
 jest.mock('@/app/shared/reader/useReaderView', () => ({
@@ -106,5 +113,36 @@ describe('ReaderShell reader-mode initialization', () => {
       | { activeReaderMode?: string }
       | undefined;
     expect(firstCallProps?.activeReaderMode).toBe('reading');
+  });
+});
+
+describe('ReaderShell full-text section', () => {
+  const fullText = (
+    <details data-testid="full-text">
+      <summary>Full text</summary>
+      <p data-verse-key="1:7">verse</p>
+    </details>
+  );
+  const renderShell = (): React.JSX.Element => (
+    <ReaderServerDataProvider fullText={fullText}>
+      <ReaderShell resourceId="1" lookup={jest.fn()} />
+    </ReaderServerDataProvider>
+  );
+
+  beforeEach(() => {
+    mockUseReaderMode.mockReturnValue({
+      mode: 'verse',
+      setMode: jest.fn(),
+      enableReaderMode: jest.fn(),
+      isReaderModeAvailable: true,
+    });
+  });
+
+  it('keeps the full text in both the server render and the client render', () => {
+    // Server HTML and the hydrated/client-navigated DOM must both contain every verse.
+    expect(renderToString(renderShell())).toContain('data-testid="full-text"');
+
+    const { getByTestId } = render(renderShell());
+    expect(getByTestId('full-text').querySelector('[data-verse-key="1:7"]')).not.toBeNull();
   });
 });

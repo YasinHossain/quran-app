@@ -1,15 +1,15 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import { memo, type ReactElement, useCallback } from 'react';
 
 import { useUIState } from '@/app/providers/UIStateContext';
 import { stripLocaleFromPathname } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { SettingsIcon } from '@/app/shared/icons';
 
 export const HeaderActions = memo(function HeaderActions(): ReactElement {
   const { setSettingsOpen } = useUIState();
-  const rawPathname = usePathname();
+  const rawPathname = usePublicPathname();
   const pathname = stripLocaleFromPathname(rawPathname);
 
   // These pages have NO settings sidebar at all (not even on desktop 2xl),
@@ -37,7 +37,7 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
 
   // Pages that have settings sidebar (shows at 2xl) - show gear icon below 2xl
   return (
-    <div className="flex items-center justify-end gap-2 sm:gap-2.5 w-auto sm:w-1/3 mr-1">
+    <div className="flex items-center justify-end gap-2 sm:gap-2.5 w-auto sm:w-1/3 me-1">
       {/* Settings button - visible when settings sidebar is hidden (< 2xl) */}
       <button
         onClick={openSettings}

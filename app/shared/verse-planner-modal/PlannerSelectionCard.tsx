@@ -37,7 +37,7 @@ export function PlannerSelectionCard({
   const detailLine = detailParts.join(' · ');
 
   const composedClassName = [
-    'flex w-full flex-col gap-2 rounded-lg border px-4 py-4 text-left transition-colors duration-200 sm:px-5 sm:py-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 group',
+    'flex w-full flex-col gap-2 rounded-lg border px-4 py-4 text-start transition-colors duration-200 sm:px-5 sm:py-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 group',
     isSelected
       ? 'border-accent bg-accent text-on-accent'
       : 'border-border bg-surface text-content-primary hover:bg-interactive-hover',

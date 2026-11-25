@@ -1,0 +1,54 @@
+'use client';
+
+import Link from 'next/link';
+import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+
+/**
+ * Footer component for the home page.
+ * Displays beta notice and legal links (About, Privacy Policy, Terms of Use).
+ */
+export const HomeFooter = memo(function HomeFooter() {
+  const { t } = useTranslation();
+  const locale = getLocaleFromPathname(usePublicPathname()) ?? 'en';
+
+  return (
+    <footer className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 pb-4">
+      <div className="border-t border-border pt-3">
+        {/* Beta Notice */}
+        <p className="text-center text-sm text-muted mb-3">
+          {t('home_footer_beta_notice')}{' '}
+          <a
+            href="https://github.com/YasinHossain/quran-app/issues/new"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-accent underline decoration-dotted underline-offset-4 transition-colors"
+          >
+            {t('home_footer_feedback_call_to_action')}
+          </a>
+        </p>
+
+        {/* Legal Links */}
+        <div className="flex justify-center items-center gap-4 text-sm text-muted">
+          <Link
+            href={localizeHref('/about', locale)}
+            className="hover:text-accent transition-colors"
+          >
+            {t('home_footer_about')}
+          </Link>
+          <span className="text-border">•</span>
+          <Link href="/privacy" className="hover:text-accent transition-colors">
+            {t('home_footer_privacy_policy')}
+          </Link>
+          <span className="text-border">•</span>
+          <Link href="/terms" className="hover:text-accent transition-colors">
+            {t('home_footer_terms_of_use')}
+          </Link>
+        </div>
+      </div>
+    </footer>
+  );
+});

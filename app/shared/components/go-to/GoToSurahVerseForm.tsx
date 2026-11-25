@@ -116,7 +116,7 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
 
   return (
     <form
-      className={clsx('pt-4 px-6 pb-6 sm:pt-5 sm:px-8 sm:pb-8 space-y-4 text-left', className)}
+      className={clsx('pt-4 px-6 pb-6 sm:pt-5 sm:px-8 sm:pb-8 space-y-4 text-start', className)}
       onSubmit={handleSubmit}
     >
       <div className="flex items-center justify-between gap-3">
@@ -154,7 +154,7 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
                 key={suggestion.query}
                 type="button"
                 onClick={() => onSearchSuggestion(suggestion.query)}
-                className="flex items-center gap-2 px-2.5 py-2 rounded-lg text-left transition-colors hover:bg-interactive/60 group"
+                className="flex items-center gap-2 px-2.5 py-2 rounded-lg text-start transition-colors hover:bg-interactive/60 group"
               >
                 <div className="w-5 h-5 rounded bg-accent/10 flex items-center justify-center flex-shrink-0 group-hover:bg-accent/20 transition-colors">
                   {getSuggestionIcon(suggestion.icon)}

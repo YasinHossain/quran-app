@@ -1,10 +1,10 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import React, { memo, useCallback, startTransition } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { buildTafsirRoute } from '@/app/shared/navigation/routes';
 import { SurahNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
@@ -47,7 +47,7 @@ const SurahItem = memo(function SurahItem({
       <SurahNavigationCard
         href={href}
         scroll={!isActive}
-        prefetch={true}
+        prefetch={false}
         data-active={isActive}
         isActive={isActive}
         content={{
@@ -73,7 +73,7 @@ export const Surah = ({
   isMushafMode,
   onClose,
 }: Props): React.JSX.Element => {
-  const rawPathname = usePathname();
+  const rawPathname = usePublicPathname();
   const locale = getLocaleFromPathname(rawPathname) ?? 'en';
   const { getSurahHref } = useNavigationTargets();
 

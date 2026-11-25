@@ -3,8 +3,8 @@
 import dynamic from 'next/dynamic';
 import React, { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
 
-import { SurahMain } from '@/app/(features)/surah/components/surah-view/SurahMain';
-import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
+import { SurahMain } from '@/app/[lang]/(features)/surah/components/surah-view/SurahMain';
+import { SurahWorkspaceNavigation } from '@/app/[lang]/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
 import { useReaderMode } from '@/app/providers/ReaderModeContext';
 import { useUIState } from '@/app/providers/UIStateContext';
 import { SettingsSidebar } from '@/app/shared/reader/settings';
@@ -14,7 +14,9 @@ import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 // Dynamic import for MushafMain - only loaded when user switches to reading/mushaf mode
 const MushafMain = dynamic(
   () =>
-    import('@/app/(features)/surah/components/surah-view/MushafMain').then((mod) => mod.MushafMain),
+    import('@/app/[lang]/(features)/surah/components/surah-view/MushafMain').then(
+      (mod) => mod.MushafMain
+    ),
   {
     loading: () => (
       <div className="flex items-center justify-center h-64">
@@ -27,10 +29,14 @@ const MushafMain = dynamic(
 
 import { ReaderAudioProps, WorkspaceReaderLayout } from './ReaderLayouts';
 import { ReaderResourceHeading } from './ReaderResourceHeading';
+import { useReaderFullText, useReaderIntro } from './ReaderServerData';
 import { useReaderView } from './useReaderView';
 
-import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
-import type { LookupFn, UseVerseListingParams } from '@/app/(features)/surah/hooks/useVerseListing';
+import type { MushafResourceKind } from '@/app/[lang]/(features)/surah/hooks/mushafReadingViewTypes';
+import type {
+  LookupFn,
+  UseVerseListingParams,
+} from '@/app/[lang]/(features)/surah/hooks/useVerseListing';
 
 type ReaderViewState = ReturnType<typeof useReaderView>;
 type VerseListingState = ReaderViewState['verseListing'];
@@ -183,6 +189,9 @@ export function ReaderShell({
     ...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {}),
   });
   const { verseListing, panels, mushafParams } = readerView;
+  // Server-rendered full text of the surah/juz (collapsed); keeps every verse in the DOM.
+  const fullText = useReaderFullText();
+  const intro = useReaderIntro();
 
   // Use a layout effect so mode changes (esp. `initialMode="mushaf"`) don't flash on refresh.
   useIsomorphicLayoutEffect(() => {
@@ -263,11 +272,18 @@ export function ReaderShell({
 
   const wrappedMainContent =
     resourceKind === 'surah' ? (
-      <div className="w-full">{mainContent}</div>
+      <div className="w-full">
+        {mainContent}
+        {fullText}
+      </div>
     ) : (
       <div className="w-full space-y-8">
         <ReaderResourceHeading resourceKind={resourceKind} resourceId={resourceId} />
-        {mainContent}
+        {intro}
+        <div>
+          {mainContent}
+          {fullText}
+        </div>
       </div>
     );
   const activeReaderTab = resolvedMode === 'mushaf' ? 'reading' : 'translation';

@@ -6,6 +6,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { ResponsiveVerseActions } from '@/app/shared/ResponsiveVerseActions';
 import { VerseArabic } from '@/app/shared/VerseArabic';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import { toLanguageCode } from '@/lib/text/languageCodes';
 import { cn } from '@/lib/utils/cn';
 
 import type { VerseActionsProps } from '@/app/shared/verse-actions';
@@ -78,7 +79,7 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
     const containerClasses = cn(getVariantClasses(variant, isPlaying), className);
     const fontSize = translationFontSize ?? settings.translationFontSize ?? 18;
     const arabicSelectionGutterClassName = extendArabicSelectionGutter
-      ? '-mr-4 pr-1 sm:-mr-6 sm:pr-3 xl:-mr-6 xl:pr-3'
+      ? '-me-4 pe-1 sm:-me-6 sm:pe-3 xl:-me-6 xl:pe-3'
       : undefined;
 
     const sortedTranslations = useMemo(() => {
@@ -127,7 +128,7 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
             />
           ) : null}
 
-          <div className={cn('space-y-6 md:flex-grow', contentClassName)}>
+          <div className={cn('space-y-6 md:space-y-8 md:flex-grow', contentClassName)}>
             {showArabic ? (
               <VerseArabic verse={verse} className={arabicSelectionGutterClassName} />
             ) : null}
@@ -136,7 +137,6 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
               <div className="space-y-6">
                 {sortedTranslations.map((translation: Translation) => {
                   const lang = resourceLanguages?.[translation.resource_id];
-                  const isEnglish = lang === 'en';
                   return (
                     <div key={translation.resource_id} className="group">
                       {translation.resource_name && (
@@ -146,10 +146,9 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
                       )}
                       <p
                         className={cn(
-                          'text-left leading-relaxed text-slate-900 dark:text-stone-200',
-                          isEnglish ? 'font-[family-name:var(--font-crimson-text)]' : ''
+                          'text-start leading-relaxed text-slate-900 dark:text-stone-200'
                         )}
-                        lang={lang}
+                        lang={toLanguageCode(lang)}
                         dir="auto"
                         style={{ fontSize: `${fontSize}px` }}
                         dangerouslySetInnerHTML={{ __html: sanitizeHtml(translation.text) }}

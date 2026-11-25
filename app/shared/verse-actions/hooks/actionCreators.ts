@@ -10,6 +10,7 @@ import {
   CalendarIcon,
   GoToIcon,
 } from '@/app/shared/icons';
+import { tafsirHrefForVerseKey } from '@/app/shared/navigation/routes';
 import { VerseActionItem } from '@/app/shared/verse-actions/types';
 
 import type { TFunction } from 'i18next';
@@ -74,7 +75,7 @@ export function createTafsirAction({ verseKey, t }: CreateTafsirActionParams): V
     label: t('view_tafsir', { defaultValue: 'View tafsir' }),
     icon: createElement(BookReaderIcon, { size: 20 }),
     onClick: () => {},
-    href: `/tafsir/${verseKey.replace(':', '/')}`,
+    href: tafsirHrefForVerseKey(verseKey),
   };
 }
 

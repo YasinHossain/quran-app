@@ -57,7 +57,7 @@ describe('getSurahInitialDataServer', () => {
     expect(result).toEqual({ totalVerses: 286, initialVerses: [verse] });
   });
 
-  it('does not throw when initial verse fetch fails', async () => {
+  it('throws when the initial verse fetch fails, so no degraded page is cached', async () => {
     const { getChapterServer } = jest.requireMock('../chapters') as {
       getChapterServer: jest.Mock;
     };
@@ -71,15 +71,14 @@ describe('getSurahInitialDataServer', () => {
     getChapterServer.mockResolvedValue({ id: 2, verses_count: 286 });
     getVersesByChapter.mockRejectedValue(new Error('Nope'));
 
-    const result = await getSurahInitialDataServer({
-      surahId: '2',
-      translationIds: [20],
-      wordLang: 'en',
-      perPage: 20,
-    });
-
-    expect(result.totalVerses).toBe(286);
-    expect(result.initialVerses).toBeUndefined();
+    await expect(
+      getSurahInitialDataServer({
+        surahId: '2',
+        translationIds: [20],
+        wordLang: 'en',
+        perPage: 20,
+      })
+    ).rejects.toThrow('Nope');
     expect(logger.error).toHaveBeenCalled();
   });
 });

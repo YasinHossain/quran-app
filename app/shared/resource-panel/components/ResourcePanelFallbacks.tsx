@@ -21,7 +21,7 @@ export const ResourcePanelErrorMessage = memo(function ResourcePanelErrorMessage
 }): React.JSX.Element {
   return (
     <div className="mx-4 mt-4 p-4 rounded-lg border bg-error/10 border-error/20 text-error">
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-2">
         <AlertIcon className="h-5 w-5 text-error" />
         <span className="text-sm">{error}</span>
       </div>

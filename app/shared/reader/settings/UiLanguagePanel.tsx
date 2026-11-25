@@ -2,13 +2,19 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { SlideOverPanel } from '@/app/shared/components/SlideOverPanel';
+import { buildLocaleSwitchHref } from '@/app/shared/i18n/localeRouting';
 import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
-import { UI_LANGUAGES, isUiLanguageCode, type UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
+import {
+  DEFAULT_UI_LANGUAGE,
+  UI_LANGUAGES,
+  isUiLanguageCode,
+  type UiLanguageCode,
+} from '@/app/shared/i18n/uiLanguages';
 import { ensureUiResourcesLoaded } from '@/app/shared/i18n/uiResourcesClient';
-import { setLocaleInPathnameForSwitch } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 import { SettingsPanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
 import { ResourceItem } from '@/app/shared/resource-panel/ResourceItem';
 
@@ -24,10 +30,11 @@ export function UiLanguagePanel({
   onCloseSidebar,
 }: UiLanguagePanelProps): React.JSX.Element {
   const { t, i18n } = useTranslation();
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const selectedCode: UiLanguageCode = isUiLanguageCode(i18n.language) ? i18n.language : 'en';
+  const router = useProgressRouter();
+  const pathname = usePublicPathname();
+  const selectedCode: UiLanguageCode = isUiLanguageCode(i18n.language)
+    ? i18n.language
+    : DEFAULT_UI_LANGUAGE;
 
   React.useEffect(() => {
     if (!isOpen) return;
@@ -55,11 +62,9 @@ export function UiLanguagePanel({
                   isSelected={selectedCode === language.code}
                   onToggle={() => {
                     if (selectedCode === language.code) return;
-                    const query = searchParams.toString();
-                    const hash = typeof window !== 'undefined' ? window.location.hash : '';
-                    const nextPath = setLocaleInPathnameForSwitch(pathname, language.code);
+                    const nextHref = buildLocaleSwitchHref(pathname, language.code);
                     setUiLanguage(i18n, language.code);
-                    router.replace(`${nextPath}${query ? `?${query}` : ''}${hash}`);
+                    router.replace(nextHref);
                     onClose();
                   }}
                 />

@@ -1,0 +1,79 @@
+import { NO_DAILY_GOAL_MESSAGE } from '@/app/[lang]/(features)/bookmarks/planner/utils/plannerCard/constants';
+import { buildAggregatedChapter } from '@/app/[lang]/(features)/bookmarks/planner/utils/plannerGroupCard.helpers';
+
+import type { PlannerGroupCardData } from './plannerGroupCard.types';
+import type { PlannerPlanGroup } from '@/app/[lang]/(features)/bookmarks/planner/utils/planGrouping';
+import type { PlannerCardViewModel } from '@/app/[lang]/(features)/bookmarks/planner/utils/plannerCard';
+import type { PlannerI18nContext } from '@/app/[lang]/(features)/bookmarks/planner/utils/plannerI18n';
+import type { Chapter, PlannerPlan } from '@/types';
+
+const buildPlaceholderViewModel = (
+  planName: string,
+  planDetailsText: string | null,
+  surahLabel: string,
+  i18n?: PlannerI18nContext
+): PlannerCardViewModel => ({
+  planInfo: {
+    displayPlanName: planName,
+    planDetailsText,
+    surahLabel,
+  },
+  focus: {
+    hasDailyGoal: false,
+    dayLabel: i18n ? i18n.t('planner_getting_started') : 'Getting started',
+    goalVerseLabel: i18n
+      ? i18n.t('planner_all_daily_goals_completed')
+      : 'All daily goals completed',
+    dailyHighlights: [],
+    remainingSummary: null,
+    endsAtSummary: null,
+    isComplete: true,
+    noGoalMessage: i18n ? i18n.t('planner_no_daily_goal_message') : NO_DAILY_GOAL_MESSAGE,
+  },
+  stats: {
+    completed: { verses: 0, pages: null, juz: null },
+    remaining: { verses: 0, pages: null, juz: null },
+    goal: { verses: 0, pages: null, juz: null },
+  },
+  progress: {
+    percent: 0,
+    currentVerse: 1,
+    currentSecondaryText: '',
+  },
+});
+
+export const buildPlaceholderCardData = (
+  group: PlannerPlanGroup,
+  chapterLookup: Map<number, Chapter>,
+  i18n?: PlannerI18nContext
+): PlannerGroupCardData => {
+  const fallbackSurahId = group.surahIds[0] ?? 1;
+  const placeholderPlan: PlannerPlan = {
+    id: group.planIds[0] ?? `${group.key}-placeholder`,
+    surahId: fallbackSurahId,
+    targetVerses: 0,
+    completedVerses: 0,
+    createdAt: Date.now(),
+    lastUpdated: Date.now(),
+    notes: group.planName,
+    estimatedDays: 0,
+  };
+  const placeholderChapter = buildAggregatedChapter(group.surahIds, chapterLookup, i18n);
+  const fallbackSurahLabel = placeholderChapter?.name_simple ?? `Surah ${placeholderPlan.surahId}`;
+  const surahLabel =
+    i18n && Number.isFinite(fallbackSurahId)
+      ? i18n.t(`surah_names.${fallbackSurahId}`, fallbackSurahLabel)
+      : fallbackSurahLabel;
+  const viewModel = buildPlaceholderViewModel(group.planName, null, surahLabel, i18n);
+
+  return {
+    key: group.key,
+    surahId: String(fallbackSurahId),
+    plan: placeholderPlan,
+    ...(placeholderChapter ? { chapter: placeholderChapter } : {}),
+    viewModel,
+    progressLabel: i18n ? i18n.t('planner_no_progress_tracked') : 'No progress tracked',
+    planIds: group.planIds,
+    planName: group.planName,
+  };
+};

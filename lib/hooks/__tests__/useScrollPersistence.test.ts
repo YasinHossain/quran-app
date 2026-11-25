@@ -93,6 +93,9 @@ describe('useScrollPersistence - interactions', () => {
     act(() => {
       jest.advanceTimersByTime(120);
     });
+    act(() => {
+      jest.runOnlyPendingTimers();
+    });
     expect(setScrollTops.Surah).toHaveBeenCalledWith(42);
     expect(setSpy).toHaveBeenCalledWith('surahScrollTop', '42');
     setSpy.mockRestore();
@@ -117,7 +120,14 @@ describe('useScrollPersistence - interactions', () => {
 });
 
 describe('useScrollPersistence - remember scroll', () => {
-  beforeEach(resetState);
+  beforeEach(() => {
+    resetState();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
 
   it('remembers scroll for a tab', () => {
     const setSpy = jest.spyOn(Storage.prototype, 'setItem');
@@ -133,6 +143,9 @@ describe('useScrollPersistence - remember scroll', () => {
     act(() => {
       scrollRef.current!.scrollTop = 25;
       result.current.rememberScroll('Page');
+    });
+    act(() => {
+      jest.runOnlyPendingTimers();
     });
     expect(setScrollTops.Page).toHaveBeenCalledWith(25);
     expect(setSpy).toHaveBeenCalledWith('pageScrollTop', '25');

@@ -7,12 +7,12 @@ import { PanelHeader } from './PanelHeader';
 import { PanelOverlay } from './PanelOverlay';
 
 export const PANEL_VARIANTS = {
-  sidebar: 'fixed top-0 bottom-0 right-0 w-80 bg-surface shadow-lg pt-safe pb-safe',
+  sidebar: 'fixed top-0 bottom-0 end-0 w-80 bg-surface shadow-lg pt-safe pb-safe',
   modal: 'fixed inset-4 bg-surface rounded-lg shadow-xl max-w-2xl max-h-96 mx-auto my-auto',
   'bottom-sheet':
     'fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl max-h-[90dvh] pb-safe',
   overlay:
-    'fixed top-reader-header right-4 w-72 bg-surface rounded-lg shadow-lg border border-border',
+    'fixed top-reader-header end-4 w-72 bg-surface rounded-lg shadow-lg border border-border',
   fullscreen: 'fixed inset-0 bg-surface pt-safe pb-safe',
 } as const;
 
@@ -98,7 +98,9 @@ function renderStandardPanel({
         className={cn(
           'z-50 text-foreground transition-transform duration-300 will-change-transform',
           variantClass,
-          isOpen ? 'translate-x-0 ease-in-out' : 'translate-x-full shadow-none ease-in-out',
+          isOpen
+            ? 'translate-x-0 ease-in-out'
+            : 'translate-x-full rtl:-translate-x-full shadow-none ease-in-out',
           className
         )}
       >

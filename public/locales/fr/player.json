@@ -1,0 +1,11 @@
+{
+  "skip_back": "Reculer de 10 secondes",
+  "skip_forward": "Avancer de 10 secondes",
+  "pause_audio": "Mettre l’audio en pause",
+  "play_audio": "Lire l’audio",
+  "toggle_repeat": "Activer ou désactiver la répétition",
+  "toggle_mute": "Activer ou couper le son",
+  "audio_settings": "Paramètres audio",
+  "microphone": "Microphone",
+  "could_not_play_audio": "Impossible de lire l’audio."
+}

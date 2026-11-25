@@ -8,13 +8,13 @@ import {
   buildGroupRangeLabel,
   getChapterDisplayName,
   groupPlannerPlans,
-} from '@/app/(features)/bookmarks/planner/utils/planGrouping';
+} from '@/app/[lang]/(features)/bookmarks/planner/utils/planGrouping';
 import {
   clampActualVerseToPlanRange,
   convertActualVerseToPlanProgress,
   getPlanEndVerse,
   getPlanStartVerse,
-} from '@/app/(features)/bookmarks/planner/utils/planRange';
+} from '@/app/[lang]/(features)/bookmarks/planner/utils/planRange';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { ModalFooter } from '@/app/shared/components/modal/ModalFooter';
 import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';

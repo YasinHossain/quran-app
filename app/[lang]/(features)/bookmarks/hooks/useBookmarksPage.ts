@@ -1,0 +1,63 @@
+import { useState, useMemo } from 'react';
+
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
+
+import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+
+export interface UseBookmarksPageReturn {
+  folders: ReturnType<typeof useBookmarks>['folders'];
+  sortedFolders: ReturnType<typeof useBookmarks>['folders'];
+  handleSectionChange: (section: SectionId) => void;
+}
+
+type SortKey = 'recent' | 'name-asc' | 'name-desc' | 'most-verses';
+
+function sortFolders<F extends { name: string; bookmarks: unknown[]; createdAt?: number }>(
+  folders: F[],
+  sortBy: SortKey
+): F[] {
+  const items = [...folders];
+  switch (sortBy) {
+    case 'name-asc':
+      return items.sort((a, b) => a.name.localeCompare(b.name));
+    case 'name-desc':
+      return items.sort((a, b) => b.name.localeCompare(a.name));
+    case 'most-verses':
+      return items.sort((a, b) => b.bookmarks.length - a.bookmarks.length);
+    case 'recent':
+    default:
+      return items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  }
+}
+
+function sectionToPath(section: SectionId): string {
+  switch (section) {
+    case 'pinned':
+      return '/bookmarks/pinned';
+    case 'last-read':
+      return '/bookmarks/last-read';
+    case 'planner':
+      return '/bookmarks/planner';
+    default:
+      return '/bookmarks/folders';
+  }
+}
+
+export const useBookmarksPage = (): UseBookmarksPageReturn => {
+  const { folders } = useBookmarks();
+  const [sortBy] = useState<SortKey>('recent');
+  const router = useProgressRouter();
+  const pathname = usePublicPathname();
+
+  const sortedFolders = useMemo(() => sortFolders(folders, sortBy), [folders, sortBy]);
+
+  const handleSectionChange = (section: SectionId): void => {
+    const locale = getLocaleFromPathname(pathname) ?? 'en';
+    router.push(localizeHref(sectionToPath(section), locale));
+  };
+
+  return { folders, sortedFolders, handleSectionChange };
+};

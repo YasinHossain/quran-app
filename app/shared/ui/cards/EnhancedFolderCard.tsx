@@ -2,7 +2,7 @@
 
 import React, { memo } from 'react';
 
-import { FolderContextMenu } from '@/app/(features)/bookmarks/components/FolderContextMenu';
+import { FolderContextMenu } from '@/app/[lang]/(features)/bookmarks/components/FolderContextMenu';
 import { ClockIcon } from '@/app/shared/icons';
 import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
 import { cn } from '@/lib/utils/cn';
@@ -75,7 +75,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
 
   return (
     <div className={cn('group relative w-full', className)} {...props}>
-      <div className="absolute right-3 top-3 z-10" onPointerDown={(e) => e.stopPropagation()}>
+      <div className="absolute end-3 top-3 z-10" onPointerDown={(e) => e.stopPropagation()}>
         <FolderContextMenu onDelete={onDelete} onColorChange={onColorChange} />
       </div>
 
@@ -87,7 +87,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
         gap="gap-3"
         customVariant={{
           height: 'min-h-[136px]',
-          padding: 'pl-5 pr-4 pb-3 pt-3',
+          padding: 'ps-5 pe-4 pb-3 pt-3',
           hover: {
             effect: 'none',
             value: 'group-hover:shadow-lg',
@@ -105,7 +105,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
         className="h-full w-full"
       >
         <div className="flex h-full w-full flex-1 flex-col gap-3">
-          <div className="flex items-center gap-4 min-w-0 pr-8 sm:pr-12">
+          <div className="flex items-center gap-4 min-w-0 pe-8 sm:pe-12">
             <FolderGlyph folder={folder} />
             <div className="flex-1 min-w-0">
               <h3 className="mb-1 line-clamp-2 text-lg font-semibold text-foreground transition-colors duration-200 group-hover:text-accent">
@@ -135,7 +135,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
               ) : null}
             </div>
             {formattedUpdatedAt ? (
-              <span className="ml-auto inline-flex items-center gap-1 text-[11px] font-medium text-muted/80 whitespace-nowrap text-right">
+              <span className="ms-auto inline-flex items-center gap-1 text-[11px] font-medium text-muted/80 whitespace-nowrap text-end">
                 <ClockIcon className="h-3.5 w-3.5" />
                 {formattedUpdatedAt}
               </span>

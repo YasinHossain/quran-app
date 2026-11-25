@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
 import {
   memo,
   useCallback,
@@ -18,14 +17,16 @@ import { useDynamicFontLoader } from '@/app/hooks/useDynamicFontLoader';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { GoToSurahVerseForm } from '@/app/shared/components/go-to/GoToSurahVerseForm';
 import { SearchInput } from '@/app/shared/components/SearchInput';
+import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { SearchIcon, BookOpenIcon, HashIcon } from '@/app/shared/icons';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 import {
   buildSurahRoute,
   buildJuzRoute,
   buildPageRoute,
   buildSearchRoute,
 } from '@/app/shared/navigation/routes';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import {
   quickSearch,
   analyzeQuery,
@@ -180,7 +181,7 @@ const SearchDropdown = memo(function SearchDropdown({
 }: SearchDropdownProps): ReactElement {
   const { settings } = useSettings();
   const { t, i18n } = useTranslation();
-  const rawPathname = usePathname();
+  const rawPathname = usePublicPathname();
   const locale = useMemo(() => getLocaleFromPathname(rawPathname) ?? 'en', [rawPathname]);
 
   // Load Arabic font dynamically when displaying search results
@@ -274,7 +275,7 @@ const SearchDropdown = memo(function SearchDropdown({
               key={search.timestamp}
               type="button"
               onClick={() => onSelectRecent(search.query)}
-              className="w-full px-4 py-2.5 text-left hover:bg-interactive/60 transition-colors flex items-center gap-3"
+              className="w-full px-4 py-2.5 text-start hover:bg-interactive/60 transition-colors flex items-center gap-3"
             >
               <SearchIcon size={16} className="text-muted flex-shrink-0" />
               <span className="text-sm text-foreground truncate">{search.query}</span>
@@ -303,7 +304,7 @@ const SearchDropdown = memo(function SearchDropdown({
                 href={localizeHref(getNavResultHref(result, searchQuery), locale)}
                 prefetch={true}
                 onClick={onLinkClick}
-                className={`w-full px-4 py-3 text-left transition-colors flex items-center gap-3 ${
+                className={`w-full px-4 py-3 text-start transition-colors flex items-center gap-3 ${
                   isHighlighted ? 'bg-accent/20' : 'hover:bg-interactive/60'
                 }`}
               >
@@ -397,7 +398,7 @@ const SearchDropdown = memo(function SearchDropdown({
                 )}
                 prefetch={true}
                 onClick={onLinkClick}
-                className={`w-full block px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${
+                className={`w-full block px-4 py-4 text-start transition-colors border-b border-border/30 last:border-b-0 ${
                   isHighlighted ? 'bg-accent/15' : 'hover:bg-interactive/50'
                 }`}
               >
@@ -507,7 +508,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
   showShortcuts = false,
 }: ComprehensiveSearchProps): ReactElement {
   const { t } = useTranslation();
-  const router = useRouter();
+  const router = useProgressRouter();
   const { settings } = useSettings();
   const containerRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
@@ -555,7 +556,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
   }, [isOpen]);
 
   // Close dropdown when route changes
-  const pathname = usePathname();
+  const pathname = usePublicPathname();
   const locale = useMemo(() => getLocaleFromPathname(pathname) ?? 'en', [pathname]);
   useEffect(() => {
     setIsOpen(false);

@@ -16,6 +16,9 @@ export interface ApiVerse extends Omit<Verse, 'words'> {
   words?: ApiWord[];
 }
 
+/** Quran.com footnote markers (`<sup foot_note=123>1</sup>`); the reader has no footnote text. */
+const FOOTNOTE_SUP_TAG = /<sup\b[^>]*\bfoot_note\b[^>]*>[\s\S]*?<\/sup>/gi;
+
 /**
  * Normalize API verse data into the internal `Verse` shape.
  *
@@ -23,12 +26,21 @@ export interface ApiVerse extends Omit<Verse, 'words'> {
  * @param wordLang  Key used for word-by-word translations.
  *
  * Safely maps optional `words` array, falling back to base text when the
- * Uthmani script or translations are missing.
+ * Uthmani script or translations are missing, and drops translation footnote markers.
  */
 export function normalizeVerse(raw: ApiVerse, wordLang: string = 'en'): Verse {
   const { words: wordsRaw, ...rest } = raw;
   return {
     ...(rest as Omit<ApiVerse, 'words'>),
+    // Same as the server-rendered first page (`prerenderedVerses`), so later pages match it.
+    ...(rest.translations
+      ? {
+          translations: rest.translations.map((translation) => ({
+            ...translation,
+            text: translation.text.replace(FOOTNOTE_SUP_TAG, '').trimEnd(),
+          })),
+        }
+      : {}),
     ...(wordsRaw
       ? {
           words: wordsRaw.map(

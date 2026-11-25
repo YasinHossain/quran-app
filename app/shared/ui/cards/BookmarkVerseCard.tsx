@@ -57,7 +57,7 @@ export const BookmarkVerseCard = ({
       )}
       {...props}
     >
-      <div className="flex items-start space-x-2.5">
+      <div className="flex items-start gap-2.5">
         {/* Verse indicator */}
         <div className="flex-shrink-0 w-7 h-7 rounded-md bg-accent/10 text-accent flex items-center justify-center text-xs font-semibold group-hover:bg-accent/15">
           {localizedAyahNumber}

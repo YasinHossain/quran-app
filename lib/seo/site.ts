@@ -1,8 +1,23 @@
 export const SITE_DOMAIN = 'appquran.com';
-export const SITE_NAME = 'AppQuran';
+export const SITE_NAME = 'Al Quran';
 
 export const SITE_DESCRIPTION =
-  'AppQuran is a fast, modern Quran app to read, listen, and study the Holy Quran with translations, tafsir, and audio recitations.';
+  'Al Quran is a fast, modern Quran app to read, listen, and study the Holy Quran with translations, tafsir, and audio recitations.';
+
+export const GITHUB_REPO_URL = 'https://github.com/YasinHossain/quran-app';
+export const GITHUB_ISSUES_URL = `${GITHUB_REPO_URL}/issues`;
+
+/**
+ * Official profiles of the site, listed as `sameAs` on the Organization JSON-LD. Add the Play Store
+ * listing and a Facebook page here once they exist.
+ */
+export const SITE_SAME_AS: ReadonlyArray<string> = [GITHUB_REPO_URL];
+
+/**
+ * Google Search Console verification code.
+ * Set via environment variable: NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+ */
+export const GOOGLE_SITE_VERIFICATION = process.env['NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION'] || '';
 
 export const SITE_KEYWORDS: ReadonlyArray<string> = [
   'AppQuran',
@@ -15,6 +30,15 @@ export const SITE_KEYWORDS: ReadonlyArray<string> = [
   'Quran audio',
   'Quran recitation',
   'Holy Quran',
+  'Surah Al-Fatiha',
+  'Surah Al-Baqarah',
+  'Surah Yasin',
+  'Surah Al-Mulk',
+  'Surah Ar-Rahman',
+  'Quran online free',
+  'listen Quran online',
+  'Quran with translation',
+  'Quran tafsir online',
 ];
 
 export function isProductionDeployment(): boolean {
@@ -27,7 +51,8 @@ export function isProductionDeployment(): boolean {
 function normalizeOrigin(url: string): string {
   const raw = String(url || '').trim();
   if (!raw) return '';
-  const withProtocol = raw.startsWith('http://') || raw.startsWith('https://') ? raw : `https://${raw}`;
+  const withProtocol =
+    raw.startsWith('http://') || raw.startsWith('https://') ? raw : `https://${raw}`;
   const parsed = new URL(withProtocol);
   return `${parsed.protocol}//${parsed.host}`;
 }
@@ -49,4 +74,15 @@ export function absoluteUrl(pathname: string): string {
   const baseUrl = getSiteUrl();
   const path = String(pathname || '/').startsWith('/') ? String(pathname || '/') : `/${pathname}`;
   return new URL(path, baseUrl).toString();
+}
+
+export function buildOrganizationJsonLd(): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: getSiteUrl(),
+    logo: absoluteUrl('/icons/icon-512x512.png'),
+    sameAs: [...SITE_SAME_AS],
+  };
 }

@@ -1,10 +1,10 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { ArabicFontPanel } from '@/app/(features)/surah/components/ArabicFontPanel';
-import { WordLanguagePanel } from '@/app/(features)/surah/components/WordLanguagePanel';
+import { ArabicFontPanel } from '@/app/[lang]/(features)/surah/components/ArabicFontPanel';
+import { WordLanguagePanel } from '@/app/[lang]/(features)/surah/components/WordLanguagePanel';
 
 import { SettingsPanelsProps } from './types';
 
@@ -13,7 +13,7 @@ import type { ReactElement } from 'react';
 // Dynamic imports for heavy panels - only loaded when user opens them
 const TranslationPanel = dynamic(
   () =>
-    import('@/app/(features)/surah/components/panels/translation-panel').then(
+    import('@/app/[lang]/(features)/surah/components/panels/translation-panel').then(
       (mod) => mod.TranslationPanel
     ),
   { ssr: false }
@@ -21,19 +21,23 @@ const TranslationPanel = dynamic(
 
 const TafsirPanel = dynamic(
   () =>
-    import('@/app/(features)/surah/components/panels/tafsir-panel').then((mod) => mod.TafsirPanel),
+    import('@/app/[lang]/(features)/surah/components/panels/tafsir-panel').then(
+      (mod) => mod.TafsirPanel
+    ),
   { ssr: false }
 );
 
 const MushafPanel = dynamic(
   () =>
-    import('@/app/(features)/surah/components/panels/mushaf-panel').then((mod) => mod.MushafPanel),
+    import('@/app/[lang]/(features)/surah/components/panels/mushaf-panel').then(
+      (mod) => mod.MushafPanel
+    ),
   { ssr: false }
 );
 
 const TajweedRulesPanel = dynamic(
   () =>
-    import('@/app/(features)/surah/components/panels/tajweed-rules-panel').then(
+    import('@/app/[lang]/(features)/surah/components/panels/tajweed-rules-panel').then(
       (mod) => mod.TajweedRulesPanel
     ),
   { ssr: false }
@@ -57,6 +61,32 @@ export const SettingsPanels = ({
   onTajweedRulesPanelClose,
   onCloseSidebar,
 }: SettingsPanelsProps): ReactElement => {
+  const [hasOpenedTranslationPanel, setHasOpenedTranslationPanel] = useState(false);
+  const [hasOpenedTafsirPanel, setHasOpenedTafsirPanel] = useState(false);
+  const [hasOpenedMushafPanel, setHasOpenedMushafPanel] = useState(false);
+  const [hasOpenedTajweedRulesPanel, setHasOpenedTajweedRulesPanel] = useState(false);
+
+  const isTranslationOpen = Boolean(isTranslationPanelOpen);
+  const isTafsirOpen = Boolean(isTafsirPanelOpen);
+  const isMushafOpen = Boolean(isMushafPanelOpen);
+  const isTajweedRulesOpen = Boolean(isTajweedRulesPanelOpen);
+
+  useEffect(() => {
+    if (isTranslationOpen) setHasOpenedTranslationPanel(true);
+  }, [isTranslationOpen]);
+
+  useEffect(() => {
+    if (isTafsirOpen) setHasOpenedTafsirPanel(true);
+  }, [isTafsirOpen]);
+
+  useEffect(() => {
+    if (isMushafOpen) setHasOpenedMushafPanel(true);
+  }, [isMushafOpen]);
+
+  useEffect(() => {
+    if (isTajweedRulesOpen) setHasOpenedTajweedRulesPanel(true);
+  }, [isTajweedRulesOpen]);
+
   return (
     <>
       <ArabicFontPanel
@@ -64,20 +94,20 @@ export const SettingsPanels = ({
         onClose={onArabicFontPanelClose}
         {...(onCloseSidebar ? { onCloseSidebar } : {})}
       />
-      {onTranslationPanelClose && (
+      {onTranslationPanelClose && (hasOpenedTranslationPanel || isTranslationOpen) ? (
         <TranslationPanel
-          isOpen={!!isTranslationPanelOpen}
+          isOpen={isTranslationOpen}
           onClose={onTranslationPanelClose}
           {...(onCloseSidebar ? { onCloseSidebar } : {})}
         />
-      )}
-      {onTafsirPanelClose && (
+      ) : null}
+      {onTafsirPanelClose && (hasOpenedTafsirPanel || isTafsirOpen) ? (
         <TafsirPanel
-          isOpen={!!isTafsirPanelOpen}
+          isOpen={isTafsirOpen}
           onClose={onTafsirPanelClose}
           {...(onCloseSidebar ? { onCloseSidebar } : {})}
         />
-      )}
+      ) : null}
       {onWordLanguagePanelClose && (
         <WordLanguagePanel
           isOpen={!!isWordLanguagePanelOpen}
@@ -85,23 +115,26 @@ export const SettingsPanels = ({
           {...(onCloseSidebar ? { onCloseSidebar } : {})}
         />
       )}
-      {onMushafPanelClose && mushafOptions && onMushafChange && (
+      {onMushafPanelClose &&
+      mushafOptions &&
+      onMushafChange &&
+      (hasOpenedMushafPanel || isMushafOpen) ? (
         <MushafPanel
-          isOpen={!!isMushafPanelOpen}
+          isOpen={isMushafOpen}
           onClose={onMushafPanelClose}
           options={mushafOptions}
           selectedId={selectedMushafId}
           onSelect={onMushafChange}
           {...(onCloseSidebar ? { onCloseSidebar } : {})}
         />
-      )}
-      {onTajweedRulesPanelClose && (
+      ) : null}
+      {onTajweedRulesPanelClose && (hasOpenedTajweedRulesPanel || isTajweedRulesOpen) ? (
         <TajweedRulesPanel
-          isOpen={!!isTajweedRulesPanelOpen}
+          isOpen={isTajweedRulesOpen}
           onClose={onTajweedRulesPanelClose}
           {...(onCloseSidebar ? { onCloseSidebar } : {})}
         />
-      )}
+      ) : null}
     </>
   );
 };

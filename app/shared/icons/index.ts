@@ -29,6 +29,7 @@ export { CloseIcon } from './CloseIcon';
 export { EllipsisHIcon } from './EllipsisHIcon';
 export { FlagIcon } from './FlagIcon';
 export { GripVerticalIcon } from './GripVerticalIcon';
+export { InfoIcon } from './InfoIcon';
 export { MinusIcon } from './MinusIcon';
 export { PlusIcon } from './PlusIcon';
 export { SearchIcon } from './SearchIcon';

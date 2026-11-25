@@ -20,6 +20,7 @@ import {
 import { createPortal } from 'react-dom';
 
 import { ChevronDownIcon } from '@/app/shared/icons';
+import { foldSearchCase } from '@/lib/text/foldSearchCase';
 
 const DROPDOWN_MAX_HEIGHT = 28 * 16;
 
@@ -204,11 +205,11 @@ export const SurahSelect = memo(
           return;
         }
 
-        const query = next.trim().toLowerCase();
+        const query = foldSearchCase(next.trim());
         const matchIndex = options.findIndex(
           (option) =>
-            option.value.toLowerCase().startsWith(query) ||
-            option.label.toLowerCase().includes(query)
+            foldSearchCase(option.value).startsWith(query) ||
+            foldSearchCase(option.label).includes(query)
         );
         if (matchIndex >= 0) {
           const matchedOption = options[matchIndex];
@@ -318,10 +319,10 @@ export const SurahSelect = memo(
             }}
             onKeyDown={handleInputKeyDown}
             className={clsx(
-              'w-full bg-transparent text-foreground text-sm px-3 py-3 pr-7 rounded-lg outline-none placeholder:text-muted'
+              'w-full bg-transparent text-foreground text-sm px-3 py-3 pe-7 rounded-lg outline-none placeholder:text-muted'
             )}
           />
-          <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center gap-2 text-muted">
+          <div className="pointer-events-none absolute inset-y-0 end-2 flex items-center gap-2 text-muted">
             {clearable && !disabled && value ? (
               <button
                 type="button"
@@ -411,7 +412,7 @@ export const SurahSelect = memo(
                         data-index={index}
                         onClick={(): void => handleOptionSelect(option)}
                         className={clsx(
-                          'w-full text-left px-4 py-2.5 rounded-lg text-sm transition-colors',
+                          'w-full text-start px-4 py-2.5 rounded-lg text-sm transition-colors',
                           selected
                             ? 'bg-interactive text-foreground'
                             : isActive

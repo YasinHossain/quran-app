@@ -1,0 +1,177 @@
+/* ===== Tafsir Content Styles ===== */
+.tafsir-content {
+  font-family: var(--font-noto-sans-bengali), 'Noto Sans Bengali', sans-serif;
+  line-height: 2.3;
+  color: rgb(var(--color-foreground));
+  text-align: justify;
+  word-spacing: normal;
+  letter-spacing: 0.015em;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  font-feature-settings:
+    'kern' 1,
+    'liga' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+}
+
+.tafsir-content p {
+  margin-bottom: 1.8rem;
+  text-indent: 1.5rem;
+}
+
+.tafsir-content p:first-child {
+  text-indent: 0;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  font-size: 1.05em;
+}
+
+.tafsir-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Arabic text within tafsir */
+.tafsir-content [lang='ar'] {
+  font-size: 1.1em;
+  font-weight: 500;
+  color: rgb(var(--color-accent));
+  background: rgba(13, 148, 136, 0.08);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  margin: 0 0.25rem;
+  display: inline-block;
+  border: 1px solid rgba(13, 148, 136, 0.2);
+}
+
+/* Enhanced readability for Bengali text */
+.tafsir-content [lang='bn'] {
+  font-family: var(--font-noto-sans-bengali), 'Noto Sans Bengali', sans-serif !important;
+  font-size: 1.02em;
+  line-height: 2.4;
+  font-weight: 400;
+  font-feature-settings: 'kern' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Quote-like styling for important sections */
+.tafsir-content em,
+.tafsir-content i {
+  font-style: normal;
+  font-weight: 500;
+  color: rgb(var(--color-accent));
+  position: relative;
+}
+
+/* Better spacing for long paragraphs */
+.tafsir-content p + p {
+  margin-top: 1.5rem;
+}
+
+/* Section breaks and emphasis */
+.tafsir-content strong,
+.tafsir-content b {
+  font-weight: 700;
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-libre-baskerville), serif;
+}
+
+/* Subtle drop cap effect for first paragraph */
+.tafsir-content p:first-child::first-letter {
+  font-size: 3em;
+  line-height: 0.8;
+  float: left;
+  float: inline-start;
+  margin: 0.1em 0 0;
+  margin-inline-end: 0.1em;
+  font-family: var(--font-libre-baskerville), serif;
+  font-weight: 700;
+  color: rgb(var(--color-accent));
+}
+
+/* Improved quote styling */
+.tafsir-content blockquote {
+  border-inline-start: 4px solid rgb(var(--color-accent));
+  padding-inline-start: 1.5rem;
+  margin: 2rem 0;
+  font-style: italic;
+  color: rgb(var(--color-foreground));
+  opacity: 0.9;
+}
+
+/* NOTE: Removed paragraph transitions for performance - causes layout thrashing with long content */
+
+/* Theme-aware adjustments using semantic tokens */
+.tafsir-content [lang='ar'] {
+  background: rgb(var(--color-accent) / 0.15);
+  border-color: rgb(var(--color-accent) / 0.3);
+}
+
+.tafsir-content p:first-child::first-letter {
+  color: rgb(var(--color-accent) / 0.9);
+}
+
+/* Ensure all tafsir content uses Noto Sans Bengali */
+.tafsir-content * {
+  font-family: var(--font-noto-sans-bengali), 'Noto Sans Bengali', sans-serif !important;
+}
+
+/* Override for Arabic text to maintain Arabic fonts */
+.tafsir-content [lang='ar'] {
+  font-family: var(--font-noto-sans-arabic), 'Noto Sans Arabic', serif !important;
+}
+
+/* Ensure embedded media and wide content are responsive */
+.tafsir-content img,
+.tafsir-content video,
+.tafsir-content iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Prevent long URLs or tokens from overflowing */
+.tafsir-content a,
+.tafsir-content code,
+.tafsir-content pre {
+  overflow-wrap: anywhere;
+}
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 640px) {
+  .tafsir-content {
+    line-height: 2.1;
+    letter-spacing: 0.01em;
+  }
+
+  .tafsir-content p {
+    margin-bottom: 1.1rem;
+    text-indent: 0;
+    /* Remove indent on small screens for readability */
+  }
+
+  /* Neutralize drop cap on small screens */
+  .tafsir-content p:first-child::first-letter {
+    float: none;
+    margin: 0;
+    font-size: 1.5em;
+    line-height: 1;
+  }
+
+  /* Tighter arabic badge on small screens */
+  .tafsir-content [lang='ar'] {
+    font-size: 1.05em;
+    padding: 0.15rem 0.35rem;
+    display: inline;
+  }
+
+  .tafsir-content blockquote {
+    padding-inline-start: 1rem;
+    margin: 1rem 0;
+  }
+
+  .tafsir-content p + p {
+    margin-top: 1rem;
+  }
+}

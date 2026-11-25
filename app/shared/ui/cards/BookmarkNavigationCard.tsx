@@ -1,10 +1,10 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import React, { memo, useCallback, useMemo, startTransition } from 'react';
 
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { colors } from '@/app/shared/design-system/card-tokens';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
 import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
 import { cn } from '@/lib/utils/cn';
 
@@ -97,7 +97,7 @@ export const BookmarkNavigationCard = memo(function BookmarkNavigationCard({
 }: BookmarkNavigationCardProps): React.JSX.Element {
   const { id, icon, label, description } = content;
   const activeState = Boolean(isActive);
-  const rawPathname = usePathname();
+  const rawPathname = usePublicPathname();
   const locale = getLocaleFromPathname(rawPathname) ?? 'en';
   const href = useMemo(() => localizeHref(getSectionHref(id), locale), [id, locale]);
   const handleClick = useNavigationClick(
@@ -119,7 +119,7 @@ export const BookmarkNavigationCard = memo(function BookmarkNavigationCard({
       {...props}
     >
       <IconBadge icon={icon} isActive={activeState} />
-      <div className="flex-1 min-w-0 ml-3">
+      <div className="flex-1 min-w-0 ms-3">
         <div
           className={cn(
             'font-semibold text-sm truncate transition-colors duration-200',

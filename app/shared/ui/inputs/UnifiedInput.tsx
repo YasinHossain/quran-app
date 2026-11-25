@@ -53,7 +53,7 @@ export const UnifiedInput = memo(function UnifiedInput({
       <div
         className={cn(
           'relative flex items-center gap-2 rounded-lg border bg-interactive/60 text-foreground',
-          variant === 'compact' ? 'pl-4 pr-3 py-3' : 'px-4 py-3',
+          variant === 'compact' ? 'ps-4 pe-3 py-3' : 'px-4 py-3',
           hasError
             ? 'border-error focus-within:border-error focus-within:ring-2 focus-within:ring-error/20'
             : 'border-border focus-within:border-transparent focus-within:ring-2 focus-within:ring-accent',
@@ -65,7 +65,7 @@ export const UnifiedInput = memo(function UnifiedInput({
           id={inputId}
           className={cn(
             'flex-1 min-w-0 bg-surface/0 text-foreground placeholder:text-muted focus:outline-none',
-            rightSlot ? 'pr-10' : undefined,
+            rightSlot ? 'pe-10' : undefined,
             inputClassName
           )}
           aria-invalid={hasError || props['aria-invalid']}
@@ -73,7 +73,7 @@ export const UnifiedInput = memo(function UnifiedInput({
           {...props}
         />
         {rightSlot ? (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2">{rightSlot}</div>
+          <div className="absolute end-3 top-1/2 -translate-y-1/2">{rightSlot}</div>
         ) : null}
       </div>
 

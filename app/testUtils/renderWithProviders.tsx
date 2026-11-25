@@ -16,7 +16,7 @@ beforeEach(() => {
   (chaptersApi.getChapters as jest.Mock).mockResolvedValue([]);
 });
 
-const Providers = ({ children }: { children: React.ReactNode }): React.JSX.Element => (
+export const TestProviders = ({ children }: { children: React.ReactNode }): React.JSX.Element => (
   <SWRConfig
     value={{
       provider: () => new Map(),
@@ -47,7 +47,7 @@ export function renderWithProviders(
   ui: React.ReactElement,
   options?: Omit<RenderOptions, 'wrapper'>
 ): RenderResult {
-  return render(ui, { wrapper: Providers, ...options });
+  return render(ui, { wrapper: TestProviders, ...options });
 }
 
 export async function renderWithProvidersAsync(
@@ -56,7 +56,7 @@ export async function renderWithProvidersAsync(
 ): Promise<RenderResult> {
   let result: RenderResult | undefined;
   await act(async () => {
-    result = render(ui, { wrapper: Providers, ...options });
+    result = render(ui, { wrapper: TestProviders, ...options });
   });
   return result!;
 }

@@ -1,18 +1,18 @@
 // app/shared/Navigation.tsx - Simple unified navigation
 'use client';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useHeaderVisibility } from '@/app/[lang]/(features)/layout/context/HeaderVisibilityContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import {
   getLocaleFromPathname,
   localizeHref,
   stripLocaleFromPathname,
 } from '@/app/shared/i18n/localeRouting';
-import { isUiLanguageCode } from '@/app/shared/i18n/uiLanguages';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { getTafsirReturnHref } from '@/app/shared/navigation/tafsirReturn';
 import { cn } from '@/lib/utils/cn';
@@ -45,7 +45,7 @@ const DesktopNavigation = memo(function DesktopNavigation({
 
   return (
     <nav
-      className="fixed left-0 top-reader-header bottom-0 hidden w-16 bg-background z-[5] xl:block"
+      className="fixed start-0 top-reader-header bottom-0 hidden w-16 bg-background z-[5] xl:block"
       aria-label="Primary navigation"
     >
       <div className="h-full flex flex-col items-center justify-center space-y-4">
@@ -145,20 +145,20 @@ export const Navigation = memo(function Navigation({
 }: {
   pathnameOverride?: string;
 }) {
-  const rawPathname = usePathname();
+  const rawPathname = usePublicPathname();
   const localeFromPath = getLocaleFromPathname(rawPathname);
   const { i18n, t } = useTranslation();
-  const locale = localeFromPath ?? (isUiLanguageCode(i18n.language) ? i18n.language : 'en');
+  const locale = localeFromPath ?? 'en';
   const pathname = pathnameOverride ?? rawPathname;
   const routePathname = stripLocaleFromPathname(pathname);
-  const router = useRouter();
+  const router = useProgressRouter();
   const { isHidden } = useHeaderVisibility();
   const { lastRead } = useBookmarks();
   // Mobile nav only hides on scroll (isHidden), not when sidebar opens.
   // We handle sidebar blur via z-index (nav is z-30, sidebar overlay is z-40).
   const hideMobileNav = isHidden;
 
-  const [readerHref, setReaderHref] = useState('/surah/1');
+  const [readerHref, setReaderHref] = useState(() => buildSurahRoute(1));
   const [tafsirReturnHref, setTafsirReturnHref] = useState<string | null>(null);
   const [prefetchEnabled] = useState(() => {
     // Prefetching is a major UX win for "tab-like" navigation, but we still
@@ -269,7 +269,11 @@ export const Navigation = memo(function Navigation({
     }, null);
 
     if (mostRecent) {
-      const href = buildSurahRoute(mostRecent.surahId, { startVerse: mostRecent.verseNumber });
+      // `forceSeq` stamps the jump, so a refresh after reading on resumes at the newer position.
+      const href = buildSurahRoute(mostRecent.surahId, {
+        startVerse: mostRecent.verseNumber,
+        forceSeq: true,
+      });
       setReaderHref(href);
       window.localStorage.setItem('nav:last-reader-href', href);
     }

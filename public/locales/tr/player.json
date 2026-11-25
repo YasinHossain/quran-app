@@ -1,0 +1,11 @@
+{
+  "skip_back": "10 saniye geri sar",
+  "skip_forward": "10 saniye ileri sar",
+  "pause_audio": "Sesi duraklat",
+  "play_audio": "Sesi oynat",
+  "toggle_repeat": "Tekrarı aç/kapat",
+  "toggle_mute": "Sesi aç/kapat",
+  "audio_settings": "Ses Ayarları",
+  "microphone": "Mikrofon",
+  "could_not_play_audio": "Ses oynatılamadı."
+}

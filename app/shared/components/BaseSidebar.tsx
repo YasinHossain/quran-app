@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useHeaderVisibility } from '@/app/[lang]/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
 
 import { SidebarOverlay } from './sidebar/SidebarOverlay';
@@ -111,7 +111,7 @@ export const BaseSidebar = ({
         desktopBreakpoint={desktopBreakpoint}
       />
 
-      <aside
+      <div
         className={cn(
           getPositionClasses(),
           // Ensure we don't override fixed positioning from getPositionClasses
@@ -124,7 +124,7 @@ export const BaseSidebar = ({
         aria-modal={isOpen}
       >
         {shouldRenderContent ? children : null}
-      </aside>
+      </div>
     </>
   );
 };

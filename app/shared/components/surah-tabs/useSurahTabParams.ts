@@ -1,4 +1,7 @@
-import { useParams, usePathname } from 'next/navigation';
+import { useParams } from 'next/navigation';
+
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { resolveSurahParam } from '@/lib/seo/surahSlugs';
 
 import type { TabKey } from '@/app/shared/components/surah-tabs/types';
 
@@ -19,9 +22,11 @@ interface SurahTabParamsResult {
 
 export const useSurahTabParams = (): SurahTabParamsResult => {
   const { surahId, juzId, pageId } = useParams();
-  const pathname = usePathname();
+  const pathname = usePublicPathname();
 
-  const currentSurahId = toNumberParam(surahId);
+  // Surah routes use the slug (`al-baqarah`); resolve it (or a legacy number) to the surah id.
+  const rawSurahId = Array.isArray(surahId) ? surahId[0] : surahId;
+  const currentSurahId = rawSurahId ? resolveSurahParam(rawSurahId)?.id : undefined;
   const currentJuzId = toNumberParam(juzId);
   const currentPageId = toNumberParam(pageId);
   const isTafsirPath = pathname?.includes('/tafsir');

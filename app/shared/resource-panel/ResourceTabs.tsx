@@ -76,13 +76,13 @@ export const ResourceTabs = ({
   scrollTabsRight,
   className = '',
 }: ResourceTabsProps): React.JSX.Element => (
-  <div className={`flex min-w-0 items-center overflow-hidden ${className}`}>
+  <div className={`flex min-w-0 items-center overflow-hidden rtl:flex-row-reverse ${className}`}>
     <NavButton disabled={!canScrollLeft} onClick={scrollTabsLeft} side="left">
       <ChevronLeftIcon size={20} />
     </NavButton>
     <div
       ref={tabsContainerRef}
-      className="flex flex-1 min-w-0 items-center space-x-2 overflow-x-auto [&::-webkit-scrollbar]:hidden"
+      className="flex flex-1 min-w-0 items-center gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden"
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
     >
       {languages.map((lang) => (

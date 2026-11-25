@@ -295,9 +295,12 @@
     margin-bottom: 0;
   }
 
+  /* Persian shares the Naskh UI font, which covers its letters (پ چ ژ گ ک ی) and digits. */
   html[lang='ar'],
-  html[lang='ar'] body {
-    font-family: Inter, 'Noto Sans Arabic', 'Noto Naskh Arabic', serif;
+  html[lang='ar'] body,
+  html[lang='fa'],
+  html[lang='fa'] body {
+    font-family: Inter, 'Noto Naskh Arabic', serif;
   }
 
   html[lang='bn'],
@@ -348,6 +351,15 @@
     box-shadow: -10px 0 28px -18px rgb(var(--color-foreground) / 0.18);
   }
 
+  /* Sidebars swap sides in RTL, so their separation shadows swap too */
+  [dir='rtl'] .mobile-sidebar-shadow-right {
+    box-shadow: -10px 0 28px -18px rgb(var(--color-foreground) / 0.18);
+  }
+
+  [dir='rtl'] .mobile-sidebar-shadow-left {
+    box-shadow: 10px 0 28px -18px rgb(var(--color-foreground) / 0.18);
+  }
+
   @media (min-width: 1280px) {
     .workspace-sidebar-left {
       box-shadow:
@@ -357,6 +369,10 @@
 
     .workspace-sidebar-right {
       box-shadow: -10px 0 28px -18px rgb(var(--color-foreground) / 0.14);
+    }
+
+    [dir='rtl'] .workspace-sidebar-right {
+      box-shadow: 10px 0 28px -18px rgb(var(--color-foreground) / 0.14);
     }
   }
 
@@ -894,4 +910,24 @@ html[data-glass='off'] .backdrop-saturate-150 {
 
 .animate-menu-out {
   animation: menu-out 0.15s ease-in forwards;
+}
+
+/* Top-of-page navigation progress (RouteProgressBar). Grows from the inline-start edge. */
+.route-progress-fill {
+  transform-origin: left center;
+  box-shadow:
+    0 0 10px rgb(var(--color-accent) / 0.7),
+    0 0 4px rgb(var(--color-accent) / 0.5);
+  border-start-end-radius: 9999px;
+  border-end-end-radius: 9999px;
+}
+
+[dir='rtl'] .route-progress-fill {
+  transform-origin: right center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-progress-fill {
+    transition: none !important;
+  }
 }

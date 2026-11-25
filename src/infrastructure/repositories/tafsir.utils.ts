@@ -34,7 +34,7 @@ async function tryFetchAll(): Promise<Tafsir[] | null> {
 }
 
 async function fetchLanguageSpecificResources(): Promise<Tafsir[]> {
-  const languages = ['en', 'ar', 'bn', 'ur', 'id', 'tr', 'fa'];
+  const languages = ['en', 'ar', 'bn', 'ur', 'id', 'tr', 'fa', 'ru'];
   const results = await Promise.allSettled(
     languages.map((lang) => fetchResourcesForLanguage(lang))
   );

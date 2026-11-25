@@ -24,7 +24,8 @@
 - Language: TypeScript with two-space indentation.
 - Lint/Format: ESLint + Prettier (use project configs).
 - Components: PascalCase file/folder names (e.g., `PlayerControls.tsx`).
-- Styling: Use semantic tokens (e.g., `text-primary`, `bg-surface`, `border-border`). Avoid raw Tailwind color utilities and `dark:` classes; don't use `useTheme` for colors. See `docs/architecture/SEMANTIC_TOKENS.md` and `docs/development/STYLING.md`.
+- Design: you have full creative freedom over visual design. Existing screens and older docs are not templates; build modern, considered pages, and redesign or add components and tokens when it improves the result. Keep light/dark themes, accessibility, RTL and Quran-text rules intact. See `docs/architecture/DESIGN_SYSTEM.md`.
+- Styling mechanics: theme variables in `app/globals.css` (`bg-surface`, `text-accent/60`, …). Raw palette classes and theme conditionals fail lint because they ignore the theme. See `docs/development/STYLING.md`.
 
 ## Testing Guidelines
 
@@ -42,3 +43,13 @@
 
 - Runtime: Node.js 20 (`nvm use`). Example env: copy `.env.example` to `.env`.
 - Audits: CI runs security checks; optionally run `npm audit --omit=dev` locally.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

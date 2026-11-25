@@ -1,9 +1,10 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
+import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
+import { useProgressRouter } from '@/app/shared/navigation/progress/useProgressRouter';
 
 import { ErrorActions } from './ErrorActions';
 import { ErrorDetails } from './ErrorDetails';
@@ -12,8 +13,8 @@ import { ErrorIcon } from './ErrorIcon';
 import type { ErrorFallbackProps } from './ErrorBoundary';
 
 export function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps): React.JSX.Element {
-  const router = useRouter();
-  const pathname = usePathname();
+  const router = useProgressRouter();
+  const pathname = usePublicPathname();
   const handleGoHome = useCallback(() => {
     const locale = getLocaleFromPathname(pathname) ?? 'en';
     router.push(localizeHref('/', locale));
@@ -24,7 +25,7 @@ export function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps):
       <div className="max-w-md w-full bg-surface rounded-lg shadow-lg p-6">
         <div className="flex items-center mb-4">
           <ErrorIcon />
-          <div className="ml-3">
+          <div className="ms-3">
             <h3 className="text-lg font-medium text-foreground">Something went wrong</h3>
           </div>
         </div>
