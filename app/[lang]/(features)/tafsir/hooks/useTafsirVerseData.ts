@@ -15,6 +15,9 @@ import { useWordTranslations } from './useWordTranslations';
 interface UseTafsirVerseDataReturn {
   verse: VerseType | undefined;
   tafsirHtml: string | undefined;
+  /** The verse or its tafsir failed to load and nothing is shown for it. */
+  error: boolean;
+  retry: () => void;
   tafsirResource: { id: number; name: string; lang: string } | undefined;
   translationOptions: { id: number; name: string; lang: string }[];
   wordLanguageOptions: { name: string; id: number }[];
@@ -49,10 +52,20 @@ export const useTafsirVerseData = (
   const { prev, next, navigate, currentSurah } = useVerseNavigation(surahId, ayahId);
 
   const verseKey = surahId && ayahId ? `${surahId}:${ayahId}` : '';
-  const { verse } = useSingleVerse({
+  // The server data only seeds the verse it was rendered for. SWR keeps the previous key's data
+  // while a new key loads (`keepPreviousData`), so anything for another verse is dropped: the
+  // page must never show one verse's text under another verse's URL.
+  const {
+    verse: loadedVerse,
+    error: verseError,
+    mutate: retryVerse,
+  } = useSingleVerse({
     idOrKey: verseKey,
-    ...(initial?.verse ? { initialVerse: initial.verse } : {}),
+    ...(initial?.verse && initial.verse.verse_key === verseKey
+      ? { initialVerse: initial.verse }
+      : {}),
   });
+  const verse = loadedVerse?.verse_key === verseKey ? loadedVerse : undefined;
 
   const repository = useMemo(() => container.getTafsirRepository(), []);
   const tafsirUseCase = useMemo(() => new GetTafsirContentUseCase(repository), [repository]);
@@ -95,10 +108,15 @@ export const useTafsirVerseData = (
     [activeTafsirId, mutate, tafsirUseCase]
   );
 
-  const { data: tafsirHtml } = useSWR(
-    verse && activeTafsirId ? ['tafsir', verse.verse_key, activeTafsirId] : null,
+  const {
+    data: tafsirHtml,
+    error: tafsirError,
+    mutate: mutateTafsir,
+  } = useSWR(
+    verseKey && activeTafsirId ? ['tafsir', verseKey, activeTafsirId] : null,
     ([, key, id]) => tafsirUseCase.execute(key as string, id as number),
     {
+      keepPreviousData: false,
       ...(initial?.tafsirHtml &&
       initialTafsirId === activeTafsirId &&
       typeof initialVerseKey === 'string' &&
@@ -115,13 +133,15 @@ export const useTafsirVerseData = (
     if (connection?.saveData) return;
 
     const schedule = (work: () => void) => {
-      const idleCallback = (window as unknown as { requestIdleCallback?: unknown }).requestIdleCallback;
+      const idleCallback = (window as unknown as { requestIdleCallback?: unknown })
+        .requestIdleCallback;
       if (typeof idleCallback === 'function') {
         const handle = (idleCallback as (cb: () => void, options?: { timeout: number }) => number)(
           work,
           { timeout: PREFETCH_IDLE_DELAY_MS * 4 }
         );
-        const cancelIdle = (window as unknown as { cancelIdleCallback?: unknown }).cancelIdleCallback;
+        const cancelIdle = (window as unknown as { cancelIdleCallback?: unknown })
+          .cancelIdleCallback;
         if (typeof cancelIdle === 'function') {
           return () => (cancelIdle as (id: number) => void)(handle);
         }
@@ -139,9 +159,16 @@ export const useTafsirVerseData = (
     return cancel;
   }, [neighborKeys, prefetchSingleVerse, prefetchTafsir, verse?.verse_key]);
 
+  const retry = useCallback(() => {
+    retryVerse();
+    void mutateTafsir();
+  }, [mutateTafsir, retryVerse]);
+
   return {
     verse,
     tafsirHtml,
+    error: Boolean((verseError && !verse) || (tafsirError && tafsirHtml === undefined)),
+    retry,
     tafsirResource: effectiveTafsirResource,
     translationOptions,
     wordLanguageOptions,

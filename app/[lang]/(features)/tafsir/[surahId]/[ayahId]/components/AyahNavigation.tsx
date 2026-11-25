@@ -11,12 +11,8 @@ import { getTafsirReturnHref } from '@/app/shared/navigation/tafsirReturn';
 import { formatNumber } from '@/lib/text/localizeNumbers';
 import { Surah } from '@/types';
 
+import type { TafsirNavTarget as NavTarget } from '@/app/[lang]/(features)/tafsir/hooks/useVerseNavigation';
 import type { JSX } from 'react';
-
-interface NavTarget {
-  surahId: string;
-  ayahId: number;
-}
 
 interface AyahNavigationProps {
   prev: NavTarget | null;
@@ -24,6 +20,8 @@ interface AyahNavigationProps {
   currentSurah?: Surah | undefined;
   ayahId: string;
   surahId: string;
+  /** Switches verse on the client; without it the links do a normal page navigation. */
+  onNavigate?: ((target: NavTarget) => void) | undefined;
 }
 
 const ChevronLeft = (): JSX.Element => (
@@ -42,9 +40,19 @@ interface NavLinkProps {
   target: NavTarget | null;
   side: 'left' | 'right';
   locale: UiLanguageCode;
+  onNavigate?: ((target: NavTarget) => void) | undefined;
 }
 
-const NavLink = ({ label, target, side, locale }: NavLinkProps): JSX.Element => {
+/** A plain left click; modified and middle clicks (new tab/window) stay with the browser. */
+const isPlainClick = (event: React.MouseEvent<HTMLAnchorElement>): boolean =>
+  event.button === 0 &&
+  !event.metaKey &&
+  !event.ctrlKey &&
+  !event.shiftKey &&
+  !event.altKey &&
+  (!event.currentTarget.target || event.currentTarget.target === '_self');
+
+const NavLink = ({ label, target, side, locale, onNavigate }: NavLinkProps): JSX.Element => {
   const baseClasses =
     'flex items-center px-1 py-2 sm:px-4 rounded-full bg-accent text-on-accent font-bold';
   const iconWrapperClasses =
@@ -65,7 +73,13 @@ const NavLink = ({ label, target, side, locale }: NavLinkProps): JSX.Element => 
   return (
     <Link
       href={localizeHref(buildTafsirUrl(target), locale)}
-      prefetch={true}
+      // The click renders the verse from client data; no route payload is needed.
+      prefetch={false}
+      onClick={(event) => {
+        if (!onNavigate || event.defaultPrevented || !isPlainClick(event)) return;
+        event.preventDefault();
+        onNavigate(target);
+      }}
       rel={side === 'left' ? 'prev' : 'next'}
       aria-label={label}
       className={baseClasses}
@@ -85,7 +99,7 @@ interface BackLinkProps {
 const BackLink = ({ href, locale }: BackLinkProps): JSX.Element => (
   <Link
     href={localizeHref(href, locale)}
-    prefetch={true}
+    prefetch={false}
     aria-label="Back"
     className="flex items-center px-1 sm:px-3 py-2 rounded-full bg-accent text-on-accent"
   >
@@ -147,6 +161,7 @@ export const AyahNavigation = ({
   currentSurah,
   ayahId,
   surahId,
+  onNavigate,
 }: AyahNavigationProps): JSX.Element => {
   const rawPathname = usePublicPathname();
   const locale = getLocaleFromPathname(rawPathname) ?? 'en';
@@ -158,8 +173,14 @@ export const AyahNavigation = ({
       <BackLink href={backHref} locale={locale} />
       <Title currentSurah={currentSurah} surahId={surahId} ayahId={ayahId} />
       <div className="flex items-center gap-1 sm:gap-3">
-        <NavLink label="Previous" target={prev} side="left" locale={locale} />
-        <NavLink label="Next" target={next} side="right" locale={locale} />
+        <NavLink
+          label="Previous"
+          target={prev}
+          side="left"
+          locale={locale}
+          onNavigate={onNavigate}
+        />
+        <NavLink label="Next" target={next} side="right" locale={locale} onNavigate={onNavigate} />
       </div>
     </div>
   );

@@ -47,7 +47,7 @@ const SurahItem = memo(function SurahItem({
       <SurahNavigationCard
         href={href}
         scroll={!isActive}
-        prefetch={true}
+        prefetch={false}
         data-active={isActive}
         isActive={isActive}
         content={{
