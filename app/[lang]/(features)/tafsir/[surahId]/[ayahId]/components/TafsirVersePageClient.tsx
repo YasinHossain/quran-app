@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,11 +13,10 @@ import {
 } from '@/app/[lang]/(features)/tafsir/hooks/useVerseNavigation';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useUIState } from '@/app/providers/UIStateContext';
-import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
-import { buildVerseRoute } from '@/app/shared/navigation/routes';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
+import { useMinWidth } from '@/app/shared/reader/ReaderLayouts';
 import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
 import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 
@@ -117,6 +115,8 @@ export default function TafsirVersePageClient({
     useUIPanelVisibility(WORD_LANGUAGE_PANEL_ID);
 
   const { setSettingsOpen } = useUIState();
+  const isXlUp = useMinWidth(1280);
+  const is2xlUp = useMinWidth(1536);
 
   const handleAddTafsir = React.useCallback(() => {
     setSettingsOpen(true);
@@ -125,23 +125,30 @@ export default function TafsirVersePageClient({
 
   return (
     <>
-      <div className="lg:hidden">
-        <SurahListSidebar />
-        <TafsirSettingsSidebar
-          selectedTranslationName={selectedTranslationName}
-          selectedTafsirName={selectedTafsirName}
-          selectedWordLanguageName={selectedWordLanguageName}
-          isTranslationPanelOpen={isTranslationPanelOpen}
-          onTranslationPanelOpen={openTranslationPanel}
-          onTranslationPanelClose={closeTranslationPanel}
-          isTafsirPanelOpen={isTafsirPanelOpen}
-          onTafsirPanelOpen={openTafsirPanel}
-          onTafsirPanelClose={closeTafsirPanel}
-          isWordLanguagePanelOpen={isWordPanelOpen}
-          onWordLanguagePanelOpen={openWordPanel}
-          onWordLanguagePanelClose={closeWordPanel}
-        />
-      </div>
+      {/* Drawers cover the widths where the workspace columns are hidden (left < xl, right < 2xl). */}
+      {isXlUp ? null : (
+        <div className="xl:hidden">
+          <SurahListSidebar />
+        </div>
+      )}
+      {is2xlUp ? null : (
+        <div className="2xl:hidden">
+          <TafsirSettingsSidebar
+            selectedTranslationName={selectedTranslationName}
+            selectedTafsirName={selectedTafsirName}
+            selectedWordLanguageName={selectedWordLanguageName}
+            isTranslationPanelOpen={isTranslationPanelOpen}
+            onTranslationPanelOpen={openTranslationPanel}
+            onTranslationPanelClose={closeTranslationPanel}
+            isTafsirPanelOpen={isTafsirPanelOpen}
+            onTafsirPanelOpen={openTafsirPanel}
+            onTafsirPanelClose={closeTafsirPanel}
+            isWordLanguagePanelOpen={isWordPanelOpen}
+            onWordLanguagePanelOpen={openWordPanel}
+            onWordLanguagePanelClose={closeWordPanel}
+          />
+        </div>
+      )}
 
       <ThreeColumnWorkspace
         left={<SurahWorkspaceNavigation />}
@@ -216,10 +223,8 @@ function TafsirContent({
   onRetry: () => void;
   onAddTafsir: () => void;
 }): React.JSX.Element {
-  const pathname = usePublicPathname();
   const { t } = useTranslation();
   const { settings } = useSettings();
-  const locale = getLocaleFromPathname(pathname) ?? 'en';
   const touchStart = React.useRef<{ x: number; y: number } | null>(null);
 
   const onTouchStart = (e: React.TouchEvent): void => {
@@ -262,15 +267,6 @@ function TafsirContent({
         ayahId={ayahId}
         surahId={surahId}
       />
-      <div className="mt-2 flex justify-end">
-        <Link
-          href={localizeHref(buildVerseRoute(surahId, ayahId), locale)}
-          prefetch={false}
-          className="inline-flex min-h-touch items-center rounded-sm px-2 text-sm font-semibold text-accent underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        >
-          {t('verse_page_open')}
-        </Link>
-      </div>
       {error ? (
         <div className="flex flex-col items-center gap-3 p-6 text-center text-muted" role="alert">
           <p>{t('error_loading_tafsir')}</p>

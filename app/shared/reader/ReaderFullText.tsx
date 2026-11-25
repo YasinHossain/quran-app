@@ -52,15 +52,15 @@ export function ReaderFullText({
       data-slot="reader-full-text"
       {...(lang ? { lang } : {})}
       {...(dir ? { dir } : {})}
-      className="group mt-10 w-full rounded-lg border border-border bg-surface"
+      className="group w-full"
     >
-      <summary className="flex min-h-touch cursor-pointer list-none items-center justify-between gap-3 rounded-lg px-4 py-3 text-foreground hover:bg-interactive-hover [&::-webkit-details-marker]:hidden">
-        <h2 className="text-sm font-medium">{title}</h2>
+      <summary className="flex min-h-touch cursor-pointer list-none items-center justify-between gap-3 rounded-md px-1 py-2 text-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent [&::-webkit-details-marker]:hidden">
+        <h2 className="text-xs font-normal">{title}</h2>
         <svg
           aria-hidden="true"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className="h-5 w-5 shrink-0 text-muted transition-transform group-open:rotate-180 motion-reduce:transition-none"
+          className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180 motion-reduce:transition-none"
         >
           <path
             fillRule="evenodd"
@@ -69,7 +69,7 @@ export function ReaderFullText({
           />
         </svg>
       </summary>
-      <ol className="divide-y divide-border border-t border-border px-4">
+      <ol className="divide-y divide-border px-1">
         {verses.map((verse) => {
           const href = verseHref(verse.verseKey, locale);
           return (

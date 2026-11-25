@@ -298,7 +298,7 @@ describe('client verse switching', () => {
       'href',
       '/tafsir/al-fatihah/7'
     );
-    expect(screen.getByRole('link', { name: 'verse_page_open' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: '2:1' })).toHaveAttribute(
       'href',
       '/surah/al-baqarah/1'
     );

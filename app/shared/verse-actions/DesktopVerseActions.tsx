@@ -52,7 +52,8 @@ export const DesktopVerseActions = ({
   return (
     <div className={cn('text-center space-y-2 flex-shrink-0', className)}>
       <p className="font-semibold text-accent text-sm">{localizeDigits(verseKey, language)}</p>
-      <div className="flex flex-col items-center space-y-1 text-muted">
+      {/* Mouse users get 32px targets so the rail is not taller than short verses (touch keeps 44px). */}
+      <div className="flex flex-col items-center space-y-1 text-muted [@media(pointer:fine)]:space-y-0 [@media(pointer:fine)]:[&_.min-h-touch]:min-h-8 [@media(pointer:fine)]:[&_.min-w-touch]:min-w-8">
         <PlayPauseButton
           isPlaying={isPlaying}
           isLoadingAudio={isLoadingAudio}

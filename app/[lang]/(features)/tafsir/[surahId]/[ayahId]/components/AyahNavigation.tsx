@@ -6,7 +6,7 @@ import { ArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/i
 import { getLocaleFromPathname, localizeHref } from '@/app/shared/i18n/localeRouting';
 import type { UiLanguageCode } from '@/app/shared/i18n/uiLanguages';
 import { usePublicPathname } from '@/app/shared/i18n/usePublicPathname';
-import { buildSurahRoute, buildTafsirRoute } from '@/app/shared/navigation/routes';
+import { buildSurahRoute, buildTafsirRoute, buildVerseRoute } from '@/app/shared/navigation/routes';
 import { getTafsirReturnHref } from '@/app/shared/navigation/tafsirReturn';
 import { formatNumber } from '@/lib/text/localizeNumbers';
 import { Surah } from '@/types';
@@ -113,10 +113,12 @@ const Title = ({
   currentSurah,
   surahId,
   ayahId,
+  locale,
 }: {
   currentSurah?: Surah | undefined;
   surahId: string;
   ayahId: string;
+  locale: UiLanguageCode;
 }): JSX.Element => {
   const { t, i18n } = useTranslation();
   const language = i18n?.language ?? 'en';
@@ -150,7 +152,19 @@ const Title = ({
   return (
     <div className="flex-1 min-w-0 text-center px-2 text-on-accent font-bold text-sm sm:text-base truncate">
       <span className="font-bold">{surahName}</span>
-      {reference ? ` : ${reference}` : null}
+      {reference ? (
+        <>
+          {' : '}
+          {/* The reference links to the verse page, which links back here (crawl + context). */}
+          <Link
+            href={localizeHref(buildVerseRoute(surahId, ayahId), locale)}
+            prefetch={false}
+            className="rounded-sm underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-accent"
+          >
+            {reference}
+          </Link>
+        </>
+      ) : null}
     </div>
   );
 };
@@ -171,7 +185,7 @@ export const AyahNavigation = ({
   return (
     <div className="flex w-full items-center justify-between gap-1 sm:gap-3 rounded-full bg-accent text-on-accent p-2 min-w-0 overflow-hidden">
       <BackLink href={backHref} locale={locale} />
-      <Title currentSurah={currentSurah} surahId={surahId} ayahId={ayahId} />
+      <Title currentSurah={currentSurah} surahId={surahId} ayahId={ayahId} locale={locale} />
       <div className="flex items-center gap-1 sm:gap-3">
         <NavLink
           label="Previous"

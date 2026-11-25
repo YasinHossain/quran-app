@@ -112,7 +112,7 @@ function VerseListEndSection({
   return (
     <div
       data-slot="reader-end-of-list"
-      className="flex w-full flex-col items-center justify-center gap-6 py-10 text-center"
+      className="flex w-full flex-col items-center justify-center gap-6 text-center"
     >
       {surahNavigation}
       {resourceNavigation}

@@ -3,11 +3,13 @@
 import React from 'react';
 
 import { SurahAudio } from '@/app/[lang]/(features)/surah/components/surah-view/SurahAudio';
+import { cn } from '@/lib/utils/cn';
 
 import { ThreeColumnWorkspace } from './ThreeColumnWorkspace';
 import { WorkspaceMain } from './WorkspaceMain';
 
-const useMinWidth = (minWidthPx: number): boolean => {
+/** Media-query match that is `false` on the server; used to mount only the active sidebar variant. */
+export const useMinWidth = (minWidthPx: number): boolean => {
   const query = `(min-width: ${minWidthPx}px)`;
 
   return React.useSyncExternalStore(
@@ -96,7 +98,9 @@ export const WorkspaceReaderLayout = ({
             data-slot="surah-workspace-main"
             reserveLeftSpace
             reserveRightSpace
-            contentClassName={contentClassName}
+            // pb-24 clears the mobile bottom nav and the audio player; on xl neither is shown
+            // while audio is stopped, so the page ends right after its content.
+            contentClassName={cn(contentClassName, !audio.isVisible && 'xl:pb-10')}
           >
             {main}
           </WorkspaceMain>

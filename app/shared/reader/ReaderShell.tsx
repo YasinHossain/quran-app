@@ -280,8 +280,10 @@ export function ReaderShell({
       <div className="w-full space-y-8">
         <ReaderResourceHeading resourceKind={resourceKind} resourceId={resourceId} />
         {intro}
-        {mainContent}
-        {fullText}
+        <div>
+          {mainContent}
+          {fullText}
+        </div>
       </div>
     );
   const activeReaderTab = resolvedMode === 'mushaf' ? 'reading' : 'translation';

@@ -128,7 +128,7 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
             />
           ) : null}
 
-          <div className={cn('space-y-6 md:flex-grow', contentClassName)}>
+          <div className={cn('space-y-6 md:space-y-8 md:flex-grow', contentClassName)}>
             {showArabic ? (
               <VerseArabic verse={verse} className={arabicSelectionGutterClassName} />
             ) : null}
