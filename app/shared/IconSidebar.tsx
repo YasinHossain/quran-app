@@ -269,7 +269,11 @@ export const Navigation = memo(function Navigation({
     }, null);
 
     if (mostRecent) {
-      const href = buildSurahRoute(mostRecent.surahId, { startVerse: mostRecent.verseNumber });
+      // `forceSeq` stamps the jump, so a refresh after reading on resumes at the newer position.
+      const href = buildSurahRoute(mostRecent.surahId, {
+        startVerse: mostRecent.verseNumber,
+        forceSeq: true,
+      });
       setReaderHref(href);
       window.localStorage.setItem('nav:last-reader-href', href);
     }

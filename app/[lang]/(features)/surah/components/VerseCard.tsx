@@ -8,6 +8,7 @@ import { AddToPlannerModal } from '@/app/shared/verse-planner-modal';
 import { Verse as VerseType } from '@/types';
 
 import { useVerseCard } from './verse-card/useVerseCard';
+import { useLastReadObserver } from './verse-card/useVerseLastReadObserver';
 
 interface VerseProps {
   verse: VerseType;
@@ -16,6 +17,8 @@ interface VerseProps {
 export const Verse = memo(function Verse({ verse }: VerseProps): JSX.Element {
   const { verseRef, isPlaying, isCurrent, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
     useVerseCard(verse);
+  // Only the reader records reading progress; bookmark, pinned and tafsir cards reuse useVerseCard.
+  useLastReadObserver(verse, verseRef);
   const { resourceLanguagesMap } = useTranslationOptions({ enabled: false });
   const [isPlannerModalOpen, setPlannerModalOpen] = useState(false);
   const { verse_key, text_uthmani, translations } = verse;

@@ -2,6 +2,7 @@
 
 import React, { useMemo } from 'react';
 
+import { loadLastReadFromStorage } from '@/app/providers/bookmarks/storage-utils';
 import {
   useHashSearchParams,
   useLocationSearchParams,
@@ -11,6 +12,18 @@ import { getVersesByChapter } from '@/lib/api';
 import { ensureLanguageCode } from '@/lib/text/languageCodes';
 
 import type { Verse } from '@/types';
+
+/**
+ * A `#startVerse=…&nav=<timestamp>` link is a one-time jump, but it stays in the URL. When the
+ * reader has saved a newer position since that jump (then refreshed, went back, or reopened the
+ * tab), resume there instead of sending them back to the old verse.
+ */
+function resumeVerseAfterJump(surahId: string, navSeq: string | undefined): number | undefined {
+  const jumpedAt = navSeq ? Number(navSeq) : NaN;
+  if (!Number.isFinite(jumpedAt)) return undefined;
+  const saved = loadLastReadFromStorage()[surahId];
+  return saved && saved.updatedAt > jumpedAt ? saved.verseNumber : undefined;
+}
 
 interface SurahViewProps {
   surahId: string;
@@ -45,13 +58,13 @@ export function SurahView({
   const resolvedInitialVerseNumber = useMemo(() => {
     const fromQuery = startVerseRaw ? Number.parseInt(startVerseRaw, 10) : undefined;
     if (typeof fromQuery === 'number' && Number.isFinite(fromQuery) && fromQuery > 0) {
-      return fromQuery;
+      return resumeVerseAfterJump(surahId, navSeq) ?? fromQuery;
     }
     if (typeof initialVerseNumber === 'number' && Number.isFinite(initialVerseNumber)) {
       return initialVerseNumber > 0 ? initialVerseNumber : undefined;
     }
     return undefined;
-  }, [initialVerseNumber, startVerseRaw]);
+  }, [initialVerseNumber, navSeq, startVerseRaw, surahId]);
 
   const initialVerseKey =
     typeof resolvedInitialVerseNumber === 'number'

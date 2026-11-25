@@ -5,8 +5,6 @@ import { useCallback, useRef } from 'react';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
-import { useLastReadObserver } from './useVerseLastReadObserver';
-
 import type { Verse as VerseType } from '@/types';
 
 interface UseVerseCardReturn {
@@ -38,8 +36,6 @@ export const useVerseCard = (verse: VerseType): UseVerseCardReturn => {
   const isLoadingAudio = loadingId === verse.id;
   // Check both numeric ID and verseKey format to find pins regardless of storage format
   const isVerseBookmarked = isPinned(String(verse.id)) || isPinned(verse.verse_key);
-
-  useLastReadObserver(verse, verseRef);
 
   const handlePlayPause = useCallback(() => {
     if (playingId === verse.id) {

@@ -14,6 +14,7 @@ import { ReaderResourceNavigation } from '@/app/shared/reader/ReaderResourceNavi
 import { Spinner } from '@/app/shared/Spinner';
 
 import { SurahNavigation } from './SurahNavigation';
+import { armLastReadTracking, resetLastReadTracking } from './verse-card/useVerseLastReadObserver';
 import { Verse as VerseComponent } from './VerseCard';
 
 import type { MushafResourceKind } from '@/app/[lang]/(features)/surah/hooks/mushafReadingViewTypes';
@@ -165,6 +166,13 @@ export const SurahVerseList = ({
   const audio = useAudio();
   const emptyLabel = t(emptyLabelKey);
   const initialVerseNumber = parseInitialVerseNumber(initialVerseKey);
+
+  // Opening the reader or jumping to a verse remounts this list: don't save a last-read position
+  // until the reader scrolls or listens.
+  useEffect(() => resetLastReadTracking(), []);
+  useEffect(() => {
+    if (audio.isPlaying) armLastReadTracking();
+  }, [audio.isPlaying]);
 
   const hasNoContent = verseListing.verses.length === 0;
   const isQuranComMode =
