@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages -- the bar listens for clicks on rendered anchors, which is what <Link> outputs */
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react';
 import { usePathname } from 'next/navigation';
 
