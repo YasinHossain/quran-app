@@ -27,91 +27,81 @@ const useSurahIntroDetails = (chapterId?: number | null): SurahIntroDetails | nu
   if (!chapterId) return null;
 
   const chapter = serverChapter ?? chapters.find((item) => item.id === chapterId);
-  const surahNumberLabel = chapter?.id ?? chapterId;
   const surahName = chapter?.name_simple ?? `Surah ${chapterId}`;
-  // Leave unknown metadata blank rather than showing a wrong count or revelation place.
-  const versesCount = chapter?.verses_count;
+  const versesCount = chapter?.verses_count; // unknown stays blank, never guessed
 
   return {
     revelationPlace: chapter?.revelation_place,
     showBismillah: chapterId !== 9 && chapterId !== 1,
-    chapterId: surahNumberLabel,
+    chapterId: chapter?.id ?? chapterId,
     surahName,
     versesCount,
   };
 };
 
-const SurahMetadata = ({
-  revelationPlace,
-}: Pick<SurahIntroDetails, 'revelationPlace'>): React.JSX.Element | null => {
-  const label =
-    revelationPlace === 'makkah' ? 'مكية' : revelationPlace === 'madinah' ? 'مدنية' : null;
-  if (!label) return null;
+const revelationLabel = (place?: string): string | null =>
+  place === 'makkah' ? 'مكية' : place === 'madinah' ? 'مدنية' : null;
+
+const DOT = (
+  <span aria-hidden="true" className="text-muted-foreground/50">
+    ·
+  </span>
+);
+
+const AboutLink = ({ chapterId }: { chapterId: number }): React.JSX.Element => {
+  const { t } = useTranslation();
+  const pathname = usePublicPathname();
+  const href = localizeHref(
+    buildSurahAboutRoute(chapterId),
+    getLocaleFromPathname(pathname) ?? 'en'
+  );
+  const description = t('surah_about_link');
 
   return (
-    <div className="flex items-center justify-center">
-      <span
-        className="text-xl text-foreground sm:text-3xl"
-        style={{
-          fontFamily: "'UthmanicHafs1Ver18', serif",
-          lineHeight: 1.4,
-        }}
-      >
-        {label}
+    <Link
+      href={href}
+      prefetch={false}
+      data-slot="surah-about-link"
+      title={description}
+      className="group -my-2 inline-flex min-h-touch items-center rounded-full focus-visible:outline-none"
+    >
+      <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-foreground/[0.06] px-2.5 text-xs font-medium text-muted-foreground transition-colors group-hover:bg-foreground/10 group-hover:text-foreground group-focus-visible:ring-2 group-focus-visible:ring-accent">
+        <InfoIcon size={13} aria-hidden="true" />
+        {t('info')}
+        <span className="sr-only">: {description}</span>
       </span>
-    </div>
+    </Link>
   );
 };
 
-const SurahIntroBismillah = ({ showBismillah }: { showBismillah: boolean }): React.JSX.Element => (
-  <div
-    className={cn(
-      'flex w-full items-center justify-center overflow-hidden transition-all duration-300',
-      showBismillah ? 'h-auto opacity-100' : 'h-0 opacity-0'
-    )}
-  >
-    <p
-      dir="rtl"
-      className="text-center text-3xl leading-none text-foreground sm:text-center sm:text-4xl"
-      style={{
-        fontFamily: "'UthmanicHafs1Ver18', serif",
-      }}
-    >
-      ﷽
-    </p>
-  </div>
-);
-
-const SurahTitleBlock = ({
-  surahName,
+const SurahIntroMeta = ({
+  place,
   versesLabel,
-  about,
+  chapterId,
 }: {
-  surahName: string;
+  place: string | null;
   versesLabel: string | null;
-  about: { href: string; label: string };
+  chapterId: number;
 }): React.JSX.Element => (
-  <div className="flex flex-col items-center justify-center gap-1">
-    <h1
-      className="text-lg font-semibold text-foreground sm:text-xl"
-      style={{
-        fontFamily: "'Inter', 'Outfit', sans-serif",
-      }}
-    >
-      {surahName}
-    </h1>
-    {versesLabel ? (
-      <span className="text-xs text-muted-foreground/50 sm:text-sm">{versesLabel}</span>
+  <div className="mt-1.5 flex flex-wrap items-center justify-center gap-x-2 text-xs text-muted-foreground sm:text-sm">
+    {place ? (
+      <>
+        <span
+          className="text-base text-foreground/80 sm:text-lg"
+          style={{ fontFamily: "'UthmanicHafs1Ver18', serif", lineHeight: 1 }}
+        >
+          {place}
+        </span>
+        {DOT}
+      </>
     ) : null}
-    <Link
-      href={about.href}
-      prefetch={false}
-      data-slot="surah-about-link"
-      className="-my-2 inline-flex min-h-touch items-center gap-1.5 rounded-full px-3 text-xs font-medium text-accent transition-colors hover:bg-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:text-sm"
-    >
-      <InfoIcon size={14} aria-hidden="true" />
-      {about.label}
-    </Link>
+    {versesLabel ? (
+      <>
+        <span>{versesLabel}</span>
+        {DOT}
+      </>
+    ) : null}
+    <AboutLink chapterId={chapterId} />
   </div>
 );
 
@@ -123,47 +113,45 @@ export const SurahCalligraphyIntro = ({
   className?: string;
 }): React.JSX.Element | null => {
   const { t, i18n } = useTranslation();
-  const pathname = usePublicPathname();
   const introDetails = useSurahIntroDetails(chapterId);
 
   if (!introDetails) return null;
 
-  const translatedSurahName = t(`surah_names.${introDetails.chapterId}`, {
+  const surahName = t(`surah_names.${introDetails.chapterId}`, {
     defaultValue: introDetails.surahName,
   });
-
-  const translatedVersesLabel =
+  const versesLabel =
     typeof introDetails.versesCount === 'number'
       ? `${formatNumber(introDetails.versesCount, i18n.language)} ${t('verses')}`
       : null;
 
   return (
-    <div className={cn('mx-auto mb-4 -mt-4 w-full max-w-7xl sm:-mt-3', className)}>
-      <div className="flex w-full flex-col items-center gap-4 border-b border-border/40 pt-0 pb-5 sm:flex-row sm:justify-evenly sm:gap-0 sm:pt-6 sm:pb-9">
-        <div className="order-3 sm:order-1 sm:min-w-[6rem] sm:w-auto">
-          <SurahMetadata revelationPlace={introDetails.revelationPlace} />
-        </div>
-
-        <div className="order-2 w-full sm:order-2 sm:w-auto">
-          <div className="flex flex-col items-center gap-3">
-            <SurahIntroBismillah showBismillah={introDetails.showBismillah} />
-          </div>
-        </div>
-
-        <div className="order-1 sm:order-3 sm:min-w-[6rem] sm:w-auto">
-          <SurahTitleBlock
-            surahName={translatedSurahName}
-            versesLabel={translatedVersesLabel}
-            about={{
-              href: localizeHref(
-                buildSurahAboutRoute(introDetails.chapterId),
-                getLocaleFromPathname(pathname) ?? 'en'
-              ),
-              label: t('surah_about_link'),
-            }}
-          />
-        </div>
-      </div>
+    <div
+      className={cn(
+        'mx-auto -mt-4 flex w-full max-w-7xl flex-col items-center border-b border-border/40 px-1 pb-6 sm:-mt-3 sm:pt-6 sm:pb-9',
+        className
+      )}
+    >
+      <h1
+        className="text-xl font-semibold text-foreground sm:text-2xl"
+        style={{ fontFamily: "'Inter', 'Outfit', sans-serif" }}
+      >
+        {surahName}
+      </h1>
+      <SurahIntroMeta
+        place={revelationLabel(introDetails.revelationPlace)}
+        versesLabel={versesLabel}
+        chapterId={introDetails.chapterId}
+      />
+      {introDetails.showBismillah ? (
+        <p
+          dir="rtl"
+          className="mt-4 text-center text-3xl leading-none text-foreground sm:mt-6 sm:text-4xl"
+          style={{ fontFamily: "'UthmanicHafs1Ver18', serif" }}
+        >
+          ﷽
+        </p>
+      ) : null}
     </div>
   );
 };

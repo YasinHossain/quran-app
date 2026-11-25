@@ -16,7 +16,7 @@ export const HomeFooter = memo(function HomeFooter() {
   const locale = getLocaleFromPathname(usePublicPathname()) ?? 'en';
 
   return (
-    <footer className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 pb-20 md:pb-4">
+    <footer className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 pb-4">
       <div className="border-t border-border pt-3">
         {/* Beta Notice */}
         <p className="text-center text-sm text-muted mb-3">

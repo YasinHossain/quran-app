@@ -53,7 +53,7 @@ export const HomePageClient = memo(function HomePageClient({
     >
       <HomePageBackground />
 
-      <div className="relative z-10 flex flex-col px-2 sm:px-4 pb-24 md:px-6 md:pb-10 lg:px-8">
+      <div className="relative z-10 flex flex-col px-2 sm:px-4 pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:px-6 md:pb-10 lg:px-8">
         <HomeHeader />
 
         <main className="flex-grow flex flex-col items-center justify-center text-center space-y-6 pt-6 pb-6 md:pt-12 md:pb-10 md:space-y-8">
